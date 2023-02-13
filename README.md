@@ -14,18 +14,17 @@ A chrome extension that elevates your Genius.com experience by incorporating aut
 - A fresh, modern look and feel for Genius.com
 
 ## Installation
-1. Download the extension from the chrome web store 
-  https://chrome.google.com/webstore/detail/genius-enhancer-beta/hnkhjljomklfcnfnbbikoddbolmpaifl
+1. Download the extension from the [chrome web store](https://chrome.google.com/webstore/detail/genius-enhancer-beta/hnkhjljomklfcnfnbbikoddbolmpaifl)
 
 or
 
-2. Clone the repository
+1. Clone the repository
 ```
 git clone https://github.com/Uri6/genius-enhancer.git
 ```
-Copy code
-3. Go to chrome://extensions/ in your chrome browser and turn on "developer mode"
-4. Click on "Load Unpacked" and select the cloned repository
+
+2. Go to chrome://extensions/ in your chrome browser and turn on "developer mode"
+3. Click on "Load Unpacked" and select the cloned repository
 
 ## Usage
 1. Go to Genius.com

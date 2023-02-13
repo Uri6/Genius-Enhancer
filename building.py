@@ -58,7 +58,7 @@ def copytree(src, dst):
     print('Copying {} to {}'.format(src, dst))
     for folder in os.listdir(src):
         skip = False
-        bad_folders = [".vscode", ".git", "Builds", "vision", "header", "gifs"]
+        bad_folders = [".vscode", ".git", "Builds", "vision", "header", "gifs", "Github"]
         if folder in bad_folders or src.endswith("\\icons") and folder == "1":
             continue
         if os.path.isdir(src + '\\' + folder):
@@ -85,7 +85,7 @@ def copytree(src, dst):
 
 geniusBot_path = os.path.dirname(os.path.realpath(__file__))
 
-manifest = open('D:/Projects/ChromeExtensions/GeniusEnhancer/manifest.json', 'r')
+manifest = open('./manifest.json', 'r')
 
 data = json.load(manifest)
 version = data.get('version')
