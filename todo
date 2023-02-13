@@ -1,0 +1,20 @@
+# BUGS
+- Table tags aren't supported in the new text editor [ @dusan ]
+- Sometimes the metadata indicators and the extension's logo aren't shown [ @dusan ]
+- The profile menu is glitchy [ @TheYoshiPhase @Reece ]
+- Metadata indicators are still crumpled together sometimes [ @furashaka ]
+- In the new text editor, annotations get separated by lines [ @furashaka ]
+- When pasting something in the new text editor, the page automatically scrolls to the top [ @mottled ]
+- The "Send a new message" header on the messages popup isn't visible [ @mottled ]
+
+# FEATURES
+- Auto-link cover artwork
+- Reply button to suggestions on annotations
+- Favorite suggestions
+- Add credits with one link
+- Auto-link media button
+- Autofill youtube/soundcloud links via linking a playlist
+- Automatically transfer credits from other platforms
+- Ability to add more metadata from the "add song" page
+- Marked-as-complete indicators in album pages
+- A darker interface

@@ -1,0 +1,251 @@
+@import "fonts.css";
+html {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+* {
+  transition: all 0.3s ease;
+}
+
+body {
+  background-color: #ffff65 !important;
+}
+
+#container {
+  margin: 0px !important;
+  height: 100% !important;
+  width: 100% !important;
+  padding-top: 10px !important;
+  position: static !important;
+}
+#container #main {
+  margin: 0px !important;
+}
+#container #main #group_container {
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #ffff65 !important;
+  color: #ffff65 !important;
+  align-items: left !important;
+  margin-bottom: 0 !important;
+}
+#container #main #group_container #group_discussion {
+  margin: 0 auto !important;
+  float: none !important;
+}
+#container #main #group_container #groups_sidebar,
+#container #main #group_container .discussions_search_bar {
+  background-color: #c6c289 !important;
+  float: none !important;
+  left: 1% !important;
+  top: 1% !important;
+  border: none !important;
+  transition: all 0.3s ease;
+  position: sticky !important;
+  display: inline-block !important;
+  vertical-align: top !important;
+  margin-left: 10px !important;
+  border-radius: 5px !important;
+  padding: 5px 10px;
+  transition: all 0.3s ease !important;
+}
+#container #main #group_container #groups_sidebar .small_label,
+#container #main #group_container #groups_sidebar .group_list,
+#container #main #group_container .discussions_search_bar .small_label,
+#container #main #group_container .discussions_search_bar .group_list {
+  background-color: #c6c289 !important;
+  color: #000 !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
+  font-weight: 600 !important;
+  border: none !important;
+  text-transform: none !important;
+}
+#container #main #group_container #groups_sidebar .small_label .group_name,
+#container #main #group_container #groups_sidebar .group_list .group_name,
+#container #main #group_container .discussions_search_bar .small_label .group_name,
+#container #main #group_container .discussions_search_bar .group_list .group_name {
+  color: #ffff65 !important;
+}
+
+#groups_sidebar {
+  background-color: rgba(128, 128, 128, 0.2) !important;
+  float: none !important;
+  left: 1% !important;
+  top: 5% !important;
+  border: none !important;
+  transition: all 0.3s ease;
+  position: sticky !important;
+  outline: 2px solid #ff1464 !important;
+  display: inline-block !important;
+  vertical-align: top !important;
+  margin: 0 !important;
+  border-radius: 5px !important;
+  padding: 5px 10px;
+  transition: all 0.3s ease !important;
+}
+#groups_sidebar .groups_sidebar-search {
+  padding: 10px 0 !important;
+}
+#groups_sidebar .groups_sidebar-search input::-moz-placeholder {
+  color: transparent !important;
+}
+#groups_sidebar .groups_sidebar-search input::placeholder {
+  color: transparent !important;
+}
+#groups_sidebar .small_label,
+#groups_sidebar .group_list {
+  background: transparent !important;
+  color: #000 !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
+  font-weight: 600 !important;
+  border: none !important;
+  text-transform: none !important;
+}
+#groups_sidebar .small_label .group_name,
+#groups_sidebar .group_list .group_name {
+  border: none !important;
+  color: #000;
+}
+
+.group_summary,
+.discussion_summary {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  border-bottom: 0px !important;
+  box-shadow: 0 0 0px #000;
+  border-radius: 5px !important;
+  padding: 5px 10px;
+}
+.group_summary.current,
+.discussion_summary.current {
+  background-color: rgba(128, 128, 128, 0.4) !important;
+}
+.group_summary:hover,
+.discussion_summary:hover {
+  color: rgba(128, 128, 128, 0.4);
+}
+.group_summary.active,
+.discussion_summary.active {
+  background-color: #ffff65;
+  color: rgba(128, 128, 128, 0.4);
+}
+.group_summary.active .group_name,
+.discussion_summary.active .group_name {
+  color: #ffff65 !important;
+}
+.group_summary.active:hover,
+.discussion_summary.active:hover {
+  background-color: #ffff65;
+  color: rgba(128, 128, 128, 0.4);
+}
+.group_summary .button,
+.group_summary .create_discussion,
+.discussion_summary .button,
+.discussion_summary .create_discussion {
+  top: 7.5% !important;
+  position: absolute !important;
+  float: none !important;
+  margin-left: 10px;
+  background-color: #979797 !important;
+  color: #000 !important;
+  padding: 5px 5px 5px 7px !important;
+  border: none !important;
+  box-shadow: none;
+  border-radius: 5px !important;
+}
+.group_summary .button:hover,
+.group_summary .create_discussion:hover,
+.discussion_summary .button:hover,
+.discussion_summary .create_discussion:hover {
+  background-color: #ffff65 !important;
+}
+.group_summary .button.active,
+.group_summary .create_discussion.active,
+.discussion_summary .button.active,
+.discussion_summary .create_discussion.active {
+  background-color: #ffff65 !important;
+}
+.group_summary .button.active:hover,
+.group_summary .create_discussion.active:hover,
+.discussion_summary .button.active:hover,
+.discussion_summary .create_discussion.active:hover {
+  background-color: #ffff65 !important;
+}
+.group_summary .create_discussion,
+.discussion_summary .create_discussion {
+  right: 1% !important;
+}
+.group_summary .toggle_follow,
+.discussion_summary .toggle_follow {
+  right: calc(1% + 46px) !important;
+}
+
+.group_summary:hover {
+  background-color: rgba(128, 128, 128, 0.4) !important;
+}
+
+.group_list {
+  overflow-y: auto !important;
+  max-height: 280px !important;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.group_list::-webkit-scrollbar {
+  display: none;
+}
+
+.discussions_search_bar-text_input {
+  align-items: center;
+  border: none !important;
+  border-radius: 10px !important;
+  background-color: rgba(128, 128, 128, 0.4) !important;
+  color: #000 !important;
+  padding-left: 10px !important;
+}
+
+.discussions_search_bar {
+  padding-left: 0 !important;
+  width: 100% !important;
+}
+
+.groups_sidebar-search,
+.groups_chunk {
+  border: none !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
+  padding: 0 !important;
+}
+
+.discussions_search_bar-text_input-error {
+  text-align: center !important;
+  display: block !important;
+  position: relative !important;
+  margin: auto !important;
+  padding: 5px 10px !important;
+  font-family: "Roboto", sans-serif !important;
+  color: #ff0000 !important;
+}
+
+#discussion_list {
+  margin: 0 auto !important;
+  top: 1% !important;
+  float: none !important;
+  z-index: 10 !important;
+  position: static !important;
+  display: inline-block !important;
+  vertical-align: top !important;
+  border: none !important;
+  width: 35% !important;
+  transform: translateX(50%) !important;
+}
+
+.clearfix .markdown_preview_container {
+  display: none !important;
+}
+.clearfix .ql-toolbar {
+  position: static;
+}
+.clearfix .ql-editor {
+  min-height: 300px;
+}/*# sourceMappingURL=newPost.css.map */

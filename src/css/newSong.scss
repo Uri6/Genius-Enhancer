@@ -1,0 +1,122 @@
+body {
+    background: #ffff65 !important;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: #000 !important;
+    }
+
+    input:not(.quick_search):not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea,
+    .chzn-choices {
+        background-color: rgba(128, 128, 128, 0.2) !important;
+        border-radius: 10px !important;
+        border: 1px solid #bbb !important;
+        color: #000 !important;
+
+        &.required.missing, &.add_song_page-lyrics_textarea.missing {
+            border: 2px solid red !important;
+        }
+
+        &:not(.add_song_page-lyrics_textarea) {
+            min-height: 2.5rem !important;
+        }
+
+        &:hover {
+            background-color: rgba(128, 128, 128, 0.4) !important;
+        }
+
+        &:focus {
+            background-color: rgba(128, 128, 128, 0.6) !important;
+        }
+    }
+
+    textarea {
+        resize: none !important;
+        min-height: 2.5rem !important;
+    }
+
+    #main {
+
+        .add_song_page>h1:first-child, .add_song_page .add_song_page-helper_text {
+            display: none !important;
+        }
+
+        label,
+        span {
+            text-transform: none !important;
+
+            &.error {
+                display: none !important;
+            }
+        }
+
+        .lyrics_style_guide {
+            border-radius: 10px !important;
+            background-color: rgba(128, 128, 128, 0.4) !important;
+            padding: 1rem !important;
+
+            *:not(a) {
+                color: black !important;
+            }
+
+            a {
+                color: #1873d1 !important;
+                display: inline-block !important;
+            }
+        }
+
+        .add_song_page-sub_header {
+            display: none !important;
+        }
+
+        .chzn-choices {
+            padding-top: 7px !important;
+
+            li:not(.search-field) {
+                height: 1.8rem !important;
+                line-height: 1.4rem !important;
+
+                background-image: none !important;
+                background-color: #009994 !important;
+                border-radius: 10px !important;
+
+                margin-right: 5px !important;
+            }
+        }
+
+        .modern-chooser {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+
+            .modern-chooser-button {
+                background-color: rgba(128, 128, 128, 0.4);
+                border: none;
+                border-radius: 10px;
+                color: rgb(0, 0, 0, 0.7);
+                font-size: 1rem;
+                margin: 0.5rem;
+                padding: 0.75rem 1.25rem;
+                text-align: center;
+
+                &:hover {
+                    background-color: rgba(128, 128, 128, 0.6);
+                    color: black;
+                    cursor: pointer;
+                }
+            }
+
+            .modern-chooser-button-active {
+                background-color: rgba(128, 128, 128, 0.8);
+                color: black;
+            }
+        }
+    }
+}

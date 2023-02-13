@@ -1,0 +1,113 @@
+body {
+  background: #ffff65 !important;
+}
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
+  color: #000 !important;
+}
+body input:not(.quick_search):not([type=checkbox]):not([type=radio]),
+body select,
+body textarea,
+body .chzn-choices {
+  background-color: rgba(128, 128, 128, 0.2) !important;
+  border-radius: 10px !important;
+  border: 1px solid #bbb !important;
+  color: #000 !important;
+}
+body input:not(.quick_search):not([type=checkbox]):not([type=radio]).required.missing, body input:not(.quick_search):not([type=checkbox]):not([type=radio]).add_song_page-lyrics_textarea.missing,
+body select.required.missing,
+body select.add_song_page-lyrics_textarea.missing,
+body textarea.required.missing,
+body textarea.add_song_page-lyrics_textarea.missing,
+body .chzn-choices.required.missing,
+body .chzn-choices.add_song_page-lyrics_textarea.missing {
+  border: 2px solid red !important;
+}
+body input:not(.quick_search):not([type=checkbox]):not([type=radio]):not(.add_song_page-lyrics_textarea),
+body select:not(.add_song_page-lyrics_textarea),
+body textarea:not(.add_song_page-lyrics_textarea),
+body .chzn-choices:not(.add_song_page-lyrics_textarea) {
+  min-height: 2.5rem !important;
+}
+body input:not(.quick_search):not([type=checkbox]):not([type=radio]):hover,
+body select:hover,
+body textarea:hover,
+body .chzn-choices:hover {
+  background-color: rgba(128, 128, 128, 0.4) !important;
+}
+body input:not(.quick_search):not([type=checkbox]):not([type=radio]):focus,
+body select:focus,
+body textarea:focus,
+body .chzn-choices:focus {
+  background-color: rgba(128, 128, 128, 0.6) !important;
+}
+body textarea {
+  resize: none !important;
+  min-height: 2.5rem !important;
+}
+body #main .add_song_page > h1:first-child, body #main .add_song_page .add_song_page-helper_text {
+  display: none !important;
+}
+body #main label,
+body #main span {
+  text-transform: none !important;
+}
+body #main label.error,
+body #main span.error {
+  display: none !important;
+}
+body #main .lyrics_style_guide {
+  border-radius: 10px !important;
+  background-color: rgba(128, 128, 128, 0.4) !important;
+  padding: 1rem !important;
+}
+body #main .lyrics_style_guide *:not(a) {
+  color: black !important;
+}
+body #main .lyrics_style_guide a {
+  color: #1873d1 !important;
+  display: inline-block !important;
+}
+body #main .add_song_page-sub_header {
+  display: none !important;
+}
+body #main .chzn-choices {
+  padding-top: 7px !important;
+}
+body #main .chzn-choices li:not(.search-field) {
+  height: 1.8rem !important;
+  line-height: 1.4rem !important;
+  background-image: none !important;
+  background-color: #009994 !important;
+  border-radius: 10px !important;
+  margin-right: 5px !important;
+}
+body #main .modern-chooser {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+body #main .modern-chooser .modern-chooser-button {
+  background-color: rgba(128, 128, 128, 0.4);
+  border: none;
+  border-radius: 10px;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 1rem;
+  margin: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+}
+body #main .modern-chooser .modern-chooser-button:hover {
+  background-color: rgba(128, 128, 128, 0.6);
+  color: black;
+  cursor: pointer;
+}
+body #main .modern-chooser .modern-chooser-button-active {
+  background-color: rgba(128, 128, 128, 0.8);
+  color: black;
+}/*# sourceMappingURL=newSong.css.map */

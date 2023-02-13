@@ -1,0 +1,147 @@
+body {
+    background-color: #ffff65 !important;
+
+    #main {
+        .avatar {
+            border-radius: 50% !important;
+        }
+
+        #firehose {
+            width: 100% !important;
+
+            .activity_stream_event_unit {
+                border-radius: 5px 5px 10px 10px !important;
+                padding: 10px !important;
+                margin: 10px !important;
+
+                &.unread:not(.details_loaded):before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 3px;
+                    background-color: #ff1464;
+                    background-position: 0 0;
+                    border-radius: 10px 10px 0 0;
+                }
+
+                .target {
+                    &, .event_context, *.annotation_container, *.stand_alone_annotation_container, *.stand_alone_referent {
+                        border-radius: 10px !important;
+                    }
+                }
+            }
+        }
+
+        #firehose_filters {
+
+            label,
+            legend,
+            input,
+            input::placeholder,
+            select {
+                color: black !important;
+            }
+
+            #selected_users .selected_user {
+                .user_badge {
+                    padding: 5px !important;
+                    margin: 5px 0px !important;
+                    background-color: rgba(128, 128, 128, 0.6) !important;
+                    border-radius: 10px !important;
+                    max-width: 154px !important;
+
+                    .login, .iq_value {
+                        &:hover {
+                            padding-top: 0px !important;
+                            padding-bottom: 0px !important;
+                            color: white !important;
+
+                            &.iq_value {
+                                font-size: 12px !important;
+                            }
+                        }
+                    }
+
+                    .iq_value {
+                        color: black !important;
+                        font-size: 9px !important;
+                    }
+
+                    .badge_avatar_wrapper {
+                        &:hover {
+                            background-color: none !important;
+                            padding: 0px !important;
+
+                            .avatar {
+                                background-color: none !important;
+                                transform: scale(1.1) !important;
+                            }
+                        }
+                    }
+                }
+
+                .remove_selected_user {
+                    padding-top: 8.5px !important;
+                    color: rgb(200, 0, 0) !important;
+
+                    &:hover {
+                        color: rgb(255, 0, 0) !important;
+                    }
+                }
+            }
+
+            .chzn-choices,
+            input:not(.chzn-choices input) {
+                background-color: rgba(128, 128, 128, 0.2) !important;
+                border-radius: 10px !important;
+
+                &:hover {
+                    background-color: rgba(128, 128, 128, 0.4) !important;
+                }
+
+                &:focus {
+                    background-color: rgba(128, 128, 128, 0.6) !important;
+                    border-width: 0px !important;
+                }
+            }
+
+            legend {
+                border-width: initial !important;
+                border-style: none !important;
+                border-color: initial !important;
+                border-image: initial !important;
+                font-size: 15px !important;
+                padding: 0px !important;
+                margin: 0px !important;
+                float: unset !important;
+                line-height: unset !important;
+                width: unset !important;
+            }
+
+            fieldset>legend+* {
+                clear: both;
+            }
+
+            fieldset {
+                margin: 20px;
+                border: 1px solid;
+                border-radius: 10px;
+                background-color: rgba(128, 128, 128, 0.2) !important;
+
+                legend {
+                    padding: 0px 10px !important;
+                    border-radius: 10px !important;
+                    border: 1px solid #cccccc !important;
+                    background-color: #ffff65 !important;
+                    right: -10px !important;
+                }
+
+                input {
+                    max-width: 178px;
+                }
+            }
+        }
+    }
+}
