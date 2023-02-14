@@ -36,4 +36,4 @@ git clone https://github.com/Uri6/genius-enhancer.git
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
-Please refer to the [LICENSE.txt](/LICENSE.md) file in the root folder for the terms of use of this ptoject.
+Please refer to the [LICENSE.md](/LICENSE.md) file in the root folder for the terms of use of this ptoject.
