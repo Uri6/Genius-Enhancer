@@ -1,3 +1,8 @@
+/*
+* This code is licensed under the terms of the "LICENSE.md" file
+* located in the root directory of this code package.
+*/
+
 export function containsHebrew(text) {
     return /[א-ת]/.test(text);
 }

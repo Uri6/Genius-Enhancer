@@ -1,3 +1,8 @@
+/*
+* This code is licensed under the terms of the "LICENSE.md" file
+* located in the root directory of this code package.
+*/
+
 import { missingInfo, appendIcon, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
 import { ModernTextEditor } from "./src/js/sideFunctions_song.js";
 import { replaceButtons } from "./src/js/sideFunctions_forum.js";
