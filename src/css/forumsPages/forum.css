@@ -23,6 +23,9 @@ html {
 #discussion_list > .group_summary {
   background-color: #493a3c !important;
 }
+#discussion_list > .group_summary:hover {
+  background-color: #2c2627 !important;
+}
 
 .group_summary,
 .discussion_summary {
@@ -59,6 +62,10 @@ html {
 .group_summary.discussion_summary,
 .discussion_summary.discussion_summary {
   background-color: #574143 !important;
+}
+.group_summary.discussion_summary:hover,
+.discussion_summary.discussion_summary:hover {
+  background-color: #413335 !important;
 }
 .group_summary .button,
 .group_summary .create_discussion,
