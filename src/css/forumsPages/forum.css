@@ -11,13 +11,17 @@ html {
 
 .cont-groups,
 .group_list {
-  background-color: #ffff65 !important;
+  background: linear-gradient(180deg, #ff8f65, #ff1464, #ff1464, #ff1464, #ff699c) !important;
   color: #ffff65 !important;
 }
 
 .group_name {
   border: none !important;
   color: #000;
+}
+
+#discussion_list > .group_summary {
+  background-color: #493a3c !important;
 }
 
 .group_summary,
@@ -51,6 +55,10 @@ html {
 .discussion_summary.active:hover {
   background-color: #ffff65;
   color: rgba(128, 128, 128, 0.4);
+}
+.group_summary.discussion_summary,
+.discussion_summary.discussion_summary {
+  background-color: #574143 !important;
 }
 .group_summary .button,
 .group_summary .create_discussion,
@@ -133,14 +141,13 @@ html {
 }
 
 #groups_sidebar {
-  background-color: rgba(128, 128, 128, 0.2) !important;
+  background-color: rgba(128, 128, 128, 0.4) !important;
   float: none !important;
   left: 1% !important;
   top: 5% !important;
   border: none !important;
   transition: all 0.3s ease;
   position: sticky !important;
-  outline: 2px solid #ff1464 !important;
   display: inline-block !important;
   vertical-align: top !important;
   margin: 0 !important;

@@ -58,16 +58,15 @@ def copytree(src, dst):
     print('Copying {} to {}'.format(src, dst))
     for folder in os.listdir(src):
         skip = False
-        bad_folders = [".vscode", ".git", "Builds", "vision", "header", "gifs", "Github"]
+        bad_folders = [".vscode", ".git", "Builds", "vision", "header", "gifs"]
         if folder in bad_folders or src.endswith("\\icons") and folder == "1":
             continue
         if os.path.isdir(src + '\\' + folder):
-            # call this function
             os.mkdir(dst + '\\' + folder)
             copytree(src + '\\' + folder, dst + '\\' + folder)
         else:
             file = folder
-            bad_files = [".py", ".map", ".scss", ".sass", ".psd", "changelog.md"]
+            bad_files = [".py", ".map", ".scss", ".sass", ".psd", "changelog.md", ".gitignore"]
             for bad_file in bad_files:
                 if file.endswith(bad_file):
                     skip = True

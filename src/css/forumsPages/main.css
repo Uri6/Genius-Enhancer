@@ -7,10 +7,12 @@
   color: #000;
 }
 
-.act-index,
-.cont-groups,
+.act-index.cont-groups {
+  background: linear-gradient(180deg, #0083BE, #009994, #009994, #009994, #56b9b4) !important;
+}
+
 .group_list {
-  background-color: #ffff65 !important;
+  background: transparent !important;
   color: #ffff65 !important;
   display: block !important;
 }
@@ -101,6 +103,7 @@
 .discussion_search_bar-input_container:before {
   left: auto !important;
   right: calc(-85% - 6px) !important;
+  filter: grayscale(100%) brightness(0.75);
 }
 
 .discussions_search_bar-text_input {
@@ -111,25 +114,33 @@
   margin: auto !important;
   border-radius: 5px !important;
   padding: 5px 10px !important;
-  border: 2px solid rgb(191, 191, 191) !important;
+  border: 2px solid #9a9a9a !important;
   box-shadow: none;
   transition: all 0.3s ease;
-  background-color: rgba(0, 0, 0, 0) !important;
+  background-color: rgba(154, 154, 154, 0.5) !important;
 }
 .discussions_search_bar-text_input::-moz-placeholder {
-  color: #979797 !important;
+  color: black !important;
+  opacity: 0.4 !important;
   -moz-transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
 .discussions_search_bar-text_input::placeholder {
-  color: #979797 !important;
+  color: black !important;
+  opacity: 0.4 !important;
   transition: all 0.2s ease;
 }
+.discussions_search_bar-text_input:hover::-moz-placeholder {
+  opacity: 0.6 !important;
+}
+.discussions_search_bar-text_input:hover::placeholder {
+  opacity: 0.6 !important;
+}
 .discussions_search_bar-text_input:focus::-moz-placeholder {
-  opacity: 0.5 !important;
+  opacity: 0 !important;
 }
 .discussions_search_bar-text_input:focus::placeholder {
-  opacity: 0.5 !important;
+  opacity: 0 !important;
 }
 
 .discussions_search_bar-text_input-error {

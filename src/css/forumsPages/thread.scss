@@ -11,13 +11,12 @@ html {
 
 .cont-groups,
 .group_list {
-  background-color: #ffff65 !important;
+  background-color: transparent !important;
   color: #ffff65 !important;
 }
 
 body {
-  background-color: #ffff65 !important;
-}
+  background: linear-gradient(180deg, #058567, #0ac095, #0ac095, #0ac095, #72eed1) !important;}
 
 #discussion_container {
   border: none !important;
@@ -81,8 +80,7 @@ body {
 .discussion_summary {
   font-size: 20px;
   font-weight: 600;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   box-shadow: 0 0 0px #000;
   border: none !important;
 
@@ -185,6 +183,10 @@ body {
   display: block;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  border-radius: 5px !important;
+  outline: 4px solid #ff1464 !important;
+  background-color: #ff1464 !important;
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.6) !important;
 
   &::-webkit-scrollbar {
     display: none;
@@ -196,6 +198,18 @@ body {
 
   .back_to_group {
     display: none !important;
+  }
+
+  .discussion_summary {
+    background-color: #574143 !important;
+
+    &:hover {
+      background-color: #ffff65 !important;
+
+      .discussion_summary_title>.subject {
+        color: #000 !important;
+      }
+    }
   }
 }
 
@@ -401,13 +415,15 @@ body {
         color: #000 !important;
       }
 
-      .mention {
-        color: #0074e8 !important;
-        background: none !important;
+      a, .mention {
+        color: #005ab4 !important;
+        background: rgba(128, 128, 128, 0.2) !important;
         border: none !important;
+        border-radius: 5px !important;
+        padding: 0 5px 0 5px !important;
 
         &:hover {
-          background-color: rgba(128, 128, 128, 0.1) !important;
+          background-color: rgba(128, 128, 128, 0.4) !important;
           text-decoration: underline !important;
         }
       }
@@ -520,10 +536,12 @@ body {
   top: 30% !important;
   left: 0.5% !important;
   height: 400px !important;
+  border-radius: 5px !important;
   transition: top 0.3s ease-in-out;
 
   .sticky-wrapper {
     height: 400px !important;
+    border-radius: 5px !important;
 
     .no_auto_more.sidebar.sticky.stuck {
       position: sticky !important;
@@ -534,27 +552,6 @@ body {
         height: 400px !important;
       }
     }
-  }
-
-  &::after,
-  &::before {
-    content: "";
-    display: block;
-    height: 10px;
-    /* adjust to your needs */
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-  }
-
-  &::before {
-    background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, #ffff65 100%);
-    top: 0;
-  }
-
-  &::after {
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffff65 100%);
-    bottom: 0;
   }
 }
 

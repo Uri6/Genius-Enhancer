@@ -8,10 +8,12 @@
   color: #000;
 }
 
-.act-index,
-.cont-groups,
+.act-index.cont-groups {
+  background: linear-gradient(180deg, #0083BE, #009994, #009994, #009994, #56b9b4) !important;
+}
+
 .group_list {
-  background-color: #ffff65 !important;
+  background: transparent !important;
   color: #ffff65 !important;
   display: block !important;
 }
@@ -41,12 +43,9 @@
   border-bottom: 0px !important;
   float: right !important;
   margin-right: 2% !important;
-  // round corners
   border-radius: 5px;
   padding: 5px 10px;
-  // shadow
   box-shadow: 0 0 0px #000;
-  // transition
   transition: all 0.3s ease;
 
   &:last-of-type {
@@ -58,17 +57,12 @@
     margin-left: 10px;
     background-color: rgb(0, 0, 0, 0) !important;
     color: #000 !important;
-    // round corners
     border-radius: 5px;
     padding: 5px 10px;
-    // border
     border: none !important;
-    // shadow
     box-shadow: none;
-    // transition
     transition: all 0.3s ease;
 
-    // hover
     &:hover {
       background-color: none !important;
 
@@ -77,22 +71,19 @@
       }
     }
 
-    // active
     &.active {
       background-color: none !important;
 
       .gb-new-button {
         fill: #ffff65 !important;
       }
-    }
 
-
-    // active hover
-    &.active:hover {
-      background-color: none !important;
-
-      .gb-new-button {
-        fill: #ffff65 !important;
+      &:hover {
+        background-color: none !important;
+  
+        .gb-new-button {
+          fill: #ffff65 !important;
+        }
       }
     }
   }
@@ -111,46 +102,43 @@
 
 .gb-new-button {
   fill: #979797 !important;
-  // transition
   transition: all 0.3s ease;
 }
 
 .discussion_search_bar-input_container:before {
-  // align to the right
   left: auto !important;
   right: calc(-85% - 6px) !important;
+  filter: grayscale(100%) brightness(0.75);
 }
 
 .discussions_search_bar-text_input {
-  // align to the center
   text-align: center !important;
   display: block !important;
   position: relative !important;
   left: calc(88%) !important;
   margin: auto !important;
-  // round corners
   border-radius: 5px !important;
   padding: 5px 10px !important;
-  // round border
-  border: 2px solid rgb(191, 191, 191) !important;
-  // shadow
+  border: 2px solid #9a9a9a !important;
   box-shadow: none;
-  // transition
   transition: all 0.3s ease;
-  // transparent background
-  background-color: rgb(0, 0, 0, 0) !important;
+  background-color: rgba(154, 154, 154, 0.5) !important;
 
-  // change the text input color
   &::placeholder {
-    color: #979797 !important;
+    color: black !important;
+    opacity: 0.4 !important;
     transition: all 0.2s ease;
   }
 
-  // when focused, change the placeholder color
+  &:hover {
+    &::placeholder {
+      opacity: 0.6 !important;
+    }
+  }
+
   &:focus {
     &::placeholder {
-      // change the opacity
-      opacity: 0.5 !important;
+      opacity: 0 !important;
     }
   }
 }
