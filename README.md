@@ -1,5 +1,7 @@
 # Genius Enhancer
 
+![Released Version](https://img.shields.io/chrome-web-store/v/hnkhjljomklfcnfnbbikoddbolmpaifl?color=ffff65&label=Released%20Version&logo=Google%20Chrome&logoColor=white)
+
 A chrome extension that elevates your Genius.com experience by incorporating automation tools and productivity boosters.
 
 ## Features
