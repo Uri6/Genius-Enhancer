@@ -1,14 +1,19 @@
 <div align="center">
 
-  <p><img src="https://i.ibb.co/Zz7QkrK/transp.png" style="transform: scale(0.8);"></p>
+  <hr>
 
+  <p><img src="https://i.ibb.co/4TwJTVf/transp-Github.png" style="transform: scale(0.8);"></p>
   <img src="https://img.shields.io/chrome-web-store/v/hnkhjljomklfcnfnbbikoddbolmpaifl?color=ffff65&label=Released%20Version&logo=Google%20Chrome&logoColor=white" alt="Released Version" style="max-width: 100%;">
   <img src="https://img.shields.io/chrome-web-store/rating/hnkhjljomklfcnfnbbikoddbolmpaifl?label=Chrome%20Web%20Store%20Rating" alt="Chrome Web Store Rating" style="max-width: 100%;">
   <a href="https://chrome.google.com/webstore/detail/genius-enhancer-beta/hnkhjljomklfcnfnbbikoddbolmpaifl"><img src="https://badgen.net/badge/Download/%F0%9F%91%80/" alt="Download" style="max-width: 100%;"></a>
 
+  <hr>
+
 </div>
 
 A chrome extension that elevates your Genius.com experience by incorporating automation tools and productivity boosters.
+
+<hr>
 
 ## Features
 - Streamline your workflow with automation tools such as:
