@@ -16,14 +16,8 @@
     "author": "Uri Sivani",
     "web_accessible_resources": [
         {
-            "resources": [
-                "lib/*",
-                "src/images/*"
-            ],
-            "matches": [
-                "*://*.genius.com/*",
-                "*://genius.com/*"
-            ]
+            "resources": ["lib/*", "src/images/*"],
+            "matches": ["*://*.genius.com/*", "*://genius.com/*"]
         }
     ],
     "action": {
@@ -39,16 +33,9 @@
         "minimum_chrome_version": "51"
     },
     "options_page": "/src/html/options.html",
-    "permissions": [
-        "storage",
-        "activeTab",
-        "scripting",
-        "tabs"
-    ],
-    "host_permissions": [
-        "*://*/*"
-    ],
+    "permissions": ["storage", "activeTab", "scripting", "tabs"],
+    "host_permissions": ["*://*/*"],
     "content_security_policy": {
-        "extension_pages" : "script-src 'self' ; object-src 'self' ; img-src 'self' ; style-src 'self' ;"
+        "extension_pages": "script-src 'self' ; object-src 'self' ; img-src 'self' ; style-src 'self' ;"
     }
 }
