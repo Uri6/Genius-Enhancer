@@ -127,10 +127,10 @@ let pageType = "unknown";
 let isGeniusPage = false;
 let pageObject = {};
 let url = "";
-const geniusAdress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
+const geniusAddress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    isGeniusPage = geniusAdress.some((adress) => tab.url.startsWith(adress));
+    isGeniusPage = geniusAddress.some((adress) => tab.url.startsWith(adress));
     chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
     url = tab.url;
 
@@ -217,13 +217,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         }
                                     });
                                 }
-                                else if (geniusAdress.some((adress) => tab.url == adress) || (urlPart[0] == "#" && !urlPart.includes("/"))) {
+                                else if (geniusAddress.some((adress) => tab.url == adress) || (urlPart[0] == "#" && !urlPart.includes("/"))) {
                                     pageType = "home";
                                 }
-                                else if (geniusAdress.some((adress) => tab.url.startsWith(adress + "firehose"))) {
+                                else if (geniusAddress.some((adress) => tab.url.startsWith(adress + "firehose"))) {
                                     pageType = "firehose";
                                 }
-                                else if (geniusAdress.some((adress) => tab.url == adress + "new" || tab.url == adress + "new/")) {
+                                else if (geniusAddress.some((adress) => tab.url == adress + "new" || tab.url == adress + "new/")) {
                                     pageType = "new song";
                                 }
                                 chrome.scripting.executeScript(
@@ -316,7 +316,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 $("html, body").animate({ scrollTop: elementOffset }, 500);
                             }
 
-                            elementsToScroll = {
+                            const elementsToScroll = {
                                 "/#top-songs": $(".HomeContentdesktop__Section-sc-1xfg7l1-4.bBDcg"),
                                 "/#featured-stories": $(".PageGriddesktop-a6v82w-0.csQZGy"),
                                 "/#videos": $(".HomeContentdesktop__Section-sc-1xfg7l1-4.gveVlf")
@@ -884,7 +884,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     filterDropdown.classList.add("RecentActivity__FilteringDropdown--open");
                                                 }
                                             });
-                                            
+
                                             while (!$(e.target).find(".RecentActivity__Title-d62qa5-1.ilJdac").length) {
                                                 Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
                                             }
