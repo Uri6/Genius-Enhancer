@@ -3,11 +3,6 @@
 * located in the root directory of this code package.
 */
 
-/*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
-
 import { getDeatils, identifyPageType, replaceTextarea, removeQuill } from "./src/js/sideFunctions.js";
 import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolinkArtwork, saveEverything, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
 import { appleMusicPopUp, spotifyPopUp, song_modernTextEditor, appendReplyButton } from "./src/js/sideFunctions_song.js";
