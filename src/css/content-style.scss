@@ -69,7 +69,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
         background-color: $genius-yellow !important;
       }
 
-      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.Link__StyledLink-h3isu4-0.fUgcxf):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
+      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
         padding: 2px 5px;
       }
 
@@ -88,7 +88,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
       &:is(.ql-container *),
       &:is(.lyrics_style_guide *),
       &:is(.discussion_list_meta_user_link),
-      &:is(.Link__StyledLink-h3isu4-0.fUgcxf) {
+      &:is(.Link__StyledLink-h3isu4-0) {
         padding-left: 5px;
         padding-right: 5px;
       }

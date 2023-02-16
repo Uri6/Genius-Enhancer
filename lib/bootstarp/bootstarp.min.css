@@ -4,6 +4,10 @@
 */
 
 @charset "UTF-8";
+/*
+* This code was not written by me (Uri Sivani) and is subject to the license of the original project.
+* Please refer to the original project website for more information.
+*/
 /*! * Bootstrap v5.1.0 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors * Copyright 2011-2021 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE) */
 :root {
   --bs-blue:#0d6efd;

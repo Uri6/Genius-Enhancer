@@ -79,13 +79,15 @@ artist-songs-and-albums {
 
             .thumbnail_grid-grid_element {
                 .vertical_album_card {
-                    border-radius: 10px;
+                    border-radius: 15px;
                     background-color: rgb(255, 255, 101) !important;
                     padding-bottom: 5px !important;
     
                     .cover_art {
                         border-radius: 10px;
                         background-color: unset !important;
+                        outline: 0 !important;
+                        transition: all 0.2s ease-in-out !important;
     
                         &::after {
                             content: "";
@@ -110,15 +112,14 @@ artist-songs-and-albums {
                         background-color: rgb(255, 143, 40) !important;
     
                         .cover_art {
+                            transform: perspective(75em) rotateX(15deg) scale(1.1) translateY(-10px) !important;
+                            border-radius: 5px !important;
+                            outline: 2px solid #ff1464 !important;
 
                             &::after {
                                 display: block;
                                 animation: shine 0.6s;
                                 animation-fill-mode: forwards;
-                            }
-    
-                            img {
-                                transform: scale(1.05) !important;
                             }
                         }
                     }

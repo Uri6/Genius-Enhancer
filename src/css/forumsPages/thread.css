@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  background: linear-gradient(180deg, #058567, #0ac095, #0ac095, #0ac095, #72eed1) !important;
+  background: linear-gradient(180deg, #11ad89, #0ac095, #0ac095, #0ac095, #72eed1) !important;
 }
 
 #discussion_container {
@@ -40,7 +40,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background: linear-gradient(45deg, #B8E75C, #007361);
   padding: 5px !important;
   margin: 10px 0;
   font-size: 20px;
@@ -63,11 +63,11 @@ body {
 }
 .group_summary .group_name {
   border: none !important;
-  color: #000;
+  color: #444939 !important;
   padding: 0px !important;
 }
 .group_summary:hover {
-  background-color: #ff8f28 !important;
+  background: linear-gradient(45deg, #ff8f28, #ff8f28);
   color: #000 !important;
 }
 .group_summary:hover .group_name {
@@ -268,8 +268,9 @@ body {
 }
 .forum_post_container .forum_post_unit .forum_post-header {
   width: 100%;
+  padding-bottom: 5px;
 }
-.forum_post_container .forum_post_unit .forum_post-header .avatar.small {
+.forum_post_container .forum_post_unit .forum_post-header .badge_avatar_wrapper .avatar.small {
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -277,6 +278,13 @@ body {
   -o-object-fit: cover;
      object-fit: cover;
   transition: all 0.3s ease;
+  margin-top: 1.5px !important;
+}
+.forum_post_container .forum_post_unit .forum_post-header .user_details {
+  padding: 5px 10px !important;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px !important;
+  margin-left: -12.7px !important;
 }
 .forum_post_container .forum_post_unit .forum_post-header .user_details .login {
   font-weight: 600;
@@ -285,23 +293,17 @@ body {
   border-radius: 5px !important;
 }
 .forum_post_container .forum_post_unit .forum_post-header .user_details .login:hover {
-  background-color: #ffff65;
-  color: #000;
+  color: #fff;
   text-shadow: none;
 }
 .forum_post_container .forum_post_unit .forum_post-header .user_details .login.active {
   background-color: #ffff65;
-  color: #000;
-  text-shadow: none;
-}
-.forum_post_container .forum_post_unit .forum_post-header .user_details .login.active:hover {
-  background-color: #ffff65;
-  color: #000;
+  color: #fff;
   text-shadow: none;
 }
 .forum_post_container .forum_post_unit .forum_post-header .user_badge:not(.first_one) {
   width: 470px !important;
-  border-bottom: 2px solid #ffff65 !important;
+  border-bottom: none !important;
   border-radius: 1px !important;
 }
 .forum_post_container .forum_post_unit .forum_post-header .iq {
@@ -313,6 +315,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 8px;
   background-color: none !important;
 }
 .forum_post_container .forum_post_unit .forum_post-header .voting_links .vote.up,
@@ -349,6 +352,8 @@ body {
   font-size: 14px;
   line-height: 1.4;
   color: #000 !important;
+  padding-top: 5px !important;
+  margin-top: 45px !important;
   margin-bottom: 15px;
   position: relative;
 }
@@ -372,14 +377,16 @@ body {
 .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) img {
   color: #000 !important;
 }
-.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) a, .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) .mention {
+.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) a,
+.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) .mention {
   color: #005ab4 !important;
   background: rgba(128, 128, 128, 0.2) !important;
   border: none !important;
   border-radius: 5px !important;
   padding: 0 5px 0 5px !important;
 }
-.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) a:hover, .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) .mention:hover {
+.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) a:hover,
+.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) .mention:hover {
   background-color: rgba(128, 128, 128, 0.4) !important;
   text-decoration: underline !important;
 }

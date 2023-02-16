@@ -3,6 +3,11 @@
 * located in the root directory of this code package.
 */
 
+/*
+* This code is licensed under the terms of the "LICENSE.md" file
+* located in the root directory of this code package.
+*/
+
 import { getDeatils, identifyPageType, replaceTextarea, removeQuill } from "./src/js/sideFunctions.js";
 import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolinkArtwork, saveEverything, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
 import { appleMusicPopUp, spotifyPopUp, song_modernTextEditor, appendReplyButton } from "./src/js/sideFunctions_song.js";
@@ -144,7 +149,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     chrome.storage.local.set({ "album_artwork_results": "" });
     pageType = "unknown";
 
-    if (tab.url.startsWith("https://promote.genius.com/") || tab.url.startsWith("http://promote.genius.com/")) {
+    if (tab.url.startsWith("https://promote.genius.com/") || tab.url.startsWith("http://promote.genius.com/") || tab.url.startsWith("https://support.genius.com/") || tab.url.startsWith("http://support.genius.com/")) {
         return;
     }
 
@@ -884,7 +889,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     filterDropdown.classList.add("RecentActivity__FilteringDropdown--open");
                                                 }
                                             });
-
+                                            
                                             while (!$(e.target).find(".RecentActivity__Title-d62qa5-1.ilJdac").length) {
                                                 Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
                                             }

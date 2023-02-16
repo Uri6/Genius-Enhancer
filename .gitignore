@@ -1,3 +1,10 @@
+*.psd
+.vscode/
+Builds/
+vision/
+src/images/header/
+src/images/gifs/
+src/images/icons/1/
 node_modules
 .yarn/cache
 .yarn/install-state.gz

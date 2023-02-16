@@ -2,7 +2,6 @@
 * This code is licensed under the terms of the "LICENSE.md" file
 * located in the root directory of this code package.
 */
-
 @keyframes shine {
   0% {
     transform: translate(-100%, -100%);
@@ -57,13 +56,15 @@ artist-songs-and-albums album-grid .thumbnail_grid {
   padding-bottom: 0 !important;
 }
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card {
-  border-radius: 10px;
+  border-radius: 15px;
   background-color: rgb(255, 255, 101) !important;
   padding-bottom: 5px !important;
 }
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card .cover_art {
   border-radius: 10px;
   background-color: unset !important;
+  outline: 0 !important;
+  transition: all 0.2s ease-in-out !important;
 }
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card .cover_art::after {
   content: "";
@@ -80,13 +81,15 @@ artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element 
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card:hover {
   background-color: rgb(255, 143, 40) !important;
 }
+artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card:hover .cover_art {
+  transform: perspective(75em) rotateX(15deg) scale(1.1) translateY(-10px) !important;
+  border-radius: 5px !important;
+  outline: 2px solid #ff1464 !important;
+}
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card:hover .cover_art::after {
   display: block;
   animation: shine 0.6s;
   animation-fill-mode: forwards;
-}
-artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card:hover .cover_art img {
-  transform: scale(1.05) !important;
 }
 artist-songs-and-albums .full_width_button {
   background-color: rgb(255, 143, 40) !important;
