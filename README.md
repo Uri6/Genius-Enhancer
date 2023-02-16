@@ -7,9 +7,9 @@
   <img src="https://img.shields.io/chrome-web-store/rating/hnkhjljomklfcnfnbbikoddbolmpaifl?label=Chrome%20Web%20Store%20Rating" alt="Chrome Web Store Rating" style="max-width: 100%;">
   <a href="https://chrome.google.com/webstore/detail/genius-enhancer-beta/hnkhjljomklfcnfnbbikoddbolmpaifl"><img src="https://badgen.net/badge/Download/%F0%9F%91%80/" alt="Download" style="max-width: 100%;"></a>
 
-  <hr>
-
 </div>
+
+##
 
 A chrome extension that elevates your Genius.com experience by incorporating automation tools and productivity boosters.
 
