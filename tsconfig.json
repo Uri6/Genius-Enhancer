@@ -15,5 +15,6 @@
         "strict": false,
         "noImplicitAny": false,
         "skipLibCheck": false
-    }
+    },
+    "exclude": ["lib"]
 }
