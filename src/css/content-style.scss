@@ -109,7 +109,7 @@ strong {
 
 @keyframes gb-opacity-in {
   0% {
-    opacity: 0%;
+    opacity: 0;
   }
 
   100% {
@@ -123,7 +123,7 @@ strong {
   }
 
   100% {
-    opacity: 0%;
+    opacity: 0;
   }
 }
 
@@ -257,7 +257,7 @@ input {
   word-spacing: normal;
   line-height: normal;
   text-transform: none;
-  text-indent: 0px;
+  text-indent: 0;
   text-shadow: none;
   display: inline-block;
   text-align: start;
@@ -269,7 +269,7 @@ input {
   overflow-wrap: break-word;
   background-color: field;
   column-count: initial !important;
-  margin: 0em;
+  margin: 0;
   border-width: 1px;
   border-style: solid;
   border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
@@ -403,9 +403,7 @@ input {
       padding: 10px 20px;
       background-color: white;
       color: #4C7AFA;
-      outline-width: 1px;
-      outline-color: #4C7AFA;
-      outline-style: solid;
+      outline: #4C7AFA solid 1px;
       cursor: pointer;
       transition: all 0.25s ease-in-out !important;
 
@@ -574,7 +572,6 @@ input {
   background: none !important;
   left: 0 !important;
   padding-left: 20px !important;
-  padding-top: 50px !important;
   position: fixed !important;
 
   .square_button {
@@ -752,7 +749,7 @@ input {
       &:hover {
         padding: 0 !important;
         background-color: transparent !important;
-  
+
         svg {
           fill: #ff1464 !important;
         }

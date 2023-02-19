@@ -3,16 +3,8 @@
 * located in the root directory of this code package.
 */
 
-export function containsHebrew(text) {
-    return /[א-ת]/.test(text);
-}
-
-export function insertAfter(newNode, existingNode) {
-    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
-}
-
 // This function written by @wnull (@wine in Genius.com)
-export function getDeatils() {
+export function getDetails() {
     let matches = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
     let replaces = {
         '&#039;': `'`,
@@ -25,8 +17,7 @@ export function getDeatils() {
     if (matches) {
         let meta = matches[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
         // full metadata album & another data
-        let dataObject = JSON.parse(meta);
-        return dataObject;
+        return JSON.parse(meta);
     }
 }
 
@@ -34,41 +25,41 @@ export function identifyPageType() {
     console.log("identifyPageType");
     let pageType = "unknown";
     let pageObject = {};
-    const geniusAdress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
-    return new Promise((resolve, reject) => {
+    const geniusAddress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
+    return new Promise((resolve) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const tab = tabs[0];
             chrome.scripting.executeScript(
                 {
                     target: { tabId: tab.id },
-                    func: getDeatils
+                    func: getDetails
                 },
                 function (returnVal) {
-                    if (returnVal != undefined && returnVal[0].result != null) {
+                    if (returnVal !== undefined && returnVal[0].result != null) {
                         pageObject = returnVal[0].result;
                         pageType = pageObject.page_type;
                     }
 
-                    if (returnVal == undefined || returnVal[0].result == null || pageType == undefined || pageType == "unknown") {
-                        var urlPart = tab.url.split("genius.com/")[1];
+                    if (returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown") {
+                        const urlPart = tab.url.split("genius.com/")[1];
                         if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?react=1/") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
                             pageType = "song";
                         }
-                        else if (geniusAdress.some((adress) => tab.url == adress) || (urlPart[0] == "#" && !urlPart.includes("/"))) {
+                        else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] == "#" && !urlPart.includes("/"))) {
                             pageType = "home";
                         }
-                        else if (geniusAdress.some((adress) => tab.url.startsWith(adress + "firehose"))) {
+                        else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
                             pageType = "firehose";
                         }
-                        else if (geniusAdress.some((adress) => tab.url == adress + "new" || tab.url == adress + "new/")) {
+                        else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/")) {
                             pageType = "new song";
                         }
                         chrome.scripting.executeScript(
                             {
                                 target: { tabId: tab.id },
-                                func: () => {
-                                    return document.getElementsByClassName("group_summary").length > 0;
-                                }
+                                func: () => (
+                                    document.getElementsByClassName("group_summary").length > 0
+                                )
                             },
                             function (isForumPage) {
                                 if (isForumPage[0].result) {
@@ -85,17 +76,15 @@ export function identifyPageType() {
                                         pageType = "forum";
                                     }
                                 }
-                                if (pageType != undefined) {
+                                if (pageType !== undefined) {
                                     chrome.storage.local.set({ "pageType": pageType });
                                     console.log("pageType: " + pageType);
                                 }
                                 resolve();
                             }
                         );
-                    }
-
-                    else {
-                        if (pageType != undefined) {
+                    } else {
+                        if (pageType !== undefined) {
                             chrome.storage.local.set({ "pageType": pageType });
                             console.log("pageType: " + pageType);
                         }
@@ -107,15 +96,14 @@ export function identifyPageType() {
     });
 }
 
-
 export async function getTagsList() {
     let tagElem;
 
     await fetch("https://genius.com/new")
         .then(function (response) { return response.text() })
         .then((res) => {
-            var parser = new DOMParser();
-            var htmlDoc = parser.parseFromString(res, 'text/html');
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(res, "text/html");
             tagElem = htmlDoc.getElementsByName("tag_ids[]")[0];
         });
 
@@ -123,27 +111,26 @@ export async function getTagsList() {
 }
 
 export function replaceTextarea(textareaClasses) {
-
     if ($(".ql-editor").length) {
         console.info("Quill already exists");
         return;
     }
 
-    var textarea = document.getElementsByClassName(textareaClasses)[0];
+    const textarea = document.getElementsByClassName(textareaClasses)[0];
     console.log("textarea: ", textarea);
-    var content = textarea.value;
+    let content = textarea.value;
     textarea.style.display = "none";
-    var editor = document.createElement('div');
+    const editor = document.createElement("div");
     textarea.parentNode.appendChild(editor);
-    var quill = new Quill(editor, {
+    const quill = new Quill(editor, {
         modules: {
             toolbar: [
-                [{ 'header': [1, 2, 3, false] }],
-                ['bold', 'italic', 'clean'],
-                [{ 'align': ['justify', 'center'] }],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['link', 'image'],
-                ['code-block']
+                [{ "header": [1, 2, 3, false] }],
+                ["bold", "italic", "clean"],
+                [{ "align": ["justify", "center"] }],
+                [{ "list": "ordered" }, { "list": "bullet" }],
+                ["link", "image"],
+                ["code-block"]
             ],
             history: {
                 delay: 2000,
@@ -151,17 +138,17 @@ export function replaceTextarea(textareaClasses) {
                 userOnly: true
             }
         },
-        theme: 'snow'
+        theme: "snow"
     });
 
     content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
     content = content.replace(/\n/g, '<br>');
 
     // if editing lyrics, it's making the header sticky
-    if (textareaClasses != "required markdown_preview_setup_complete") {
-        var toolbar = $(".ql-toolbar");
-        var toolbarHeight = toolbar.height();
-        var toolbarContainer = $("<div>", { class: "ql-toolbar-container" });
+    if (textareaClasses !== "required markdown_preview_setup_complete") {
+        const toolbar = $(".ql-toolbar");
+        const toolbarHeight = toolbar.height();
+        const toolbarContainer = $("<div>", { class: "ql-toolbar-container" });
         toolbarContainer.css("height", toolbarHeight + 48);
         $(".eqRvkr").css("z-index", "3")
         $(".hJeJkL").css("z-index", "4")
@@ -172,7 +159,7 @@ export function replaceTextarea(textareaClasses) {
     quill.clipboard.dangerouslyPasteHTML(content);
 
     quill.on('text-change', function (delta, oldDelta, source) {
-        var htmlContent = quill.root.innerHTML;
+        let htmlContent = quill.root.innerHTML;
         htmlContent = htmlContent.replace(/<strong>/g, '<b>').replace(/<\/strong>/g, '</b>');
         htmlContent = htmlContent.replace(/<em>/g, '<i>').replace(/<\/em>/g, '</i>');
         htmlContent = htmlContent.replace(/<br>/g, '\n').replace(/<p><\/p>/g, '').replace(/<p>/g, '').replace(/<\/p>/g, '\n').replace(/\n\n/g, '\n');
@@ -187,9 +174,9 @@ export function replaceTextarea(textareaClasses) {
 
         textarea.value = htmlContent;
 
-        var event = new Event('input', {
+        const event = new Event("input", {
             bubbles: true,
-            cancelable: true,
+            cancelable: true
         });
         textarea.dispatchEvent(event);
     });

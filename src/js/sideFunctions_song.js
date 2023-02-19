@@ -53,7 +53,7 @@ export function song_modernTextEditor() {
                         if (flag) {
                             console.log("removed: ", e.target);
                             setTimeout(function() {
-                                if ($(e.target).attr("ng-if") === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" || $(e.target).attr("ng-if") == "!lyrics_ctrl.saving") {
+                                if ($(e.target).attr("ng-if") === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" || $(e.target).attr("ng-if") === "!lyrics_ctrl.saving") {
                                     chrome.runtime.sendMessage({ "removeQuill": true });
                                     flag = false;
                                 }

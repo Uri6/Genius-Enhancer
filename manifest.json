@@ -10,7 +10,7 @@
         "128": "/src/images/icons/2/128x128.png"
     },
     "background": {
-        "service_worker": "background.js",
+        "service_worker": "build/background-script.js",
         "type": "module"
     },
     "author": "Uri Sivani",

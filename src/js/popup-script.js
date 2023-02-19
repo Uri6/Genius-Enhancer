@@ -3,7 +3,7 @@
 * located in the root directory of this code package.
 */
 
-import { getDeatils } from "./sideFunctions.js";
+import { getDetails } from "./sideFunctions.js";
 
 document.getElementById("version").innerHTML += chrome.runtime.getManifest().version;
 
