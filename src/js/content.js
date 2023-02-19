@@ -71,7 +71,7 @@ export function contentHandler() {
                             $("html, body").animate({ scrollTop: elementOffset }, 500);
                         }
 
-                        elementsToScroll = {
+                        const elementsToScroll = {
                             "/#top-songs": $(".HomeContentdesktop__Section-sc-1xfg7l1-4.bBDcg"),
                             "/#featured-stories": $(".PageGriddesktop-a6v82w-0.csQZGy"),
                             "/#videos": $(".HomeContentdesktop__Section-sc-1xfg7l1-4.gveVlf")
