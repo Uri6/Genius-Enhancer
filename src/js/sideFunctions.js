@@ -3,7 +3,8 @@
 * located in the root directory of this code package.
 */
 
-// This function written by @wnull (@wine in Genius.com)
+import { geniusAddress, isSongPageUrl } from "./utils";
+
 export function getDetails() {
     let matches = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
     let replaces = {
@@ -25,7 +26,6 @@ export function identifyPageType() {
     console.log("identifyPageType");
     let pageType = "unknown";
     let pageObject = {};
-    const geniusAddress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
     return new Promise((resolve) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const tab = tabs[0];
@@ -42,16 +42,13 @@ export function identifyPageType() {
 
                     if (returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown") {
                         const urlPart = tab.url.split("genius.com/")[1];
-                        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?react=1/") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                        if (isSongPageUrl(urlPart)) {
                             pageType = "song";
-                        }
-                        else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] == "#" && !urlPart.includes("/"))) {
+                        } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
                             pageType = "home";
-                        }
-                        else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
+                        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
                             pageType = "firehose";
-                        }
-                        else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/")) {
+                        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/")) {
                             pageType = "new song";
                         }
                         chrome.scripting.executeScript(
@@ -65,14 +62,11 @@ export function identifyPageType() {
                                 if (isForumPage[0].result) {
                                     if (tab.url.endsWith("/forum")) {
                                         pageType = "forum (main)";
-                                    }
-                                    else if (tab.url.endsWith("/new")) {
+                                    } else if (tab.url.endsWith("/new")) {
                                         pageType = "new post";
-                                    }
-                                    else if (tab.url.includes("/discussions/")) {
+                                    } else if (tab.url.includes("/discussions/")) {
                                         pageType = "forum thread";
-                                    }
-                                    else {
+                                    } else {
                                         pageType = "forum";
                                     }
                                 }

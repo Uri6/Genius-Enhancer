@@ -16,5 +16,6 @@
         "noImplicitAny": false,
         "skipLibCheck": false
     },
+    "include": ["src", "lib/hot-reload.ts"],
     "exclude": ["lib"]
 }

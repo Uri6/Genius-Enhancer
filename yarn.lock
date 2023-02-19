@@ -235,6 +235,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^18.14.0":
+  version: 18.14.0
+  resolution: "@types/node@npm:18.14.0"
+  checksum: d83fcf5e4ed544755dd9028f5cbb6b9d46235043159111bb2ad62223729aee581c0144a9f6df8ba73d74011db9ed4ebd7af2fd5e0996714e3beb508a5da8ac5c
+  languageName: node
+  linkType: hard
+
 "@types/sizzle@npm:*":
   version: 2.3.3
   resolution: "@types/sizzle@npm:2.3.3"
@@ -656,6 +663,7 @@ __metadata:
   dependencies:
     "@types/chrome": ^0.0.213
     "@types/jquery": ^3.5.16
+    "@types/node": ^18.14.0
     esbuild: ^0.17.8
     esbuild-sass-plugin: ^2.5.0
     prettier: ^2.8.4

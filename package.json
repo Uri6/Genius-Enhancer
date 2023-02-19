@@ -5,6 +5,7 @@
     "devDependencies": {
         "@types/chrome": "^0.0.213",
         "@types/jquery": "^3.5.16",
+        "@types/node": "^18.14.0",
         "esbuild": "^0.17.8",
         "prettier": "^2.8.4",
         "sass": "^1.58.3",
