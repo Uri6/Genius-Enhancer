@@ -36,7 +36,7 @@ or
 git clone https://github.com/Uri6/genius-enhancer.git
 ```
 
-2. Go to chrome://extensions/ in your chrome browser and turn on "developer mode"
+2. Go to `chrome://extensions/` in your chrome browser and turn on "developer mode"
 3. Click on "Load Unpacked" and select the cloned repository
 
 ## Usage
