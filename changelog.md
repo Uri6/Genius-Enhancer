@@ -2,7 +2,7 @@
 
 ## 0.7.2
 **Bugs Squashed**
-- 
+- When using the old song page to add additional credits, there’s no dropdown menu [ @andzas ]
 
 **Hotfixes**
 - 

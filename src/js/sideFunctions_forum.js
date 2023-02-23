@@ -116,27 +116,15 @@ export function replaceButtons(createDiscussion, follow) {
 }
 
 export function forums_modernTextEditor() {
-    updateTextEditor();
-
-    function updateTextEditor() {
-        if ($('.reply_container .required.markdown_preview_setup_complete').length || $('#new_discussion .required.markdown_preview_setup_complete').length) {
-            chrome.runtime.sendMessage({ "replaceTextarea": ["required markdown_preview_setup_complete"] });
-            
-            if ($('.reply_container .formatting_help').length) {
-                $('.reply_container .formatting_help').css('display', 'none');
-            }
-
-            if ($('.reply_container .markdown_preview_container').length) {
-                $('.reply_container .markdown_preview_container').css('display', 'none');
-            }
+    if ($('.reply_container .required.markdown_preview_setup_complete').length || $('#new_discussion .required.markdown_preview_setup_complete').length) {
+        chrome.runtime.sendMessage({ "replaceTextarea": ["required markdown_preview_setup_complete"] });
         
-            if ($('#forum_post_submit').length) {
-                $('#forum_post_submit').on('click', function () {
-                    chrome.runtime.sendMessage({ "removeQuill": [true] });
-                });
+        if ($('.reply_container .formatting_help').length) {
+            $('.reply_container .formatting_help').css('display', 'none');
+        }
 
-                setTimeout(updateTextEditor, 100);
-            }
+        if ($('.reply_container .markdown_preview_container').length) {
+            $('.reply_container .markdown_preview_container').css('display', 'none');
         }
     }
 }

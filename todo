@@ -6,6 +6,8 @@
 - In the new text editor, annotations get separated by lines [ @furashaka ]
 - When pasting something in the new text editor, the page automatically scrolls to the top [ @mottled ]
 - The "Send a new message" header on the messages popup isn't visible [ @mottled ]
+- The new text editor removes the referent and instead tries to add a hyperlink to it [ @ChloeConlon ]
+- Annotations aren't shown well in threads [ @TheYoshiPhase ]
 
 # FEATURES
 - Auto-link cover artwork

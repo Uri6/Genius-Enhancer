@@ -193,6 +193,10 @@ export function replaceTextarea(textareaClasses) {
         });
         textarea.dispatchEvent(event);
     });
+
+    if (textareaClasses == "required markdown_preview_setup_complete") {
+        window.scrollTo(0, 0);
+    }
 }
 
 export function removeQuill() {

@@ -5,6 +5,10 @@
 
 @import "fonts.css";
 
+#main {
+  padding-bottom: 30px !important;
+}
+
 .groups_header {
   display: none;
   justify-content: space-between;
@@ -26,8 +30,11 @@
 .small_label.toggle_target {
   color: #000 !important;
   text-transform: none !important;
-  font-weight: 600 !important;
+  font-family: Programme, Arial, sans-serif !important;
+  font-size: 23px !important;
+  font-weight: 500 !important;
   clear: both;
+  padding-bottom: 10px;
   cursor: default !important;
 }
 

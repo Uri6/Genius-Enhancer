@@ -179,13 +179,23 @@ export function restyleMissingInfo() {
     releaseDateIcons.forEach((icon) => icon.style.left = releaseDateLeftPosition);
 }
 
+export async function getPlaylistVideos(playlistLink) {
+    const playlistId = playlistLink.split("list=")[1];
+    const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
+    const data = await response.json();
+    const videos = data.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
+
+    return videos;
+}
+
 export function appendIcon() {
 
     let hashmap;
 
     const userValidation = () => {
         const disable_add_tag = (placeholderText) => {
-            // change the placeholder of the add-tags box to warn the user about the lower than 100 IQ
             document.getElementById("gb-add-tags").placeholder = placeholderText;
         }
 
@@ -197,107 +207,128 @@ export function appendIcon() {
             const user_picture_parent = user_picture.parentElement;
             // make sure the user's iq is high enough to add a tag
             if (parseInt(user_picture_parent.children[1].innerHTML.replace(" IQ", "").replaceAll(",", "")) < 100) {
-                disable_add_tag("You need at least 100 IQ to add tags");
+                disable_add_tag("You need at least 100 IQ to tag songs");
             }
         }
 
         else {
-            disable_add_tag("You need to be logged in to add tags");
+            disable_add_tag("You need to be logged in to tag songs");
         }
     }
 
-    const buttonBackground = document.getElementsByClassName("column_layout-column_span column_layout-column_span--three_quarter column_layout-column_span--force_padding")[0]
-    const icon_elem = document.createElement('img');
-    icon_elem.className = "extension-icon";
-    icon_elem.setAttribute("alt", "genius bot extension icon");
-    icon_elem.setAttribute("title", "Alt + G");
-    icon_elem.src = chrome.runtime.getURL("src/images/icons/2/128x128.png");
-    buttonBackground.appendChild(icon_elem);
-
-
-
-    document.getElementsByClassName("extension-icon")[0].addEventListener("click", () => {
+    const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
+    const icon_elem = $("<img>").addClass("extension-icon").attr({
+      "alt": "genius bot extension icon",
+      "title": "Alt + G",
+      "src": chrome.runtime.getURL("src/images/icons/2/128x128.png")
+    });
+    buttonBackground.append(icon_elem);
+    
+    $(".extension-icon").eq(0).on("click", () => {
 
         window.scrollTo(0, 0);
+        $('body').addClass('disable-scrolling');
 
-        // creating the popup window
-        const popupDiv = document.createElement("dialog");
-        popupDiv.setAttribute("open", "");
-        popupDiv.classList.add("blured-background", "gb-fade-in");
+        const popupDiv = $("<dialog>", {
+            class: "blured-background gb-fade-in",
+            open: true
+        }).appendTo("body");
 
-        const popupBox = document.createElement("div");
-        popupBox.classList.add("extension-box", "gb-zoom-in");
-        popupDiv.appendChild(popupBox);
+        const popupBox = $("<div>", {
+            class: "extension-box gb-zoom-in"
+        }).appendTo(popupDiv);
 
-        const closePopup = document.createElement('img');
-        closePopup.className = "close-icon";
-        closePopup.src = chrome.runtime.getURL("/src/images/other/closeIcon.png");
-        closePopup.setAttribute("onmouseover", "this.src=\'" + chrome.runtime.getURL("/src/images/other/closeIconX.png") + "\'");
-        closePopup.setAttribute("onmouseout", "this.src=\'" + chrome.runtime.getURL("/src/images/other/closeIcon.png") + "\'");
-        closePopup.setAttribute("title", "Esc");
-
-        //alert before closing the popup
-        closePopup.addEventListener("click", () => {
-            if (confirm("If you've made changes, they won't save.\nAre you sure you want to close this window?")) {
-                document.getElementsByClassName("extension-box")[0].classList.add("gb-zoom-out");
-                document.getElementsByClassName("blured-background")[0].classList.add("gb-fade-out");
-                document.body.classList.remove('disable-scrolling');
-                setTimeout(() => { document.getElementsByClassName("blured-background")[0].remove(); }, 400);
+        const closePopup = $('<img>', {
+            class: 'close-icon',
+            src: chrome.runtime.getURL('/src/images/other/closeIcon.png'),
+            on: {
+                mouseover: function () {
+                    this.src = chrome.runtime.getURL('/src/images/other/closeIconX.png');
+                },
+                mouseout: function () {
+                    this.src = chrome.runtime.getURL('/src/images/other/closeIcon.png');
+                },
+                click: function () {
+                    if (confirm('If you\'ve made changes, they won\'t save.\nAre you sure you want to close this window?')) {
+                        $('.extension-box').addClass('gb-zoom-out');
+                        $('.blured-background').addClass('gb-fade-out');
+                        $('body').removeClass('disable-scrolling');
+                        setTimeout(() => { $('.blured-background').remove(); }, 400);
+                    }
+                }
+            },
+            attr: {
+                title: 'Esc'
             }
-        });
+        }).appendTo(popupBox);
 
-        popupBox.appendChild(closePopup);
+        const addTagsTitle = $("<div>", {
+            class: "add-tags-title title",
+            text: "Tag songs"
+        }).appendTo(popupBox);
 
-        const addTagsTitle = document.createElement('div');
-        addTagsTitle.classList.add("add-tags-title");
-        addTagsTitle.innerHTML = "Add tags for each song";
-        popupBox.appendChild(addTagsTitle);
+        const addTags = $("<input>", {
+            class: "add-tags rcorners gb-textarea",
+            id: "gb-add-tags",
+            type: "text",
+            placeholder: "Tags",
+            spellcheck: "false",
+            "data-gramm": "false",
+            on: {
+                keydown: function (e) {
+                    if (e.keyCode == 13) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            }
+        }).appendTo(popupBox);
 
-        //const addTagsSubTitle = document.createElement('div');
-        //addTagsSubTitle.classList.add("add-tags-sub-title");
-        //addTagsSubTitle.innerHTML = "Notice: You can now add only one tag at a time,<br>but soon it will be how much you want to.";
-        //popupBox.appendChild(addTagsSubTitle);
+        const addCreditsTitle = $("<div>", {
+            class: "add-credits-title title",
+            text: "Credit Artists"
+        }).appendTo(popupBox);
 
-        const addTags = document.createElement('input');
-        addTags.classList.add("add-tags", "rcorners", "gb-textarea");
-        addTags.setAttribute("id", "gb-add-tags");
-        addTags.setAttribute("type", "text");
-        addTags.setAttribute("placeholder", "Tags");
-        addTags.setAttribute("spellcheck", "false");
-        addTags.setAttribute("data-gramm", "false");
-        popupBox.appendChild(addTags);
+        const addCredits_role = $("<input>", {
+            class: "add-credits role rcorners gb-textarea",
+            type: "text",
+            placeholder: "Role",
+            spellcheck: "false",
+            "data-gramm": "false",
+            disabled: ""
+        }).appendTo(popupBox);
 
-        const addCreditsTitle = document.createElement('div');
-        addCreditsTitle.classList.add("add-credits-title");
-        addCreditsTitle.innerHTML = "Add credits for each song";
-        popupBox.appendChild(addCreditsTitle);
+        const addCredits_artist = $("<input>", {
+            class: "add-credits artist rcorners gb-textarea",
+            type: "text",
+            placeholder: "Artist",
+            spellcheck: "false",
+            "data-gramm": "false",
+            disabled: ""
+        }).appendTo(popupBox);
 
-        const addCredits_role = document.createElement('input');
-        addCredits_role.classList.add("add-credits", "role", "rcorners", "gb-textarea");
-        addTags.setAttribute("type", "text");
-        addCredits_role.setAttribute("placeholder", "Role");
-        addCredits_role.setAttribute("spellcheck", "false");
-        addCredits_role.setAttribute("data-gramm", "false");
-        addCredits_role.setAttribute("disabled", "");
-        popupBox.appendChild(addCredits_role);
+        const addCredits_add = $("<input>", {
+            class: "add-credits add rcorners gb-textarea",
+            type: "text",
+            placeholder: "Add",
+            spellcheck: "false",
+            "data-gramm": "false",
+            disabled: ""
+        });//.appendTo(popupBox);
 
-        const addCredits_artist = document.createElement('input');
-        addCredits_artist.classList.add("add-credits", "artist", "rcorners", "gb-textarea");
-        addTags.setAttribute("type", "text");
-        addCredits_artist.setAttribute("placeholder", "Artist");
-        addCredits_artist.setAttribute("spellcheck", "false");
-        addCredits_artist.setAttribute("data-gramm", "false");
-        // disable it
-        addCredits_artist.setAttribute("disabled", "");
-        popupBox.appendChild(addCredits_artist);
+        const addMediaTitle = $("<div>", {
+            class: "add-media-title title",
+            text: "Link Media"
+        }).appendTo(popupBox);
 
-        const addCredits_add = document.createElement('input');
-        addCredits_role.classList.add("add-credits", "role", "rcorners", "gb-textarea");
-        addTags.setAttribute("type", "text");
-        addCredits_role.setAttribute("placeholder", "Role");
-        addCredits_role.setAttribute("spellcheck", "false");
-        addCredits_role.setAttribute("data-gramm", "false");
-        popupBox.appendChild(addCredits_role);
+        const addMedia = $("<input>", {
+            class: "add-media rcorners gb-textarea",
+            id: "gb-add-media",
+            type: "text",
+            placeholder: "Youtube Playlist",
+            spellcheck: "false",
+            "data-gramm": "false"
+        }).appendTo(popupBox);
 
         const autolinkArtworkContainer = document.createElement("div");
         autolinkArtworkContainer.classList.add("autolink-artwork-icon-container", "rcorners");
@@ -309,7 +340,7 @@ export function appendIcon() {
 
         const autolinkArtworkTitle = document.createElement('div');
         autolinkArtworkTitle.classList.add("autolink-artwork-title");
-        autolinkArtworkTitle.innerHTML = "Autolink<br>artwork";
+        autolinkArtworkTitle.innerText = "Autolink\nartwork";
         autolinkArtworkContainer.appendChild(autolinkArtworkTitle);
 
         autolinkArtworkContainer.addEventListener("click", () => {
@@ -322,7 +353,6 @@ export function appendIcon() {
 
                     result = result.album_artwork_results;
 
-                    // set the result var to error if no artwork is found
                     if (result.length == 0) {
                         chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
                     }
@@ -340,10 +370,6 @@ export function appendIcon() {
                         image.src = result[i];
                         container.insertAdjacentElement('afterbegin', image);
 
-                        // add a overlay to the image with v and x buttons to accept or reject the image
-                        // if image got accepted, set the image to the local storage and delete the stack element
-                        // if image got rejected, delete the image element from the stack
-                        // take the images for the buttons from the images folder
                         const overlay = document.createElement("div");
                         overlay.classList.add("overlay");
 
@@ -407,7 +433,6 @@ export function appendIcon() {
                             overlay.style.backgroundColor = "rgb(252, 88, 84, 0.3)";
                             // wait for animation to finish before removing the element
                             setTimeout(() => { container.remove(); }, 400);
-                            // if its the last image, set the local storage to error
                             if (imagesStack.childNodes.length == 0) {
                                 chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
                             }
@@ -419,7 +444,6 @@ export function appendIcon() {
                         imagesStack.insertAdjacentElement('afterbegin', container);
                     }
 
-                    // at the end of the stack element, add a error message
                     const errorContainer = document.createElement("div");
                     errorContainer.classList.add("error-container");
 
@@ -435,38 +459,35 @@ export function appendIcon() {
             }
         });
 
-        popupBox.appendChild(autolinkArtworkContainer);
+        popupBox.append(autolinkArtworkContainer);
 
-        const saveButton = document.createElement('input');
-        saveButton.classList.add("gb-save-button", "rcorners");
-        saveButton.setAttribute("value", "Save");
-        saveButton.setAttribute("readonly", "readonly");
-        saveButton.setAttribute("title", "Alt + S");
+        const saveButton = $('<input>')
+            .addClass('gb-save-button rcorners')
+            .attr({
+                'value': 'Save',
+                'readonly': 'readonly',
+                'title': 'Alt + S'
+            })
+            .on('mousedown', function (event) {
+                event.preventDefault();
+            })
+            .on('click', function () {
+                chrome.runtime.sendMessage({ 'album_saveEverything': [true] });
+                $('.extension-box').eq(0).addClass('gb-zoom-out');
+                $('.blured-background').eq(0).addClass('gb-fade-out');
+                $('body').removeClass('disable-scrolling');
+                setTimeout(() => {
+                    $('.blured-background').eq(0).remove();
+                }, 400);
+            });
 
-        //disable text selection in save button
-        saveButton.addEventListener("mousedown", function (event) {
-            event.preventDefault();
-        });
-
-        saveButton.addEventListener("click", () => {
-            chrome.runtime.sendMessage({ 'album_saveEverything': [true] });
-            document.getElementsByClassName("extension-box")[0].classList.add("gb-zoom-out");
-            document.getElementsByClassName("blured-background")[0].classList.add("gb-fade-out");
-            document.body.classList.remove('disable-scrolling');
-            setTimeout(() => { document.getElementsByClassName("blured-background")[0].remove(); }, 400);
-        })
-
-        popupBox.appendChild(saveButton);
-
-        document.body.appendChild(popupDiv);
-
-        $('body').addClass('disable-scrolling');
+        popupBox.append(saveButton);
 
         userValidation();
 
-        document.addEventListener("click", () => {
-            if (!hashmap && !!document.getElementById("tagsList")) {
-                hashmap = Array.prototype.reduce.call(document.getElementById("tagsList").options, (obj, option) => {
+        $(document).on("click", () => {
+            if (!hashmap && !!$("#tagsList").length) {
+                hashmap = Array.prototype.reduce.call($("#tagsList option"), (obj, option) => {
                     if (!obj[option.value.toLowerCase()]) {
                         obj[option.value.toLowerCase()] = option.value;
                     }
@@ -538,8 +559,8 @@ export function appendIcon() {
         function transformTag(tagData) {
             tagData.color = getRandomColor();
             tagData.style = "--tag-bg:" + tagData.color;
+            tagData.value = tagData.value.trim().replace(/ +/g, ' ');
 
-            tagData.value = tagData.value.trim().replace(/  +/g, ' ');
             switch (tagData.value.toLowerCase()) {
                 case "pop":
                 case "genius pop":
@@ -571,12 +592,12 @@ export function appendIcon() {
             }
         }
 
-        tagify_tags.on('input', function (e) {
-            document.getElementsByClassName("blured-background")[0].appendChild(document.getElementsByClassName("tagify__dropdown")[0]);
-        })
+        $('#tagify_tags').on('input', function (e) {
+            $('.blured-background').append($('.tagify__dropdown').eq(0));
+        });
 
-        if (!!document.getElementById("tagsList")) {
-            hashmap = Array.prototype.reduce.call(document.getElementById("tagsList").options, (obj, option) => {
+        if ($('#tagsList').length) {
+            hashmap = Array.prototype.reduce.call($('#tagsList option'), function (obj, option) {
                 if (!obj[option.value.toLowerCase()]) {
                     obj[option.value.toLowerCase()] = option.value;
                 }
@@ -584,38 +605,35 @@ export function appendIcon() {
             }, {});
         }
 
-        document.getElementsByTagName("tags")[0].addEventListener("click", () => {
-            // wait for the dropdown to be rendered
-            setTimeout(() => {
-                document.getElementsByClassName("blured-background")[0].appendChild(document.getElementsByClassName("tagify__dropdown")[0]);
+        $('input[type="tags"]').on('click', function () {
+            setTimeout(function () {
+                $('.blured-background').append($('.tagify__dropdown:first'));
             }, 0.1);
-        })
-
-
+        });
     });
 
     //alow to open & close the popup with shortcuts
-    window.onkeyup = () => {
+    $(window).on('keyup', function (event) {
         switch (event.key) {
             case "Escape":
-                if (!!document.getElementsByClassName("close-icon").length) {
-                    document.getElementsByClassName("close-icon")[0].click();
+                if (!!$('.close-icon').length) {
+                    $('.close-icon')[0].click();
                 }
                 break;
             case "g":
-                if (event.altKey && !document.getElementsByClassName("blured-background").length) {
-                    document.getElementsByClassName("extension-icon")[0].click();
+                if (event.altKey && !$('.blured-background').length) {
+                    $('.extension-icon')[0].click();
                 }
                 break;
             case "s":
-                if (event.altKey && !!document.getElementsByClassName("gb-save-button").length) {
-                    document.getElementsByClassName("gb-save-button")[0].click();
+                if (event.altKey && !!$('.gb-save-button').length) {
+                    $('.gb-save-button')[0].click();
                 }
                 break;
             default:
                 break;
         }
-    }
+    });
 }
 
 export async function autolinkArtwork() {
@@ -808,7 +826,6 @@ export async function saveEverything() {
     document.querySelectorAll(".extension-song").forEach((e) => e.remove());
 
 }
-
 
 export function addSongAsTheNext() {
     // look for an element with the classes "square_input square_input--full_width ac_input" (it's the input for the song name) inserted into the DOM

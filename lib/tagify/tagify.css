@@ -1,9 +1,8 @@
+@charset "UTF-8";
 /*
 * This code was not written by me (Uri Sivani) and is subject to the license of the original project.
 * Please refer to the original project website for more information.
 */
-
-@charset "UTF-8";
 :root {
   --tagify-dd-color-primary:rgb(53, 149, 246);
   --tagify-dd-bg-color:white;
@@ -351,6 +350,7 @@
   pointer-events: none;
   opacity: 0;
   position: absolute;
+  transition: 0.1s ease-out;
 }
 .tagify__input::after {
   content: attr(data-suggest);

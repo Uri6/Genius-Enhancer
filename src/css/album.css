@@ -28,13 +28,28 @@
   font-family: "Programme";
   text-align: center;
   font-size: 25px;
-  transition: all 0.2s;
+  transition: transform 0.1s ease-in-out;
   color: #000 !important;
+  overflow: hidden;
+}
+.gb-save-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.3) 51%, rgba(255, 255, 255, 0.2) 100%);
+  transform: rotate(45deg);
+  transition: transform 0.6s;
+}
+.gb-save-button:hover::before {
+  transform: translate(50%, 50%) rotate(45deg);
 }
 .gb-save-button:hover {
   cursor: pointer;
-  background-color: #17a05e;
-  font-size: 27px;
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .bio-icon,
@@ -50,7 +65,7 @@
 .autolink-artwork-icon-container {
   position: absolute;
   top: 67px;
-  right: 40px;
+  right: 45px;
   width: 100px;
   height: 100px;
   transition: all ease-in-out 0.2s !important;
@@ -162,58 +177,6 @@
   transform: scale(1.05);
 }
 
-.add-tags-title {
-  position: relative;
-  top: 40px;
-  left: 65px;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.add-tags-sub-title {
-  position: relative;
-  top: 41px;
-  left: 65px;
-  font-size: 15px;
-  color: #ff6556;
-  font-weight: bold;
-  line-height: 120%;
-}
-
-.add-tags {
-  position: relative;
-  top: 50px;
-  left: 65px;
-  width: 500px;
-}
-.add-tags:focus, .add-tags.tagify--focus {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-
-.add-credits-title {
-  position: relative;
-  top: 75px;
-  left: 65px;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.add-credits {
-  position: relative;
-  top: 85px;
-  width: 245px;
-}
-.add-credits.role {
-  left: 75px;
-}
-.add-credits.artist {
-  left: 65px;
-}
-.add-credits:hover {
-  cursor: not-allowed !important;
-}
-
 .extension-icon {
   transform: scale(0.6);
   position: absolute;
@@ -231,7 +194,7 @@
 
 .blured-background {
   position: fixed;
-  z-index: 2147483647;
+  z-index: 999;
   inset: 0px;
   width: 100vw;
   height: 100vh;
@@ -243,8 +206,7 @@
   -webkit-backdrop-filter: blur(2px);
           backdrop-filter: blur(2px);
 }
-
-.extension-box {
+.blured-background .extension-box {
   position: absolute;
   width: 1200px;
   min-height: 700px;
@@ -261,10 +223,26 @@
   user-select: none;
   -o-user-select: none;
 }
-
-.close-icon {
+.blured-background .extension-box .close-icon {
   position: absolute;
+  right: 10px;
+  top: 10px;
   cursor: pointer;
+}
+.blured-background .extension-box .title {
+  position: relative;
+  left: 65px;
+  font-size: 30px;
+  font-weight: bold;
+}
+.blured-background .extension-box .title.add-tags-title {
+  top: 40px;
+}
+.blured-background .extension-box .title.add-credits-title {
+  top: 75px;
+}
+.blured-background .extension-box .title.add-media-title {
+  top: 110px;
 }
 
 .gb-textarea {
@@ -286,19 +264,29 @@
   position: relative;
   color: #000 !important;
 }
-.gb-textarea:hover {
-  cursor: pointer;
-  background-color: #979797;
+.gb-textarea.add-tags {
+  top: 50px;
+  left: 65px;
+  width: 500px;
 }
-.gb-textarea:focus, .gb-textarea.tagify--focus {
-  cursor: text;
-  background-color: #cbcbcb;
+.gb-textarea.add-tags:focus, .gb-textarea.add-tags.tagify--focus {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
-.gb-textarea:focus::-moz-placeholder, .gb-textarea.tagify--focus::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.25) !important;
+.gb-textarea.add-credits {
+  top: 85px;
+  width: 245px;
 }
-.gb-textarea:focus::placeholder, .gb-textarea.tagify--focus::placeholder {
-  color: rgba(0, 0, 0, 0.25) !important;
+.gb-textarea.add-credits.role {
+  left: 65px;
+}
+.gb-textarea.add-credits.artist {
+  left: 75px;
+}
+.gb-textarea.add-media {
+  top: 120px;
+  left: 65px;
+  width: 500px;
 }
 .gb-textarea::-moz-placeholder {
   font-family: "Programme";
@@ -312,4 +300,25 @@
   font-size: 18px;
   color: rgba(0, 0, 0, 0.4) !important;
   transition: all 0.2s;
+}
+.gb-textarea:hover {
+  cursor: pointer;
+  background-color: #979797;
+}
+.gb-textarea:hover.add-credits {
+  cursor: not-allowed !important;
+}
+.gb-textarea:focus, .gb-textarea.tagify--focus {
+  cursor: text;
+  background-color: #cbcbcb;
+}
+.gb-textarea:focus::-moz-placeholder, .gb-textarea.tagify--focus::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+.gb-textarea:focus::placeholder, .gb-textarea.tagify--focus::placeholder {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.tagify__dropdown {
+  z-index: 1000;
 }/*# sourceMappingURL=album.css.map */

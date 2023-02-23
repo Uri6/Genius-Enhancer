@@ -1,9 +1,8 @@
+@charset "UTF-8";
 /*
 * This code is licensed under the terms of the "LICENSE.md" file
 * located in the root directory of this code package.
 */
-
-@charset "UTF-8";
 @import "fonts.css";
 html {
   max-width: 100% !important;
@@ -186,12 +185,17 @@ body {
 }
 #discussion_list .discussion_summary {
   background-color: #574143 !important;
+  filter: saturate(0.8);
+}
+#discussion_list .discussion_summary .discussion_summary_title > .subject {
+  width: 290px !important;
 }
 #discussion_list .discussion_summary:hover {
-  background-color: #ffff65 !important;
+  background-color: #413335 !important;
+  filter: saturate(1);
 }
 #discussion_list .discussion_summary:hover .discussion_summary_title > .subject {
-  color: #000 !important;
+  color: #ffff65 !important;
 }
 
 .pinned_with_indicator:before {
@@ -248,8 +252,62 @@ body {
   z-index: 20 !important;
 }
 
+.group_title {
+  width: calc(100% + 20px) !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+.group_title .group_title-subject h1 {
+  max-width: unset !important;
+  margin-top: 10px !important;
+}
+.group_title .group_title-follow_button {
+  right: -50px !important;
+  top: -5px !important;
+}
+.group_title .group_title-follow_button .button {
+  border-radius: 10px !important;
+  transform: scale(0.9) !important;
+}
+.group_title .group_title-follow_button .button:before {
+  position: unset !important;
+}
+.group_title .group_title-follow_button .button span {
+  display: none !important;
+}
+
+.forum_post_container .forum_post_unit:has(> .first_one) {
+  width: calc(100% + 20px) !important;
+  border-radius: 0 0 10px 10px !important;
+}
+.forum_post_container .forum_post_unit:has(> .first_one) .forum_post-header .name .user_details {
+  margin-left: 0 !important;
+  top: -3px !important;
+}
+.forum_post_container .forum_post_unit:has(> .first_one) .forum_post-header .group_title-moderation_actions * {
+  border-radius: 10px !important;
+}
+.forum_post_container .forum_post_unit:has(> .first_one) .forum_post-header .voting_links {
+  margin-top: 0 !important;
+}
+.forum_post_container .forum_post_unit:has(> .first_one) .body.embedly {
+  border-radius: 5px !important;
+  padding: 20px 40px !important;
+  border-bottom: 1px solid #333 !important;
+}
+.forum_post_container .forum_post_unit:has(> .first_one) .body.embedly img {
+  border-radius: 5px !important;
+}
+.forum_post_container .forum_post_unit:has(> .first_one) .meta {
+  width: auto !important;
+  float: right !important;
+  border-top: none !important;
+  padding-top: 0 !important;
+}
 .forum_post_container .forum_post_unit .meta {
   top: calc(100% - 10px);
+}
+.forum_post_container .forum_post_unit .meta a:not(.destroy), .forum_post_container .forum_post_unit .meta span, .forum_post_container .forum_post_unit .meta #text {
+  color: #256767 !important;
 }
 .forum_post_container .forum_post_unit .reply_button {
   float: right;
@@ -390,6 +448,9 @@ body {
   background-color: rgba(128, 128, 128, 0.4) !important;
   text-decoration: underline !important;
 }
+.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) img {
+  border-radius: 5px !important;
+}
 .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one):hover {
   background-color: rgba(128, 128, 128, 0.3);
 }
@@ -400,7 +461,7 @@ body {
   background: none !important;
   padding-top: 30px !important;
 }
-.reply_container .comment-title {
+.reply_container .comment-title, .reply_container label[for=forum_post_follow_discussion] {
   color: #000 !important;
 }
 .reply_container .required.autogrow.markdown_preview_setup_complete,
@@ -575,4 +636,20 @@ body {
 }
 .user_tooltip .info .basics .buttons .toggle_follow:hover {
   background-color: #f2f2f2;
+}
+
+.reply_container .ql-toolbar {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
+.reply_container .ql-container {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.qtip-wrapper:has(.voters_container) .qtip-contentWrapper {
+  border-radius: 5px !important;
+}
+.qtip-wrapper:has(.voters_container) .qtip-contentWrapper .voters_container {
+  border-radius: 5px !important;
 }/*# sourceMappingURL=thread.css.map */
