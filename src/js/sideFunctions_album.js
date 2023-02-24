@@ -34,13 +34,12 @@ export function missingInfo(bio, people, releaseDate) {
         if (matches) {
             let meta = matches[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
             // full metadata album & another data
-            let dataObject = JSON.parse(meta);
-            return dataObject;
+            return JSON.parse(meta);
         }
     }
 
     let albumObject = getDeatils();
-    var tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
+    const tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
     let song_index = 0;
 
     albumObject.album_appearances.forEach(({ song }) => {
@@ -49,7 +48,7 @@ export function missingInfo(bio, people, releaseDate) {
 
         if (people) {
             let img_elem = document.createElement('img');
-            var peopleAreMissing = song.writer_artists.length == 0 || song.producer_artists.length == 0;
+            const peopleAreMissing = song.writer_artists.length === 0 || song.producer_artists.length === 0;
             img_elem.classList.add("people-icon", "gb-fade-in");
             if (peopleAreMissing) {
                 img_elem.src = imgs.people.missing;
@@ -63,9 +62,9 @@ export function missingInfo(bio, people, releaseDate) {
         }
 
         if (bio) {
-            img_elem = document.createElement("img");
+            const img_elem = document.createElement("img");
             img_elem.classList.add("bio-icon", "gb-fade-in");
-            if (song.description_preview == '') {
+            if (song.description_preview === '') {
                 img_elem.src = imgs.bios.missing;
                 img_elem.setAttribute("alt", "missing bio");
                 img_elem.setAttribute("title", "No one wrote a bio for this song");
@@ -77,7 +76,7 @@ export function missingInfo(bio, people, releaseDate) {
         }
 
         if (releaseDate) {
-            img_elem = document.createElement("img");
+            const img_elem = document.createElement("img");
             img_elem.classList.add("release-date-icon", "gb-fade-in");
             if (!song.release_date_for_display) {
                 img_elem.src = imgs.releaseDate.missing;
@@ -100,10 +99,9 @@ export function missingInfo(bio, people, releaseDate) {
 }
 
 export function removeMissingInfo(bio, people, releaseDate) {
-
-    var peopleIcons = document.querySelectorAll('.people-icon');
-    var bioIcons = document.querySelectorAll('.bio-icon');
-    var releaseDateIcons = document.querySelectorAll('.release-date-icon');
+    const peopleIcons = document.querySelectorAll(".people-icon");
+    const bioIcons = document.querySelectorAll(".bio-icon");
+    const releaseDateIcons = document.querySelectorAll(".release-date-icon");
 
     if (bio) {
         bioIcons.forEach((icon) => {
@@ -133,13 +131,13 @@ export function removeMissingInfo(bio, people, releaseDate) {
 }
 
 export function restyleMissingInfo() {
-    var peopleIcons = document.querySelectorAll('.people-icon');
-    var bioIcons = document.querySelectorAll('.bio-icon');
-    var releaseDateIcons = document.querySelectorAll('.release-date-icon');
+    let peopleIcons = document.querySelectorAll(".people-icon");
+    let bioIcons = document.querySelectorAll(".bio-icon");
+    let releaseDateIcons = document.querySelectorAll(".release-date-icon");
 
     // make sure at least one of the icons is present
     // if not, wait until they are
-    while (peopleIcons.length == 0 && bioIcons.length == 0 && releaseDateIcons.length == 0) {
+    while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0) {
         setTimeout(() => {
             peopleIcons = document.querySelectorAll('.people-icon');
             bioIcons = document.querySelectorAll('.bio-icon');
@@ -185,13 +183,10 @@ export async function getPlaylistVideos(playlistLink) {
 
     const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
     const data = await response.json();
-    const videos = data.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
-
-    return videos;
+    return data.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
 }
 
 export function appendIcon() {
-
     let hashmap;
 
     const userValidation = () => {
@@ -223,7 +218,7 @@ export function appendIcon() {
       "src": chrome.runtime.getURL("src/images/icons/2/128x128.png")
     });
     buttonBackground.append(icon_elem);
-    
+
     $(".extension-icon").eq(0).on("click", () => {
 
         window.scrollTo(0, 0);
@@ -276,7 +271,7 @@ export function appendIcon() {
             "data-gramm": "false",
             on: {
                 keydown: function (e) {
-                    if (e.keyCode == 13) {
+                    if (e.keyCode === 13) {
                         e.preventDefault();
                         return false;
                     }
@@ -353,7 +348,7 @@ export function appendIcon() {
 
                     result = result.album_artwork_results;
 
-                    if (result.length == 0) {
+                    if (result.length === 0) {
                         chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
                     }
 
@@ -374,10 +369,10 @@ export function appendIcon() {
                         overlay.classList.add("overlay");
 
                         $(overlay).hover(() => {
-                            overlay.style.backgroundColor = $(".v-button").length == $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)";
+                            overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)";
                         });
                         $(overlay).mouseleave(() => {
-                            overlay.style.backgroundColor = $(".v-button").length == $(".artwork-image").length ? "rgb(0, 0, 0, 0.0)" : "rgb(33, 236, 138, 0.0)";
+                            overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.0)" : "rgb(33, 236, 138, 0.0)";
                         });
 
                         const vButton = document.createElement("img");
@@ -433,7 +428,7 @@ export function appendIcon() {
                             overlay.style.backgroundColor = "rgb(252, 88, 84, 0.3)";
                             // wait for animation to finish before removing the element
                             setTimeout(() => { container.remove(); }, 400);
-                            if (imagesStack.childNodes.length == 0) {
+                            if (imagesStack.childNodes.length === 0) {
                                 chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
                             }
                         });
@@ -496,7 +491,7 @@ export function appendIcon() {
             }
         })
 
-        var tagify_tagsWhitelist = $('datalist#tagsList option').map(function (_, o) {
+        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function(_, o) {
             let searchByStr;
 
             switch (o.value) {
@@ -510,28 +505,30 @@ export function appendIcon() {
             };
         }).get();
 
-        var tagify_tags = new Tagify(document.getElementById("gb-add-tags"), {
+        const tagify_tags = new Tagify(document.getElementById("gb-add-tags"), {
             delimiters: null,
             templates: {
-                tag: function (tagData) {
+                tag: function(tagData) {
                     try {
                         return `<tag title='${tagData.value}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
                                 <x title='remove tag' class='tagify__tag__removeBtn'></x>
                                 <div>
                                     <span class='tagify__tag-text'>${tagData.value}</span>
                                 </div>
-                            </tag>`
+                            </tag>`;
+                    } catch (err) {
+                        console.error(err);
                     }
-                    catch (err) { console.error(err) }
                 },
 
-                dropdownItem: function (tagData) {
+                dropdownItem: function(tagData) {
                     try {
                         return `<div ${this.getAttributes(tagData)} class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
                                     <span>${tagData.value}</span>
-                                </div>`
+                                </div>`;
+                    } catch (err) {
+                        console.error(err);
                     }
-                    catch (err) { console.error(err) }
                 }
             },
             enforceWhitelist: true,
@@ -539,17 +536,17 @@ export function appendIcon() {
             transformTag: transformTag,
             dropdown: {
                 enabled: 0,
-                classname: 'tags-look',
+                classname: "tags-look",
                 maxItems: 20
             }
-        })
+        });
 
         function getRandomColor() {
             function rand(min, max) {
                 return min + Math.random() * (max - min);
             }
 
-            var h = rand(1, 360) | 0,
+            const h = rand(1, 360) | 0,
                 s = rand(40, 70) | 0,
                 l = rand(65, 72) | 0;
 
@@ -616,8 +613,9 @@ export function appendIcon() {
     $(window).on('keyup', function (event) {
         switch (event.key) {
             case "Escape":
-                if (!!$('.close-icon').length) {
-                    $('.close-icon')[0].click();
+                const closeIcon = $('.close-icon');
+                if (!!closeIcon.length) {
+                    closeIcon[0].click();
                 }
                 break;
             case "g":
@@ -626,8 +624,9 @@ export function appendIcon() {
                 }
                 break;
             case "s":
-                if (event.altKey && !!$('.gb-save-button').length) {
-                    $('.gb-save-button')[0].click();
+                const saveButton = $('.gb-save-button');
+                if (event.altKey && !!saveButton.length) {
+                    saveButton[0].click();
                 }
                 break;
             default:
@@ -637,7 +636,6 @@ export function appendIcon() {
 }
 
 export async function autolinkArtwork() {
-
     console.log("autolinkArtwork");
 
     let itunesResult = "";
@@ -656,7 +654,7 @@ export async function autolinkArtwork() {
         for (let i = 0; i < nameToSearch.length; i++) {
             if (containsHebrew(nameToSearch[i])) {
                 const langsParts = nameToSearch[i].split(" - ")
-                nameToSearch[i] = langsParts[i == 0 ? 1 : 0];
+                nameToSearch[i] = langsParts[i === 0 ? 1 : 0];
             }
         }
 
@@ -690,9 +688,9 @@ export async function autolinkArtwork() {
 
                 }).done(function (data) {
                     if (!data.error && data.length) {
-                        for (var i = 0; i < data.length; i++) {
+                        for (let i = 0; i < data.length; i++) {
                             data[i] = data[i].url.replace("/600x600bb.jpg", "/1000x1000-999.jpg");
-                        };
+                        }
                         itunesResult = data;
                     }
                     resolve();
@@ -749,7 +747,6 @@ export async function saveEverything() {
         let width = progressBar.style.width;
         let newWidth = `${(parseInt(width, 10) + (1 / albumSongs.length / 3) * 100)}%`;
         progressBar.style.width = newWidth;
-
 
         while (!iframe.contentWindow.document.querySelector("button.SmallButton__Container-mg33hl-0")) {
             await new Promise((resolve) => setTimeout(resolve, 100));
@@ -911,6 +908,4 @@ export function addSongAsTheNext() {
         childList: true,
         subtree: true
     });
-
-
 }
