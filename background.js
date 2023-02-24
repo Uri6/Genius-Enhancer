@@ -23,8 +23,8 @@ function getTabId() {
 }
 
 chrome.runtime.onInstalled.addListener((details) => {
-    const currentVersion = chrome.runtime.getManifest().version;
-    const previousVersion = details.previousVersion;
+    // const currentVersion = chrome.runtime.getManifest().version;
+    // const previousVersion = details.previousVersion;
     const reason = details.reason;
 
     switch (reason) {
@@ -260,7 +260,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     );
                 })
             }).then(() => {
-                if (pageType != undefined) {
+                if (pageType !== undefined) {
                     chrome.storage.local.set({ "pageType": pageType });
                 }
 
@@ -732,15 +732,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                         getArtistsList().then((res) => {
                                             // need to convert the ul to a select element with options for each li element in the ul element
-
-                                            let replaces = {
-                                                '&#039;': `'`,
-                                                '&amp;': '&',
-                                                '&lt;': '<',
-                                                '&gt;': '>',
-                                                '&quot;': '"'
-                                            };
-
                                             var tempElem = document.createElement('datalist');
                                             tempElem.innerHTML = res.innerHTML;
                                             tempElem.setAttribute("id", "artistsList");
@@ -884,7 +875,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     filterDropdown.classList.add("RecentActivity__FilteringDropdown--open");
                                                 }
                                             });
-                                            
+
                                             while (!$(e.target).find(".RecentActivity__Title-d62qa5-1.ilJdac").length) {
                                                 Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
                                             }
