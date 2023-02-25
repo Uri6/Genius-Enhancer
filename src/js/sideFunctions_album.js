@@ -4,7 +4,6 @@
 */
 
 export function missingInfo(bio, people, releaseDate) {
-
     const imgs = {
         bios: {
             exists: chrome.runtime.getURL("/src/images/bio/Exists/48x48.png"),
@@ -43,7 +42,6 @@ export function missingInfo(bio, people, releaseDate) {
     let song_index = 0;
 
     albumObject.album_appearances.forEach(({ song }) => {
-
         let elem = tracklist[song_index];
 
         if (people) {
@@ -279,12 +277,12 @@ export function appendIcon() {
             }
         }).appendTo(popupBox);
 
-        const addCreditsTitle = $("<div>", {
+        $("<div>", {
             class: "add-credits-title title",
             text: "Credit Artists"
         }).appendTo(popupBox);
 
-        const addCredits_role = $("<input>", {
+        $("<input>", {
             class: "add-credits role rcorners gb-textarea",
             type: "text",
             placeholder: "Role",
@@ -293,7 +291,7 @@ export function appendIcon() {
             disabled: ""
         }).appendTo(popupBox);
 
-        const addCredits_artist = $("<input>", {
+        $("<input>", {
             class: "add-credits artist rcorners gb-textarea",
             type: "text",
             placeholder: "Artist",
@@ -302,21 +300,21 @@ export function appendIcon() {
             disabled: ""
         }).appendTo(popupBox);
 
-        const addCredits_add = $("<input>", {
-            class: "add-credits add rcorners gb-textarea",
-            type: "text",
-            placeholder: "Add",
-            spellcheck: "false",
-            "data-gramm": "false",
-            disabled: ""
-        });//.appendTo(popupBox);
+        // $("<input>", {
+        //     class: "add-credits add rcorners gb-textarea",
+        //     type: "text",
+        //     placeholder: "Add",
+        //     spellcheck: "false",
+        //     "data-gramm": "false",
+        //     disabled: ""
+        // }).appendTo(popupBox);
 
-        const addMediaTitle = $("<div>", {
+        $("<div>", {
             class: "add-media-title title",
             text: "Link Media"
         }).appendTo(popupBox);
 
-        const addMedia = $("<input>", {
+        $("<input>", {
             class: "add-media rcorners gb-textarea",
             id: "gb-add-media",
             type: "text",
@@ -609,7 +607,7 @@ export function appendIcon() {
         });
     });
 
-    //alow to open & close the popup with shortcuts
+    // allow to open & close the popup with shortcuts
     $(window).on('keyup', function (event) {
         switch (event.key) {
             case "Escape":
@@ -640,6 +638,7 @@ export async function autolinkArtwork() {
 
     let itunesResult = "";
 
+    // TODO: refactor this into an async function
     new Promise((resolve, reject) => {
         // TODO: add support for other non-english languages
 
@@ -670,22 +669,18 @@ export async function autolinkArtwork() {
 
         }).done(function (data) {
             $.ajax({
-
                 type: "GET",
                 crossDomain: true,
                 url: data.url,
                 data: {},
                 dataType: 'json'
-
             }).done(function (data) {
                 $.ajax({
-
                     type: "POST",
                     crossDomain: true,
                     url: 'https://itunesartwork.bendodson.com/api.php',
                     data: { json: JSON.stringify(data), type: 'data', entity: 'album' },
                     dataType: 'json'
-
                 }).done(function (data) {
                     if (!data.error && data.length) {
                         for (let i = 0; i < data.length; i++) {
@@ -704,6 +699,8 @@ export async function autolinkArtwork() {
 }
 
 export async function saveEverything() {
+    // TODO: refactor this into an API call.
+
     const numOfSongs = Array.from(
         document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
     ).length;
@@ -826,7 +823,7 @@ export async function saveEverything() {
 
 export function addSongAsTheNext() {
     // look for an element with the classes "square_input square_input--full_width ac_input" (it's the input for the song name) inserted into the DOM
-    // then add a "on/off" button to it which will add the song as the next song in the queue if turned on
+    // then add an "on/off" button to it which will add the song as the next song in the queue if turned on
     // save to the local storage the state of the button (on/off) [and if it's already true, change the button to on]
 
     // in the same observer, look for the "Add to queue" button (it's have the class "ac_even" or "ac_odd") and add a click event listener to it
