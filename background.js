@@ -151,13 +151,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status == 'complete' && tab.url.includes("genius.com")) {
         const files = [
             { type: "css", file: "./src/css/content-style.css" },
-            { type: "css", file: "./lib/bootstarp/bootstarp.min.css" },
+            { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
             { type: "css", file: "./lib/quilljs/quill.snow.css" },
             { type: "js", file: "./lib/jquery/jquery.min.js" },
             { type: "js", file: "./lib/jquery/jquery-ui.js" },
-            { type: "js", file: "./lib/bootstarp/bootstarp.min.js" },
+            { type: "js", file: "./lib/bootstrap/bootstrap.min.js" },
             { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" },
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
