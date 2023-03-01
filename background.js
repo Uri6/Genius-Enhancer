@@ -4,7 +4,7 @@
 */
 
 import { getDeatils, identifyPageType, replaceTextarea, removeQuill } from "./src/js/sideFunctions.js";
-import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolinkArtwork, saveEverything, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
+import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolinkArtwork, getPlaylistVideos, saveEverything, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
 import { appleMusicPopUp, spotifyPopUp, song_modernTextEditor, appendReplyButton } from "./src/js/sideFunctions_song.js";
 import { replaceButtons, forums_modernTextEditor } from "./src/js/sideFunctions_forum.js";
 
@@ -38,8 +38,8 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "ModernTextEditor": true });
             chrome.storage.local.set({ "OldSongPage": false });
         case 'update':
-            // ar newURL = "https://uri6.github.io/genius-bot/versions/";
-            // hrome.tabs.create({ url: newURL });
+            // var newURL = "https://uri6.github.io/genius-bot/versions/";
+            // chrome.tabs.create({ url: newURL });
             break;
         case 'chrome_update':
         case 'shared_module_update':
@@ -79,6 +79,11 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
         case "album_autolinkArtwork" in message:
             func = autolinkArtwork;
             break;
+        case "album_getPlaylistVideos" in message:
+            func = getPlaylistVideos;
+            args = message.album_getPlaylistVideos;
+            console.log("getPlaylistVideos called");
+            break;
         case "album_saveEverything" in message:
             func = saveEverything;
             args = message.album_saveEverything;
@@ -94,7 +99,6 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
         case "song_modernTextEditor" in message:
             func = song_modernTextEditor;
             args = message.song_modernTextEditor;
-            console.log("song_modernTextEditor message received");
             break;
         case "song_appendReplyButton" in message:
             func = appendReplyButton;
@@ -119,8 +123,13 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     }, (results) => {
         if (func === identifyPageType) {
             sendResponse(results[0].result);
+        } else if (func === getPlaylistVideos) {
+            console.log(results[0].result);
+            sendResponse(results[0].result);
         }
     });
+
+
 });
 
 let pageType = "unknown";
@@ -144,7 +153,20 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     chrome.storage.local.set({ "album_artwork_results": "" });
     pageType = "unknown";
 
-    if (tab.url.startsWith("https://promote.genius.com/") || tab.url.startsWith("http://promote.genius.com/") || tab.url.startsWith("https://support.genius.com/") || tab.url.startsWith("http://support.genius.com/")) {
+    const prohibitedDomains = [
+        "promote.genius.com",
+        "support.genius.com",
+        "docs.genius.com",
+        "homestudio.genius.com"
+    ];
+
+    const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
+    const protocolAndDomainMatch = tab.url.match(protocolAndDomainRegex);
+
+    if (
+        protocolAndDomainMatch !== null &&
+        prohibitedDomains.includes(protocolAndDomainMatch[1])
+    ) {
         return;
     }
 
@@ -155,13 +177,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
             { type: "css", file: "./lib/quilljs/quill.snow.css" },
+            { type: "css", file: "./lib/select2/select2.min.css" },
             { type: "js", file: "./lib/jquery/jquery.min.js" },
             { type: "js", file: "./lib/jquery/jquery-ui.js" },
             { type: "js", file: "./lib/bootstrap/bootstrap.min.js" },
             { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" },
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
-            { type: "js", file: "./lib/oauth/oauth.min.js" }
+            //{ type: "js", file: "./lib/oauth/oauth.min.js" },
+            { type: "js", file: "./lib/select2/select2.min.js" }
         ];
 
         const cssFiles = files
@@ -732,6 +756,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                         getArtistsList().then((res) => {
                                             // need to convert the ul to a select element with options for each li element in the ul element
+
                                             var tempElem = document.createElement('datalist');
                                             tempElem.innerHTML = res.innerHTML;
                                             tempElem.setAttribute("id", "artistsList");
@@ -830,51 +855,88 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     func: () => {
 
                                         $(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", function (e) {
-                                            let filterDropdown = document.createElement("div");
-                                            filterDropdown.setAttribute("class", "RecentActivity__FilteringDropdown");
-                                            filterDropdown.innerHTML = `
-                                                <div class="RecentActivity__FilteringDropdownTitle">
-                                                    <span class="RecentActivity__FilteringDropdownTitleText">Filter Activities</span>
-                                                </div>
-                                                <div class="RecentActivity__FilteringDropdownContent">
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">All</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Annotations</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Comments</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Follows</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Lyrics Edits</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Lyrics Proposals</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Q&A</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Suggestions</div>
-                                                    </div>
-                                                    <div class="RecentActivity__FilteringDropdownContentItem">
-                                                        <div class="RecentActivity__FilteringDropdownContentItemText">Voting</div>
-                                                    </div>
-                                                </div>
-                                            `;
+                                            if (!$(".RecentActivity__FilteringContainer").length) {
 
-                                            // add click event to the dropdown title (for opening and closing the dropdown)
-                                            filterDropdown.querySelector(".RecentActivity__FilteringDropdownTitle").addEventListener("click", (e) => {
-                                                if (filterDropdown.classList.contains("RecentActivity__FilteringDropdown--open")) {
-                                                    filterDropdown.classList.remove("RecentActivity__FilteringDropdown--open");
-                                                } else {
-                                                    filterDropdown.classList.add("RecentActivity__FilteringDropdown--open");
-                                                }
-                                            });
+                                                const filterContainer = $('<div>', {
+                                                    class: 'RecentActivity__FilteringContainer'
+                                                });
+
+                                                $('<span>', {
+                                                    class: 'RecentActivity__FilteringTitle',
+                                                    text: 'Filter Activities'
+                                                }).appendTo(filterContainer);
+
+                                                // Define the options for the dropdown
+                                                const options = [
+                                                    { id: 'all', text: 'All' },
+                                                    { id: 'created|edited|merged|accepted|rejected', text: 'Annotations' },
+                                                    { id: 'added_a_suggestion_to', text: 'Comments' },
+                                                    { id: 'followed|unfollowed', text: 'Follows' },
+                                                    { id: '', text: 'Geniusbot' },
+                                                    { id: 'edited_the_lyrics_of|recognized|marked_complete|verified_the_lyrics_of|unverified_the_lyrics_of', text: 'Lyrics Edits' },
+                                                    { id: 'merged|', text: 'Lyrics Proposals' },
+                                                    { id: 'edited_the_metadata_of', text: 'Metadata' },
+                                                    { id: 'pyonged', text: 'Pyongs' },
+                                                    { id: 'pinned|created', text: 'Q&A' },
+                                                    { id: 'added_a_suggestion_to|integrated|marked', text: 'Suggestions' },
+                                                    { id: 'downvoted|upvoted', text: 'Voting' }
+                                                ];
+
+                                                // Create a select element for the dropdown
+                                                const filterDropdown = $('<select>', {
+                                                    class: 'RecentActivity__FilteringDropdown',
+                                                    multiple: true,
+                                                    'data-dropdown': true
+                                                });
+
+                                                // Create an option element for each option and add it to the dropdown
+                                                options.forEach(function (option) {
+                                                    var optionElem = document.createElement('option');
+                                                    optionElem.setAttribute('value', option.id);
+                                                    optionElem.innerText = option.text;
+                                                    filterDropdown.appendChild(optionElem);
+                                                });
+
+                                                // Add an event listener to the "All" option
+                                                filterDropdown.addEventListener('change', function (e) {
+                                                    var allOptionSelected = e.target.options[0].selected;
+
+                                                    // Check or uncheck all options based on the "All" option state
+                                                    options.forEach(function (option) {
+                                                        var optionElem = filterDropdown.querySelector('option[value="' + option.id + '"]');
+                                                        optionElem.selected = allOptionSelected;
+                                                    });
+                                                });
+
+                                                // Initialize the dropdown with select2
+                                                $(filterDropdown).select2({
+                                                    placeholder: 'Filter Activities',
+                                                    allowClear: true,
+                                                    width: '100%'
+                                                });
+
+                                                // Add the dropdown to the page
+                                                $(e.target).find('.RecentActivity__Title-d62qa5-1.ilJdac').after(filterContainer);
+                                                $(filterContainer).append(filterDropdown);
+
+                                                // Add a click event listener to the "All" option
+                                                $(filterDropdown).on('select2:select', function (e) {
+                                                    if (e.params.data.id === 'all') {
+                                                        var allOptionSelected = $(filterDropdown).val() !== null;
+
+                                                        // Check or uncheck all options based on the "All" option state
+                                                        options.forEach(function (option) {
+                                                            var optionElem = $(filterDropdown).find('option[value="' + option.id + '"]');
+                                                            if (allOptionSelected) {
+                                                                optionElem.prop('selected', true);
+                                                            } else {
+                                                                optionElem.prop('selected', false);
+                                                            }
+                                                        });
+                                                        $(filterDropdown).trigger('change'); // Trigger change event to update select2
+                                                    }
+                                                });
+                                            }
 
                                             while (!$(e.target).find(".RecentActivity__Title-d62qa5-1.ilJdac").length) {
                                                 Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);

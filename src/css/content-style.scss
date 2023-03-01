@@ -522,7 +522,7 @@ input {
           right: 20px !important;
         }
 
-        &.PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3) {
+        &.PageHeadershared__Dropdown-sc-1cjax99-1 {
           right: 40px !important;
         }
 
@@ -691,47 +691,20 @@ input {
   }
 }
 
-.RecentActivity__FilteringDropdown {
+.RecentActivity__FilteringContainer {
   position: relative;
   right: 0;
   top: 0;
   margin-top: -40px;
   float: right;
 
-  &Title {
-    cursor: not-allowed;
+  .RecentActivity__FilteringTitle {
+    cursor: pointer;
     font-weight: bold;
     font-size: 12px;
     padding: 5px 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
-
-  &Content {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    z-index: 1;
-    display: none;
-
-    &Item {
-      cursor: pointer;
-      padding: 5px 10px;
-
-      &:hover {
-        background-color: #ccc;
-      }
-    }
-  }
-
-  &--open {
-    &Content {
-      display: block;
-    }
   }
 }
 

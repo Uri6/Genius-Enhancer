@@ -176,15 +176,42 @@ export function restyleMissingInfo() {
 }
 
 export async function getPlaylistVideos(playlistLink) {
+    if (!playlistLink.startsWith("https://www.youtube.com/playlist?list=")) {
+        throw new Error("Invalid playlist link");
+    }
     const playlistId = playlistLink.split("list=")[1];
     const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
 
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
-    const data = await response.json();
-    return data.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
+    // Fetch the playlist metadata
+    const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
+    if (!metadataResponse.ok) {
+        throw new Error("Failed to fetch playlist metadata");
+    }
+    const metadataData = await metadataResponse.json();
+    const playlistTitle = metadataData.items[0].snippet.title;
+    const playlistImage = metadataData.items[0].snippet.thumbnails.maxres.url;
+
+    // Fetch the playlist videos
+    const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
+    if (!videosResponse.ok) {
+        throw new Error("Failed to fetch playlist videos");
+    }
+    const videosData = await videosResponse.json();
+    const videoTitles = videosData.items.map(item => item.snippet.title);
+    const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
+    const playlistLength = videoLinks.length;
+
+    // Return an object containing the metadata and the video links
+    return {
+        playlistTitle,
+        playlistImage,
+        playlistLength,
+        videoTitles,
+        videoLinks
+    };
 }
 
-export function appendIcon() {
+export async function appendIcon() {
     let hashmap;
 
     const userValidation = () => {
@@ -211,13 +238,13 @@ export function appendIcon() {
 
     const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
     const icon_elem = $("<img>").addClass("extension-icon").attr({
-      "alt": "genius bot extension icon",
-      "title": "Alt + G",
-      "src": chrome.runtime.getURL("src/images/icons/2/128x128.png")
+        "alt": "genius bot extension icon",
+        "title": "Alt + G",
+        "src": chrome.runtime.getURL("src/images/icons/2/128x128.png")
     });
     buttonBackground.append(icon_elem);
 
-    $(".extension-icon").eq(0).on("click", () => {
+    $(".extension-icon").eq(0).on("click", async () => {
 
         window.scrollTo(0, 0);
         $('body').addClass('disable-scrolling');
@@ -231,7 +258,7 @@ export function appendIcon() {
             class: "extension-box gb-zoom-in"
         }).appendTo(popupDiv);
 
-        const closePopup = $('<img>', {
+        $('<img>', {
             class: 'close-icon',
             src: chrome.runtime.getURL('/src/images/other/closeIcon.png'),
             on: {
@@ -255,12 +282,12 @@ export function appendIcon() {
             }
         }).appendTo(popupBox);
 
-        const addTagsTitle = $("<div>", {
+        $("<div>", {
             class: "add-tags-title title",
             text: "Tag songs"
         }).appendTo(popupBox);
 
-        const addTags = $("<input>", {
+        $("<input>", {
             class: "add-tags rcorners gb-textarea",
             id: "gb-add-tags",
             type: "text",
@@ -314,7 +341,7 @@ export function appendIcon() {
             text: "Link Media"
         }).appendTo(popupBox);
 
-        $("<input>", {
+        const addMediaInput = $("<input>", {
             class: "add-media rcorners gb-textarea",
             id: "gb-add-media",
             type: "text",
@@ -322,6 +349,40 @@ export function appendIcon() {
             spellcheck: "false",
             "data-gramm": "false"
         }).appendTo(popupBox);
+
+        addMediaInput.on("blur", async () => {
+            const url = addMediaInput.val();
+            if (url === "") {
+                addMediaInput.css({ outlineWidth: "0" });
+                addMediaInput.attr("title", "");
+                return;
+            }
+
+            try {
+                const response = await new Promise((resolve, reject) => {
+                    chrome.runtime.sendMessage({ 'album_getPlaylistVideos': [url] }, async (response) => {
+                        while (response === undefined) {
+                            await new Promise(r => setTimeout(r, 100));
+                        }
+                        resolve(response);
+                    });
+                });
+                console.log(response);
+                if (response === undefined) {
+                    throw new Error("Invalid Youtube Playlist URL");
+                }
+                else {
+                    addMediaInput.css({ outlineWidth: "0" });
+                    addMediaInput.attr("title", "");
+                }
+            } catch (error) {
+                console.error(error);
+                // change the border color of the input to red and increase the border width
+                    addMediaInput.css({ outline: "2px solid red" });
+                // add a tooltip to the input
+                addMediaInput.attr("title", "Invalid Youtube Playlist URL");
+            }
+        });
 
         const autolinkArtworkContainer = document.createElement("div");
         autolinkArtworkContainer.classList.add("autolink-artwork-icon-container", "rcorners");
@@ -370,7 +431,7 @@ export function appendIcon() {
                             overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)";
                         });
                         $(overlay).mouseleave(() => {
-                            overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.0)" : "rgb(33, 236, 138, 0.0)";
+                            overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)";
                         });
 
                         const vButton = document.createElement("img");
@@ -387,8 +448,8 @@ export function appendIcon() {
                         vButton.addEventListener("click", function () {
                             chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result[i] } });
 
-                            $(".v-button").css("opacity", "0.0");
-                            $(".x-button").css("opacity", "0.0");
+                            $(".v-button").css("opacity", "0");
+                            $(".x-button").css("opacity", "0");
 
                             setTimeout(() => {
                                 $(".v-button").remove();
@@ -397,13 +458,13 @@ export function appendIcon() {
 
                             overlay.style.backgroundColor = "rgb(33, 236, 138, 0.4)";
                             setTimeout(() => {
-                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0.0)";
+                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0)";
                             }, 400);
                             setTimeout(() => {
                                 overlay.style.backgroundColor = "rgb(33, 236, 138, 0.4)";
                             }, 400);
                             setTimeout(() => {
-                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0.0)";
+                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0)";
                             }, 400);
                         });
 
@@ -489,7 +550,7 @@ export function appendIcon() {
             }
         })
 
-        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function(_, o) {
+        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function (_, o) {
             let searchByStr;
 
             switch (o.value) {
@@ -506,7 +567,7 @@ export function appendIcon() {
         const tagify_tags = new Tagify(document.getElementById("gb-add-tags"), {
             delimiters: null,
             templates: {
-                tag: function(tagData) {
+                tag: function (tagData) {
                     try {
                         return `<tag title='${tagData.value}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
                                 <x title='remove tag' class='tagify__tag__removeBtn'></x>
@@ -519,7 +580,7 @@ export function appendIcon() {
                     }
                 },
 
-                dropdownItem: function(tagData) {
+                dropdownItem: function (tagData) {
                     try {
                         return `<div ${this.getAttributes(tagData)} class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
                                     <span>${tagData.value}</span>
@@ -726,10 +787,7 @@ export async function saveEverything() {
     progressBar.style.zIndex = "10000";
     progressBar.style.height = "10px";
 
-    // insert after the leement with the tag name header-with-cover-art
     $("header-with-cover-art").after(progressBar);
-
-    console.log("progressBar", progressBar);
 
     albumSongs.forEach(async (song) => {
         const iframe = document.createElement("iframe");

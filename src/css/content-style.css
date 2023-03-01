@@ -527,20 +527,20 @@ input::-webkit-calendar-picker-indicator {
   width: 29% !important;
   right: 20px !important;
 }
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer1:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer2:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer3:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer4:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) .PageHeadershared__Dropdown-sc-1cjax99-1.PageHeaderDropdowndesktop__Container-sc-12d2okf-0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) .feed_dropdown:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer1:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer2:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer3:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer4:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) .PageHeadershared__Dropdown-sc-1cjax99-1.PageHeaderDropdowndesktop__Container-sc-12d2okf-0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3),
-.header-actions *:not([open-header-menus=open_header_menus]) .feed_dropdown:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3) {
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer1:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer2:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer3:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer4:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) .PageHeadershared__Dropdown-sc-1cjax99-1.PageHeaderDropdowndesktop__Container-sc-12d2okf-0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) .feed_dropdown:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer1:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer2:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer3:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) #iFrameResizer4:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) .PageHeadershared__Dropdown-sc-1cjax99-1.PageHeaderDropdowndesktop__Container-sc-12d2okf-0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1,
+.header-actions *:not([open-header-menus=open_header_menus]) .feed_dropdown:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0).PageHeadershared__Dropdown-sc-1cjax99-1 {
   right: 40px !important;
 }
 .PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer0:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0)::-webkit-scrollbar,
@@ -695,41 +695,20 @@ input::-webkit-calendar-picker-indicator {
   color: #fff;
 }
 
-.RecentActivity__FilteringDropdown {
+.RecentActivity__FilteringContainer {
   position: relative;
   right: 0;
   top: 0;
   margin-top: -40px;
   float: right;
 }
-.RecentActivity__FilteringDropdownTitle {
-  cursor: not-allowed;
+.RecentActivity__FilteringContainer .RecentActivity__FilteringTitle {
+  cursor: pointer;
   font-weight: bold;
   font-size: 12px;
   padding: 5px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-.RecentActivity__FilteringDropdownContent {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  z-index: 1;
-  display: none;
-}
-.RecentActivity__FilteringDropdownContentItem {
-  cursor: pointer;
-  padding: 5px 10px;
-}
-.RecentActivity__FilteringDropdownContentItem:hover {
-  background-color: #ccc;
-}
-.RecentActivity__FilteringDropdown--openContent {
-  display: block;
 }
 
 .autocomplete-results {

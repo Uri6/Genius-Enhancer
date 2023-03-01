@@ -3,18 +3,34 @@
 * located in the root directory of this code package.
 */
 
+/**
+ * Checks if the given text contains any Hebrew characters
+ * @param {string} text - The text to check for Hebrew characters
+ * @returns {boolean} - Returns true if the text contains Hebrew characters, false otherwise
+ */
 export function containsHebrew(text) {
+    // Use a regular expression to check if the text contains any Hebrew characters
+    // The regular expression /[א-ת]/ matches any Hebrew character
     return /[א-ת]/.test(text);
 }
+
 
 export function insertAfter(newNode, existingNode) {
     existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 }
 
-// This function written by @wnull (@wine in Genius.com)
+/**
+ * Extracts metadata from the current page's HTML and returns it as a parsed JSON object
+ * Was originally written by @wnull (@wine in Genius.com)
+ * 
+ * @returns {object} The parsed metadata object
+ */
 export function getDeatils() {
-    let matches = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
-    let replaces = {
+    // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
+    const $meta = $('meta').filter((i, el) => $(el).attr('content')?.startsWith('{')).eq(0);
+
+    // Define an object containing HTML entity codes and their corresponding characters
+    const replaces = {
         '&#039;': `'`,
         '&amp;': '&',
         '&lt;': '<',
@@ -22,18 +38,41 @@ export function getDeatils() {
         '&quot;': '"'
     };
 
-    if (matches) {
-        let meta = matches[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
-        // full metadata album & another data
+    // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
+    if ($meta.length) {
+        // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
+        const meta = $meta.attr('content').replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
+
+        // Parse the JSON string and return the resulting object
         return JSON.parse(meta);
     }
 }
 
+/**
+ * Identifies the type of page currently open in the browser tab
+ *
+ * @returns {Promise<string>} A promise that resolves to the page type
+ */
+
 export function identifyPageType() {
-    console.log("identifyPageType");
+    // Initialize variables for later use
     let pageType = "unknown";
     let pageObject = {};
-    const geniusAdress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
+
+    // An array of possible Genius.com URLs
+    const geniusAdress = [
+        "http://www.genius.com/",
+        "https://www.genius.com/",
+        "http://genius.com/",
+        "https://genius.com/"
+    ];
+
+    const urlToPageType = {
+        "/forum": "forum (main)",
+        "/new": "new post",
+        "/discussions/": "forum thread",
+    };
+
     return new Promise((resolve, reject) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const tab = tabs[0];
@@ -71,24 +110,24 @@ export function identifyPageType() {
                             },
                             function (isForumPage) {
                                 if (isForumPage[0].result) {
-                                    if (tab.url.endsWith("/forum")) {
-                                        pageType = "forum (main)";
+                                    // Loop through the keys of the urlToPageType object and check if the URL includes any of them
+                                    for (const url of Object.keys(urlToPageType)) {
+                                        if (tab.url.includes(url)) {
+                                            // If yes, set the pageType to the corresponding value in the urlToPageType object
+                                            pageType = urlToPageType[url];
+                                            break;
+                                        }
                                     }
-                                    else if (tab.url.endsWith("/new")) {
-                                        pageType = "new post";
-                                    }
-                                    else if (tab.url.includes("/discussions/")) {
-                                        pageType = "forum thread";
-                                    }
-                                    else {
+
+                                    // If the pageType is still "unknown", it's has to be a forum page
+                                    if (pageType === "unknown" || pageTpye === undefined) {
                                         pageType = "forum";
                                     }
                                 }
                                 if (pageType !== undefined) {
                                     chrome.storage.local.set({ "pageType": pageType });
-                                    console.log("pageType: " + pageType);
                                 }
-                                resolve();
+                                resolve(pageType);
                             }
                         );
                     }
@@ -96,9 +135,8 @@ export function identifyPageType() {
                     else {
                         if (pageType !== undefined) {
                             chrome.storage.local.set({ "pageType": pageType });
-                            console.log("pageType: " + pageType);
                         }
-                        resolve();
+                        resolve(pageType);
                     }
                 }
             );
@@ -107,19 +145,60 @@ export function identifyPageType() {
 }
 
 
+/**
+ * Retrieves the first input element with the name "tag_ids[]" from the HTML content of the Genius New page
+ * 
+ * @returns {HTMLElement} The input element with the name "tag_ids[]"
+ */
 export async function getTagsList() {
+    // Initialize variable for later use
     let tagElem;
 
-    await fetch("https://genius.com/new")
-        .then(function (response) { return response.text() })
-        .then((res) => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(res, "text/html");
-            tagElem = htmlDoc.getElementsByName("tag_ids[]")[0];
-        });
+    // Fetch the HTML content of the Genius New page
+    const response = await fetch("https://genius.com/new");
+    const res = await response.text();
 
+    // Parse the HTML content into a DOM object
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(res, "text/html");
+
+    // Find the element with the name "tag_ids[]" and assign it to tagElem
+    tagElem = htmlDoc.getElementsByName("tag_ids[]")[0];
+
+    // Return the element
     return tagElem;
 }
+
+
+/**
+ * Retrieves a list of artists from the Genius API based on a search query
+ * 
+ * @param {string} query - The search query for artists
+ * @returns {Promise<Array>} - A Promise that resolves to an array of unique artists matching the search query
+ */
+export async function getArtistsList(query) {
+    // Encode the search query to include special characters
+    const encodedName = encodeURIComponent(query);
+
+    // Construct the URL to call the Genius API search endpoint
+    const url = `https://genius.com/api/search/artist?q=${encodedName}&per_page=20`;
+
+    // Call the Genius API search endpoint and get the response as JSON
+    const response = await fetch(url);
+    const jsonResponse = await response.json();
+
+    // Extract the artists from the response and map them to a new object with just their name and ID
+    const artistsList = jsonResponse.response.sections[0].hits.map((hit) => ({
+        name: hit.result.name,
+        image: hit.result.image_url,
+        id: hit.result.id,
+    }));
+
+    // Return the list of artists
+    return artistsList;
+}
+
+
 
 export function replaceTextarea(textareaClasses) {
 
@@ -198,8 +277,16 @@ export function replaceTextarea(textareaClasses) {
     }
 }
 
+/**
+ * Removes the Quill rich text editor from the DOM.
+ */
 export function removeQuill() {
-    $(".ql-toolbar-container").remove();
+    // Remove the Quill toolbar container from the DOM
+    if ($(".ql-toolbar-container").length) {
+        $(".ql-toolbar-container").remove();
+    }
+
+    // Loop through all elements with class "ql-snow" and remove them from the DOM
     while ($(".ql-snow").length) {
         $(".ql-snow").remove();
     }
