@@ -54,7 +54,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
         border-radius: 10px;
       }
 
-      &:not(.ql-container *):not(.lyrics_style_guide *):not(.SongTags__Tag-xixwg3-2):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.referent):not(.u-display_block):not(.UserBadge__Container-v0cw88-0):not(.nav_menu-link):not(.discussion_list_meta_user_link):not(.destroy_discussion):not(.move_discussion):not(.group_accessibility > *) {
+      &:not(.ql-container *):not(.lyrics_style_guide *):not(.feed_dropdown-item):not(.SongTags__Tag-xixwg3-2):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.referent):not(.u-display_block):not(.UserBadge__Container-v0cw88-0):not(.nav_menu-link):not(.discussion_list_meta_user_link):not(.destroy_discussion):not(.move_discussion):not(.group_accessibility > *) {
         color: white !important;
         background-color: rgb(50, 65, 82);
 
@@ -69,7 +69,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
         background-color: $genius-yellow !important;
       }
 
-      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
+      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
         padding: 2px 5px;
       }
 
@@ -88,9 +88,15 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
       &:is(.ql-container *),
       &:is(.lyrics_style_guide *),
       &:is(.discussion_list_meta_user_link),
-      &:is(.Link__StyledLink-h3isu4-0) {
+      &:is(.Link__StyledLink-h3isu4-0){
         padding-left: 5px;
         padding-right: 5px;
+      }
+
+      &:is(.feed_dropdown-item) {
+        background-color: #ff1464 !important;
+        color: white !important;
+        padding-left: 10px;
       }
     }
   }
@@ -185,6 +191,14 @@ strong {
 .disable-scrolling {
   height: 100%;
   overflow: hidden;
+}
+
+header-admin .feed_dropdown {
+  border-radius: 10px;
+
+  .feed_dropdown-item {
+    border: 0 !important;
+  }
 }
 
 .header-primary,

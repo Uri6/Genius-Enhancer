@@ -190,6 +190,7 @@ export async function getPlaylistVideos(playlistLink) {
     const metadataData = await metadataResponse.json();
     const playlistTitle = metadataData.items[0].snippet.title;
     const playlistImage = metadataData.items[0].snippet.thumbnails.maxres.url;
+    const artistName = metadataData.items[0].snippet.channelTitle;
 
     // Fetch the playlist videos
     const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
@@ -203,6 +204,7 @@ export async function getPlaylistVideos(playlistLink) {
 
     // Return an object containing the metadata and the video links
     return {
+        artistName,
         playlistTitle,
         playlistImage,
         playlistLength,
@@ -378,138 +380,143 @@ export async function appendIcon() {
             } catch (error) {
                 console.error(error);
                 // change the border color of the input to red and increase the border width
-                    addMediaInput.css({ outline: "2px solid red" });
+                addMediaInput.css({ outline: "2px solid red" });
                 // add a tooltip to the input
                 addMediaInput.attr("title", "Invalid Youtube Playlist URL");
             }
         });
 
-        const autolinkArtworkContainer = document.createElement("div");
-        autolinkArtworkContainer.classList.add("autolink-artwork-icon-container", "rcorners");
+        const autolinkArtworkContainer = $('<div>', {
+            class: 'autolink-artwork-icon-container rcorners'
+        });
 
-        const autolinkArtwork = document.createElement("img");
-        autolinkArtwork.classList.add("autolink-artwork-icon");
-        autolinkArtwork.src = chrome.runtime.getURL("/src/images/artwork/512x512.png");
-        autolinkArtworkContainer.appendChild(autolinkArtwork);
+        const autolinkArtwork = $('<img>', {
+            class: 'autolink-artwork-icon',
+            src: chrome.runtime.getURL('/src/images/artwork/512x512.png')
+        }).appendTo(autolinkArtworkContainer);
 
-        const autolinkArtworkTitle = document.createElement('div');
-        autolinkArtworkTitle.classList.add("autolink-artwork-title");
-        autolinkArtworkTitle.innerText = "Autolink\nartwork";
-        autolinkArtworkContainer.appendChild(autolinkArtworkTitle);
+        const autolinkArtworkTitle = $('<div>', {
+            class: 'autolink-artwork-title',
+            text: "Autolink\nartwork"
+        }).appendTo(autolinkArtworkContainer);
 
-        autolinkArtworkContainer.addEventListener("click", () => {
-            if (!document.getElementsByClassName("artwork-images-stack")[0]) {
-                chrome.storage.local.get(["album_artwork_results"], (result) => {
-                    autolinkArtworkContainer.style.backgroundColor = "#333a3c";
-                    autolinkArtworkContainer.style.cursor = "default";
-                    autolinkArtwork.style.transform = "scale(1) rotate(0deg)";
-                    autolinkArtworkTitle.style.transform = "scale(1)";
-
-                    result = result.album_artwork_results;
-
-                    if (result.length === 0) {
-                        chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
-                    }
-
-                    // create a images stack element which contains every image in result
-                    const imagesStack = document.createElement("div");
-                    imagesStack.classList.add("artwork-images-stack", "gb-animate-right");
-
-                    for (let i = 0; i < result.length; i++) {
-                        const container = document.createElement("div");
-                        container.classList.add("artwork-image-container");
-
-                        const image = document.createElement("img");
-                        image.classList.add("artwork-image");
-                        image.src = result[i];
-                        container.insertAdjacentElement('afterbegin', image);
-
-                        const overlay = document.createElement("div");
-                        overlay.classList.add("overlay");
-
-                        $(overlay).hover(() => {
-                            overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)";
-                        });
-                        $(overlay).mouseleave(() => {
-                            overlay.style.backgroundColor = $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)";
-                        });
-
-                        const vButton = document.createElement("img");
-                        vButton.classList.add("v-button");
-                        vButton.src = chrome.runtime.getURL("/src/images/other/v.png");
-
-                        $(vButton).hover(() => {
-                            overlay.style.backgroundColor = "rgb(33, 236, 138, 0.1)";
-                        });
-                        $(vButton).mouseleave(() => {
-                            overlay.style.backgroundColor = "rgb(0, 0, 0, 0.2)";
-                        });
-
-                        vButton.addEventListener("click", function () {
-                            chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result[i] } });
-
-                            $(".v-button").css("opacity", "0");
-                            $(".x-button").css("opacity", "0");
-
-                            setTimeout(() => {
-                                $(".v-button").remove();
-                                $(".x-button").remove();
-                            }, 400);
-
-                            overlay.style.backgroundColor = "rgb(33, 236, 138, 0.4)";
-                            setTimeout(() => {
-                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0)";
-                            }, 400);
-                            setTimeout(() => {
-                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0.4)";
-                            }, 400);
-                            setTimeout(() => {
-                                overlay.style.backgroundColor = "rgb(33, 236, 138, 0)";
-                            }, 400);
-                        });
-
-                        overlay.insertAdjacentElement('afterbegin', vButton);
-
-                        const xButton = document.createElement("img");
-                        xButton.classList.add("x-button");
-                        xButton.src = chrome.runtime.getURL("/src/images/other/x.png");
-
-                        $(xButton).hover(() => {
-                            overlay.style.backgroundColor = "rgb(252, 88, 84, 0.1)";
-                        });
-                        $(xButton).mouseleave(() => {
-                            overlay.style.backgroundColor = "rgb(0, 0, 0, 0.2)";
-                        });
-
-                        xButton.addEventListener("click", function () {
-                            container.style.opacity = "0";
-                            container.style.transform = "translateY(25%)";
-                            overlay.style.backgroundColor = "rgb(252, 88, 84, 0.3)";
-                            // wait for animation to finish before removing the element
-                            setTimeout(() => { container.remove(); }, 400);
-                            if (imagesStack.childNodes.length === 0) {
-                                chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
-                            }
-                        });
-                        overlay.insertAdjacentElement('afterbegin', xButton);
-
-                        container.insertAdjacentElement('afterbegin', overlay);
-
-                        imagesStack.insertAdjacentElement('afterbegin', container);
-                    }
-
-                    const errorContainer = document.createElement("div");
-                    errorContainer.classList.add("error-container");
-
-                    const errorText = document.createElement("div");
-                    errorText.classList.add("error-text");
-                    errorText.innerHTML = "No artwork<br>found";
-                    errorContainer.insertAdjacentElement('afterbegin', errorText);
-
-                    imagesStack.insertAdjacentElement('afterbegin', errorContainer);
-
-                    autolinkArtworkContainer.insertAdjacentElement('afterbegin', imagesStack);
+        autolinkArtworkContainer.on("click", async () => {
+            if (!$('.artwork-images-stack').length) {
+                const album_artwork_results = await new Promise((resolve, reject) => {
+                    chrome.storage.local.get("album_artwork_results", (result) => {
+                        resolve(result.album_artwork_results);
+                    });
                 });
+
+                console.log("album_artwork_results: ", album_artwork_results);
+
+                autolinkArtworkContainer.css('backgroundColor', '#333a3c');
+                autolinkArtworkContainer.css('cursor', 'default');
+                autolinkArtwork.css('transform', 'scale(1) rotate(0deg)');
+                autolinkArtworkTitle.css('transform', 'scale(1)');
+
+                if (!album_artwork_results.length) {
+                    chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
+                }
+
+                const imagesStack = $('<div>', {
+                    class: 'artwork-images-stack gb-animate-right'
+                });
+
+                album_artwork_results.slice().reverse().forEach(result => {
+
+                    const container = $('<div>', {
+                        class: 'artwork-image-container'
+                    });
+
+                    $('<img>', {
+                        class: 'artwork-image',
+                        src: result
+                    }).appendTo(container);
+
+                    const overlay = $('<div>', {
+                        class: 'overlay'
+                    });
+
+                    overlay.hover(function () {
+                        overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)");
+                    });
+
+                    overlay.mouseleave(function () {
+                        overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)");
+                    });
+
+                    const vButton = $('<img>', {
+                        class: 'v-button',
+                        src: chrome.runtime.getURL('/src/images/other/v.png')
+                    });
+
+                    vButton.hover(function () {
+                        overlay.css('backgroundColor', "rgb(33, 236, 138, 0.1)");
+                    });
+
+                    vButton.mouseleave(function () {
+                        overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
+                    });
+
+                    vButton.click(function () {
+                        chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result } });
+
+                        $(".v-button, .x-button").css("opacity", "0");
+
+                        setTimeout(() => {
+                            $(".v-button, .x-button").remove();
+                        }, 400);
+
+                        overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
+                        setTimeout(() => {
+                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
+                        }, 400);
+                        setTimeout(() => {
+                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
+                        }, 400);
+                        setTimeout(() => {
+                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
+                        }, 400);
+                    });
+
+                    overlay.prepend(vButton);
+
+                    const xButton = $('<img>', {
+                        class: 'x-button',
+                        src: chrome.runtime.getURL('/src/images/other/x.png')
+                    });
+
+                    xButton.hover(function () {
+                        overlay.css('backgroundColor', "rgb(252, 88, 84, 0.1)");
+                    });
+
+                    xButton.mouseleave(function () {
+                        overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
+                    });
+
+                    xButton.click(function () {
+                        container.css({ 'opacity': '0', 'transform': 'translateY(25%)', 'backgroundColor': 'rgb(252, 88, 84, 0.3)' });
+                        setTimeout(() => { container.remove(); }, 400);
+                        if (imagesStack.children().length === 0) {
+                            chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
+                        }
+                    });
+
+                    overlay.prepend(xButton);
+                    container.prepend(overlay);
+                    imagesStack.append(container);
+                });
+
+                const errorContainer = $('<div>').addClass('error-container');
+
+                $('<div>', {
+                    class: 'error-text',
+                    html: 'No artwork<br>found'
+                }).appendTo(errorContainer);
+
+                imagesStack.prepend(errorContainer);
+                autolinkArtworkContainer.prepend(imagesStack);
             }
         });
 
@@ -694,69 +701,79 @@ export async function appendIcon() {
     });
 }
 
+
+/**
+ * Searches for album artwork from iTunes API based on album and artist name obtained from the web page
+ * The results are saved in the Chrome storage and also returned as a promise
+ * @returns {Promise<Array<String>>} A promise that resolves to an array of album artwork URLs
+ */
 export async function autolinkArtwork() {
-    console.log("autolinkArtwork");
+    // A helper function that checks if a given text string contains Hebrew characters
+    const containsHebrew = (text) => {
+        return /[א-ת]/.test(text);
+    }
 
-    let itunesResult = "";
+    // Get the album title and artist name from the page DOM
+    let albumTitle = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
+    let artistName = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerHTML;
+    let nameToSearch = [albumTitle, artistName];
 
-    // TODO: refactor this into an async function
-    new Promise((resolve, reject) => {
-        // TODO: add support for other non-english languages
-
-        const containsHebrew = (text) => {
-            return /[א-ת]/.test(text);
+    // If the album or artist name contains Hebrew characters, split it and use the non-Hebrew part for the search query
+    for (let i = 0; i < nameToSearch.length; i++) {
+        if (containsHebrew(nameToSearch[i])) {
+            const langsParts = nameToSearch[i].split(" - ")
+            nameToSearch[i] = langsParts[i === 0 ? 1 : 0];
         }
+    }
 
-        let albumTitle = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
-        let artistName = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerHTML;
-        let nameToSearch = [albumTitle, artistName];
+    nameToSearch = nameToSearch[0];
 
-        for (let i = 0; i < nameToSearch.length; i++) {
-            if (containsHebrew(nameToSearch[i])) {
-                const langsParts = nameToSearch[i].split(" - ")
-                nameToSearch[i] = langsParts[i === 0 ? 1 : 0];
-            }
-        }
-
-        nameToSearch = nameToSearch[0]//.join(" ");
-
-        $.ajax({
-
+    try {
+        // Make a GET request to the iTunes Artwork API to get a URL for the album artwork
+        const data = await $.ajax({
             type: "GET",
             crossDomain: true,
             url: 'https://itunesartwork.bendodson.com/api.php',
             data: { query: nameToSearch, entity: 'album', country: 'us', type: 'request' },
             dataType: 'json'
+        });
 
-        }).done(function (data) {
-            $.ajax({
-                type: "GET",
-                crossDomain: true,
-                url: data.url,
-                data: {},
-                dataType: 'json'
-            }).done(function (data) {
-                $.ajax({
-                    type: "POST",
-                    crossDomain: true,
-                    url: 'https://itunesartwork.bendodson.com/api.php',
-                    data: { json: JSON.stringify(data), type: 'data', entity: 'album' },
-                    dataType: 'json'
-                }).done(function (data) {
-                    if (!data.error && data.length) {
-                        for (let i = 0; i < data.length; i++) {
-                            data[i] = data[i].url.replace("/600x600bb.jpg", "/1000x1000-999.jpg");
-                        }
-                        itunesResult = data;
-                    }
-                    resolve();
-                });
-            });
-        })
-    }).then(() => {
+        // Make a GET request to the URL returned by the previous request to get more information about the album artwork
+        const data2 = await $.ajax({
+            type: "GET",
+            crossDomain: true,
+            url: data.url,
+            data: {},
+            dataType: 'json'
+        });
+
+        // Make a POST request to the iTunes Artwork API with the data returned by the previous request to get the actual image URLs for the artwork
+        const data3 = await $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: 'https://itunesartwork.bendodson.com/api.php',
+            data: { json: JSON.stringify(data2), type: 'data', entity: 'album' },
+            dataType: 'json'
+        });
+
+        let itunesResult = "";
+        if (!data3.error && data3.length) {
+            // Replace the large image URLs with smaller ones to save bandwidth and performance
+            for (let i = 0; i < data3.length; i++) {
+                data3[i] = data3[i].url.replace("/600x600bb.jpg", "/115x115.jpg");
+            }
+            itunesResult = data3;
+        }
+
+        console.log("result: ", itunesResult);
+
+        // Store the result in Chrome storage
         chrome.storage.local.set({ "album_artwork_results": itunesResult });
         return itunesResult;
-    });
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function saveEverything() {

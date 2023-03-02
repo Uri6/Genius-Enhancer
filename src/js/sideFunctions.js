@@ -27,7 +27,7 @@ export function insertAfter(newNode, existingNode) {
  */
 export function getDeatils() {
     // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
-    const $meta = $('meta').filter((i, el) => $(el).attr('content')?.startsWith('{')).eq(0);
+    const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
     // Define an object containing HTML entity codes and their corresponding characters
     const replaces = {
@@ -39,9 +39,9 @@ export function getDeatils() {
     };
 
     // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
-    if ($meta.length) {
+    if (metaElem) {
         // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
-        const meta = $meta.attr('content').replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
+        const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
 
         // Parse the JSON string and return the resulting object
         return JSON.parse(meta);
