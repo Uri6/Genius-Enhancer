@@ -587,6 +587,10 @@ input::-webkit-calendar-picker-indicator {
 .header-actions *:not([open-header-menus=open_header_menus]) .feed_dropdown:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0) .PlaceholderSpinnerIframe__Placeholder-sc-1vue620-1.jHLvCd {
   margin: 0 auto !important;
 }
+.PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ .search_results_autocomplete_container .feed_dropdown,
+.header-actions .search_results_autocomplete_container .feed_dropdown {
+  right: 20px !important;
+}
 
 .PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt,
 .logo_container {
@@ -721,6 +725,52 @@ input::-webkit-calendar-picker-indicator {
   padding: 5px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 300px;
+  -moz-column-count: 2;
+       column-count: 2;
+  -moz-column-gap: 10px;
+       column-gap: 10px;
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem {
+  display: block;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem label,
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem input {
+  cursor: pointer;
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem label .RecentActivity__FilteringDropdownItemText {
+  display: inline-block;
+  align-items: center;
+  max-width: 90px;
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem label .chkboxmspan {
+  top: 2.5px;
+  margin-right: 10px;
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem:hover {
+  background: #ff1464;
+  color: #fff;
+}
+.RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem:nth-child(1) label .chkboxmspan, .RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem:nth-child(2) label .chkboxmspan {
+  top: -5px;
 }
 
 .autocomplete-results {

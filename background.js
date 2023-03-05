@@ -55,6 +55,9 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     let func, args;
 
     switch (true) {
+        case "getDetails" in message:
+            func = getDeatils;
+            break;
         case "identifyPageType" in message:
             func = identifyPageType;
             break;
@@ -82,7 +85,6 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
         case "album_getPlaylistVideos" in message:
             func = getPlaylistVideos;
             args = message.album_getPlaylistVideos;
-            console.log("getPlaylistVideos called");
             break;
         case "album_saveEverything" in message:
             func = saveEverything;
@@ -116,19 +118,21 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
             return;
     }
 
-    chrome.scripting.executeScript({
-        target: { tabId: tabId },
-        func: func,
-        args: args
-    }, (results) => {
-        if (func === identifyPageType) {
-            sendResponse(results[0].result);
-        } else if (func === getPlaylistVideos) {
-            console.log(results[0].result);
-            sendResponse(results[0].result);
-        }
+    let res = new Promise((resolve) => {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: func,
+            args: args
+        }).then((results) => {
+            if (func === identifyPageType || func === getPlaylistVideos || func === getDeatils) {
+                resolve(results[0].result);
+            }
+
+            resolve();
+        });
     });
 
+    sendResponse(res);
 
 });
 
@@ -177,7 +181,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
             { type: "css", file: "./lib/quilljs/quill.snow.css" },
-            { type: "css", file: "./lib/select2/select2.min.css" },
             { type: "js", file: "./lib/jquery/jquery.min.js" },
             { type: "js", file: "./lib/jquery/jquery-ui.js" },
             { type: "js", file: "./lib/bootstrap/bootstrap.min.js" },
@@ -185,7 +188,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
             //{ type: "js", file: "./lib/oauth/oauth.min.js" },
-            { type: "js", file: "./lib/select2/select2.min.js" }
         ];
 
         const cssFiles = files
@@ -356,6 +358,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                             // if an element with the classes "AnnotationPortaldesktop__Sticky-sc-17hre1n-2 daeaLL" added, remove the class "daeaLL" from it
                             $(document).on("DOMNodeInserted", function (e) {
+
+                                if ($('.search_results_autocomplete_container .feed_dropdown').hasClass("feed_dropdown--left_align")) {
+                                    $('.search_results_autocomplete_container .feed_dropdown').removeClass("feed_dropdown--left_align");
+                                }
+
                                 /* replace the elememt
                                     <div ng-if="focused" ng-click="unfocus()" stop-propagation="click" class="global_search-submit_button global_search-submit_button--focused ng-scope">
                                         <svg src="x.svg" class="global_search-search_icon global_search-search_icon--close inline_icon inline_icon--down_4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path d="M22 1.39L20.61 0 11 9.62 1.39 0 0 1.39 9.62 11 0 20.61 1.39 22 11 12.38 20.61 22 22 20.61 12.38 11 22 1.39"></path></svg>
@@ -685,21 +692,26 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     target: { tabId: tabId },
                                     func: (() => {
                                         const getTagsList = async function () {
+                                            // Initialize variable for later use
                                             let tagElem;
 
-                                            await fetch("https://genius.com/new")
-                                                .then(function (response) { return response.text() })
-                                                .then((res) => {
-                                                    var parser = new DOMParser();
-                                                    var htmlDoc = parser.parseFromString(res, 'text/html');
-                                                    tagElem = htmlDoc.getElementsByName("tag_ids[]")[0];
-                                                });
+                                            // Fetch the HTML content of the Genius New page
+                                            const response = await fetch("https://genius.com/new");
+                                            const res = await response.text();
 
+                                            // Parse the HTML content into a DOM object
+                                            const parser = new DOMParser();
+                                            const htmlDoc = parser.parseFromString(res, "text/html");
+
+                                            // Find the element with the name "tag_ids[]" and assign it to tagElem
+                                            tagElem = htmlDoc.getElementsByName("tag_ids[]")[0];
+
+                                            // Return the element
                                             return tagElem;
                                         }
 
-                                        getTagsList().then((res) => {
-                                            let replaces = {
+                                        getTagsList().then(res => {
+                                            const replaces = {
                                                 '&#039;': `'`,
                                                 '&amp;': '&',
                                                 '&lt;': '<',
@@ -707,82 +719,30 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 '&quot;': '"'
                                             };
 
-                                            var tempElem = document.createElement('datalist');
-                                            tempElem.innerHTML = res.innerHTML;
-                                            tempElem.setAttribute("id", "tagsList");
+                                            const dataListElem = $('<datalist>').html(res.innerHTML).attr('id', 'tagsList');
+                                            const options = dataListElem.find('option');
 
-                                            for (let i = tempElem.childNodes.length; i > 0; i -= 2) {
-                                                var tagNameFixed = tempElem.childNodes[i - 1].innerHTML.replace(/&[\w\d#]{2,5};/g, match => replaces[match]).replace(/  +/g, ' ');
-                                                tempElem.childNodes[i - 1].innerHTML = tagNameFixed;
-                                                tempElem.childNodes[i - 1].setAttribute("value", tagNameFixed);
-                                            }
+                                            options.each(function () {
+                                                const tagNameFixed = $(this).html().replace(/&[\w\d#]{2,5};/g, match => replaces[match]).replace(/  +/g, ' ');
+                                                const tagID = $(this).attr('value');
+                                                $(this).html(tagNameFixed).attr('value', tagID);
+                                            });
 
-                                            document.body.appendChild(tempElem);
-
-                                            var options = $('datalist#tagsList option');
-                                            var arr = options.map(function (_, o) {
+                                            const arr = options.map(function () {
                                                 return {
-                                                    text: $(o).text(),
-                                                    value: o.value
+                                                    text: $(this).text(),
+                                                    value: this.value
                                                 };
-                                            }).get();
-                                            arr.sort(function (o1, o2) {
+                                            }).get().sort(function (o1, o2) {
                                                 return o1.text > o2.text ? 1 : o1.text < o2.text ? -1 : 0;
                                             });
+
                                             options.each(function (i, o) {
                                                 o.value = arr[i].value;
-                                                $(o).text(arr[i].t);
+                                                $(o).text(arr[i].text);
                                             });
-                                        })
 
-                                        const getArtistsList = async function () {
-                                            let artistElem;
-                                            const letters = "abcdefghijklmnopqrstuvwxyz0".split("");
-                                            for (let i = 0; i < letters.length; i++) {
-                                                await fetch("https://genius.com/artists-index/" + letters[i])
-                                                    .then(function (response) { return response.text() })
-                                                    .then((res) => {
-                                                        var parser = new DOMParser();
-                                                        var htmlDoc = parser.parseFromString(res, 'text/html');
-                                                        artistElem = htmlDoc.getElementsByClassName("artists_index_list")[1];
-                                                    });
-
-                                                if (artistElem != undefined) {
-                                                    break;
-                                                }
-                                            }
-                                            return artistElem;
-                                        }
-
-                                        getArtistsList().then((res) => {
-                                            // need to convert the ul to a select element with options for each li element in the ul element
-
-                                            var tempElem = document.createElement('datalist');
-                                            tempElem.innerHTML = res.innerHTML;
-                                            tempElem.setAttribute("id", "artistsList");
-
-                                            for (let i = tempElem.childNodes.length; i > 0; i -= 2) {
-                                                var artistNameFixed = tempElem.childNodes[i - 1].innerHTML//.replace(/&[\w\d#]{2,5};/g, match => replaces[match]).replace(/  +/g, ' ');
-                                                tempElem.childNodes[i - 1].innerHTML = artistNameFixed;
-                                                tempElem.childNodes[i - 1].setAttribute("value", artistNameFixed);
-                                            }
-
-                                            document.body.appendChild(tempElem);
-
-                                            var options = $('datalist#artistsList option');
-                                            var arr = options.map(function (_, o) {
-                                                return {
-                                                    text: $(o).text(),
-                                                    value: o.value
-                                                };
-                                            }).get();
-                                            arr.sort(function (o1, o2) {
-                                                return o1.text > o2.text ? 1 : o1.text < o2.text ? -1 : 0;
-                                            });
-                                            options.each(function (i, o) {
-                                                o.value = arr[i].value;
-                                                $(o).text(arr[i].t);
-                                            });
+                                            $('body').append(dataListElem);
                                         });
                                     })
                                 }
@@ -861,93 +821,140 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     class: 'RecentActivity__FilteringContainer'
                                                 });
 
-                                                $('<span>', {
+                                                const button = $('<span>', {
                                                     class: 'RecentActivity__FilteringTitle',
-                                                    text: 'Filter Activities'
+                                                    text: 'Filter'
                                                 }).appendTo(filterContainer);
 
                                                 // Define the options for the dropdown
                                                 const options = [
-                                                    { id: 'all', text: 'All' },
-                                                    { id: 'created|edited|merged|accepted|rejected', text: 'Annotations' },
-                                                    { id: 'added_a_suggestion_to', text: 'Comments' },
+                                                    { id: 'created|edited|merged|accepted|rejected|pinned', text: 'Annotations, Proposals, Q&A' },
+                                                    { id: 'added_a_suggestion_to|replied_to|integrated|archived|marked', text: 'Comments, Suggestions' },
                                                     { id: 'followed|unfollowed', text: 'Follows' },
                                                     { id: '', text: 'Geniusbot' },
                                                     { id: 'edited_the_lyrics_of|recognized|marked_complete|verified_the_lyrics_of|unverified_the_lyrics_of', text: 'Lyrics Edits' },
-                                                    { id: 'merged|', text: 'Lyrics Proposals' },
                                                     { id: 'edited_the_metadata_of', text: 'Metadata' },
                                                     { id: 'pyonged', text: 'Pyongs' },
-                                                    { id: 'pinned|created', text: 'Q&A' },
-                                                    { id: 'added_a_suggestion_to|integrated|marked', text: 'Suggestions' },
                                                     { id: 'downvoted|upvoted', text: 'Voting' }
                                                 ];
 
                                                 // Create a select element for the dropdown
-                                                const filterDropdown = $('<select>', {
+                                                const filterDropdown = $('<div>', {
                                                     class: 'RecentActivity__FilteringDropdown',
-                                                    multiple: true,
-                                                    'data-dropdown': true
+                                                    style: 'display: none;'
                                                 });
 
                                                 // Create an option element for each option and add it to the dropdown
                                                 options.forEach(function (option) {
-                                                    var optionElem = document.createElement('option');
-                                                    optionElem.setAttribute('value', option.id);
-                                                    optionElem.innerText = option.text;
-                                                    filterDropdown.appendChild(optionElem);
-                                                });
-
-                                                // Add an event listener to the "All" option
-                                                filterDropdown.addEventListener('change', function (e) {
-                                                    var allOptionSelected = e.target.options[0].selected;
-
-                                                    // Check or uncheck all options based on the "All" option state
-                                                    options.forEach(function (option) {
-                                                        var optionElem = filterDropdown.querySelector('option[value="' + option.id + '"]');
-                                                        optionElem.selected = allOptionSelected;
-                                                    });
-                                                });
-
-                                                // Initialize the dropdown with select2
-                                                $(filterDropdown).select2({
-                                                    placeholder: 'Filter Activities',
-                                                    allowClear: true,
-                                                    width: '100%'
+                                                    $('<div>', {
+                                                        class: 'RecentActivity__FilteringDropdownItem'
+                                                    })
+                                                        .append($('<input>', {
+                                                            type: 'checkbox',
+                                                            class: 'chkboxm',
+                                                            id: option.text,
+                                                            name: option.text,
+                                                            'filter-id': option.id,
+                                                            checked: true
+                                                        }))
+                                                        .append($('<label>', {
+                                                            for: option.text,
+                                                        })
+                                                            .append($('<span>', {
+                                                                class: 'chkboxmspan'
+                                                            }))
+                                                            .append($('<span>', {
+                                                                class: 'RecentActivity__FilteringDropdownItemText',
+                                                                text: option.text
+                                                            }))
+                                                        )
+                                                        .appendTo(filterDropdown);
                                                 });
 
                                                 // Add the dropdown to the page
                                                 $(e.target).find('.RecentActivity__Title-d62qa5-1.ilJdac').after(filterContainer);
                                                 $(filterContainer).append(filterDropdown);
 
-                                                // Add a click event listener to the "All" option
-                                                $(filterDropdown).on('select2:select', function (e) {
-                                                    if (e.params.data.id === 'all') {
-                                                        var allOptionSelected = $(filterDropdown).val() !== null;
+                                                // When the dropdown is clicked, show the options
+                                                $(button).click(function () {
+                                                    $(filterDropdown).toggle();
+                                                });
 
-                                                        // Check or uncheck all options based on the "All" option state
-                                                        options.forEach(function (option) {
-                                                            var optionElem = $(filterDropdown).find('option[value="' + option.id + '"]');
-                                                            if (allOptionSelected) {
-                                                                optionElem.prop('selected', true);
-                                                            } else {
-                                                                optionElem.prop('selected', false);
-                                                            }
-                                                        });
-                                                        $(filterDropdown).trigger('change'); // Trigger change event to update select2
+                                                // When the user clicks anywhere outside of the dropdown, hide it (make sure it won't hide when clicking on the button)
+                                                $(document).click(function (e) {
+                                                    if (!$(e.target).is(button) && !$(e.target).is(filterDropdown) && !$(e.target).is(filterDropdown.find('*'))) {
+                                                        $(filterDropdown).hide();
                                                     }
+                                                });
+
+                                                $('.RecentActivity__FilteringDropdownItem').click(function () {
+                                                    $(this).find('.chkboxm').prop('checked', !$(this).find('.chkboxm').prop('checked'));
+                                                });
+
+                                                // When the user clicks on an option, show/hide the activity items
+                                                $(filterDropdown).find('.chkboxm').click(function () {
+                                                    const filterIds = $(this).attr('filter-id').split('|');
+                                                    const isChecked = $(this).prop('checked');
+
+                                                    // the activity items are in the .PlaceholderSpinnerIframe__Iframe-sc-1vue620-0 iframe, so we need to get the iframe's document
+                                                    const iframe = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
+
+                                                    // each div child of the element with the tag name song-activity-stream is an activity item
+                                                    const activityItems = Array.from(iframe.contentWindow.document.querySelector('song-activity-stream div').children);
+
+                                                    activityItems.forEach(activityItem => {
+                                                        // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
+                                                        let actionType = activityItem.querySelector('inbox-line-item-action-icon div svg');
+                                                        if (actionType) {
+                                                            actionType = actionType.getAttribute('ng-switch-when');
+                                                            console.log(actionType);
+                                                            if (filterIds.includes(actionType)) {
+                                                                $(activityItem).toggle(!isChecked);
+                                                            }
+                                                        } else {
+                                                            actionType = activityItem.querySelector('inbox-line-item-action-icon div');
+                                                            if (actionType && !actionType.querySelector('svg') && filterIds === ['']) {
+                                                                $(activityItem).toggle(!isChecked);
+                                                            }
+                                                        }
+                                                    });
+
+                                                    // insert to the iframe a .checked-filters div element with all the checked filters ids (if there's already a .checked-filters div element, remove it)
+                                                    const checkedFilters = document.querySelectorAll('.RecentActivity__FilteringDropdownItem input:checked');
+                                                    const checkedFiltersIds = Array.from(checkedFilters).map(checkedFilter => checkedFilter.getAttribute('filter-id')).join('|');
+                                                    const checkedFiltersDiv = iframe.contentWindow.document.querySelector('.checked-filters');
+                                                    if (checkedFiltersDiv) {
+                                                        checkedFiltersDiv.remove();
+                                                    }
+                                                    $('<div>', {
+                                                        class: 'checked-filters',
+                                                        style: 'display: none;',
+                                                        text: checkedFiltersIds
+                                                    }).prependTo(iframe.contentWindow.document);
                                                 });
                                             }
 
-                                            while (!$(e.target).find(".RecentActivity__Title-d62qa5-1.ilJdac").length) {
-                                                Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
-                                            }
-
-                                            $(e.target).find(".RecentActivity__Title-d62qa5-1.ilJdac").after(filterDropdown);
-
-                                            // the indicator for the action type is in the following structure (every arrow is a child node):
-                                            // ng-repeat="line_item in line_items track by line_item.event_ids" -> inbox-line-item -> class="feed_dropdown-item feed_dropdown-item--active"
-                                            // -> class="inbox_line_item" -> class="inbox_line_item-action" -> class="inbox_line_item-action-center" -> inbox-line-item-action-icon
-                                            // -> ng-switch=":: action_name" -> svg ng-switch-when=[ACTION_TYPE]
+                                            document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0').contentWindow.document.querySelector('song-activity-stream div').addEventListener('DOMNodeInserted', function (e) {
+                                                if (e.target.tagName === 'DIV') {
+                                                    let filterIds = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0').contentWindow.document.querySelector('.checked-filters');
+                                                    if (filterIds) {
+                                                        filterIds = filterIds.innerText.split('|');
+                                                        // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
+                                                        let actionType = e.target.querySelector('inbox-line-item-action-icon div svg');
+                                                        if (actionType) {
+                                                            actionType = actionType.getAttribute('ng-switch-when');
+                                                            if (filterIds.includes(actionType)) {
+                                                                $(e.target).toggle(false);
+                                                            }
+                                                        } else {
+                                                            actionType = e.target.querySelector('inbox-line-item-action-icon div');
+                                                            if (actionType && !actionType.querySelector('svg') && filterIds.includes('')) {
+                                                                $(e.target).toggle(false);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
                                         });
 
                                         let isAnnotation = false;

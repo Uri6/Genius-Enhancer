@@ -88,7 +88,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
       &:is(.ql-container *),
       &:is(.lyrics_style_guide *),
       &:is(.discussion_list_meta_user_link),
-      &:is(.Link__StyledLink-h3isu4-0){
+      &:is(.Link__StyledLink-h3isu4-0) {
         padding-left: 5px;
         padding-right: 5px;
       }
@@ -550,6 +550,12 @@ input {
       }
     }
   }
+
+  .search_results_autocomplete_container {
+    .feed_dropdown {
+      right: 20px !important;
+    }
+  }
 }
 
 .PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt,
@@ -719,6 +725,63 @@ input {
     padding: 5px 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+  }
+
+  .RecentActivity__FilteringDropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 8px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 300px;
+    // make sure the items will be in two columns
+    column-count: 2;
+    column-gap: 10px;
+
+    .RecentActivity__FilteringDropdownItem {
+      display: block;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+      label,
+      input {
+        cursor: pointer;
+      }
+
+      label {
+        .RecentActivity__FilteringDropdownItemText {
+          display: inline-block;
+          align-items: center;
+          max-width: 90px;
+        }
+
+        .chkboxmspan {
+          top: 2.5px;
+          margin-right: 10px;
+        }
+      }
+
+      &:hover {
+        background: #ff1464;
+        color: #fff;
+      }
+
+      &:nth-child(1),
+      &:nth-child(2) {
+        label .chkboxmspan {
+          top: -5px;
+        }
+      }
+    }
   }
 }
 

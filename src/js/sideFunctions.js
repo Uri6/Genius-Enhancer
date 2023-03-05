@@ -181,24 +181,44 @@ export async function getArtistsList(query) {
     const encodedName = encodeURIComponent(query);
 
     // Construct the URL to call the Genius API search endpoint
-    const url = `https://genius.com/api/search/artist?q=${encodedName}&per_page=20`;
+    const url = `https://genius.com/api/artists/autocomplete?q=${encodedName}&limit=20`;
 
     // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
     const jsonResponse = await response.json();
 
     // Extract the artists from the response and map them to a new object with just their name and ID
-    const artistsList = jsonResponse.response.sections[0].hits.map((hit) => ({
-        name: hit.result.name,
-        image: hit.result.image_url,
-        id: hit.result.id,
+    const artistsList = jsonResponse.response.artists.map((artist) => ({
+        name: artist.name,
+        image: artist.image_url,
+        id: artist.id,
     }));
 
     // Return the list of artists
     return artistsList;
 }
 
+export async function getCreditsList(query) {
+    // Encode the search query to include special characters
+    const encodedName = encodeURIComponent(query);
 
+    // Construct the URL to call the Genius API search endpoint
+    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}&limit=20`;
+
+    // Call the Genius API search endpoint and get the response as JSON
+    const response = await fetch(url);
+    const jsonResponse = await response.json();
+
+    // Extract the artists from the response and map them to a new object with just their name and ID
+    const creditsList = jsonResponse.response.custom_performance_roles.map((credit) => ({
+        type: credit._type,
+        label: credit.label,
+        id: credit.id,
+    }));
+
+    // Return the list of artists
+    return creditsList;
+}
 
 export function replaceTextarea(textareaClasses) {
 

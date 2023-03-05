@@ -83,8 +83,7 @@ artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element 
 }
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card:hover .cover_art {
   transform: perspective(75em) rotateX(15deg) scale(1.1) translateY(-10px) !important;
-  border-radius: 5px !important;
-  outline: 2px solid #ff1464 !important;
+  border-radius: 2px !important;
 }
 artist-songs-and-albums album-grid .thumbnail_grid .thumbnail_grid-grid_element .vertical_album_card:hover .cover_art::after {
   display: block;

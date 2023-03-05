@@ -560,13 +560,14 @@ export async function appendIcon() {
         const tagify_tagsWhitelist = $("datalist#tagsList option").map(function (_, o) {
             let searchByStr;
 
-            switch (o.value) {
+            switch (o.innerText) {
                 case "Hip-Hop":
                     searchByStr = "hip hop, genius hip hop, genius hip-hop, hip hop genius, hip-hop genius";
             }
 
             return {
-                value: o.value,
+                value: o.innerText,
+                id: o.value,
                 searchBy: searchByStr
             };
         }).get();
@@ -575,8 +576,9 @@ export async function appendIcon() {
             delimiters: null,
             templates: {
                 tag: function (tagData) {
+                    console.log(tagData);
                     try {
-                        return `<tag title='${tagData.value}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
+                        return `<tag title='${tagData.value}' tag-id='${tagData.id}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
                                 <x title='remove tag' class='tagify__tag__removeBtn'></x>
                                 <div>
                                     <span class='tagify__tag-text'>${tagData.value}</span>
@@ -628,22 +630,27 @@ export async function appendIcon() {
                 case "pop":
                 case "genius pop":
                     tagData.value = "Pop Genius";
+                    tagData.id = 16;
                     break;
                 case "rap":
                 case "genius rap":
                     tagData.value = "Rap Genius";
+                    tagData.id = 1434;
                     break;
                 case "rock":
                 case "genius rock":
                     tagData.value = "Rock Genius";
+                    tagData.id = 567;
                     break;
                 case "r&b":
                 case "genius r&b":
                     tagData.value = "R&B Genius";
+                    tagData.id = 352;
                     break;
                 case "country":
                 case "genius country":
                     tagData.value = "Country Genius";
+                    tagData.id = 413;
                     break;
                 case "hip hop":
                 case "genius hip hop":
@@ -651,6 +658,7 @@ export async function appendIcon() {
                 case "hip hop genius":
                 case "hip-hop genius":
                     tagData.value = "Hip-Hop";
+                    tagData.id = 3783;
                     break;
             }
         }
@@ -777,21 +785,39 @@ export async function autolinkArtwork() {
 }
 
 export async function saveEverything() {
-    // TODO: refactor this into an API call.
 
-    const numOfSongs = Array.from(
-        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
-    ).length;
+    const getDeatils = () => {
+        // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
+        const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
-    const albumSongs = Array.from(
-        document.getElementsByClassName("u-display_block")
-    ).slice(0, numOfSongs);
+        // Define an object containing HTML entity codes and their corresponding characters
+        const replaces = {
+            '&#039;': `'`,
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"'
+        };
 
-    const tagNames = $(".extension-box tag")
-        .map(function () {
-            return $(this).attr("title");
-        })
-        .get();
+        // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
+        if (metaElem) {
+            // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
+            const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
+
+            // Parse the JSON string and return the resulting object
+            return JSON.parse(meta);
+        }
+    }
+
+    const details = getDeatils();
+    const albumSongs = details.album_appearances;
+
+    const tags = $(".extension-box tag").toArray().map((tag) => {
+        return {
+            id: tag.getAttribute("tag-id"),
+            name: tag.getAttribute("title")
+        }
+    });
 
     let everythingIsSaved = false;
 
@@ -807,80 +833,37 @@ export async function saveEverything() {
     $("header-with-cover-art").after(progressBar);
 
     albumSongs.forEach(async (song) => {
-        const iframe = document.createElement("iframe");
-        iframe.classList.add("extension-song");
-        iframe.sandbox = "allow-scripts allow-same-origin";
-        iframe.style.display = "none";
-        iframe.src = song.href;
-        document.body.appendChild(iframe);
+        // the api for adding tags to a song is HTTP PUT https://genius.com/api/SONG-API-PATH {"text_format":"html,markdown","song":{"tags":[{"id":TAG-ID,"name":"TAG-NAME"},{"id":TAG-ID,"name":"TAG-NAME"}]}}
+        const apiKey = "FvAP7zy0fRVkG870MzpfkTafVQo1H5RdObznmlvEWypAWzq6P14eHpLhFBc4DsPy";
 
-        await new Promise((resolve) => (iframe.onload = resolve));
+        await $.ajax({
+            type: "PUT",
+            url: `https://genius.com/api${song.song.api_path}`,
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+            },
+            data: JSON.stringify({
+                text_format: "html,markdown",
+                song: {
+                    tags: tags.map((tagName) => {
+                        return {
+                            id: +tagName.id,
+                            name: tagName.name,
+                        };
+                    }),
+                },
+            }),
+            contentType: "application/json"
+        });
 
-        let width = progressBar.style.width;
-        let newWidth = `${(parseInt(width, 10) + (1 / albumSongs.length / 3) * 100)}%`;
-        progressBar.style.width = newWidth;
-
-        while (!iframe.contentWindow.document.querySelector("button.SmallButton__Container-mg33hl-0")) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-
-        iframe.contentWindow.document
-            .querySelector("button.SmallButton__Container-mg33hl-0")
-            .click();
-
-        let existingTags = [];
-        iframe.contentWindow.document
-            .querySelector("[data-testid='tags-input']")
-            .querySelectorAll(".TagInput__MultiValueLabel-sc-17py0eg-2.blnjJQ")
-            .forEach((e) => {
-                existingTags.push(e.innerText);
-            });
-
-        const tagsForThisSong = tagNames.filter((e) => !existingTags.includes(e));
-        console.log(
-            "song: ",
-            song.innerText,
-            " tags: ",
-            tagNames,
-            " existing tags: ",
-            existingTags,
-            " tags for this song: ",
-            tagsForThisSong
-        );
-
-        for (const tag of tagsForThisSong) {
-            const input = iframe.contentWindow.document.querySelector("input#react-select-7-input");
-            input.value = tag;
-            const event = new InputEvent("input", {
-                bubbles: true,
-                data: tag,
-            });
-            input.dispatchEvent(event);
-
-            while (!iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option").length) {
-                await new Promise((resolve) => setTimeout(resolve, 100));
-            }
-
-            const options = iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
-            options[0].click();
-        }
-
-        let width1 = progressBar.style.width;
-        let newWidth1 = `${(parseInt(width1, 10) + (2 / albumSongs.length / 3) * 100)}%`;
-        progressBar.style.width = newWidth1;
+        const currentWidth = $(progressBar).width();
+        const newWidth = `${currentWidth + (1 / albumSongs.length) * 100}%`;
+        $(progressBar).width(newWidth);
 
         // if it's the last song, set everythingIsSaved to true
         if (song === albumSongs[albumSongs.length - 1]) {
             everythingIsSaved = true;
         }
-
-        while (iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").disabled) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-        iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").click();
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        iframe.remove();
     });
 
     while (!everythingIsSaved) {
@@ -911,7 +894,6 @@ export function addSongAsTheNext() {
         mutations.forEach(function (mutation) {
             if (mutation.addedNodes.length) {
                 let addedElem = mutation.addedNodes[0];
-                console.log("addedElem: ", addedElem.classList);
                 let input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
 
                 if (input) {
