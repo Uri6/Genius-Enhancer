@@ -12,7 +12,7 @@
   --bs-body-line-height: 1.5;
 }
 
-*:not(.AnnotationPortaldesktop__Sticky-sc-17hre1n-2.daeaLL):not(.drop.drop-element):not(li):not(a) {
+*:not(.AnnotationPortaldesktop__Sticky-sc-17hre1n-2.daeaLL):not(.drop.drop-element):not(li):not(a):not(input) {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -380,10 +380,22 @@ input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
 
+@media (max-width: 940px) {
+  #sticky-nav .StickyNavdesktop__Subnavigation-sc-60o25r-6 {
+    opacity: 0 !important;
+  }
+}
+
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd,
 .header-nav_menu {
   background: none !important;
   margin-left: 150px !important;
+}
+@media (max-width: 1240px) {
+  .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd,
+  .header-nav_menu {
+    opacity: 0 !important;
+  }
 }
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd .PageHeaderdesktop__Link-bhx5ui-4.jQULAr,
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd .nav_menu-item,

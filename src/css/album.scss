@@ -331,6 +331,91 @@
         top: 120px;
         left: 65px;
         width: 500px;
+        &:not(.details) {
+            z-index: 2
+        }
+
+        &.details {
+            background-color: #f1f1f1;
+            border-radius: 0px 0px 10px 10px;
+            padding: 15px 5px 5px 5px;
+            top: 110px;
+            z-index: 1;
+            cursor: default;
+
+            &:not(.image-container):not(.image):not(.title):not(.artist) {
+                height: 80px;
+            }
+
+            * {
+                position: absolute;
+            }
+
+            .image-container {
+                display: inline-flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                width: 100px !important;
+                height: 56.25px !important;
+
+                .image:not([src=""]) {
+                    border-radius: 4px;
+                    margin-right: 10px;
+                    // make sure it will be in the height of the container, and keep the aspect ratio
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            .title {
+                display: inline-block;
+                font-family: "Programme";
+                font-size: 18px;
+                font-weight: 500;
+                color: #000;
+                max-width: 350px;
+                max-height: 22px;
+                text-align: left;
+                left: 120px;
+                top: 22px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .artist {
+                display: inline-block;
+                font-family: "Programme";
+                font-size: 14px;
+                font-weight: 500;
+                color: rgba(0, 0, 0, 0.4);
+                max-width: 360px;
+                text-align: left;
+                left: 120px;
+                top: 47px;
+            }
+
+            .length {
+                display: inline-block;
+                font-family: "Programme";
+                font-size: 16px;
+                font-weight: 500;
+                max-width: 360px;
+                text-align: left;
+                right: 5px;
+                top: 33px;
+            }
+        }
+    }
+
+    &.error {
+        outline-width: 2px !important;
+
+        &.error-animation {
+            background-color: #fc5753;
+        }
     }
 
     &::placeholder {

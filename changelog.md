@@ -1,21 +1,32 @@
 # Changelog
 
-## 0.7.2
+## 0.8
 **Bugs Squashed**
-- When using the old song page to add additional credits, there’s no dropdown menu [ @andzas ]
+- No more memory leaks causing browser crashes! [ @Everyone ]
+- The new text editor removes the referent and tries to add a hyperlink to it instead [ @ChloeConlon ]
+- There is no dropdown menu when using the old song page to add additional credits [ @andzas ]
+- Annotations get separated by lines in the new text editor [ @furashaka ]
+- When adding songs to an album tracklist with “Add as next” active, the song is added to the end of the tracklist only if you click on the track (not if you press enter) [ @NvrLvcky ]
+- The styles have been broken since the last update Genius made [ @Reece ]
 
 **Hotfixes**
-- 
+- Annotations aren't shown properly in threads [ @TheYoshiPhase ]
+- Opening dropdown menus comes flying in from the top left corner [ @NvrLvcky ]
+- The profile menu is glitchy [ @TheYoshiPhase @Reece @NvrLvcky ]
+- Adding metadata is glitchy when the system recommends options [ @NvrLvcky ]
 
 **New Features**
-- 
+- Voting activity won't disturb you anymore! You can now filter the activity feed by types of activity (only available on the new song page for now) [ @jambi @DrJEvansPritchardPhD ]
+- Instead of linking songs to their YT videos one by one, you can now attach a YT playlist and the extension will automatically link each song [ @vojokyo  ]
 
 **Redesigns**
-- 
+- The design of the forums has been changed based on your feedback
+- The artist's page looks even better
+- The redesigned messages popup is now available on more pages
 
 **Optimizations**
-- 
-
+- @Reece has cleaned up some of the code & fixed typos (thanks!)
+- The artwork auto-linker is now faster
 
 ## 0.7.1
 **Bugs Squashed**

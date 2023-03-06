@@ -176,7 +176,8 @@ export function restyleMissingInfo() {
 }
 
 export async function getPlaylistVideos(playlistLink) {
-    if (!playlistLink.startsWith("https://www.youtube.com/playlist?list=")) {
+    const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
+    if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
         throw new Error("Invalid playlist link");
     }
     const playlistId = playlistLink.split("list=")[1];
@@ -187,16 +188,23 @@ export async function getPlaylistVideos(playlistLink) {
     if (!metadataResponse.ok) {
         throw new Error("Failed to fetch playlist metadata");
     }
-    const metadataData = await metadataResponse.json();
-    const playlistTitle = metadataData.items[0].snippet.title;
-    const playlistImage = metadataData.items[0].snippet.thumbnails.maxres.url;
-    const artistName = metadataData.items[0].snippet.channelTitle;
+
+    // Extract the playlist metadata
+    let metadataData = await metadataResponse.json();
+    metadataData = metadataData.items[0].snippet;
+    const playlistTitle = metadataData.title;
+    const artistName = metadataData.channelTitle;
+    const thumbnails = metadataData.thumbnails;
+    let playlistImage = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default;
+    playlistImage = playlistImage.url;
 
     // Fetch the playlist videos
     const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
     if (!videosResponse.ok) {
         throw new Error("Failed to fetch playlist videos");
     }
+
+    // Extract the videos data
     const videosData = await videosResponse.json();
     const videoTitles = videosData.items.map(item => item.snippet.title);
     const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
@@ -352,37 +360,140 @@ export async function appendIcon() {
             "data-gramm": "false"
         }).appendTo(popupBox);
 
+        $("<div>", {
+            class: "gb-textarea add-media details"
+        })
+            .append($("<div>", {
+                class: "add-media details image-container",
+                text: ""
+            })
+                .append($("<img>", {
+                    class: "add-media details image",
+                    src: ""
+                })))
+            .append($("<div>", {
+                class: "add-media details title",
+                text: ""
+            }))
+            .append($("<div>", {
+                class: "add-media details artist",
+                text: ""
+            }))
+            .append($("<div>", {
+                class: "add-media details length",
+                text: ""
+            }))
+            .append($("<div>", {
+                class: "add-media details videos-links",
+                text: "",
+                style: "display: none;"
+            }))
+            .appendTo(popupBox);
+
         addMediaInput.on("blur", async () => {
             const url = addMediaInput.val();
             if (url === "") {
-                addMediaInput.css({ outlineWidth: "0" });
+                addMediaInput.removeClass("error");
                 addMediaInput.attr("title", "");
+                $(".add-media.details.title").text("");
+                $(".add-media.details.title").attr("title", "");
+                $(".add-media.details.image").attr("src", "");
+                $(".add-media.details.artist").text("");
+                $(".add-media.details.length").text("");
+                $(".add-media.details.videos-links").text("");
                 return;
             }
 
+            const getPlaylistVideos = async (playlistLink) => {
+                const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
+                if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
+                    throw new Error("Invalid playlist link");
+                }
+                const playlistId = playlistLink.split("list=")[1];
+                const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+
+                // Fetch the playlist metadata
+                const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
+                if (!metadataResponse.ok) {
+                    throw new Error("Failed to fetch playlist metadata");
+                }
+
+                // Extract the metadata
+                let metadataData = await metadataResponse.json();
+                metadataData = metadataData.items[0].snippet;
+                const playlistTitle = metadataData.title;
+                const artistName = metadataData.channelTitle;
+                const thumbnails = metadataData.thumbnails;
+                let playlistImage = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default;
+                playlistImage = playlistImage.url;
+
+                // Fetch the playlist videos
+                const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
+                if (!videosResponse.ok) {
+                    throw new Error("Failed to fetch playlist videos");
+                }
+
+                // Extract the videos data
+                const videosData = await videosResponse.json();
+                const videoTitles = videosData.items.map(item => item.snippet.title);
+                const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
+                const playlistLength = videoLinks.length;
+
+                // Return an object containing the metadata and the video links
+                return {
+                    artistName,
+                    playlistTitle,
+                    playlistImage,
+                    playlistLength,
+                    videoTitles,
+                    videoLinks
+                };
+            }
+
             try {
-                const response = await new Promise((resolve, reject) => {
-                    chrome.runtime.sendMessage({ 'album_getPlaylistVideos': [url] }, async (response) => {
-                        while (response === undefined) {
-                            await new Promise(r => setTimeout(r, 100));
-                        }
-                        resolve(response);
-                    });
-                });
+                const response = await getPlaylistVideos(url);
                 console.log(response);
                 if (response === undefined) {
                     throw new Error("Invalid Youtube Playlist URL");
                 }
                 else {
-                    addMediaInput.css({ outlineWidth: "0" });
+                    const numOfSongs = Array.from(
+                        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
+                    ).length;
+
+                    addMediaInput.removeClass("error");
                     addMediaInput.attr("title", "");
+                    $(".add-media.details.title").text(response.playlistTitle);
+                    $(".add-media.details.title").attr("title", response.playlistTitle);
+                    $(".add-media.details.image").attr("src", response.playlistImage);
+                    $(".add-media.details.artist").text(response.artistName);
+                    $(".add-media.details.length").text(response.playlistLength);
+                    $(".add-media.details.videos-links").text(response.videoLinks.join(" "));
+
+                    if (numOfSongs === response.playlistLength) {
+                        $(".add-media.details.length").css({ color: "#1cc674" });
+                        $(".add-media.details.length").attr("title", "The number of songs in the playlist matches the number of songs in the chart");
+                        addMediaInput.removeClass("error");
+
+                    } else {
+                        $(".add-media.details.length").css({ color: "#fc5753" });
+                        $(".add-media.details.length").attr("title", "The number of songs in the playlist does not match the number of songs in the chart")
+                        addMediaInput.addClass("error");
+                    }
                 }
             } catch (error) {
                 console.error(error);
-                // change the border color of the input to red and increase the border width
-                addMediaInput.css({ outline: "2px solid red" });
+                // add the error class to the input
+                addMediaInput.addClass("error");
                 // add a tooltip to the input
                 addMediaInput.attr("title", "Invalid Youtube Playlist URL");
+                // clear the details
+                $(".add-media.details.title").text("");
+                $(".add-media.details.title").attr("title", "");
+                $(".add-media.details.image").attr("src", "");
+                $(".add-media.details.artist").text("");
+                $(".add-media.details.length").text("");
+                $(".add-media.details.videos-links").text("");
             }
         });
 
@@ -402,6 +513,20 @@ export async function appendIcon() {
 
         autolinkArtworkContainer.on("click", async () => {
             if (!$('.artwork-images-stack').length) {
+
+                const imagesStack = $('<div>', {
+                    class: 'artwork-images-stack gb-animate-right'
+                });
+
+                $('<div>', {
+                    class: 'error-container'
+                })
+                    .append($('<div>', {
+                        class: 'error-text',
+                        html: 'No artwork<br>found'
+                    }))
+                    .appendTo(imagesStack);
+
                 const album_artwork_results = await new Promise((resolve, reject) => {
                     chrome.storage.local.get("album_artwork_results", (result) => {
                         resolve(result.album_artwork_results);
@@ -417,105 +542,93 @@ export async function appendIcon() {
 
                 if (!album_artwork_results.length) {
                     chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
+                } else {
+                    album_artwork_results.slice().reverse().forEach(result => {
+
+                        const container = $('<div>', {
+                            class: 'artwork-image-container'
+                        });
+
+                        $('<img>', {
+                            class: 'artwork-image',
+                            src: result
+                        }).appendTo(container);
+
+                        const overlay = $('<div>', {
+                            class: 'overlay'
+                        });
+
+                        overlay.hover(function () {
+                            overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)");
+                        });
+
+                        overlay.mouseleave(function () {
+                            overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)");
+                        });
+
+                        const vButton = $('<img>', {
+                            class: 'v-button',
+                            src: chrome.runtime.getURL('/src/images/other/v.png')
+                        });
+
+                        vButton.hover(function () {
+                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0.1)");
+                        });
+
+                        vButton.mouseleave(function () {
+                            overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
+                        });
+
+                        vButton.click(function () {
+                            chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result } });
+
+                            $(".v-button, .x-button").css("opacity", "0");
+
+                            setTimeout(() => {
+                                $(".v-button, .x-button").remove();
+                            }, 400);
+
+                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
+                            setTimeout(() => {
+                                overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
+                            }, 400);
+                            setTimeout(() => {
+                                overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
+                            }, 400);
+                            setTimeout(() => {
+                                overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
+                            }, 400);
+                        });
+
+                        overlay.prepend(vButton);
+
+                        const xButton = $('<img>', {
+                            class: 'x-button',
+                            src: chrome.runtime.getURL('/src/images/other/x.png')
+                        });
+
+                        xButton.hover(function () {
+                            overlay.css('backgroundColor', "rgb(252, 88, 84, 0.1)");
+                        });
+
+                        xButton.mouseleave(function () {
+                            overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
+                        });
+
+                        xButton.click(function () {
+                            container.css({ 'opacity': '0', 'transform': 'translateY(25%)', 'backgroundColor': 'rgb(252, 88, 84, 0.3)' });
+                            setTimeout(() => { container.remove(); }, 400);
+                            if (imagesStack.children().length === 0) {
+                                chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
+                            }
+                        });
+
+                        overlay.prepend(xButton);
+                        container.prepend(overlay);
+                        imagesStack.append(container);
+                    });
                 }
 
-                const imagesStack = $('<div>', {
-                    class: 'artwork-images-stack gb-animate-right'
-                });
-
-                album_artwork_results.slice().reverse().forEach(result => {
-
-                    const container = $('<div>', {
-                        class: 'artwork-image-container'
-                    });
-
-                    $('<img>', {
-                        class: 'artwork-image',
-                        src: result
-                    }).appendTo(container);
-
-                    const overlay = $('<div>', {
-                        class: 'overlay'
-                    });
-
-                    overlay.hover(function () {
-                        overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)");
-                    });
-
-                    overlay.mouseleave(function () {
-                        overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)");
-                    });
-
-                    const vButton = $('<img>', {
-                        class: 'v-button',
-                        src: chrome.runtime.getURL('/src/images/other/v.png')
-                    });
-
-                    vButton.hover(function () {
-                        overlay.css('backgroundColor', "rgb(33, 236, 138, 0.1)");
-                    });
-
-                    vButton.mouseleave(function () {
-                        overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
-                    });
-
-                    vButton.click(function () {
-                        chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result } });
-
-                        $(".v-button, .x-button").css("opacity", "0");
-
-                        setTimeout(() => {
-                            $(".v-button, .x-button").remove();
-                        }, 400);
-
-                        overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
-                        setTimeout(() => {
-                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
-                        }, 400);
-                        setTimeout(() => {
-                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
-                        }, 400);
-                        setTimeout(() => {
-                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
-                        }, 400);
-                    });
-
-                    overlay.prepend(vButton);
-
-                    const xButton = $('<img>', {
-                        class: 'x-button',
-                        src: chrome.runtime.getURL('/src/images/other/x.png')
-                    });
-
-                    xButton.hover(function () {
-                        overlay.css('backgroundColor', "rgb(252, 88, 84, 0.1)");
-                    });
-
-                    xButton.mouseleave(function () {
-                        overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
-                    });
-
-                    xButton.click(function () {
-                        container.css({ 'opacity': '0', 'transform': 'translateY(25%)', 'backgroundColor': 'rgb(252, 88, 84, 0.3)' });
-                        setTimeout(() => { container.remove(); }, 400);
-                        if (imagesStack.children().length === 0) {
-                            chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
-                        }
-                    });
-
-                    overlay.prepend(xButton);
-                    container.prepend(overlay);
-                    imagesStack.append(container);
-                });
-
-                const errorContainer = $('<div>').addClass('error-container');
-
-                $('<div>', {
-                    class: 'error-text',
-                    html: 'No artwork<br>found'
-                }).appendTo(errorContainer);
-
-                imagesStack.prepend(errorContainer);
                 autolinkArtworkContainer.prepend(imagesStack);
             }
         });
@@ -533,6 +646,14 @@ export async function appendIcon() {
                 event.preventDefault();
             })
             .on('click', function () {
+                if ($('.extension-box .error').length) {
+                    // make a flashing animation on the error inputs
+                    $('.extension-box .error').addClass('error-animation');
+                    setTimeout(function () {
+                        $('.extension-box .error').removeClass('error-animation');
+                    }, 200);
+                    return;
+                }
                 chrome.runtime.sendMessage({ 'album_saveEverything': [true] });
                 $('.extension-box').eq(0).addClass('gb-zoom-out');
                 $('.blured-background').eq(0).addClass('gb-fade-out');
@@ -786,6 +907,10 @@ export async function autolinkArtwork() {
 
 export async function saveEverything() {
 
+    // TODO: refactor this into an API call
+
+    axios.defaults.withCredentials = true
+
     const getDeatils = () => {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
@@ -809,8 +934,10 @@ export async function saveEverything() {
         }
     }
 
-    const details = getDeatils();
-    const albumSongs = details.album_appearances;
+    //const details = getDeatils();
+    //const albumSongs = details.album_appearances;
+
+    const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
     const tags = $(".extension-box tag").toArray().map((tag) => {
         return {
@@ -818,6 +945,27 @@ export async function saveEverything() {
             name: tag.getAttribute("title")
         }
     });
+
+    const tagsNames = tags.map((tag) => {
+        return tag.name;
+    });
+
+    const numOfSongs = Array.from(
+        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
+    ).length;
+
+    const albumSongs = Array.from(
+        document.getElementsByClassName("u-display_block")
+    ).slice(0, numOfSongs);
+
+    // unit the album songs with the youtube links
+    if (youtubeLinks.length) {
+        albumSongs.forEach((song) => {
+            song.youtubeLink = youtubeLinks[albumSongs.indexOf(song)];
+        });
+    }
+
+    console.log("albumSongs: ", albumSongs);
 
     let everythingIsSaved = false;
 
@@ -833,37 +981,105 @@ export async function saveEverything() {
     $("header-with-cover-art").after(progressBar);
 
     albumSongs.forEach(async (song) => {
-        // the api for adding tags to a song is HTTP PUT https://genius.com/api/SONG-API-PATH {"text_format":"html,markdown","song":{"tags":[{"id":TAG-ID,"name":"TAG-NAME"},{"id":TAG-ID,"name":"TAG-NAME"}]}}
-        const apiKey = "FvAP7zy0fRVkG870MzpfkTafVQo1H5RdObznmlvEWypAWzq6P14eHpLhFBc4DsPy";
 
-        await $.ajax({
-            type: "PUT",
-            url: `https://genius.com/api${song.song.api_path}`,
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
-            },
-            data: JSON.stringify({
-                text_format: "html,markdown",
-                song: {
-                    tags: tags.map((tagName) => {
-                        return {
-                            id: +tagName.id,
-                            name: tagName.name,
-                        };
-                    }),
-                },
-            }),
-            contentType: "application/json"
-        });
+        //axios.put(`https://genius.com/api${song.song.api_path}`, {
+        //    text_format: "html,markdown",
+        //    song: {
+        //        tags: tags.map((tag) => {
+        //            return {
+        //                id: +tag.id,
+        //                name: tag.name,
+        //            };
+        //        }),
+        //    }
+        //});
 
-        const currentWidth = $(progressBar).width();
-        const newWidth = `${currentWidth + (1 / albumSongs.length) * 100}%`;
+        const iframe = document.createElement("iframe");
+        iframe.classList.add("extension-song");
+        iframe.sandbox = "allow-scripts allow-same-origin";
+        iframe.style.display = "none";
+        iframe.src = song.href;
+        document.body.appendChild(iframe);
+
+        await new Promise((resolve) => (iframe.onload = resolve));
+
+        let currentWidth = $(progressBar).width();
+        let newWidth = `${currentWidth + (1 / (albumSongs.length / 3))}%`;
+        $(progressBar).width(newWidth);
+
+        while (!iframe.contentWindow.document.querySelector("button.SmallButton__Container-mg33hl-0")) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        iframe.contentWindow.document
+            .querySelector("button.SmallButton__Container-mg33hl-0")
+            .click();
+
+        let existingTags = [];
+        iframe.contentWindow.document
+            .querySelector("[data-testid='tags-input']")
+            .querySelectorAll(".TagInput__MultiValueLabel-sc-17py0eg-2.blnjJQ")
+            .forEach((e) => {
+                existingTags.push(e.innerText);
+            });
+
+        const tagsForThisSong = tagsNames.filter((e) => !existingTags.includes(e));
+        console.log(
+            "song: ",
+            song.innerText,
+            " tags: ",
+            tagsNames,
+            " existing tags: ",
+            existingTags,
+            " tags for this song: ",
+            tagsForThisSong
+        );
+
+        const youtubeURLInput = /*iframe.contentWindow.*/document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
+
+        if (youtubeURLInput) {
+            youtubeURLInput.click();
+            youtubeURLInput.setAttribute("value", song.youtubeLink);
+            const event = new InputEvent("input", {
+                bubbles: true,
+                data: song.youtubeLink,
+            });
+            youtubeURLInput.dispatchEvent(event);
+        }
+
+        for (const tag of tagsForThisSong) {
+            const input = iframe.contentWindow.document.querySelector("input#react-select-7-input");
+            input.value = tag;
+            const event = new InputEvent("input", {
+                bubbles: true,
+                data: tag,
+            });
+            input.dispatchEvent(event);
+
+            while (!iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option").length) {
+                await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+
+            const options = iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
+            options[0].click();
+        }
+
+        currentWidth = $(progressBar).width();
+        newWidth = `${currentWidth + (2 / (albumSongs.length / 3))}%`;
         $(progressBar).width(newWidth);
 
         // if it's the last song, set everythingIsSaved to true
         if (song === albumSongs[albumSongs.length - 1]) {
             everythingIsSaved = true;
         }
+
+        while (iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").disabled) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+        iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").click();
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        iframe.remove();
     });
 
     while (!everythingIsSaved) {
@@ -890,8 +1106,30 @@ export function addSongAsTheNext() {
     // then, write in the input with the class "square_input editable_tracklist-row-number-input u-x_small_right_margin ng-pristine ng-valid ng-empty ng-touched" the length-3 of $(".editable_tracklist-row-number")
     // then, click on the first element with the classes "inline_icon inline_icon--gray u-x_small_right_margin u-clickable"
 
-    let observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
+    const addSongAsNext_ = () => {
+        setTimeout(() => {
+            // save the last word in the innerText of ".text_label text_label--gray" element into the var "songNum"
+            // the ".text_label text_label--gray" should be a child of the ".tracklist-row__number" element without "ng-repeat" attribute ot "ng-if" attribute
+            let songNum = $("div.text_label.text_label--gray").not("[ng-repeat]").not("[ng-if]").first().text().split(" ").pop();
+            let buttonsLength = $(".button--unstyled").length;
+            let button = $(".button--unstyled")[buttonsLength - 1];
+            button.click();
+            let input = document.querySelector("input.square_input.editable_tracklist-row-number-input.u-x_small_right_margin.ng-pristine.ng-valid");
+            setTimeout(() => {
+                input.classList.remove("ng-empty");
+                input.classList.add("ng-not-empty");
+                input.value = songNum;
+                let event = new Event("input", { bubbles: true });
+                input.dispatchEvent(event);
+            }, 5);
+            setTimeout(() => {
+                document.querySelectorAll(".button--unstyled")[buttonsLength].click();
+            }, 5);
+        }, 5);
+    }
+
+    let observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
             if (mutation.addedNodes.length) {
                 let addedElem = mutation.addedNodes[0];
                 let input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
@@ -914,43 +1152,33 @@ export function addSongAsTheNext() {
                     $(container).append(label);
                     $(input).parent().append(container);
 
-                    chrome.storage.local.get("add_song_as_next", function (result) {
+                    chrome.storage.local.get("add_song_as_next", (result) => {
                         if (result.add_song_as_next) {
                             checkbox.checked = true;
                         }
                     });
 
-                    checkbox.addEventListener("change", function () {
+                    checkbox.addEventListener("change", () => {
                         chrome.storage.local.set({ "add_song_as_next": checkbox.checked });
+                    });
+                    $('input[on-select="$ctrl.add_song(data)"]').on("keydown", (e) => {
+                        console.log("keydown", e);
+                        chrome.storage.local.get("add_song_as_next", (result) => {
+                            if (result.add_song_as_next) {
+                                if (e.keyCode === 13) {
+                                    addSongAsNext_();
+                                }
+                            }
+                        });
                     });
                 }
 
                 if (addedElem.classList.contains("ac_even") || addedElem.classList.contains("ac_odd")) {
                     console.log("found add to queue button");
                     let addToQueueButton = addedElem;
-                    chrome.storage.local.get("add_song_as_next", function (result) {
+                    chrome.storage.local.get("add_song_as_next", (result) => {
                         if (result.add_song_as_next) {
-                            $(addToQueueButton).on("click", function () {
-                                setTimeout(function () {
-                                    // save the last word in the innerText of ".text_label text_label--gray" element into the var "songNum"
-                                    // the ".text_label text_label--gray" should be a child of the ".tracklist-row__number" element without "ng-repeat" attribute ot "ng-if" attribute
-                                    let songNum = $("div.text_label.text_label--gray").not("[ng-repeat]").not("[ng-if]").first().text().split(" ").pop();
-                                    let buttonsLength = $(".button--unstyled").length;
-                                    let button = $(".button--unstyled")[buttonsLength - 1];
-                                    button.click();
-                                    let input = document.querySelector("input.square_input.editable_tracklist-row-number-input.u-x_small_right_margin.ng-pristine.ng-valid");
-                                    setTimeout(function () {
-                                        input.classList.remove("ng-empty");
-                                        input.classList.add("ng-not-empty");
-                                        input.value = songNum;
-                                        let event = new Event("input", { bubbles: true });
-                                        input.dispatchEvent(event);
-                                    }, 5);
-                                    setTimeout(function () {
-                                        document.querySelectorAll(".button--unstyled")[buttonsLength].click();
-                                    }, 5);
-                                }, 5);
-                            });
+                            $(addToQueueButton).on("click", addSongAsNext_);
                         }
                     });
                 }
@@ -961,5 +1189,13 @@ export function addSongAsTheNext() {
     observer.observe(document.body, {
         childList: true,
         subtree: true
+    });
+
+    // run a keydown event listener on the body
+    // if the key is enter log the element which has the focus
+    document.body.addEventListener("keydown", (e) => {
+        if (e.keyCode === 13) {
+            console.log(document.activeElement);
+        }
     });
 }

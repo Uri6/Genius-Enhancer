@@ -187,6 +187,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" },
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
+            { type: "js", file: "./lib/axios/axios.min.js" },
             //{ type: "js", file: "./lib/oauth/oauth.min.js" },
         ];
 

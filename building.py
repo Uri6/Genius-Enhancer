@@ -28,7 +28,7 @@ def add_license_comment(directory):
                         comment = license_comment
                     with open(file_path, "rb") as f:
                         lines = f.read().decode("utf-8")
-                    if not lines.startswith(comment):
+                    if not lines.startswith(comment) and not lines.startswith('@charset "UTF-8";'):
                         lines = comment + "\n\n" + lines
                         with open(file_path, "wb") as f:
                             f.write(lines.encode("utf-8"))
@@ -64,7 +64,8 @@ def copytree(src, dst):
     for folder in os.listdir(src):
         skip = False
         bad_folders = [".vscode", ".git", ".github",
-                       "Builds", "vision", "header", "gifs"]
+                       "Builds", "vision", "header",
+                       "gifs", ".idea"]
         if folder in bad_folders or src.endswith("\\icons") and folder == "1":
             continue
         if os.path.isdir(src + '\\' + folder):
@@ -73,7 +74,8 @@ def copytree(src, dst):
         else:
             file = folder
             bad_files = [".py", ".map", ".scss", ".sass",
-                         ".psd", "changelog.md", ".gitignore"]
+                         ".psd", ".gitignore", "todo",
+                         "changelog.md"]
             for bad_file in bad_files:
                 if file.endswith(bad_file):
                     skip = True
@@ -102,7 +104,7 @@ manifest.close()
 
 dst_path = rootDir + '/Builds/' + version
 
-add_license_comment(rootDir)
+#add_license_comment(rootDir)
 
 if os.path.exists(dst_path):
     shutil.rmtree(dst_path)

@@ -17,7 +17,7 @@ $genius-yellow: #ffff65;
   --bs-body-line-height: 1.5;
 }
 
-*:not(.AnnotationPortaldesktop__Sticky-sc-17hre1n-2.daeaLL):not(.drop.drop-element):not(li):not(a) {
+*:not(.AnnotationPortaldesktop__Sticky-sc-17hre1n-2.daeaLL):not(.drop.drop-element):not(li):not(a):not(input) {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -414,8 +414,17 @@ input {
   display: none !important;
 }
 
+#sticky-nav .StickyNavdesktop__Subnavigation-sc-60o25r-6 {
+  @media (max-width: 940px) {
+    opacity: 0 !important;
+  }
+}
+
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd,
 .header-nav_menu {
+  @media (max-width: 1240px) {
+    opacity: 0 !important;
+  }
   background: none !important;
   margin-left: 150px !important;
 
