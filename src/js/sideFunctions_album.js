@@ -20,7 +20,7 @@ export function missingInfo(bio, people, releaseDate) {
     }
 
     // This functoin written by @wnull (@wine in Genius.com)
-    const getDeatils = () => {
+    const getDetails = () => {
         let matches = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
         let replaces = {
             '&#039;': `'`,
@@ -37,7 +37,7 @@ export function missingInfo(bio, people, releaseDate) {
         }
     }
 
-    let albumObject = getDeatils();
+    let albumObject = getDetails();
     const tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
     let song_index = 0;
 
