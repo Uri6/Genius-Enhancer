@@ -5,45 +5,45 @@
 
 const GENIUS_PAGE_HTML = `
 <fieldset id="info-box">
-    <center>
+    <div style="text-align: center;">
         <legend id="genius-page">
             Genius Page
         </legend>
-    </center>
+    </div>
 </fieldset>`;
 
 const NO_SPECIAL_FEATURES_HTML = `
 <fieldset id="no-features-box">
-    <center>
+    <div style="text-align: center;">
         <legend id="features">
             There are (still) no<br>special features here
         </legend>
-    </center>
+    </div>
 </fieldset>`;
 
 const NOT_GENIUS_HTML = `
 <fieldset id="err-box">
-    <center>
+    <div style="text-align: center;">
         <legend id="missing-genius-err">You're not on a Genius page!</legend>
-    </center>
+    </div>
 </fieldset>`;
 
 const ALBUM_PAGE_HTML = `
 <fieldset id="info-box">
-    <center>
+    <div style="text-align: center;">
         <legend id="genius-page">
             Album Page
         </legend>
-    </center>
+    </div>
 </fieldset>`;
 
 const SONG_PAGE_HTML = `
 <fieldset id="info-box">
-    <center>
+    <div style="text-align: center;">
         <legend id="genius-page">
             Song Page
         </legend>
-    </center>
+    </div>
 </fieldset>`;
 
 const ALBUM_PAGE_FEATURES_HTML = `

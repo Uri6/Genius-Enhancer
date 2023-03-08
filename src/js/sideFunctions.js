@@ -14,7 +14,6 @@ export function containsHebrew(text) {
     return /[א-ת]/.test(text);
 }
 
-
 export function insertAfter(newNode, existingNode) {
     existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 }
@@ -22,10 +21,10 @@ export function insertAfter(newNode, existingNode) {
 /**
  * Extracts metadata from the current page's HTML and returns it as a parsed JSON object
  * Was originally written by @wnull (@wine in Genius.com)
- * 
+ *
  * @returns {object} The parsed metadata object
  */
-export function getDeatils() {
+export function getDetails() {
     // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
     const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
@@ -79,7 +78,7 @@ export function identifyPageType() {
             chrome.scripting.executeScript(
                 {
                     target: { tabId: tab.id },
-                    func: getDeatils
+                    func: getDetails
                 },
                 function (returnVal) {
                     if (returnVal && returnVal[0].result != null) {
@@ -147,7 +146,7 @@ export function identifyPageType() {
 
 /**
  * Retrieves the first input element with the name "tag_ids[]" from the HTML content of the Genius New page
- * 
+ *
  * @returns {HTMLElement} The input element with the name "tag_ids[]"
  */
 export async function getTagsList() {
@@ -172,7 +171,7 @@ export async function getTagsList() {
 
 /**
  * Retrieves a list of artists from the Genius API based on a search query
- * 
+ *
  * @param {string} query - The search query for artists
  * @returns {Promise<Array>} - A Promise that resolves to an array of unique artists matching the search query
  */
@@ -188,14 +187,11 @@ export async function getArtistsList(query) {
     const jsonResponse = await response.json();
 
     // Extract the artists from the response and map them to a new object with just their name and ID
-    const artistsList = jsonResponse.response.artists.map((artist) => ({
+    return jsonResponse.response.artists.map((artist) => ({
         name: artist.name,
         image: artist.image_url,
         id: artist.id,
     }));
-
-    // Return the list of artists
-    return artistsList;
 }
 
 export async function getCreditsList(query) {
@@ -210,18 +206,14 @@ export async function getCreditsList(query) {
     const jsonResponse = await response.json();
 
     // Extract the artists from the response and map them to a new object with just their name and ID
-    const creditsList = jsonResponse.response.custom_performance_roles.map((credit) => ({
+    return jsonResponse.response.custom_performance_roles.map((credit) => ({
         type: credit._type,
         label: credit.label,
         id: credit.id,
     }));
-
-    // Return the list of artists
-    return creditsList;
 }
 
 export function replaceTextarea(textareaClasses) {
-
     if ($(".ql-editor").length) {
         console.info("Quill already exists");
         return;

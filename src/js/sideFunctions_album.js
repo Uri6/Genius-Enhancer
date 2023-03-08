@@ -934,7 +934,7 @@ export async function saveEverything() {
         }
     }
 
-    //const details = getDeatils();
+    //const details = getDetails();
     //const albumSongs = details.album_appearances;
 
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');

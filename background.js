@@ -3,7 +3,7 @@
 * located in the root directory of this code package.
 */
 
-import { getDeatils, identifyPageType, replaceTextarea, removeQuill } from "./src/js/sideFunctions.js";
+import { getDetails, identifyPageType, replaceTextarea, removeQuill } from "./src/js/sideFunctions.js";
 import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolinkArtwork, getPlaylistVideos, saveEverything, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
 import { appleMusicPopUp, spotifyPopUp, song_modernTextEditor, appendReplyButton } from "./src/js/sideFunctions_song.js";
 import { replaceButtons, forums_modernTextEditor } from "./src/js/sideFunctions_forum.js";
@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
 
     switch (true) {
         case "getDetails" in message:
-            func = getDeatils;
+            func = getDetails;
             break;
         case "identifyPageType" in message:
             func = identifyPageType;
@@ -124,7 +124,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
             func: func,
             args: args
         }).then((results) => {
-            if (func === identifyPageType || func === getPlaylistVideos || func === getDeatils) {
+            if (func === identifyPageType || func === getPlaylistVideos || func === getDetails) {
                 resolve(results[0].result);
             }
 
@@ -219,7 +219,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     chrome.scripting.executeScript(
                         {
                             target: { tabId: tabId },
-                            func: getDeatils
+                            func: getDetails
                         },
                         function (returnVal) {
                             if (returnVal != undefined && returnVal[0].result != null) {
