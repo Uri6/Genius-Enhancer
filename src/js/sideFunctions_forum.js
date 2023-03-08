@@ -5,7 +5,7 @@
 
 export function replaceButtons(createDiscussion, follow) {
     if (createDiscussion) {
-        var createDiscussionElement = document.getElementsByClassName("create_discussion");
+        const createDiscussionElement = document.getElementsByClassName("create_discussion");
         for (var i = 0; i < createDiscussionElement.length; i++) {
             createDiscussionElement[i].innerHTML = `<svg class="gb-new-button" version="1.0" 
                                                     width="18pt" height="18pt" viewBox="0 0 512 512"
@@ -35,7 +35,7 @@ export function replaceButtons(createDiscussion, follow) {
     }
 
     if (follow) {
-        var unfollowElement = document.getElementsByClassName("new_status_unfollow");
+        const unfollowElement = document.getElementsByClassName("new_status_unfollow");
         for (var i = 0; i < unfollowElement.length; i++) {
             unfollowElement[i].innerHTML = `<svg class="gb-new-button" version="1.0" 
                                             width="18pt" height="18pt" viewBox="0 0 512 512"
@@ -77,7 +77,7 @@ export function replaceButtons(createDiscussion, follow) {
                                             </svg>`;
         }
 
-        var followElement = document.getElementsByClassName("new_status_follow");
+        const followElement = document.getElementsByClassName("new_status_follow");
         for (var i = 0; i < followElement.length; i++) {
             followElement[i].innerHTML = `<svg class="gb-new-button" version="1.0" 
                                             width="18pt" height="18pt" viewBox="0 0 512 512"
@@ -118,7 +118,7 @@ export function replaceButtons(createDiscussion, follow) {
 export function forums_modernTextEditor() {
     if ($('.reply_container .required.markdown_preview_setup_complete').length || $('#new_discussion .required.markdown_preview_setup_complete').length) {
         chrome.runtime.sendMessage({ "replaceTextarea": ["required markdown_preview_setup_complete"] });
-        
+
         if ($('.reply_container .formatting_help').length) {
             $('.reply_container .formatting_help').css('display', 'none');
         }

@@ -4,13 +4,11 @@
 */
 
 export function appleMusicPopUp(show) {
-  let newSite = false;
   // this holds the iframe for the Apple Music player
   let appleMusicParent = document.getElementsByClassName("apple_music_player_iframe_wrapper")[0];
   // on the new site, the container div has a different name
   if (appleMusicParent === undefined) {
     appleMusicParent = document.getElementsByClassName("AppleMusicPlayer__IframeWrapper-uavgzr-1")[0];
-    newSite = true;
   }
   // some pages do not have an Apple Music player, so they don't get Spotify. if the container
   // is still undefined after trying both possibilities then we can assume there is no player
@@ -53,7 +51,7 @@ export function song_modernTextEditor() {
             if (flag) {
               console.log("removed: ", e.target);
               setTimeout(function () {
-                if ($(e.target).attr("ng-if") === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" || $(e.target).attr("ng-if") == "!lyrics_ctrl.saving") {
+                if ($(e.target).attr("ng-if") === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" || $(e.target).attr("ng-if") === "!lyrics_ctrl.saving") {
                   chrome.runtime.sendMessage({ "removeQuill": true });
                   flag = false;
                 }
@@ -90,9 +88,9 @@ export function song_modernTextEditor() {
 
 export function appendReplyButton() {
   /*var commentClassName = "comment" || "Comment__Container-qhf03b-0 joncYs";
- 
+
   document.getElementsByClassName(commentClassName).array.forEach(element => {
     console.log(element.childNodes[12]);
   });*/
-  return;
+  // return;
 }

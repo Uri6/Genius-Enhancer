@@ -395,8 +395,9 @@ export async function appendIcon() {
             if (url === "") {
                 addMediaInput.removeClass("error");
                 addMediaInput.attr("title", "");
-                $(".add-media.details.title").text("");
-                $(".add-media.details.title").attr("title", "");
+                const addMediaTitle = $(".add-media.details.title");
+                addMediaTitle.text("");
+                addMediaTitle.attr("title", "");
                 $(".add-media.details.image").attr("src", "");
                 $(".add-media.details.artist").text("");
                 $(".add-media.details.length").text("");
@@ -1100,7 +1101,7 @@ export function addSongAsTheNext() {
     // then add an "on/off" button to it which will add the song as the next song in the queue if turned on
     // save to the local storage the state of the button (on/off) [and if it's already true, change the button to on]
 
-    // in the same observer, look for the "Add to queue" button (it's have the class "ac_even" or "ac_odd") and add a click event listener to it
+    // in the same observer, look for the "Add to queue" button (it has the class "ac_even" or "ac_odd") and add a click event listener to it
     // if the button is on, add the song as the next song in the queue
     // for adding the song as the next song in the queue, click on the button ".button--unstyled" which is child of an elem with the classes "editable_tracklist-row-number-edit_icon editable_tracklist-row-number-edit_icon--no_number"
     // then, write in the input with the class "square_input editable_tracklist-row-number-input u-x_small_right_margin ng-pristine ng-valid ng-empty ng-touched" the length-3 of $(".editable_tracklist-row-number")

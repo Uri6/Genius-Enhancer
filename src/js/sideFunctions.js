@@ -118,7 +118,7 @@ export function identifyPageType() {
                                         }
                                     }
 
-                                    // If the pageType is still "unknown", it's has to be a forum page
+                                    // If the pageType is still "unknown", it has to be a forum page
                                     if (pageType === "unknown" || pageTpye === undefined) {
                                         pageType = "forum";
                                     }
