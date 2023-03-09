@@ -11,7 +11,7 @@
 
 **Hotfixes**
 - Annotations aren't shown properly in threads [ @TheYoshiPhase ]
-- Opening dropdown menus comes flying in from the top left corner [ @NvrLvcky ]
+- Opening dropdown menus come flying in from the top left corner [ @NvrLvcky ]
 - The profile menu is glitchy [ @TheYoshiPhase @Reece @NvrLvcky ]
 - Adding metadata is glitchy when the system recommends options [ @NvrLvcky ]
 
