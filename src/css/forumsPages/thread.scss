@@ -488,6 +488,7 @@ body {
       margin-bottom: 15px;
       position: relative;
 
+      span,
       p,
       li,
       ol,
@@ -753,7 +754,7 @@ body {
 
 .reply_container {
   .ql-toolbar {
-    background-color: rgba(255, 255, 255, 0.6) !important;
+    background-color: #bdf4e7 !important;
     border-color: rgba(255, 255, 255, 0.8) !important;
   }
 

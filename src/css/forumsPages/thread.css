@@ -415,6 +415,7 @@ body {
   margin-bottom: 15px;
   position: relative;
 }
+.forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) span,
 .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) p,
 .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) li,
 .forum_post_container .forum_post_unit .body.embedly.embedly_pro:not(.first_one) ol,
@@ -639,7 +640,7 @@ body {
 }
 
 .reply_container .ql-toolbar {
-  background-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: #bdf4e7 !important;
   border-color: rgba(255, 255, 255, 0.8) !important;
 }
 .reply_container .ql-container {
