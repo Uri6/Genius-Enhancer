@@ -161,7 +161,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         "promote.genius.com",
         "support.genius.com",
         "docs.genius.com",
-        "homestudio.genius.com"
+        "homestudio.genius.com",
+        "genius.com/developers",
+        "genius.com/api-clients"
     ];
 
     const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
@@ -834,7 +836,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     { id: 'followed|unfollowed', text: 'Follows' },
                                                     { id: '', text: 'Geniusbot' },
                                                     { id: 'edited_the_lyrics_of|recognized|marked_complete|verified_the_lyrics_of|unverified_the_lyrics_of', text: 'Lyrics Edits' },
-                                                    { id: 'edited_the_metadata_of', text: 'Metadata' },
+                                                    { id: 'edited_the_metadata_of|locked|unlocked', text: 'Metadata' },
                                                     { id: 'pyonged', text: 'Pyongs' },
                                                     { id: 'downvoted|upvoted', text: 'Voting' }
                                                 ];

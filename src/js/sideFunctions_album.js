@@ -390,7 +390,7 @@ export async function appendIcon() {
             }))
             .appendTo(popupBox);
 
-        addMediaInput.on("blur", async () => {
+        addMediaInput.on("input", async () => {
             const url = addMediaInput.val();
             if (url === "") {
                 addMediaInput.removeClass("error");
