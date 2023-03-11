@@ -3,262 +3,305 @@
 * located in the root directory of this code package.
 */
 
-const GENIUS_PAGE_HTML = `
-<fieldset id="info-box">
-    <div style="text-align: center;">
-        <legend id="genius-page">
-            Genius Page
-        </legend>
-    </div>
-</fieldset>`;
-
-const NO_SPECIAL_FEATURES_HTML = `
-<fieldset id="no-features-box">
-    <div style="text-align: center;">
-        <legend id="features">
-            There are (still) no<br>special features here
-        </legend>
-    </div>
-</fieldset>`;
-
-const NOT_GENIUS_HTML = `
-<fieldset id="err-box">
-    <div style="text-align: center;">
-        <legend id="missing-genius-err">You're not on a Genius page!</legend>
-    </div>
-</fieldset>`;
-
-const ALBUM_PAGE_HTML = `
-<fieldset id="info-box">
-    <div style="text-align: center;">
-        <legend id="genius-page">
-            Album Page
-        </legend>
-    </div>
-</fieldset>`;
-
-const SONG_PAGE_HTML = `
-<fieldset id="info-box">
-    <div style="text-align: center;">
-        <legend id="genius-page">
-            Song Page
-        </legend>
-    </div>
-</fieldset>`;
-
-const ALBUM_PAGE_FEATURES_HTML = `
-<fieldset id="features-box">
-    <legend id="features">
-        Metadata Indicators
-    </legend>
-
-    <div>
-        <input type="checkbox" id="people" checked name="people" class="chkboxm">
-            <label for="people">
-                <span class="chkboxmspan">
-                </span>
-                People (producers & writers)
-            </label>
-        </input>
-    </div>
-                                                
-    <div>
-        <input type="checkbox" id="bios" checked name="bios" class="chkboxm">
-            <label for="bios">
-                <span class="chkboxmspan">
-                </span>
-                Bios
-            </label>
-        </input>
-    </div>
-    
-    <div>
-        <input type="checkbox" id="release-date" checked name="release-date" class="chkboxm">
-            <label for="release-date">
-                <span class="chkboxmspan">
-                </span>
-                Release date
-            </label>
-        </input>
-    </div>
-</fieldset>`;
-
-const SONG_PAGE_APPLE_MUSIC_CHECKBOX = `
-<div>
-    <input type="checkbox" id="apple-music-pop-up" name="apple-music-pop-up" class="chkboxm">
-    <label for="apple-music-pop-up">
-        <span class="chkboxmspan">
-        </span>
-        Apple Music
-    </label>
-</div>`;
-
-const SONG_PAGE_SPOTIFY_CHECKBOX = `
-<div>
-    <input type="checkbox" id="spotify-pop-up" name="spotify-pop-up" class="chkboxm">
-        <label for="spotify-pop-up">
-            <span class="chkboxmspan">
-            </span>
-            Spotify
-        </label>
-</div>`;
-
-const SONG_PAGE_FEATURES_HTML = `
-<fieldset id="features-box">
-    <legend id="features">
-        Players
-    </legend>
-
-    ${SONG_PAGE_APPLE_MUSIC_CHECKBOX}
-    ${SONG_PAGE_SPOTIFY_CHECKBOX}
-</fieldset>
-    
-<fieldset id="features-box">
-    <legend id="features">
-        Features
-    </legend>
-    
-    <div>
-        <input type="checkbox" id="modern-text-editor" name="modern-text-editor" class="chkboxm">
-            <label for="modern-text-editor">
-                <span class="chkboxmspan">
-                </span>
-                Modern text editor
-            </label>
-        </input>
-    </div>
-
-    <div>
-        <input type="checkbox" id="old-song-page" name="old-song-page" class="chkboxm">
-            <label for="old-song-page">
-                <span class="chkboxmspan">
-                </span>
-                Open old song page by default
-            </label>
-        </input>
-    </div>
-</fieldset>`;
-
-document.getElementById("version").innerHTML += chrome.runtime.getManifest().version;
-
-chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
-    await chrome.scripting.executeScript(
-        {
-            target: { tabId: tabs[0].id },
-            func: (() => {
-                const hasAppleMusic = document.getElementsByClassName("apple_music_player-player").length > 0;
-                chrome.storage.local.set({ "hasAppleMusic": hasAppleMusic });
-            })
-        }
+const GENIUS_PAGE_ELEMENT = $('<fieldset>', {
+    id: 'info-box'
+})
+    .append($('<div>', {
+        class: 'center-text'
+    })
+        .append($('<legend>', {
+            id: 'genius-page',
+            text: 'Genius Page'
+        }))
     );
 
+const NO_SPECIAL_FEATURES_ELEMENT = $('<fieldset>', {
+    id: 'no-features-box'
+})
+    .append($('<div>', {
+        class: 'center-text'
+    })
+        .append($('<legend>', {
+            id: 'features',
+            text: 'There are (still) no special features here'
+        }))
+    );
+
+const NOT_GENIUS_ELEMENT = $('<fieldset>', {
+    id: 'err-box'
+})
+    .append($('<div>', {
+        class: 'center-text'
+    })
+        .append($('<legend>', {
+            id: 'missing-genius-err',
+            text: "Not a Genius page"
+        }))
+    );
+
+const ALBUM_PAGE_ELEMENT = $('<fieldset>', {
+    id: 'info-box'
+})
+    .append($('<div>', {
+        class: 'center-text'
+    })
+        .append($('<legend>', {
+            id: 'genius-page',
+            text: 'Album Page'
+        }))
+    );
+
+const SONG_PAGE_ELEMENT = $('<fieldset>', {
+    id: 'info-box'
+})
+    .append($('<div>', {
+        class: 'center-text'
+    })
+        .append($('<legend>', {
+            id: 'genius-page',
+            text: 'Song Page'
+        }))
+    );
+
+const ALBUM_PAGE_FEATURES_ELEMENT = $('<fieldset>', {
+    id: 'features-box'
+})
+    .append($('<legend>', {
+        id: 'features',
+        text: 'Metadata Indicators'
+    }))
+    .append($('<div>')
+        .append($('<input>', {
+            type: 'checkbox',
+            id: 'people',
+            checked: true,
+            name: 'people',
+            class: 'chkboxm'
+        }))
+        .append($('<label>', {
+            for: 'people'
+        })
+            .append($('<span>', {
+                class: 'chkboxmspan'
+            }))
+            .append(' People (writers & producers)')
+        )
+    )
+    .append($('<div>')
+        .append($('<input>', {
+            type: 'checkbox',
+            id: 'bios',
+            checked: true,
+            name: 'bios',
+            class: 'chkboxm'
+        }))
+        .append($('<label>', {
+            for: 'bios'
+        })
+            .append($('<span>', {
+                class: 'chkboxmspan'
+            }))
+            .append(' Bios')
+        )
+    )
+    .append($('<div>')
+        .append($('<input>', {
+            type: 'checkbox',
+            id: 'release-date',
+            checked: true,
+            name: 'release-date',
+            class: 'chkboxm'
+        }))
+        .append($('<label>', {
+            for: 'release-date'
+        })
+            .append($('<span>', {
+                class: 'chkboxmspan'
+            }))
+            .append(' Release date')
+        )
+    )
+    ;
+
+const SONG_PAGE_FEATURES_ELEMENT = $('<div>')
+    .append($('<fieldset>', {
+        id: 'features-box'
+    })
+        .append($('<legend>', {
+            id: 'features',
+            text: 'Players'
+        })
+            .append($('<div>')
+                .append($('<input>', {
+                    type: 'checkbox',
+                    id: 'apple-music-pop-up',
+                    name: 'apple-music-pop-up',
+                    class: 'chkboxm'
+                }))
+                .append($('<label>', {
+                    for: 'apple-music-pop-up'
+                })
+                    .append($('<span>', {
+                        class: 'chkboxmspan'
+                    }))
+                    .append(' Apple Music')
+                )
+            )
+            .append($('<div>')
+                .append($('<input>', {
+                    type: 'checkbox',
+                    id: 'spotify-pop-up',
+                    name: 'spotify-pop-up',
+                    class: 'chkboxm'
+                }))
+                .append($('<label>', {
+                    for: 'spotify-pop-up'
+                })
+                    .append($('<span>', {
+                        class: 'chkboxmspan'
+                    }))
+                    .append(' Spotify')
+                )
+            )
+        ))
+    .append($('<fieldset>', {
+        id: 'features-box'
+    })
+        .append($('<legend>', {
+            id: 'features',
+            text: 'Features'
+        })
+            .append($('<div>')
+                .append($('<input>', {
+                    type: 'checkbox',
+                    id: 'modern-text-editor',
+                    name: 'modern-text-editor',
+                    class: 'chkboxm'
+                }))
+                .append($('<label>', {
+                    for: 'modern-text-editor'
+                })
+                    .append($('<span>', {
+                        class: 'chkboxmspan'
+                    }))
+                    .append(' Modern text editor')
+                )
+            )
+            .append($('<div>')
+                .append($('<input>', {
+                    type: 'checkbox',
+                    id: 'old-song-page',
+                    name: 'old-song-page',
+                    class: 'chkboxm'
+                }))
+                .append($('<label>', {
+                    for: 'old-song-page'
+                })
+                    .append($('<span>', {
+                        class: 'chkboxmspan'
+                    }))
+                    .append(' Use old song page by default')
+                )
+
+            )
+        )
+    );
+
+$("#version").text($("#version").text() + ' ' + chrome.runtime.getManifest().version);
+
+chrome.tabs.query({ active: true, currentWindow: true }, async () => {
+
     // get the pageType and isGeniusPage from the local storage
-    chrome.storage.local.get(["pageType", "isGeniusPage"], async function(result) {
+    chrome.storage.local.get(["pageType", "isGeniusPage"], async (result) => {
         const isGeniusPage = result.isGeniusPage;
         const pageType = result.pageType;
 
         if (!isGeniusPage) {
-            document.getElementById("optional-additions").innerHTML = NOT_GENIUS_HTML;
+            $("#optional-additions")
+                .append(NOT_GENIUS_ELEMENT);
             return;
         }
 
         if (pageType == null || pageType === "unknown") {
-            document.getElementById("optional-additions").innerHTML =
-                GENIUS_PAGE_HTML + NO_SPECIAL_FEATURES_HTML;
+            $("#optional-additions")
+                .append(GENIUS_PAGE_FEATURES_ELEMENT)
+                .append(SONG_PAGE_FEATURES_ELEMENT);
             return;
         }
 
         switch (pageType) {
             case "song":
-                document.getElementById("optional-additions").innerHTML =
-                    SONG_PAGE_HTML + SONG_PAGE_FEATURES_HTML;
+                $("#optional-additions")
+                    .append(SONG_PAGE_ELEMENT)
+                    .append(SONG_PAGE_FEATURES_ELEMENT);
 
                 chrome.storage.local.get(["appleMusicPopUp"], (res) => {
-                    document.getElementById("apple-music-pop-up").checked = res.appleMusicPopUp;
+                    $("#apple-music-pop-up").prop("checked", res.appleMusicPopUp);
                 });
 
-                document.getElementById("apple-music-pop-up").addEventListener("click", () => {
+                $("#apple-music-pop-up").click(() => {
                     const appleMusicCheckbox = document.getElementById("apple-music-pop-up");
                     chrome.storage.local.set({ "appleMusicPopUp": appleMusicCheckbox.checked });
                     chrome.runtime.sendMessage({ "song_appleMusicPopUp": [appleMusicCheckbox.checked] });
                 });
 
                 chrome.storage.local.get(["spotifyPopUp"], (res) => {
-                    document.getElementById("spotify-pop-up").checked = res.spotifyPopUp;
+                    $("#spotify-pop-up").prop("checked", res.spotifyPopUp);
                 });
 
-                document.getElementById("spotify-pop-up").addEventListener("click", () => {
+                $("#spotify-pop-up").click(() => {
                     const spotifyCheckbox = document.getElementById("spotify-pop-up");
                     chrome.storage.local.set({ "spotifyPopUp": spotifyCheckbox.checked });
                     chrome.runtime.sendMessage({ "song_spotifyPopUp": [spotifyCheckbox.checked] });
                 });
 
                 chrome.storage.local.get(["ModernTextEditor"], (res) => {
-                    document.getElementById("modern-text-editor").checked = res.ModernTextEditor;
+                    $("#modern-text-editor").prop("checked", res.ModernTextEditor);
                 });
 
-                document.getElementById("modern-text-editor").addEventListener("click", () => {
+                $("#modern-text-editor").click(() => {
                     const ModernTextEditorCheckbox = document.getElementById("modern-text-editor");
                     chrome.storage.local.set({ "ModernTextEditor": ModernTextEditorCheckbox.checked });
                     chrome.runtime.sendMessage({ "song_ModernTextEditor": [ModernTextEditorCheckbox.checked] });
                 });
 
                 chrome.storage.local.get(["OldSongPage"], (res) => {
-                    document.getElementById("old-song-page").checked = res.OldSongPage;
+                    $("#old-song-page").prop("checked", res.OldSongPage);
                 });
 
-                document.getElementById("old-song-page").addEventListener("click", () => {
+                $("#old-song-page").click(() => {
                     const OldSongPageCheckbox = document.getElementById("old-song-page");
                     chrome.storage.local.set({ "OldSongPage": OldSongPageCheckbox.checked });
                 });
                 break;
             case "album":
-                document.getElementById("optional-additions").innerHTML =
-                    ALBUM_PAGE_HTML + ALBUM_PAGE_FEATURES_HTML;
+                $("#optional-additions")
+                    .append(ALBUM_PAGE_ELEMENT)
+                    .append(ALBUM_PAGE_FEATURES_ELEMENT);
 
-                chrome.storage.local.get(["bios"], (res) => {
-                    document.getElementById("bios").checked = res.bios;
-                });
+                // Define reusable functions to handle checkboxes
+                const handleCheckbox = (checkboxName, messageArray) => {
+                    chrome.storage.local.get([checkboxName], (res) => {
+                        $(`#${checkboxName}`).prop("checked", res[checkboxName]);
+                    });
 
-                document.getElementById("bios").addEventListener("click", () => {
-                    const biosCheckbox = document.getElementById("bios");
-                    chrome.storage.local.set({ "bios": biosCheckbox.checked });
+                    $(`#${checkboxName}`).click(() => {
+                        chrome.storage.local.set({ [checkboxName]: $(`#${checkboxName}`).prop("checked") });
+                        const messageText = $(`#${checkboxName}`).prop("checked") ? "album_missingInfo" : "album_missingInfo_remove";
+                        chrome.runtime.sendMessage({ [messageText]: messageArray });
+                    });
+                };
 
-                    const messageText = biosCheckbox.checked ? "album_missingInfo" : "album_missingInfo_remove";
+                // Handle each checkbox individually
+                handleCheckbox("bios", [true, false, false]);
+                handleCheckbox("people", [false, true, false]);
+                handleCheckbox("release-date", [false, false, true]);
 
-                    chrome.runtime.sendMessage({ [messageText]: [true, false, false] });
-                });
-
-                chrome.storage.local.get(["people"], (res) => {
-                    document.getElementById("people").checked = res.people;
-                });
-
-                document.getElementById("people").addEventListener("click", () => {
-                    const peopleCheckbox = document.getElementById("people");
-                    chrome.storage.local.set({ "people": peopleCheckbox.checked });
-
-                    const messageText = peopleCheckbox.checked ? "album_missingInfo" : "album_missingInfo_remove";
-
-                    chrome.runtime.sendMessage({ [messageText]: [false, true, false] });
-                });
-
-                chrome.storage.local.get(["releaseDate"], (res) => {
-                    document.getElementById("release-date").checked = res.releaseDate;
-                });
-
-                document.getElementById("release-date").addEventListener("click", () => {
-                    const releaseDateCheckbox = document.getElementById("release-date");
-                    chrome.storage.local.set({ "releaseDate": releaseDateCheckbox.checked });
-
-                    const messageText = releaseDateCheckbox.checked ? "album_missingInfo" : "album_missingInfo_remove";
-
-                    chrome.runtime.sendMessage({ [messageText]: [false, false, true] });
-                });
 
                 break;
             default:
-                document.getElementById("optional-additions").innerHTML =
-                    GENIUS_PAGE_HTML + NO_SPECIAL_FEATURES_HTML;
+                $("#optional-additions")
+                    .append(GENIUS_PAGE_ELEMENT);
                 break;
         }
     });

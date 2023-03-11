@@ -150,7 +150,10 @@ header-admin .feed_dropdown,
 .PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 {
   border-radius: 10px;
 }
-header-admin .feed_dropdown > a, header-admin .feed_dropdown > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]), header-admin .feed_dropdown > .ng-scope > *, header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *,
+header-admin .feed_dropdown > a,
+header-admin .feed_dropdown > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]),
+header-admin .feed_dropdown > .ng-scope > *,
+header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > a,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]),
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > .ng-scope > *,
@@ -163,7 +166,10 @@ header-admin .feed_dropdown > a, header-admin .feed_dropdown > div:not(.ng-scope
   border-radius: 10px;
   padding: 0.75rem 1rem !important;
 }
-header-admin .feed_dropdown > a:hover, header-admin .feed_dropdown > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]):hover, header-admin .feed_dropdown > .ng-scope > *:hover, header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover,
+header-admin .feed_dropdown > a:hover,
+header-admin .feed_dropdown > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]):hover,
+header-admin .feed_dropdown > .ng-scope > *:hover,
+header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > a:hover,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]):hover,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > .ng-scope > *:hover,
@@ -283,7 +289,16 @@ input::-webkit-calendar-picker-indicator {
 
 .drop-element:has(user-tooltip),
 .modal_window {
-  z-index: 991 !important;
+  z-index: 990000 !important;
+}
+.drop-element:has(user-tooltip) .drop-content .tooltip,
+.modal_window .drop-content .tooltip {
+  border-radius: 10px !important;
+}
+.drop-element:has(user-tooltip) .drop-content .tooltip .user_badge .square_button,
+.modal_window .drop-content .tooltip .user_badge .square_button {
+  border-radius: 10px !important;
+  border-width: 0.125rem !important;
 }
 
 .modal_window:has(conversation-with-user),
@@ -403,6 +418,8 @@ input::-webkit-calendar-picker-indicator {
 @media (max-width: 940px) {
   #sticky-nav .StickyNavdesktop__Subnavigation-sc-60o25r-6 {
     opacity: 0 !important;
+    margin-top: -50px !important;
+    transition: margin-top 0.05s ease-in-out, opacity 0.2s ease-in-out !important;
   }
 }
 
@@ -410,11 +427,14 @@ input::-webkit-calendar-picker-indicator {
 .header-nav_menu {
   background: none !important;
   margin-left: 150px !important;
+  margin-top: 0 !important;
 }
 @media (max-width: 1240px) {
   .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd,
   .header-nav_menu {
     opacity: 0 !important;
+    margin-top: -50px !important;
+    transition: margin-top 0.05s ease-in-out, opacity 0.2s ease-in-out !important;
   }
 }
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd .PageHeaderdesktop__Link-bhx5ui-4.jQULAr,
@@ -944,7 +964,7 @@ input::-webkit-calendar-picker-indicator {
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #community {
   background: linear-gradient(180deg, #C6C289, #FFC6A3);
 }
-.HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #community .PageGriddesktop-a6v82w-0.Communitydesktop__ChartHeader-x5mxcf-2.kFMCQL {
+.HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #community .kFMCQL {
   display: none;
 }
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #community .dUTFUv .gbabFz {

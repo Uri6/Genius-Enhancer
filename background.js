@@ -360,7 +360,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             });
 
                             // if an element with the classes "AnnotationPortaldesktop__Sticky-sc-17hre1n-2 daeaLL" added, remove the class "daeaLL" from it
-                            $(document).on("DOMNodeInserted", function (e) {
+                            $(document).on("DOMNodeInserted", (e) => {
 
                                 if ($('.search_results_autocomplete_container .feed_dropdown').hasClass("feed_dropdown--left_align")) {
                                     $('.search_results_autocomplete_container .feed_dropdown').removeClass("feed_dropdown--left_align");

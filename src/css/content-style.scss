@@ -192,7 +192,10 @@ header-admin .feed_dropdown,
 .PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 {
   border-radius: 10px;
 
-  > a, > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]), > .ng-scope > *, > div[ng-if="$ctrl.can('view_chartbeat')"] > * {
+  >a,
+  >div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]),
+  >.ng-scope>*,
+  >div[ng-if="$ctrl.can('view_chartbeat')"]>* {
     border: 0 !important;
     border-radius: 10px;
     padding: 0.75rem 1rem !important;
@@ -301,7 +304,20 @@ input {
 
 .drop-element:has(user-tooltip),
 .modal_window {
-  z-index: 991 !important;
+  z-index: 990000 !important;
+
+  .drop-content {
+    .tooltip {
+      border-radius: 10px !important;
+
+      .user_badge {
+        .square_button {
+          border-radius: 10px !important;
+          border-width: 0.125rem !important;
+        }
+      }
+    }
+  }
 }
 
 .modal_window:has(conversation-with-user),
@@ -421,6 +437,8 @@ input {
 #sticky-nav .StickyNavdesktop__Subnavigation-sc-60o25r-6 {
   @media (max-width: 940px) {
     opacity: 0 !important;
+    margin-top: -50px !important;
+    transition: margin-top 0.05s ease-in-out, opacity 0.2s ease-in-out !important;
   }
 }
 
@@ -428,9 +446,13 @@ input {
 .header-nav_menu {
   @media (max-width: 1240px) {
     opacity: 0 !important;
+    margin-top: -50px !important;
+    transition: margin-top 0.05s ease-in-out, opacity 0.2s ease-in-out !important;
   }
+
   background: none !important;
   margin-left: 150px !important;
+  margin-top: 0 !important;
 
   .PageHeaderdesktop__Link-bhx5ui-4.jQULAr,
   .nav_menu-item {
@@ -950,7 +972,7 @@ input {
   #community {
     background: linear-gradient(180deg, #C6C289, #FFC6A3);
 
-    .PageGriddesktop-a6v82w-0.Communitydesktop__ChartHeader-x5mxcf-2.kFMCQL {
+    .kFMCQL {
       display: none;
     }
 

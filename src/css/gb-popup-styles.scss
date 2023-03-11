@@ -23,6 +23,10 @@ body {
     -o-user-select: none;
 }
 
+.center-text {
+    text-align: center;
+}
+
 .title {
     color: #1e1e1e;
     margin-bottom: -0.005em;
@@ -108,6 +112,10 @@ fieldset>legend {
 
 fieldset>legend+* {
     clear: both;
+}
+
+label {
+    color: #1e1e1e;
 }
 
 .chkboxm {

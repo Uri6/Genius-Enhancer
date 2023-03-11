@@ -488,6 +488,22 @@ body {
       margin-bottom: 15px;
       position: relative;
 
+      .embedly_preview {
+        border-radius: 5px !important;
+        background-color: rgba(128, 128, 128, 0.4) !important;
+
+        .text {
+          .title, .provider {
+            padding: 0 !important;
+            background-color: transparent !important;
+          }
+
+          .description {
+            color: rgba(0, 0, 0, 0.8) !important;
+          }
+        }
+      }
+
       span,
       p,
       li,
@@ -629,6 +645,11 @@ body {
 }
 
 .discussion_thread-discussion_and_group_list {
+  @media (max-width: 1220px) {
+    opacity: 0 !important;
+    margin-left: -20% !important;
+  }
+
   align-items: center !important;
   border: none !important;
   position: sticky !important;
