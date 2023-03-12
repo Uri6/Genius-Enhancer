@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2
+**Bugs Squashed**
+- Can't upload images [ @Reece @furashaka ]
+
 ## 0.8.1
 **Bugs Squashed**
 - Can't filter locking activity on song pages [ anonymous through the bug report form ]

@@ -302,8 +302,12 @@ input {
   color: red;
 }
 
-.drop-element:has(user-tooltip),
+
 .modal_window {
+  z-index: 991 !important;
+}
+
+.drop-element:has(user-tooltip){
   z-index: 990000 !important;
 
   .drop-content {

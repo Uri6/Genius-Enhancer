@@ -287,16 +287,17 @@ input::-webkit-calendar-picker-indicator {
   color: red;
 }
 
-.drop-element:has(user-tooltip),
 .modal_window {
+  z-index: 991 !important;
+}
+
+.drop-element:has(user-tooltip) {
   z-index: 990000 !important;
 }
-.drop-element:has(user-tooltip) .drop-content .tooltip,
-.modal_window .drop-content .tooltip {
+.drop-element:has(user-tooltip) .drop-content .tooltip {
   border-radius: 10px !important;
 }
-.drop-element:has(user-tooltip) .drop-content .tooltip .user_badge .square_button,
-.modal_window .drop-content .tooltip .user_badge .square_button {
+.drop-element:has(user-tooltip) .drop-content .tooltip .user_badge .square_button {
   border-radius: 10px !important;
   border-width: 0.125rem !important;
 }
