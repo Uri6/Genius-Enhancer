@@ -135,13 +135,11 @@ export function restyleMissingInfo() {
 
     // make sure at least one of the icons is present
     // if not, wait until they are
-    while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0) {
-        setTimeout(() => {
-            peopleIcons = document.querySelectorAll('.people-icon');
-            bioIcons = document.querySelectorAll('.bio-icon');
-            releaseDateIcons = document.querySelectorAll('.release-date-icon');
-        }, 100);
-    }
+    do {
+        peopleIcons = document.querySelectorAll('.people-icon');
+        bioIcons = document.querySelectorAll('.bio-icon');
+        releaseDateIcons = document.querySelectorAll('.release-date-icon');
+    } while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0)
 
     const distances = ["-60px", "-105px", "-150px"];
     let bioLeftPosition, releaseDateLeftPosition;
@@ -912,7 +910,7 @@ export async function saveEverything() {
 
     axios.defaults.withCredentials = true
 
-    const getDeatils = () => {
+    const getDetails = () => {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
