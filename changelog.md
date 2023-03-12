@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8.1
+**Bugs Squashed**
+- Can't filter locking activity on song pages [ anonymous through the bug report form ]
+
+**Hotfixes**
+- When hovering over a user on the notification tab, their profile preview is under the notification [ @ahayax ]
+- The glitchy profile menu still exists on the new song page & the home page [ @mottled ]
+- Link previews on forums are glitchy [ anonymous through the bug report form ]
+- The thread's side menu isn't shown well when decreasing the window size [ anonymous through the bug report form ]
+- The navigation bar isn't shown well when decreasing the window size
+
+**Redesigns**
+- I started working on the album page!
+
+**Behind the Scenes**
+- Keep working with @Reece on the code cleanup
+
 ## 0.8
 **Bugs Squashed**
 - No more memory leaks causing browser crashes! [ @Everyone ]
