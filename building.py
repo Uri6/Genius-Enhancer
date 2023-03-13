@@ -65,7 +65,7 @@ def copytree(src, dst):
         skip = False
         bad_folders = [".vscode", ".git", ".github",
                        "Builds", "vision", "header",
-                       "gifs", ".idea"]
+                       "gifs", "screenshots", ".idea"]
         if folder in bad_folders or src.endswith("\\icons") and folder == "1":
             continue
         if os.path.isdir(src + '\\' + folder):

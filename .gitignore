@@ -4,6 +4,7 @@ Builds/
 vision/
 src/images/header/
 src/images/gifs/
+src/images/screenshots/
 src/images/icons/1/
 node_modules
 .yarn/cache
