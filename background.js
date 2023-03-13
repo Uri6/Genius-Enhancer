@@ -747,6 +747,22 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                             $('body').append(dataListElem);
                                         });
+
+                                        if ($('.header_with_cover_art metadata .metadata_unit').length) {
+                                            $('.header_with_cover_art metadata .metadata_unit').text($('.header_with_cover_art .metadata_unit').text().replace("Released ", ""));
+                                            $('.header_with_cover_art metadata')
+                                                .prepend($('<img>', {
+                                                    src: chrome.runtime.getURL("/src/images/releaseDate/Simple/32x32.png"),
+                                                    class: "release_date_icon",
+                                                    title: "Release Date"
+                                                }));
+                                            $('.header_with_cover_art-primary_info h2 .drop-target')
+                                                .prepend($('<img>', {
+                                                    src: chrome.runtime.getURL("/src/images/artist/Simple/32x32.png"),
+                                                    class: "artist_icon",
+                                                    title: "Artist"
+                                                }));
+                                        }
                                     })
                                 }
                             );
@@ -951,7 +967,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                             }
                                                         } else {
                                                             actionType = e.target.querySelector('inbox-line-item-action-icon div');
-                                                            if (actionType && !actionType.querySelector('svg') && filterIds.includes('')) {
+                                                            if (actionType && !actionType.querySelector('svg') && JSON.stringify(filterIds) === JSON.stringify([''])) {
                                                                 $(e.target).toggle(false);
                                                             }
                                                         }
