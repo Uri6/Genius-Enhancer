@@ -49,6 +49,7 @@
 
 .group_summary {
   width: 48%;
+  background-color: rgba(0, 0, 0, 0.5) !important;
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 10px;
@@ -59,6 +60,10 @@
   padding: 5px 10px;
   box-shadow: 0 0 0px #000;
   transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
 
   &:last-of-type {
     float: left !important;
@@ -73,29 +78,13 @@
     padding: 5px 10px;
     border: none !important;
     box-shadow: none;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
 
-    &:hover {
+    &:hover, &.active {
       background-color: none !important;
 
       .gb-new-button {
         fill: #ffff65 !important;
-      }
-    }
-
-    &.active {
-      background-color: none !important;
-
-      .gb-new-button {
-        fill: #ffff65 !important;
-      }
-
-      &:hover {
-        background-color: none !important;
-  
-        .gb-new-button {
-          fill: #ffff65 !important;
-        }
       }
     }
   }
