@@ -106,4 +106,11 @@ artist-songs-and-albums .full_width_button:hover {
   color: rgb(0, 0, 0) !important;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2) !important;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.profile_identity_and_description .white_container {
+  border-radius: 10px !important;
+}
+.profile_identity_and_description .white_container:has(paginated-leaderboard) user-attribution {
+  border-radius: 5px !important;
 }/*# sourceMappingURL=profile.css.map */

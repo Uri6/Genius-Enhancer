@@ -476,7 +476,12 @@
   display: none !important;
 }
 :not(.modal_window-content) .column_layout-column_span--primary > div > .square_button {
-  border-radius: 10px !important;
+  border-width: 0.125rem !important;
+}
+:not(.modal_window-content) .column_layout-column_span--primary > div > .square_button:hover {
+  background-color: #ff1464 !important;
+  color: white !important;
+  border-color: rgba(0, 0, 0, 0) !important;
 }
 :not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row {
   width: 625px !important;

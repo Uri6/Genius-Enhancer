@@ -147,3 +147,15 @@ artist-songs-and-albums {
         }
     }
 }
+
+.profile_identity_and_description {
+    .white_container {
+        border-radius: 10px !important;
+
+        &:has(paginated-leaderboard) {
+            user-attribution {
+                border-radius: 5px !important;
+            }
+        }
+    }
+}

@@ -562,7 +562,13 @@
                 }
 
                 >.square_button {
-                    border-radius: 10px !important;
+                    border-width: 0.125rem !important;
+
+                    &:hover {
+                        background-color: #ff1464 !important;
+                        color: white !important;
+                        border-color: rgba(0, 0, 0, 0) !important;
+                    }
                 }
 
                 album-tracklist-row {
