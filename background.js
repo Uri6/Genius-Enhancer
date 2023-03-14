@@ -847,7 +847,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                                 // Define the options for the dropdown
                                                 const options = [
-                                                    { id: 'created|edited|merged|accepted|rejected|pinned', text: 'Annotations, Proposals, Q&A' },
+                                                    { id: 'created|edited|merged|accepted|rejected|deleted|pinned', text: 'Annotations, Proposals, Q&A' },
                                                     { id: 'added_a_suggestion_to|replied_to|integrated|archived|marked', text: 'Comments, Suggestions' },
                                                     { id: 'followed|unfollowed', text: 'Follows' },
                                                     { id: '', text: 'Geniusbot' },
