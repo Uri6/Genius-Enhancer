@@ -3,8 +3,14 @@ const globby = require("globby");
 const sass = require("sass");
 const CopyPlugin = require("copy-webpack-plugin");
 const RawSource = require("webpack-sources/lib/RawSource");
+const rimraf = require("rimraf");
 
 const isDev = process.env.NODE_ENV !== "production";
+
+if (!isDev) {
+    // delete stale files from the dist folder
+    rimraf.sync("dist");
+}
 
 class ScssCompilerPlugin {
     apply(compiler) {
@@ -27,7 +33,7 @@ class ScssCompilerPlugin {
 module.exports = [
     {
         mode: isDev ? "development" : "production",
-        devtool: 'cheap-module-source-map',
+        devtool: isDev ? "cheap-module-source-map" : false,
         entry: {
             background: "./background.js",
             popup: "./src/js/popup-script.js",
@@ -100,6 +106,10 @@ module.exports = [
                     {
                         from: "src/html/*.html",
                         to: "[name].html",
+                    },
+                    {
+                        from: "lib/**/*.{css,js}",
+                        to: "",
                     },
                 ],
             }),

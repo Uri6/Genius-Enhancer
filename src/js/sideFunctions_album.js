@@ -525,55 +525,55 @@ export async function appendIcon() {
                     console.log(response);
                     if (response === undefined) {
                         throw new Error("Invalid Youtube Playlist URL");
-                    } else {
-                        const numOfSongs = Array.from(
-                            document.getElementsByClassName(
-                                "chart_row-number_container-number chart_row-number_container-number--gray"
-                            )
-                        ).length;
+                    }
 
-                        addMediaInput.removeClass("error");
-                        addMediaInput.attr("title", "");
-                        $(".add-media.details.title").text(
-                            response.playlistTitle
-                        );
-                        $(".add-media.details.title").attr(
+                    const numOfSongs = Array.from(
+                        document.getElementsByClassName(
+                            "chart_row-number_container-number chart_row-number_container-number--gray"
+                        )
+                    ).length;
+
+                    addMediaInput.removeClass("error");
+                    addMediaInput.attr("title", "");
+                    $(".add-media.details.title").text(
+                        response.playlistTitle
+                    );
+                    $(".add-media.details.title").attr(
+                        "title",
+                        response.playlistTitle
+                    );
+                    $(".add-media.details.image").attr(
+                        "src",
+                        response.playlistImage
+                    );
+                    $(".add-media.details.artist").text(
+                        response.artistName
+                    );
+                    $(".add-media.details.length").text(
+                        response.playlistLength
+                    );
+                    $(".add-media.details.videos-links").text(
+                        response.videoLinks.join(" ")
+                    );
+
+                    if (numOfSongs === response.playlistLength) {
+                        $(".add-media.details.length").css({
+                            color: "#1cc674"
+                        });
+                        $(".add-media.details.length").attr(
                             "title",
-                            response.playlistTitle
+                            "The number of songs in the playlist matches the number of songs in the chart"
                         );
-                        $(".add-media.details.image").attr(
-                            "src",
-                            response.playlistImage
+                        addMediaInput.removeClass("error");
+                    } else {
+                        $(".add-media.details.length").css({
+                            color: "#fc5753"
+                        });
+                        $(".add-media.details.length").attr(
+                            "title",
+                            "The number of songs in the playlist does not match the number of songs in the chart"
                         );
-                        $(".add-media.details.artist").text(
-                            response.artistName
-                        );
-                        $(".add-media.details.length").text(
-                            response.playlistLength
-                        );
-                        $(".add-media.details.videos-links").text(
-                            response.videoLinks.join(" ")
-                        );
-
-                        if (numOfSongs === response.playlistLength) {
-                            $(".add-media.details.length").css({
-                                color: "#1cc674",
-                            });
-                            $(".add-media.details.length").attr(
-                                "title",
-                                "The number of songs in the playlist matches the number of songs in the chart"
-                            );
-                            addMediaInput.removeClass("error");
-                        } else {
-                            $(".add-media.details.length").css({
-                                color: "#fc5753",
-                            });
-                            $(".add-media.details.length").attr(
-                                "title",
-                                "The number of songs in the playlist does not match the number of songs in the chart"
-                            );
-                            addMediaInput.addClass("error");
-                        }
+                        addMediaInput.addClass("error");
                     }
                 } catch (error) {
                     console.error(error);
@@ -1170,7 +1170,7 @@ export async function saveEverything() {
 
     $("header-with-cover-art").after(progressBar);
 
-    albumSongs.forEach(async (song) => {
+    await Promise.all(albumSongs.map(async (song) => {
         //axios.put(`https://genius.com/api${song.song.api_path}`, {
         //    text_format: "html,markdown",
         //    song: {
@@ -1294,7 +1294,7 @@ export async function saveEverything() {
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
         iframe.remove();
-    });
+    }));
 
     while (!everythingIsSaved) {
         await new Promise((resolve) => setTimeout(resolve, 100));
@@ -1353,74 +1353,74 @@ export function addSongAsTheNext() {
 
     let observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length) {
-                let addedElem = mutation.addedNodes[0];
-                let input = addedElem.querySelector(
-                    "input.square_input.square_input--full_width.ac_input"
+            if (!mutation.addedNodes.length) {
+                return;
+            }
+
+            let addedElem = mutation.addedNodes[0];
+            let input = addedElem.querySelector(
+                "input.square_input.square_input--full_width.ac_input"
+            );
+            if (input) {
+                let container = document.createElement("div");
+                container.classList.add("add-song-as-next-container");
+                let label = document.createElement("label");
+                label.classList.add("add-song-as-next-label");
+                label.innerText = "Add as next";
+                label.htmlFor = "add-song-as-next-checkbox";
+                let span = document.createElement("span");
+                span.classList.add("add-song-as-next-span", "chkboxmspan");
+                $(label).prepend(span);
+                let checkbox = document.createElement("input");
+                checkbox.classList.add(
+                    "add-song-as-next-checkbox",
+                    "chkboxm"
                 );
+                checkbox.type = "checkbox";
+                checkbox.id = "add-song-as-next-checkbox";
+                $(container).append(checkbox);
+                $(container).append(label);
+                $(input).parent().append(container);
 
-                if (input) {
-                    let container = document.createElement("div");
-                    container.classList.add("add-song-as-next-container");
-                    let label = document.createElement("label");
-                    label.classList.add("add-song-as-next-label");
-                    label.innerText = "Add as next";
-                    label.htmlFor = "add-song-as-next-checkbox";
-                    let span = document.createElement("span");
-                    span.classList.add("add-song-as-next-span", "chkboxmspan");
-                    $(label).prepend(span);
-                    let checkbox = document.createElement("input");
-                    checkbox.classList.add(
-                        "add-song-as-next-checkbox",
-                        "chkboxm"
-                    );
-                    checkbox.type = "checkbox";
-                    checkbox.id = "add-song-as-next-checkbox";
-                    $(container).append(checkbox);
-                    $(container).append(label);
-                    $(input).parent().append(container);
+                chrome.storage.local.get("add_song_as_next", (result) => {
+                    if (result.add_song_as_next) {
+                        checkbox.checked = true;
+                    }
+                });
 
-                    chrome.storage.local.get("add_song_as_next", (result) => {
-                        if (result.add_song_as_next) {
-                            checkbox.checked = true;
-                        }
+                checkbox.addEventListener("change", () => {
+                    chrome.storage.local.set({
+                        add_song_as_next: checkbox.checked
                     });
-
-                    checkbox.addEventListener("change", () => {
-                        chrome.storage.local.set({
-                            add_song_as_next: checkbox.checked,
-                        });
-                    });
-                    $('input[on-select="$ctrl.add_song(data)"]').on(
-                        "keydown",
-                        (e) => {
-                            console.log("keydown", e);
-                            chrome.storage.local.get(
-                                "add_song_as_next",
-                                (result) => {
-                                    if (result.add_song_as_next) {
-                                        if (e.keyCode === 13) {
-                                            addSongAsNext_();
-                                        }
+                });
+                $("input[on-select=\"$ctrl.add_song(data)\"]").on(
+                    "keydown",
+                    (e) => {
+                        console.log("keydown", e);
+                        chrome.storage.local.get(
+                            "add_song_as_next",
+                            (result) => {
+                                if (result.add_song_as_next) {
+                                    if (e.keyCode === 13) {
+                                        addSongAsNext_();
                                     }
                                 }
-                            );
-                        }
-                    );
-                }
-
-                if (
-                    addedElem.classList.contains("ac_even") ||
-                    addedElem.classList.contains("ac_odd")
-                ) {
-                    console.log("found add to queue button");
-                    let addToQueueButton = addedElem;
-                    chrome.storage.local.get("add_song_as_next", (result) => {
-                        if (result.add_song_as_next) {
-                            $(addToQueueButton).on("click", addSongAsNext_);
-                        }
-                    });
-                }
+                            }
+                        );
+                    }
+                );
+            }
+            if (
+                addedElem.classList.contains("ac_even") ||
+                addedElem.classList.contains("ac_odd")
+            ) {
+                console.log("found add to queue button");
+                let addToQueueButton = addedElem;
+                chrome.storage.local.get("add_song_as_next", (result) => {
+                    if (result.add_song_as_next) {
+                        $(addToQueueButton).on("click", addSongAsNext_);
+                    }
+                });
             }
         });
     });

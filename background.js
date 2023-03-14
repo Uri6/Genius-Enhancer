@@ -67,13 +67,14 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ add_song_as_next: true });
             chrome.storage.local.set({ ModernTextEditor: true });
             chrome.storage.local.set({ OldSongPage: false });
-        case "update":
-            // var newURL = "https://uri6.github.io/genius-bot/versions/";
-            // chrome.tabs.create({ url: newURL });
             break;
+        case "update":
         case "chrome_update":
         case "shared_module_update":
         default:
+            // var newURL = "https://uri6.github.io/genius-bot/versions/";
+            // chrome.tabs.create({ url: newURL });
+            // break;
             break;
     }
 });
@@ -221,9 +222,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         return;
     }
 
-    if (changeInfo.status == "complete" && tab.url.includes("genius.com")) {
+    if (changeInfo.status === "complete" && tab.url.includes("genius.com")) {
+        // TODO: migrate to using the npm packages
         const files = [
-            { type: "css", file: "./src/css/content-style.css" },
+            { type: "css", file: "./css/content-style.css" },
             { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
@@ -234,8 +236,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" },
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
-            { type: "js", file: "./lib/axios/axios.min.js" },
-            //{ type: "js", file: "./lib/oauth/oauth.min.js" },
         ];
 
         const cssFiles = files
@@ -442,7 +442,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         // if the element have the href "/#top-songs" is clicked, scroll to the "HomeContentdesktop__CenteredFlexColumn-sc-1xfg7l1-1 btjJtO" element
                         // if the element have the href "/#videos" is clicked, scroll to the "HomeContentdesktop__Section-sc-1xfg7l1-4 gveVlf" element
                         function scrollToElement(element) {
-                            var elementOffset = element.offset().top;
+                            const elementOffset = element.offset().top;
                             $("html, body").animate(
                                 { scrollTop: elementOffset },
                                 500
@@ -500,8 +500,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 e.target.parentElement.classList.contains(
                                     "global_search-search_icon"
                                 ) &&
-                                e.target.tagName == "path" &&
-                                e.target.getAttribute("d") ==
+                                e.target.tagName === "path" &&
+                                e.target.getAttribute("d") ===
                                     "M22 1.39L20.61 0 11 9.62 1.39 0 0 1.39 9.62 11 0 20.61 1.39 22 11 12.38 20.61 22 22 20.61 12.38 11 22 1.39"
                             ) {
                                 e.target.setAttribute(
@@ -516,7 +516,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                             setTimeout(() => {
                                 if (
-                                    $(e.target).attr("class") ==
+                                    $(e.target).attr("class") ===
                                         "modal_window" &&
                                     $(e.target).find(".modal_window-content")
                                         .length > 0 &&
@@ -601,7 +601,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "new song":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/newSong.css"],
+                                files: ["./css/newSong.css"],
                             });
 
                             chrome.scripting.executeScript({
@@ -675,7 +675,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                     $(
                                         `#song_primary_tag_id_${genres[1].value}`
-                                    ).click();
+                                    ).trigger("click");
                                     $(newChooser.children[1]).addClass(
                                         "modern-chooser-button-active"
                                     );
@@ -840,7 +840,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "firehose":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/firehose.css"],
+                                files: ["./css/firehose.css"],
                             });
 
                             chrome.scripting.executeScript({
@@ -1199,7 +1199,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/album.css"],
+                                files: ["./css/album.css"],
                             });
 
                             chrome.scripting.executeScript({
@@ -1239,10 +1239,17 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                             break;
                         case "song":
-                            chrome.scripting.executeScript({
-                                target: { tabId: tabId },
-                                files: ["./lib/geniuspot/geniuspot.min.js"],
-                            });
+                            // dynamic import
+                            import("./src/js/geniuspot.ts")
+                                .then((module) => {
+                                    chrome.scripting.executeScript({
+                                        target: { tabId },
+                                        func: module.swapPlayer,
+                                    })
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                });
 
                             chrome.storage.local.get(
                                 "ModernTextEditor",
@@ -1787,7 +1794,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "forums (main)":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/forumsPages/main.css"],
+                                files: ["./css/forumsPages/main.css"],
                             });
                             chrome.scripting.executeScript({
                                 target: { tabId: tabId },
@@ -1854,7 +1861,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "forum":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/forumsPages/forum.css"],
+                                files: ["./css/forumsPages/forum.css"],
                             });
                             chrome.scripting.executeScript({
                                 target: { tabId: tabId },
@@ -1923,7 +1930,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "forum thread":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/forumsPages/thread.css"],
+                                files: ["./css/forumsPages/thread.css"],
                             });
                             chrome.scripting.executeScript({
                                 target: { tabId: tabId },
@@ -2266,7 +2273,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "new post":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/forumsPages/newPost.css"],
+                                files: ["./css/forumsPages/newPost.css"],
                             });
                             chrome.scripting.executeScript({
                                 target: { tabId: tabId },
@@ -2289,7 +2296,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         case "profile":
                             chrome.scripting.insertCSS({
                                 target: { tabId: tabId },
-                                files: ["./src/css/profile.css"],
+                                files: ["./css/profile.css"],
                             });
                             break;
                     }
