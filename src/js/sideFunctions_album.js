@@ -3,37 +3,34 @@
 * located in the root directory of this code package.
 */
 
+import BioExists48 from "../images/bio/Exists/48x48.png";
+import BioMissing48 from "../images/bio/Missing/48x48.png";
+import PeopleExists48 from "../images/people/Exists/48x48.png";
+import PeopleMissing48 from "../images/people/Missing/48x48.png";
+import ReleaseDateExists48 from "../images/releaseDate/Exists/48x48.png";
+import ReleaseDateMissing48 from "../images/releaseDate/Missing/48x48.png";
+import ExtensionIcon128 from "../images/icons/2/128x128.png";
+import CloseIcon from "../images/other/closeIcon.png";
+import CloseIconX from "../images/other/closeIconX.png";
+import Artwork512 from "../images/artwork/512x512.png";
+import CheckIcon from "../images/other/check.png";
+import CrossIcon from "../images/other/cross.png";
+
+import { getDetails } from "./sideFunctions"
+
 export function missingInfo(bio, people, releaseDate) {
     const imgs = {
         bios: {
-            exists: chrome.runtime.getURL("/src/images/bio/Exists/48x48.png"),
-            missing: chrome.runtime.getURL("/src/images/bio/Missing/48x48.png")
+            exists: chrome.runtime.getURL(BioExists48),
+            missing: chrome.runtime.getURL(BioMissing48)
         },
         people: {
-            exists: chrome.runtime.getURL("/src/images/people/Exists/48x48.png"),
-            missing: chrome.runtime.getURL("/src/images/people/Missing/48x48.png")
+            exists: chrome.runtime.getURL(PeopleExists48),
+            missing: chrome.runtime.getURL(PeopleMissing48)
         },
         releaseDate: {
-            exists: chrome.runtime.getURL("/src/images/releaseDate/Exists/48x48.png"),
-            missing: chrome.runtime.getURL("/src/images/releaseDate/Missing/48x48.png")
-        }
-    }
-
-    // This functoin written by @wnull (@wine in Genius.com)
-    const getDetails = () => {
-        let matches = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
-        let replaces = {
-            '&#039;': `'`,
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"'
-        };
-
-        if (matches) {
-            let meta = matches[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
-            // full metadata album & another data
-            return JSON.parse(meta);
+            exists: chrome.runtime.getURL(ReleaseDateExists48),
+            missing: chrome.runtime.getURL(ReleaseDateMissing48)
         }
     }
 
@@ -246,9 +243,9 @@ export async function appendIcon() {
 
     const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
     const icon_elem = $("<img>").addClass("extension-icon").attr({
-        "alt": "genius bot extension icon",
+        "alt": "genius enhancer extension icon",
         "title": "Alt + G",
-        "src": chrome.runtime.getURL("src/images/icons/2/128x128.png")
+        "src": chrome.runtime.getURL(ExtensionIcon128)
     });
     buttonBackground.append(icon_elem);
 
@@ -268,13 +265,13 @@ export async function appendIcon() {
 
         $('<img>', {
             class: 'close-icon',
-            src: chrome.runtime.getURL('/src/images/other/closeIcon.png'),
+            src: chrome.runtime.getURL(CloseIcon),
             on: {
                 mouseover: function () {
-                    this.src = chrome.runtime.getURL('/src/images/other/closeIconX.png');
+                    this.src = chrome.runtime.getURL(CloseIconX);
                 },
                 mouseout: function () {
-                    this.src = chrome.runtime.getURL('/src/images/other/closeIcon.png');
+                    this.src = chrome.runtime.getURL(CloseIcon);
                 },
                 click: function () {
                     if (confirm('If you\'ve made changes, they won\'t save.\nAre you sure you want to close this window?')) {
@@ -502,7 +499,7 @@ export async function appendIcon() {
 
         const autolinkArtwork = $('<img>', {
             class: 'autolink-artwork-icon',
-            src: chrome.runtime.getURL('/src/images/artwork/512x512.png')
+            src: chrome.runtime.getURL(Artwork512)
         }).appendTo(autolinkArtworkContainer);
 
         const autolinkArtworkTitle = $('<div>', {
@@ -567,7 +564,7 @@ export async function appendIcon() {
 
                         const vButton = $('<img>', {
                             class: 'v-button',
-                            src: chrome.runtime.getURL('/src/images/other/v.png')
+                            src: chrome.runtime.getURL(CheckIcon)
                         });
 
                         vButton.hover(function () {
@@ -603,7 +600,7 @@ export async function appendIcon() {
 
                         const xButton = $('<img>', {
                             class: 'x-button',
-                            src: chrome.runtime.getURL('/src/images/other/x.png')
+                            src: chrome.runtime.getURL(CrossIcon)
                         });
 
                         xButton.hover(function () {
@@ -909,29 +906,6 @@ export async function saveEverything() {
     // TODO: refactor this into an API call
 
     axios.defaults.withCredentials = true
-
-    const getDetails = () => {
-        // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
-        const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
-
-        // Define an object containing HTML entity codes and their corresponding characters
-        const replaces = {
-            '&#039;': `'`,
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"'
-        };
-
-        // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
-        if (metaElem) {
-            // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
-            const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
-
-            // Parse the JSON string and return the resulting object
-            return JSON.parse(meta);
-        }
-    }
 
     //const details = getDetails();
     //const albumSongs = details.album_appearances;

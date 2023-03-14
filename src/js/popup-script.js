@@ -3,6 +3,8 @@
 * located in the root directory of this code package.
 */
 
+import "../css/gb-popup-styles.scss"
+
 const GENIUS_PAGE_ELEMENT = $('<fieldset>', {
     id: 'info-box'
 })
@@ -296,7 +298,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
                 handleCheckbox("bios", [true, false, false]);
                 handleCheckbox("people", [false, true, false]);
                 handleCheckbox("release-date", [false, false, true]);
-
 
                 break;
             default:

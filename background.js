@@ -8,6 +8,11 @@ import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolin
 import { appleMusicPopUp, spotifyPopUp, song_modernTextEditor, appendReplyButton } from "./src/js/sideFunctions_song.js";
 import { replaceButtons, forums_modernTextEditor } from "./src/js/sideFunctions_forum.js";
 
+import CloseIcon from "./src/images/other/closeIcon.png";
+import CloseIconX from "./src/images/other/closeIconX.png";
+import ReleaseDateSimple32 from "./src/images/releaseDate/Simple/32x32.png";
+import ArtistSimple32 from "./src/images/artist/Simple/32x32.png";
+
 function getTabId() {
     return new Promise((resolve, reject) => {
         try {
@@ -399,14 +404,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         }
 
                                         const closeButton = document.createElement('img');
+                                        const closeIconSource = chrome.runtime.getURL(CloseIcon);
                                         closeButton.className = "modal_window-close_button";
-                                        closeButton.src = chrome.runtime.getURL("/src/images/other/closeIcon.png");
-                                        closeButton.setAttribute("onmouseover", "this.src=\'" + chrome.runtime.getURL("/src/images/other/closeIconX.png") + "\'");
-                                        closeButton.setAttribute("onmouseout", "this.src=\'" + chrome.runtime.getURL("/src/images/other/closeIcon.png") + "\'");
+                                        closeButton.src = closeIconSource;
+                                        closeButton.setAttribute("onmouseover", "this.src=\'" + chrome.runtime.getURL(CloseIconX) + "\'");
+                                        closeButton.setAttribute("onmouseout", "this.src=\'" + closeIconSource + "\'");
                                         closeButton.setAttribute("title", "Esc");
 
                                         closeButton.addEventListener("click", () => {
-                                            oldCloseButton.click();
+                                            oldCloseButton.trigger("click");
                                         });
 
                                         $(e.target).find(".modal_window-content").prepend(closeButton);
@@ -420,7 +426,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     }
                                 }, 1);
                             });
-
                         })
                     }
                 );
@@ -500,7 +505,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         document.querySelectorAll('input').forEach((input) => {
                                             if (!input.parentElement.classList.contains('search-field')) {
                                                 input.addEventListener('keydown', (e) => {
-                                                    if (e.key == 'Enter') {
+                                                    if (e.key === 'Enter') {
                                                         document.querySelector('#song_submit').click();
                                                     }
                                                 });
@@ -625,7 +630,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             .append(children[5])
                                             .append(children[4])
                                             .append(children[7]);
-
 
                                         document.querySelectorAll(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf").forEach(function (e) {
                                             $(e).append("<div class='styled-background'></div>");
@@ -752,13 +756,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             $('.header_with_cover_art metadata .metadata_unit').text($('.header_with_cover_art .metadata_unit').text().replace("Released ", ""));
                                             $('.header_with_cover_art metadata')
                                                 .prepend($('<img>', {
-                                                    src: chrome.runtime.getURL("/src/images/releaseDate/Simple/32x32.png"),
+                                                    src: chrome.runtime.getURL(ReleaseDateSimple32),
                                                     class: "release_date_icon",
                                                     title: "Release Date"
                                                 }));
                                             $('.header_with_cover_art-primary_info h2 .drop-target')
                                                 .prepend($('<img>', {
-                                                    src: chrome.runtime.getURL("/src/images/artist/Simple/32x32.png"),
+                                                    src: chrome.runtime.getURL(ArtistSimple32),
                                                     class: "artist_icon",
                                                     title: "Artist"
                                                 }));

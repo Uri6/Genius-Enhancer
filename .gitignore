@@ -9,5 +9,5 @@ src/images/icons/1/
 node_modules
 .yarn/cache
 .yarn/install-state.gz
-build
 .idea/workspace.xml
+dist
