@@ -27,6 +27,7 @@ class ScssCompilerPlugin {
 module.exports = [
     {
         mode: isDev ? "development" : "production",
+        devtool: 'cheap-module-source-map',
         entry: {
             background: "./background.js",
             popup: "./src/js/popup-script.js",
