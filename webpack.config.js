@@ -1,8 +1,32 @@
 const { EsbuildPlugin } = require("esbuild-loader");
+const globby = require("globby");
+const sass = require("sass");
+const fs = require("fs");
+
+const isDev = process.env.NODE_ENV !== "production";
+
+class ScssCompilerPlugin {
+    apply(compiler) {
+        // run the following after the build is complete
+        compiler.hooks.afterEmit.tap("AfterBuildPlugin", () => {
+            globby
+                .sync(["src/css/**/*.scss"])
+                .forEach((file) => {
+                    // compile the scss files to css
+                    const result = sass.compile(file)
+                    // write the css to the corresponding file in /dist
+                    const cssFile = file.replace("src/css", "dist/css").replace(".scss", ".css");
+                    // create the output subdir if it doesn't exist
+                    fs.mkdirSync(cssFile.substring(0, cssFile.lastIndexOf("/")), { recursive: true });
+                    fs.writeFileSync(cssFile, result.css.toString());
+                })
+        })
+    }
+}
 
 module.exports = [
     {
-        mode: "production",
+        mode: isDev ? "development" : "production",
         entry: {
             background: "./background.js",
             popup: "./src/js/popup-script.js",
@@ -53,6 +77,8 @@ module.exports = [
         },
     },
     {
+        /* This is a hack to get webpack to include the extension icons, processed by file loader. */
+        /* Same deal as above, but with a different entry point and loader rules. */
         mode: "production",
         entry: {
             assetContainer: "./src/js/assetContainer.js"
@@ -64,9 +90,19 @@ module.exports = [
                     type: "asset/resource",
                     generator: {
                         filename: "img/ext/[name][ext]",
-                    }
-                }
+                    },
+                },
             ]
+        },
+        plugins: [
+            new ScssCompilerPlugin(),
+        ],
+        optimization: {
+            minimizer: [
+                new EsbuildPlugin({
+                    target: "es2019",
+                }),
+            ],
         },
     }
 ]
