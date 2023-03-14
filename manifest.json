@@ -4,10 +4,10 @@
     "version": "0.8.2",
     "manifest_version": 3,
     "icons": {
-        "16": "/src/images/icons/2/16x16.png",
-        "32": "/src/images/icons/2/32x32.png",
-        "48": "/src/images/icons/2/48x48.png",
-        "128": "/src/images/icons/2/128x128.png"
+        "16": "/img/ext/16x16.png",
+        "32": "/img/ext/32x32.png",
+        "48": "/img/ext/48x48.png",
+        "128": "/img/ext/128x128.png"
     },
     "background": {
         "service_worker": "background.js",
@@ -21,18 +21,18 @@
         }
     ],
     "action": {
-        "default_popup": "/src/html/popup.html",
+        "default_popup": "/popup.html",
         "default_icon": {
-            "16": "/src/images/icons/2/16x16.png",
-            "32": "/src/images/icons/2/32x32.png",
-            "48": "/src/images/icons/2/48x48.png",
-            "128": "/src/images/icons/2/128x128.png"
+            "16": "/img/ext/16x16.png",
+            "32": "/img/ext/32x32.png",
+            "48": "/img/ext/48x48.png",
+            "128": "/img/ext/128x128.png"
         }
     },
     "requirements": {
-        "minimum_chrome_version": "51"
+        "minimum_chrome_version": "75"
     },
-    "options_page": "/src/html/options.html",
+    "options_page": "/options.html",
     "permissions": ["storage", "activeTab", "scripting", "tabs"],
     "host_permissions": ["*://*/*"],
     "content_security_policy": {

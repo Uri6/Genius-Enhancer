@@ -1,26 +1,26 @@
 const { EsbuildPlugin } = require("esbuild-loader");
 const globby = require("globby");
 const sass = require("sass");
-const fs = require("fs");
+const CopyPlugin = require("copy-webpack-plugin");
+const RawSource = require("webpack-sources/lib/RawSource");
 
 const isDev = process.env.NODE_ENV !== "production";
 
 class ScssCompilerPlugin {
     apply(compiler) {
         // run the following after the build is complete
-        compiler.hooks.afterEmit.tap("AfterBuildPlugin", () => {
-            globby
-                .sync(["src/css/**/*.scss"])
-                .forEach((file) => {
-                    // compile the scss files to css
-                    const result = sass.compile(file)
-                    // write the css to the corresponding file in /dist
-                    const cssFile = file.replace("src/css", "dist/css").replace(".scss", ".css");
-                    // create the output subdir if it doesn't exist
-                    fs.mkdirSync(cssFile.substring(0, cssFile.lastIndexOf("/")), { recursive: true });
-                    fs.writeFileSync(cssFile, result.css.toString());
-                })
-        })
+        compiler.hooks.thisCompilation.tap("AfterBuildPlugin", (compilation) => {
+            globby.sync(["src/css/**/*.scss"]).forEach((file) => {
+                const result = sass.compile(file);
+
+                const cssFile = file
+                    .replace("src/css", "css")
+                    .replace(".scss", ".css");
+
+                // write the css to the corresponding file in /dist
+                compilation.emitAsset(cssFile, new RawSource(result.css.toString()));
+            });
+        });
     }
 }
 
@@ -42,31 +42,25 @@ module.exports = [
                     options: {
                         // JavaScript version to compile to
                         target: "es2019",
-                    }
+                    },
                 },
                 {
                     test: /\.svg$/,
-                    use: [
-                        "svgo-loader",
-                    ],
+                    use: ["svgo-loader"],
                     type: "asset/source",
                 },
                 {
                     test: /\.s?css$/,
-                    use: [
-                        "style-loader",
-                        "css-loader",
-                        "sass-loader",
-                    ],
+                    use: ["style-loader", "css-loader", "sass-loader"],
                 },
                 {
                     test: /\.png$/,
                     type: "asset/resource",
                     generator: {
                         filename: "img/[contenthash][ext]",
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         },
         optimization: {
             minimizer: [
@@ -81,7 +75,7 @@ module.exports = [
         /* Same deal as above, but with a different entry point and loader rules. */
         mode: "production",
         entry: {
-            assetContainer: "./src/js/assetContainer.js"
+            assetContainer: "./src/js/assetContainer.js",
         },
         module: {
             rules: [
@@ -92,17 +86,22 @@ module.exports = [
                         filename: "img/ext/[name][ext]",
                     },
                 },
-            ]
+            ],
         },
         plugins: [
             new ScssCompilerPlugin(),
+            new CopyPlugin({
+                patterns: [
+                    {
+                        from: "manifest.json",
+                        to: "manifest.json",
+                    },
+                    {
+                        from: "src/html/*.html",
+                        to: "[name].html",
+                    },
+                ],
+            }),
         ],
-        optimization: {
-            minimizer: [
-                new EsbuildPlugin({
-                    target: "es2019",
-                }),
-            ],
-        },
-    }
-]
+    },
+];

@@ -1,7 +1,7 @@
 /*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */
 
 /**
  * Checks if the given text contains any Hebrew characters
@@ -26,21 +26,26 @@ export function insertAfter(newNode, existingNode) {
  */
 export function getDetails() {
     // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
-    const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
+    const metaElem = document.documentElement.innerHTML.match(
+        /<meta content="({[^"]+)/
+    );
 
     // Define an object containing HTML entity codes and their corresponding characters
     const replaces = {
-        '&#039;': `'`,
-        '&amp;': '&',
-        '&lt;': '<',
-        '&gt;': '>',
-        '&quot;': '"'
+        "&#039;": `'`,
+        "&amp;": "&",
+        "&lt;": "<",
+        "&gt;": ">",
+        "&quot;": '"',
     };
 
     // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
     if (metaElem) {
         // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
-        const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
+        const meta = metaElem[1].replace(
+            /&[\w\d#]{2,5};/g,
+            (match) => replaces[match]
+        );
 
         // Parse the JSON string and return the resulting object
         return JSON.parse(meta);
@@ -63,7 +68,7 @@ export function identifyPageType() {
         "http://www.genius.com/",
         "https://www.genius.com/",
         "http://genius.com/",
-        "https://genius.com/"
+        "https://genius.com/",
     ];
 
     const urlToPageType = {
@@ -78,7 +83,7 @@ export function identifyPageType() {
             chrome.scripting.executeScript(
                 {
                     target: { tabId: tab.id },
-                    func: getDetails
+                    func: getDetails,
                 },
                 function (returnVal) {
                     if (returnVal && returnVal[0].result != null) {
@@ -86,31 +91,62 @@ export function identifyPageType() {
                         pageType = pageObject.page_type;
                     }
 
-                    if (!returnVal || returnVal[0].result == null || !pageType || pageType === "unknown") {
+                    if (
+                        !returnVal ||
+                        returnVal[0].result == null ||
+                        !pageType ||
+                        pageType === "unknown"
+                    ) {
                         const urlPart = tab.url.split("genius.com/")[1];
-                        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?react=1/") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                        if (
+                            !urlPart.includes("/") &&
+                            (urlPart.endsWith("-lyrics") ||
+                                urlPart.endsWith("-lyrics/") ||
+                                urlPart.endsWith("-annotated") ||
+                                urlPart.endsWith("-annotated/") ||
+                                urlPart.endsWith("?react=1") ||
+                                urlPart.endsWith("?react=1/") ||
+                                urlPart.endsWith("?bagon=1") ||
+                                urlPart.endsWith("?bagon=1/"))
+                        ) {
                             pageType = "song";
-                        }
-                        else if (geniusAdress.some((adress) => tab.url === adress) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
+                        } else if (
+                            geniusAdress.some((adress) => tab.url === adress) ||
+                            (urlPart[0] === "#" && !urlPart.includes("/"))
+                        ) {
                             pageType = "home";
-                        }
-                        else if (geniusAdress.some((adress) => tab.url.startsWith(adress + "firehose"))) {
+                        } else if (
+                            geniusAdress.some((adress) =>
+                                tab.url.startsWith(adress + "firehose")
+                            )
+                        ) {
                             pageType = "firehose";
-                        }
-                        else if (geniusAdress.some((adress) => tab.url === adress + "new" || tab.url === adress + "new/")) {
+                        } else if (
+                            geniusAdress.some(
+                                (adress) =>
+                                    tab.url === adress + "new" ||
+                                    tab.url === adress + "new/"
+                            )
+                        ) {
                             pageType = "new song";
                         }
                         chrome.scripting.executeScript(
                             {
                                 target: { tabId: tab.id },
                                 func: () => {
-                                    return document.getElementsByClassName("group_summary").length > 0;
-                                }
+                                    return (
+                                        document.getElementsByClassName(
+                                            "group_summary"
+                                        ).length > 0
+                                    );
+                                },
                             },
                             function (isForumPage) {
                                 if (isForumPage[0].result) {
                                     // Loop through the keys of the urlToPageType object and check if the URL includes any of them
-                                    for (const url of Object.keys(urlToPageType)) {
+                                    for (const url of Object.keys(
+                                        urlToPageType
+                                    )) {
                                         if (tab.url.includes(url)) {
                                             // If yes, set the pageType to the corresponding value in the urlToPageType object
                                             pageType = urlToPageType[url];
@@ -119,21 +155,24 @@ export function identifyPageType() {
                                     }
 
                                     // If the pageType is still "unknown", it has to be a forum page
-                                    if (pageType === "unknown" || pageTpye === undefined) {
+                                    if (
+                                        pageType === "unknown" ||
+                                        pageTpye === undefined
+                                    ) {
                                         pageType = "forum";
                                     }
                                 }
                                 if (pageType !== undefined) {
-                                    chrome.storage.local.set({ "pageType": pageType });
+                                    chrome.storage.local.set({
+                                        pageType: pageType,
+                                    });
                                 }
                                 resolve(pageType);
                             }
                         );
-                    }
-
-                    else {
+                    } else {
                         if (pageType !== undefined) {
-                            chrome.storage.local.set({ "pageType": pageType });
+                            chrome.storage.local.set({ pageType: pageType });
                         }
                         resolve(pageType);
                     }
@@ -142,7 +181,6 @@ export function identifyPageType() {
         });
     });
 }
-
 
 /**
  * Retrieves the first input element with the name "tag_ids[]" from the HTML content of the Genius New page
@@ -167,7 +205,6 @@ export async function getTagsList() {
     // Return the element
     return tagElem;
 }
-
 
 /**
  * Retrieves a list of artists from the Genius API based on a search query
@@ -228,24 +265,27 @@ export function replaceTextarea(textareaClasses) {
     const quill = new Quill(editor, {
         modules: {
             toolbar: [
-                [{ "header": [1, 2, 3, false] }],
+                [{ header: [1, 2, 3, false] }],
                 ["bold", "italic", "clean"],
-                [{ "align": ["justify", "center"] }],
-                [{ "list": "ordered" }, { "list": "bullet" }],
+                [{ align: ["justify", "center"] }],
+                [{ list: "ordered" }, { list: "bullet" }],
                 ["link", "image"],
-                ["code-block"]
+                ["code-block"],
             ],
             history: {
                 delay: 2000,
                 maxStack: 500,
-                userOnly: true
-            }
+                userOnly: true,
+            },
         },
-        theme: "snow"
+        theme: "snow",
     });
 
-    content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-    content = content.replace(/\n/g, '<br>');
+    content = content.replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2">$1</a>'
+    );
+    content = content.replace(/\n/g, "<br>");
 
     // if editing lyrics, it's making the header sticky
     if (textareaClasses !== "required markdown_preview_setup_complete") {
@@ -253,33 +293,69 @@ export function replaceTextarea(textareaClasses) {
         const toolbarHeight = toolbar.height();
         const toolbarContainer = $("<div>", { class: "ql-toolbar-container" });
         toolbarContainer.css("height", toolbarHeight + 48);
-        $(".eqRvkr").css("z-index", "3")
-        $(".hJeJkL").css("z-index", "4")
-        $(".fmKONB").css("padding-bottom", "2rem")
+        $(".eqRvkr").css("z-index", "3");
+        $(".hJeJkL").css("z-index", "4");
+        $(".fmKONB").css("padding-bottom", "2rem");
         $(toolbar).before(toolbarContainer);
     }
 
     quill.clipboard.dangerouslyPasteHTML(content);
 
-    quill.on('text-change', function (delta, oldDelta, source) {
+    quill.on("text-change", function (delta, oldDelta, source) {
         let htmlContent = quill.root.innerHTML;
-        htmlContent = htmlContent.replace(/<strong>/g, '<b>').replace(/<\/strong>/g, '</b>');
-        htmlContent = htmlContent.replace(/<em>/g, '<i>').replace(/<\/em>/g, '</i>');
-        htmlContent = htmlContent.replace(/<br>/g, '\n').replace(/<p><\/p>/g, '').replace(/<p>/g, '').replace(/<\/p>/g, '\n').replace(/\n\n/g, '\n');
-        htmlContent = htmlContent.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        htmlContent = htmlContent
+            .replace(/<strong>/g, "<b>")
+            .replace(/<\/strong>/g, "</b>");
+        htmlContent = htmlContent
+            .replace(/<em>/g, "<i>")
+            .replace(/<\/em>/g, "</i>");
+        htmlContent = htmlContent
+            .replace(/<br>/g, "\n")
+            .replace(/<p><\/p>/g, "")
+            .replace(/<p>/g, "")
+            .replace(/<\/p>/g, "\n")
+            .replace(/\n\n/g, "\n");
+        htmlContent = htmlContent
+            .replace(/&nbsp;/g, " ")
+            .replace(/&amp;/g, "&")
+            .replace(/&lt;/g, "<")
+            .replace(/&gt;/g, ">");
         // still working on the while loop below
-        while (htmlContent.match(/<a [^>]*href="([^"\r\n]+)"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>\n<a [^>]*href="\1"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>/g)) {
-            htmlContent = htmlContent.replace(/<a [^>]*href="([^"\r\n]+)"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>\n<a [^>]*href="\1"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g, function (match, url, text1, text2) {
-                return '[' + text1.replace(/<br[^>]*>/g, '\n') + '\n' + text2.replace(/<br[^>]*>/g, '\n') + '](' + url + ')';
-            });
+        while (
+            htmlContent.match(
+                /<a [^>]*href="([^"\r\n]+)"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>\n<a [^>]*href="\1"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>/g
+            )
+        ) {
+            htmlContent = htmlContent.replace(
+                /<a [^>]*href="([^"\r\n]+)"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>\n<a [^>]*href="\1"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g,
+                function (match, url, text1, text2) {
+                    return (
+                        "[" +
+                        text1.replace(/<br[^>]*>/g, "\n") +
+                        "\n" +
+                        text2.replace(/<br[^>]*>/g, "\n") +
+                        "](" +
+                        url +
+                        ")"
+                    );
+                }
+            );
         }
-        htmlContent = htmlContent.replace(/<a href="([^"\r\n]+)" target="[^"\r\n]+">([^<\r\n]+)<\/a>/g, '[$2]($1)').replace(/<a href="([^"\r\n]+)"[^<\r\n]+>([^<\r\n]+)<\/a>/g, '[$2]($1)');
+        htmlContent = htmlContent
+            .replace(
+                /<a href="([^"\r\n]+)" target="[^"\r\n]+">([^<\r\n]+)<\/a>/g,
+                "[$2]($1)"
+            )
+            .replace(
+                /<a href="([^"\r\n]+)"[^<\r\n]+>([^<\r\n]+)<\/a>/g,
+                "[$2]($1)"
+            );
 
         textarea.value = htmlContent;
 
         const event = new Event("input", {
             bubbles: true,
-            cancelable: true
+            cancelable: true,
         });
         textarea.dispatchEvent(event);
     });
