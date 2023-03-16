@@ -561,6 +561,11 @@ input::-webkit-calendar-picker-indicator {
   background-color: #ff1464 !important;
   outline-width: 0 !important;
 }
+.PageHeaderdesktop__Left-bhx5ui-2.ctcvqz .dbBHSq,
+.global_search.global_search--header .dbBHSq {
+  left: unset !important;
+  right: 1rem !important;
+}
 
 .PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ,
 .header-actions {
@@ -599,13 +604,14 @@ input::-webkit-calendar-picker-indicator {
 .header-actions *:not([open-header-menus=open_header_menus]) .feed_dropdown .feed_dropdown-item--unread:not(.details_loaded):before {
   content: "";
   position: absolute;
-  top: 0;
   left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #7d8fe8;
+  width: 5px;
+  height: 85%;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ff1464;
   background-position: 0 0;
-  border-radius: 10px 10px 0 0;
+  border-radius: 0 10px 10px 0;
   border-color: transparent !important;
   border-width: 0 !important;
 }
@@ -816,6 +822,9 @@ input::-webkit-calendar-picker-indicator {
 *:has(.ql-editor) .ql-container .ql-editor *::selection {
   background: #ff1464;
   color: #fff;
+}
+*:has(.ql-editor) .ql-container .ql-clipboard {
+  position: fixed;
 }
 
 .RecentActivity__FilteringContainer {

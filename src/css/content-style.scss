@@ -602,7 +602,7 @@ input {
         border-radius: 0 10px 10px 0;
         border-color: transparent !important;
         border-width: 0 !important;
-      }      
+      }
 
       &:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0) {
         z-index: 100 !important;
@@ -787,6 +787,10 @@ input {
           color: #fff;
         }
       }
+    }
+
+    .ql-clipboard {
+      position: fixed;
     }
   }
 }

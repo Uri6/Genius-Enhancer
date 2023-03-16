@@ -551,8 +551,8 @@
     }
 }
 
-:not(.modal_window-content) .column_layout {
-    &-column_span {
+*:not(.modal_window-content):not(ng-transclude)>.column_layout {
+    .column_layout-column_span {
         &--primary {
             >div {
                 width: 645px !important;

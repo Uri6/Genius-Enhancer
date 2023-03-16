@@ -1,25 +1,50 @@
 /*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */
 
-import { getDetails, identifyPageType, replaceTextarea, removeQuill } from "./src/js/sideFunctions.js";
-import { missingInfo, removeMissingInfo, restyleMissingInfo, appendIcon, autolinkArtwork, getPlaylistVideos, saveEverything, addSongAsTheNext } from "./src/js/sideFunctions_album.js";
-import { appleMusicPopUp, spotifyPopUp, song_modernTextEditor, appendReplyButton } from "./src/js/sideFunctions_song.js";
-import { replaceButtons, forums_modernTextEditor } from "./src/js/sideFunctions_forum.js";
+import {
+    getDetails,
+    identifyPageType,
+    replaceTextarea,
+    removeQuill,
+} from "./src/js/sideFunctions.js";
+import {
+    missingInfo,
+    removeMissingInfo,
+    restyleMissingInfo,
+    appendIcon,
+    autolinkArtwork,
+    getPlaylistVideos,
+    saveEverything,
+    addSongAsTheNext,
+} from "./src/js/sideFunctions_album.js";
+import {
+    appleMusicPopUp,
+    spotifyPopUp,
+    song_modernTextEditor,
+    appendReplyButton,
+} from "./src/js/sideFunctions_song.js";
+import {
+    replaceButtons,
+    forums_modernTextEditor,
+} from "./src/js/sideFunctions_forum.js";
 
 function getTabId() {
     return new Promise((resolve, reject) => {
         try {
-            chrome.tabs.query({
-                active: true,
-            }, function (tabs) {
-                resolve(tabs[0].id);
-            })
+            chrome.tabs.query(
+                {
+                    active: true,
+                },
+                function (tabs) {
+                    resolve(tabs[0].id);
+                }
+            );
         } catch (e) {
             reject(e);
         }
-    })
+    });
 }
 
 chrome.runtime.onInstalled.addListener((details) => {
@@ -40,17 +65,16 @@ chrome.runtime.onInstalled.addListener((details) => {
         case 'update':
             // var newURL = "https://uri6.github.io/genius-bot/versions/";
             // chrome.tabs.create({ url: newURL });
-            break;
-        case 'chrome_update':
-        case 'shared_module_update':
-        default:
+            // break;
             break;
     }
-
 });
 
-chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
-
+chrome.runtime.onMessage.addListener(async function (
+    message,
+    sender,
+    sendResponse
+) {
     const tabId = await getTabId();
     let func, args;
 
@@ -119,28 +143,38 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     }
 
     let res = new Promise((resolve) => {
-        chrome.scripting.executeScript({
-            target: { tabId: tabId },
-            func: func,
-            args: args
-        }).then((results) => {
-            if (func === identifyPageType || func === getPlaylistVideos || func === getDetails) {
-                resolve(results[0].result);
-            }
+        chrome.scripting
+            .executeScript({
+                target: { tabId: tabId },
+                func: func,
+                args: args,
+            })
+            .then((results) => {
+                if (
+                    func === identifyPageType ||
+                    func === getPlaylistVideos ||
+                    func === getDetails
+                ) {
+                    resolve(results[0].result);
+                }
 
-            resolve();
-        });
+                resolve();
+            });
     });
 
     sendResponse(res);
-
 });
 
 let pageType = "unknown";
 let isGeniusPage = false;
 let pageObject = {};
 let url = "";
-const geniusAddress = ["http://www.genius.com/", "https://www.genius.com/", "http://genius.com/", "https://genius.com/"];
+const geniusAddress = [
+    "http://www.genius.com/",
+    "https://www.genius.com/",
+    "http://genius.com/",
+    "https://genius.com/",
+];
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     isGeniusPage = geniusAddress.some((adress) => tab.url.startsWith(adress));
@@ -148,7 +182,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     url = tab.url;
 
     console.info("----------------------------------------");
-    console.info("%c new tab loaded ", "background-color: #fffe65; color: #000; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
+    console.info(
+        "%c new tab loaded ",
+        "background-color: #fffe65; color: #000; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
+    );
     console.info("tab id: " + tabId);
     console.info("changeInfo: " + changeInfo.status);
     console.info("tab: " + tab.title + ", " + tab.url);
@@ -163,7 +200,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         "docs.genius.com",
         "homestudio.genius.com",
         "genius.com/developers",
-        "genius.com/api-clients"
+        "genius.com/api-clients",
     ];
 
     const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
@@ -176,7 +213,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         return;
     }
 
-    if (changeInfo.status == 'complete' && tab.url.includes("genius.com")) {
+    if (changeInfo.status === "complete" && tab.url.includes("genius.com")) {
+        // TODO: migrate to using the npm packages
         const files = [
             { type: "css", file: "./src/css/content-style.css" },
             { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
@@ -189,29 +227,29 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" },
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
-            { type: "js", file: "./lib/axios/axios.min.js" },
+            //{ type: "js", file: "./lib/axios/axios.min.js" },
             //{ type: "js", file: "./lib/oauth/oauth.min.js" },
         ];
 
         const cssFiles = files
-            .filter(f => f.type === "css")
-            .map(f => f.file);
+            .filter((f) => f.type === "css")
+            .map((f) => f.file);
 
         const jsFiles = files
-            .filter(f => f.type === "js")
-            .map(f => f.file);
+            .filter((f) => f.type === "js")
+            .map((f) => f.file);
 
-        if (cssFiles.length > 0) {
+        if (cssFiles.length) {
             chrome.scripting.insertCSS({
                 target: { tabId: tabId },
-                files: cssFiles
+                files: cssFiles,
             });
         }
 
-        if (jsFiles.length > 0) {
+        if (jsFiles.length) {
             chrome.scripting.executeScript({
                 target: { tabId: tabId },
-                files: jsFiles
+                files: jsFiles,
             });
         }
 
@@ -221,73 +259,125 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     chrome.scripting.executeScript(
                         {
                             target: { tabId: tabId },
-                            func: getDetails
+                            func: getDetails,
                         },
                         function (returnVal) {
-                            if (returnVal != undefined && returnVal[0].result != null) {
+                            if (
+                                returnVal != undefined &&
+                                returnVal[0].result != null
+                            ) {
                                 pageObject = returnVal[0].result;
                                 pageType = pageObject.page_type;
                             }
 
-                            if (returnVal == undefined || returnVal[0].result == null || pageType == undefined || pageType == "unknown") {
+                            if (
+                                returnVal == undefined ||
+                                returnVal[0].result == null ||
+                                pageType == undefined ||
+                                pageType == "unknown"
+                            ) {
                                 var urlPart = tab.url.split("genius.com/")[1];
-                                if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?react=1/") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                                if (
+                                    !urlPart.includes("/") &&
+                                    (urlPart.endsWith("-lyrics") ||
+                                        urlPart.endsWith("-lyrics/") ||
+                                        urlPart.endsWith("-annotated") ||
+                                        urlPart.endsWith("-annotated/") ||
+                                        urlPart.endsWith("?react=1") ||
+                                        urlPart.endsWith("?react=1/") ||
+                                        urlPart.endsWith("?bagon=1") ||
+                                        urlPart.endsWith("?bagon=1/"))
+                                ) {
                                     pageType = "song";
 
-                                    chrome.storage.local.get("OldSongPage", (res) => {
-                                        if (res.OldSongPage) {
-                                            let currentUrl = tab.url;
-                                            if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
-                                                currentUrl += "?bagon=1";
-                                                chrome.tabs.update(tabId, { url: currentUrl });
+                                    chrome.storage.local.get(
+                                        "OldSongPage",
+                                        (res) => {
+                                            if (res.OldSongPage) {
+                                                let currentUrl = tab.url;
+                                                if (
+                                                    currentUrl.indexOf(
+                                                        "?bagon=1"
+                                                    ) === -1 &&
+                                                    currentUrl.indexOf(
+                                                        "?react=1"
+                                                    ) === -1
+                                                ) {
+                                                    currentUrl += "?bagon=1";
+                                                    chrome.tabs.update(tabId, {
+                                                        url: currentUrl,
+                                                    });
+                                                }
+                                            } else if (
+                                                res.OldSongPage === undefined
+                                            ) {
+                                                console.error(
+                                                    "OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/"
+                                                );
                                             }
-                                        } else if (res.OldSongPage === undefined) {
-                                            console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
                                         }
-                                    });
-                                }
-                                else if (geniusAddress.some((adress) => tab.url == adress) || (urlPart[0] == "#" && !urlPart.includes("/"))) {
+                                    );
+                                } else if (
+                                    geniusAddress.some(
+                                        (adress) => tab.url == adress
+                                    ) ||
+                                    (urlPart[0] == "#" &&
+                                        !urlPart.includes("/"))
+                                ) {
                                     pageType = "home";
-                                }
-                                else if (geniusAddress.some((adress) => tab.url.startsWith(adress + "firehose"))) {
+                                } else if (
+                                    geniusAddress.some((adress) =>
+                                        tab.url.startsWith(adress + "firehose")
+                                    )
+                                ) {
                                     pageType = "firehose";
-                                }
-                                else if (geniusAddress.some((adress) => tab.url == adress + "new" || tab.url == adress + "new/")) {
+                                } else if (
+                                    geniusAddress.some(
+                                        (adress) =>
+                                            tab.url == adress + "new" ||
+                                            tab.url == adress + "new/"
+                                    )
+                                ) {
                                     pageType = "new song";
                                 }
                                 chrome.scripting.executeScript(
                                     {
                                         target: { tabId: tabId },
                                         func: () => {
-                                            return document.getElementsByClassName("group_summary").length > 0;
-                                        }
+                                            return (
+                                                document.getElementsByClassName(
+                                                    "group_summary"
+                                                ).length > 0
+                                            );
+                                        },
                                     },
                                     function (isForumPage) {
                                         if (isForumPage[0].result) {
                                             if (tab.url.endsWith("/forums")) {
                                                 pageType = "forums (main)";
-                                            }
-                                            else if (tab.url.endsWith("/new")) {
+                                            } else if (
+                                                tab.url.endsWith("/new")
+                                            ) {
                                                 pageType = "new post";
-                                            }
-                                            else if (tab.url.includes("/discussions/")) {
+                                            } else if (
+                                                tab.url.includes(
+                                                    "/discussions/"
+                                                )
+                                            ) {
                                                 pageType = "forum thread";
-                                            }
-                                            else {
+                                            } else {
                                                 pageType = "forum";
                                             }
                                         }
                                         resolve();
                                     }
                                 );
-                            }
-
-                            else {
+                            } else {
                                 resolve();
                             }
                         }
                     );
-                })
+                });
             }).then(() => {
                 if (pageType !== undefined) {
                     chrome.storage.local.set({ "pageType": pageType });
@@ -847,7 +937,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                                 // Define the options for the dropdown
                                                 const options = [
-                                                    { id: 'created|edited|merged|accepted|rejected|deleted|pinned', text: 'Annotations, Proposals, Q&A' },
+                                                    { id: 'created|edited|proposed_an_edit_to|merged|accepted|rejected|deleted|pinned', text: 'Annotations, Proposals, Q&A' },
                                                     { id: 'added_a_suggestion_to|replied_to|integrated|archived|marked', text: 'Comments, Suggestions' },
                                                     { id: 'followed|unfollowed', text: 'Follows' },
                                                     { id: '', text: 'Geniusbot' },
@@ -986,14 +1076,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         }
 
                                         chrome.runtime.sendMessage({ ["song_appendReplyButton"]: [isAnnotation] });
-
-                                        let text;
-
-                                        if ($('.Lyrics__Container-sc-1ynbvzw-6').length) {
-                                            text = $('.Lyrics__Container-sc-1ynbvzw-6').innerText;
-                                        } else if ($(".lyrics section").length) {
-                                            text = $(".lyrics section")[0].innerText;
-                                        }
+                                        
+                                        const lyricsContainer = $('.Lyrics__Container-sc-1ynbvzw-6')[0] || $(".lyrics section")[0];
+                                        let text = lyricsContainer.innerText;
 
                                         var words = text.replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g, '').split(/\s+/);
 

@@ -567,7 +567,7 @@ export async function appendIcon() {
 
                         const vButton = $('<img>', {
                             class: 'v-button',
-                            src: chrome.runtime.getURL('/src/images/other/v.png')
+                            src: chrome.runtime.getURL('/src/images/other/check.png')
                         });
 
                         vButton.hover(function () {
@@ -603,7 +603,7 @@ export async function appendIcon() {
 
                         const xButton = $('<img>', {
                             class: 'x-button',
-                            src: chrome.runtime.getURL('/src/images/other/x.png')
+                            src: chrome.runtime.getURL('/src/images/other/cross.png')
                         });
 
                         xButton.hover(function () {
@@ -833,6 +833,7 @@ export async function appendIcon() {
 /**
  * Searches for album artwork from iTunes API based on album and artist name obtained from the web page
  * The results are saved in the Chrome storage and also returned as a promise
+ * 
  * @returns {Promise<Array<String>>} A promise that resolves to an array of album artwork URLs
  */
 export async function autolinkArtwork() {
@@ -908,7 +909,7 @@ export async function saveEverything() {
 
     // TODO: refactor this into an API call
 
-    axios.defaults.withCredentials = true
+    // axios.defaults.withCredentials = true
 
     const getDetails = () => {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
@@ -1031,10 +1032,12 @@ export async function saveEverything() {
             " existing tags: ",
             existingTags,
             " tags for this song: ",
-            tagsForThisSong
+            tagsForThisSong,
+            " youtube link: ",
+            song.youtubeLink
         );
 
-        const youtubeURLInput = /*iframe.contentWindow.*/document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
+        const youtubeURLInput = iframe.contentWindow.document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
 
         if (youtubeURLInput) {
             youtubeURLInput.click();
@@ -1131,6 +1134,7 @@ export function addSongAsTheNext() {
         mutations.forEach((mutation) => {
             if (mutation.addedNodes.length) {
                 let addedElem = mutation.addedNodes[0];
+                if (!addedElem || !addedElem.children) return;
                 let input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
 
                 if (input) {

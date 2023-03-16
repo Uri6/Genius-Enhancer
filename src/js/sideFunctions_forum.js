@@ -116,15 +116,24 @@ export function replaceButtons(createDiscussion, follow) {
 }
 
 export function forums_modernTextEditor() {
-    if ($('.reply_container .required.markdown_preview_setup_complete').length || $('#new_discussion .required.markdown_preview_setup_complete').length) {
-        chrome.runtime.sendMessage({ "replaceTextarea": ["required markdown_preview_setup_complete"] });
+    if (
+        $(".reply_container .required.markdown_preview_setup_complete")
+            .length ||
+        $("#new_discussion .required.markdown_preview_setup_complete").length
+    ) {
+        chrome.runtime.sendMessage({
+            replaceTextarea: ["required markdown_preview_setup_complete"],
+        });
 
-        if ($('.reply_container .formatting_help').length) {
-            $('.reply_container .formatting_help').css('display', 'none');
+        if ($(".reply_container .formatting_help").length) {
+            $(".reply_container .formatting_help").css("display", "none");
         }
 
-        if ($('.reply_container .markdown_preview_container').length) {
-            $('.reply_container .markdown_preview_container').css('display', 'none');
+        if ($(".reply_container .markdown_preview_container").length) {
+            $(".reply_container .markdown_preview_container").css(
+                "display",
+                "none"
+            );
         }
     }
 }

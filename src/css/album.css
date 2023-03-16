@@ -469,52 +469,52 @@
   margin-left: -7px !important;
 }
 
-:not(.modal_window-content) .column_layout-column_span--primary > div {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div {
   width: 645px !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div > h2.text_label.text_label--gray.u-half_bottom_margin {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div > h2.text_label.text_label--gray.u-half_bottom_margin {
   display: none !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div > .square_button {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div > .square_button {
   border-width: 0.125rem !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div > .square_button:hover {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div > .square_button:hover {
   background-color: #ff1464 !important;
   color: white !important;
   border-color: rgba(0, 0, 0, 0) !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row {
   width: 625px !important;
   padding: 16px !important;
   border-color: transparent !important;
   border-radius: 10px !important;
   transition: width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.15s ease-in-out, background-color 0.2s ease-in-out !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row a h3 {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row a h3 {
   font-weight: 400 !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row a:hover {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row a:hover {
   padding: 0 !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row::before {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row::before {
   display: none !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row-content-title-subtitle {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row-content-title-subtitle {
   display: none !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row:hover:not(:has(img:hover)) {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row:hover:not(:has(img:hover)) {
   width: 645px !important;
   background-color: #2c2c2c;
   color: #e9e9e9 !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div album-tracklist-row .chart_row:hover:not(:has(img:hover)) a h3 {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row:hover:not(:has(img:hover)) a h3 {
   color: #e9e9e9 !important;
   padding-left: 10px !important;
 }
-:not(.modal_window-content) .column_layout-column_span--primary > div > editable-tracklist div .square_button {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div > editable-tracklist div .square_button {
   border-radius: 10px !important;
 }
-:not(.modal_window-content) .column_layout-column_span--secondary {
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--secondary {
   left: 105px !important;
 }
 
