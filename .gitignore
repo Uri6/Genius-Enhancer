@@ -1,13 +1,27 @@
-*.psd
+# VSCode configuration
 .vscode/
-Builds/
+
+# WebStorm configuration
+.idea/
+
+# Python virtual environment
+.venv/
+
+# Build artifacts and vision files
 vision/
+Builds/
+build
+
+# Image files
 src/images/header/
 src/images/gifs/
 src/images/screenshots/
 src/images/icons/1/
-node_modules
-.yarn/cache
-.yarn/install-state.gz
-build
-.idea/workspace.xml
+src/images/magicWand/48x48.png
+src/images/magicWand/512x512.png
+
+# Adobe Photoshop files
+*.psd
+
+# CSS source maps
+*.css.map
