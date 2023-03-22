@@ -1,7 +1,7 @@
 /*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */
 
 export function missingInfo(bio, people, releaseDate) {
     const imgs = {
@@ -292,7 +292,7 @@ export async function appendIcon() {
 
         $("<div>", {
             class: "add-tags-title title",
-            text: "Tag songs"
+            text: "Tag Songs"
         }).appendTo(popupBox);
 
         $("<input>", {
@@ -911,7 +911,7 @@ export async function saveEverything() {
 
     // axios.defaults.withCredentials = true
 
-    const getDetails = () => {
+    /*const getDetails = () => {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
@@ -932,7 +932,7 @@ export async function saveEverything() {
             // Parse the JSON string and return the resulting object
             return JSON.parse(meta);
         }
-    }
+    }*/
 
     //const details = getDetails();
     //const albumSongs = details.album_appearances;

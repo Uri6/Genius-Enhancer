@@ -423,6 +423,9 @@
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-cover_art .cover_art:first-child {
   box-shadow: 0 0 10px 10px #f7f7f7 inset;
 }
+.header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-cover_art .tiny_edit_button {
+  border-radius: 5px;
+}
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-cover_art:hover .cover_art {
   border-radius: 5px !important;
 }
@@ -460,6 +463,7 @@
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-primary_info_container .header_with_cover_art-primary_info .artist_icon {
   margin-top: -6px !important;
   margin-left: -7px !important;
+  vertical-align: middle !important;
 }
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-primary_info_container .header_with_cover_art-primary_info metadata > * {
   display: inline-block !important;
@@ -467,6 +471,7 @@
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-primary_info_container .header_with_cover_art-primary_info metadata .release_date_icon {
   margin-top: -5px !important;
   margin-left: -7px !important;
+  vertical-align: middle !important;
 }
 
 *:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div {
@@ -510,6 +515,10 @@
 *:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row:hover:not(:has(img:hover)) a h3 {
   color: #e9e9e9 !important;
   padding-left: 10px !important;
+}
+*:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div album-tracklist-row .chart_row:hover:not(:has(img:hover)) .square_button:not(.square_button--gray) {
+  border-color: #e9e9e9 !important;
+  color: #e9e9e9 !important;
 }
 *:not(.modal_window-content):not(ng-transclude) > .column_layout .column_layout-column_span--primary > div > editable-tracklist div .square_button {
   border-radius: 10px !important;

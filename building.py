@@ -6,17 +6,17 @@ import csscompressor
 
 def add_license_comment(directory):
     license_comment = """/*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/"""
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */"""
     HTML_comment = """<!--
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
--->"""
+  -- This code is licensed under the terms of the "LICENSE.md" file
+  -- located in the root directory of this code package.
+  -->"""
     lib_comment = """/*
-* This code was not written by me (Uri Sivani) and is subject to the license of the original project.
-* Please refer to the original project website for more information.
-*/"""
+ * This code was not written by me (Uri Sivani) and is subject to the license of the original project.
+ * Please refer to the original project website for more information.
+ */"""
     for root, dirs, files in os.walk(directory):
         if "Builds" not in root.split("\\"):
             for file in files:
@@ -58,20 +58,24 @@ def encrypt(file):
 
 
 def copytree(src, dst):
-    src = src.replace('/', '\\')
-    dst = dst.replace('/', '\\')
+    if os.name == 'nt':  # for Windows
+        src = src.replace('/', '\\')
+        dst = dst.replace('/', '\\')
+        sep = '\\'
+    else:  # for Mac
+        sep = '/'
     print('Copying {} to {}'.format(src, dst))
     for folder in os.listdir(src):
         skip = False
         bad_folders = [".vscode", ".git", ".github",
                        "Builds", "vision", "header",
                        "gifs", "screenshots", ".idea",
-                       ".yarn"]
-        if folder in bad_folders or src.endswith("\\icons") and folder == "1":
+                       ".yarn", ".venv"]
+        if folder in bad_folders or src.endswith(sep + "icons") and folder == "1":
             continue
-        if os.path.isdir(src + '\\' + folder):
-            os.mkdir(dst + '\\' + folder)
-            copytree(src + '\\' + folder, dst + '\\' + folder)
+        if os.path.isdir(src + sep + folder):
+            os.mkdir(dst + sep + folder)
+            copytree(src + sep + folder, dst + sep + folder)
         else:
             file = folder
             bad_files = [".py", ".ts", ".map", ".scss", ".sass",
@@ -81,10 +85,10 @@ def copytree(src, dst):
             for bad_file in bad_files:
                 if file.endswith(bad_file):
                     skip = True
-            nedded_dimensions = {"artwork": "512x512.png", "Exists": "48x48.png", "Missing": "48x48.png", "icons\\2": [
+            nedded_dimensions = {"artwork": "512x512.png", "Exists": "48x48.png", "Missing": "48x48.png", "icons"+sep+"2": [
                 "16x16.png", "32x32.png", "48x48.png", "128x128.png"]}
             for key in nedded_dimensions:
-                if src.endswith(key):
+                if src.endswith(sep + key):
                     if type(nedded_dimensions[key]) == list:
                         if file not in nedded_dimensions[key]:
                             skip = True
@@ -92,7 +96,7 @@ def copytree(src, dst):
                         if file != nedded_dimensions[key]:
                             skip = True
             if not skip:
-                shutil.copy(src + '\\' + file, dst + '\\' + file)
+                shutil.copy(src + sep + file, dst + sep + file)
 
 
 rootDir = os.path.dirname(os.path.realpath(__file__))

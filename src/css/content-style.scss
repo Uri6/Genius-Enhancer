@@ -1,7 +1,7 @@
 /*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */
 
 $blue: #1873d1;
 $grey: #6e6e6e;
@@ -69,7 +69,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
         background-color: $genius-yellow !important;
       }
 
-      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
+      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.nav_menu-link):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
         text-decoration: underline !important;
       }
 
@@ -221,7 +221,7 @@ header-admin .feed_dropdown,
 .header {
   background: $genius-yellow !important;
   background-color: $genius-yellow !important;
-  color: #000000 !important;
+  color: black !important;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   position: sticky !important;
@@ -234,19 +234,19 @@ header-admin .feed_dropdown,
   .jNXEyt,
   .jLiBUJ {
     svg {
-      fill: #000000 !important;
+      fill: black !important;
       top: 0 !important;
     }
 
     .knRXtG {
-      color: #000000 !important;
+      color: black !important;
     }
   }
 }
 
 .header-action-label,
 .header-action {
-  color: #000000 !important;
+  color: black !important;
 }
 
 .container {
@@ -261,13 +261,13 @@ header-admin .feed_dropdown,
   padding: 10px;
 }
 
-.square_button {
+.square_button, textarea {
   border-radius: 10px !important;
 }
 
 input {
   &::-webkit-calendar-picker-indicator {
-    color: #000 !important;
+    color: black !important;
   }
 }
 
@@ -276,7 +276,7 @@ input {
 }
 
 .contenteditable-div {
-  color: rgb(0, 0, 0);
+  color: black;
   font-family: Programme, Arial, sans-serif;
   line-height: 1.45;
   text-size-adjust: 100%;
@@ -485,7 +485,7 @@ input {
 
     .TextLabel-sc-8kw9oj-0.jlOURg,
     .nav_menu-link {
-      color: #000 !important;
+      color: black !important;
       width: auto !important;
       height: auto !important;
       letter-spacing: 0.5px !important;
@@ -543,7 +543,7 @@ input {
     outline: 2px solid #ff1464 !important;
     box-shadow: none !important;
     padding: 5px !important;
-    color: #000 !important;
+    color: black !important;
     font-family: Programme, Arial, sans-serif;
     font-size: 14px !important;
     font-weight: 200 !important;
@@ -588,6 +588,7 @@ input {
     .feed_dropdown {
 
       border-radius: 10px !important;
+      min-width: 500px !important;
 
       .feed_dropdown-item--unread:not(.details_loaded):before {
         content: "";
@@ -645,6 +646,10 @@ input {
   margin-top: -3px;
   margin-left: 0 !important;
   margin-right: 0 !important;
+
+  svg {
+    vertical-align: middle !important;
+  }
 }
 
 
@@ -681,12 +686,12 @@ input {
   position: fixed !important;
 
   .square_button {
-    background: #fff !important;
+    background: white !important;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     border-width: 0.15rem;
     border-style: solid;
     border-radius: 0;
-    border-color: #000;
+    border-color: black;
     padding: 4px 8px !important;
   }
 }
@@ -750,7 +755,7 @@ input {
     top: 0;
     z-index: 2;
     margin-top: -4.7rem;
-    background: #fff;
+    background: white;
     border-radius: 10px 10px 0 0 !important;
     width: auto;
   }
@@ -759,7 +764,7 @@ input {
     position: sticky;
     top: 60px;
     z-index: 3;
-    background: #fff;
+    background: white;
     border-radius: 10px 10px 0 0 !important;
     border-bottom: none !important;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
@@ -769,8 +774,8 @@ input {
     border-radius: 0 0 10px 10px !important;
     border-top: none !important;
     font-size: 1.125rem !important;
-    background: #fff;
-    color: #000;
+    background: white;
+    color: black;
 
     p {
       margin: 0 !important;
@@ -779,12 +784,12 @@ input {
     .ql-editor {
       * {
         &:not(a) {
-          color: #000;
+          color: black;
         }
 
         &::selection {
           background: #ff1464;
-          color: #fff;
+          color: white;
         }
       }
     }
@@ -816,7 +821,7 @@ input {
     right: 0;
     top: 100%;
     margin-top: 8px;
-    background: #fff;
+    background: white;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
@@ -856,7 +861,7 @@ input {
 
       &:hover {
         background: #ff1464;
-        color: #fff;
+        color: white;
       }
 
       &:nth-child(1),
@@ -873,6 +878,10 @@ input {
   z-index: 1000 !important;
 }
 
+/*.magic-wand-button-container {
+  
+}*/
+
 
 // home page
 
@@ -887,7 +896,7 @@ input {
 
     a {
       svg {
-        fill: #000 !important;
+        fill: black !important;
       }
 
       &:hover {
@@ -910,7 +919,7 @@ input {
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
-    border-color: #000;
+    border-color: black;
     border-width: 0.10rem;
     border-radius: 10px;
     width: 100%;
@@ -983,7 +992,7 @@ input {
         }
 
         * {
-          border-color: #000;
+          border-color: black;
         }
 
         &:hover {
@@ -1121,12 +1130,16 @@ input {
     }
 
     .jHQizl {
+      background-color: #fcff68 !important;
+
       .kMmimq {
+        background-color: #fcff68 !important;
         border-radius: 10px;
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
         .SizedImage__Container-sc-1hyeaua-0 {
+          background-color: #fcff68 !important;
           transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
           bottom: unset;
           overflow: hidden;
@@ -1154,7 +1167,7 @@ input {
     opacity: 0.3;
     border-radius: 10px;
     border: none;
-    color: #000;
+    color: black;
     font-weight: 600;
     font-size: 1.2rem;
     padding: 10px 20px;

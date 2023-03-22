@@ -24,6 +24,7 @@ import {
     spotifyPopUp,
     song_modernTextEditor,
     appendReplyButton,
+    searchVideo,
 } from "./src/js/sideFunctions_song.js";
 import {
     replaceButtons,
@@ -130,6 +131,9 @@ chrome.runtime.onMessage.addListener(async function (
             func = appendReplyButton;
             args = message.song_appendReplyButton;
             break;
+        case "song_searchVideo" in message:
+            func = searchVideo;
+            args = message.song_searchVideo;
         case "forums_replaceButtons" in message:
             func = replaceButtons;
             args = message.forums_replaceButtons;
@@ -426,6 +430,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 searchBar.val("");
                             });
 
+                            $(".header-actions *").click(() => {
+                                $(".search_results_autocomplete_container").addClass("ng-hide");
+                            });
+
                             // there's three elements with the class "PageHeaderdesktop__Link-bhx5ui-4 jQULAr"
                             // if the element have the href "/#featured-stories" is clicked, scroll to the "HomeContentdesktop__Section-sc-1xfg7l1-4 bBDcg" element
                             // if the element have the href "/#top-songs" is clicked, scroll to the "HomeContentdesktop__CenteredFlexColumn-sc-1xfg7l1-1 btjJtO" element
@@ -470,6 +478,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 if (e.target.parentElement.classList.contains("global_search-search_icon") && e.target.tagName == "path" && e.target.getAttribute("d") == "M22 1.39L20.61 0 11 9.62 1.39 0 0 1.39 9.62 11 0 20.61 1.39 22 11 12.38 20.61 22 22 20.61 12.38 11 22 1.39") {
                                     e.target.setAttribute("d", "M21.48 20.18L14.8 13.5a8.38 8.38 0 1 0-1.43 1.4l6.69 6.69zM2 8.31a6.32 6.32 0 1 1 6.32 6.32A6.32 6.32 0 0 1 2 8.31z");
                                     e.target.parentElement.setAttribute("class", "global_search-search_icon");
+
+
                                 }
 
                                 setTimeout(() => {
@@ -602,7 +612,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         document.querySelector('#song_submit').addEventListener('click', async (e) => {
 
                                             const clickedTag = document.querySelector('.modern-chooser-button-active');
-                                            console.log(clickedTag);
                                             const requiredInputs = document.querySelectorAll('.required');
                                             const lyricsState = document.querySelector('#song_lyrics_state');
                                             const lyricsTextarea = document.querySelector('.add_song_page-lyrics_textarea');
@@ -704,7 +713,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         $("#featured-stories").remove();
                                         var container = $(".HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT");
                                         var children = container.children();
-                                        console.log(children);
                                         container
                                             .empty()
                                             .append(children[0])
@@ -872,7 +880,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             );
 
                             chrome.storage.local.get(["bios", "people", "releaseDate"], (res) => {
-                                console.log(res);
+                                console.info("bios: " + res.bios, " people: " + res.people, " releaseDate: " + res.releaseDate);
                                 chrome.scripting.executeScript(
                                     {
                                         target: { tabId: tabId },
@@ -923,7 +931,29 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     target: { tabId: tabId },
                                     func: () => {
 
-                                        $(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", function (e) {
+                                        $(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", (e) => {
+                                            console.log(e);
+
+                                            setTimeout(() => {
+                                                const youtubeInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('YouTube URL')");
+
+                                                if (youtubeInputContainer.length && !$('.magic-wand-button-container').length) {
+                                                    $("<div>", {
+                                                        class: "magic-wand-button-container",
+                                                    })
+                                                        .append($("<img>", {
+                                                            class: "magic-wand-button-icon",
+                                                            src: chrome.runtime.getURL("/src/images/magicWand/26x26.png"),
+                                                        }))
+                                                        .insertAfter(youtubeInputContainer)
+                                                        .click(() => {
+                                                            chrome.runtime.sendMessage({ "song_searchVideo": [true] });
+                                                        });
+                                                }
+                                            }, 1000);
+                                        });
+
+                                        $(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", (e) => {
                                             if (!$(".RecentActivity__FilteringContainer").length) {
 
                                                 const filterContainer = $('<div>', {
@@ -954,7 +984,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 });
 
                                                 // Create an option element for each option and add it to the dropdown
-                                                options.forEach(function (option) {
+                                                options.forEach((option) => {
                                                     $('<div>', {
                                                         class: 'RecentActivity__FilteringDropdownItem'
                                                     })
@@ -985,23 +1015,23 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 $(filterContainer).append(filterDropdown);
 
                                                 // When the dropdown is clicked, show the options
-                                                $(button).click(function () {
+                                                $(button).click(() => {
                                                     $(filterDropdown).toggle();
                                                 });
 
                                                 // When the user clicks anywhere outside of the dropdown, hide it (make sure it won't hide when clicking on the button)
-                                                $(document).click(function (e) {
+                                                $(document).click((e) => {
                                                     if (!$(e.target).is(button) && !$(e.target).is(filterDropdown) && !$(e.target).is(filterDropdown.find('*'))) {
                                                         $(filterDropdown).hide();
                                                     }
                                                 });
 
-                                                $('.RecentActivity__FilteringDropdownItem').click(function () {
+                                                $('.RecentActivity__FilteringDropdownItem').click(() => {
                                                     $(this).find('.chkboxm').prop('checked', !$(this).find('.chkboxm').prop('checked'));
                                                 });
 
                                                 // When the user clicks on an option, show/hide the activity items
-                                                $(filterDropdown).find('.chkboxm').click(function () {
+                                                $(filterDropdown).find('.chkboxm').click(() => {
                                                     const filterIds = $(this).attr('filter-id').split('|');
                                                     const isChecked = $(this).prop('checked');
 
@@ -1011,12 +1041,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     // each div child of the element with the tag name song-activity-stream is an activity item
                                                     const activityItems = Array.from(iframe.contentWindow.document.querySelector('song-activity-stream div').children);
 
-                                                    activityItems.forEach(activityItem => {
+                                                    activityItems.forEach((activityItem) => {
                                                         // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
                                                         let actionType = activityItem.querySelector('inbox-line-item-action-icon div svg');
                                                         if (actionType) {
                                                             actionType = actionType.getAttribute('ng-switch-when');
-                                                            console.log(actionType);
                                                             if (filterIds.includes(actionType)) {
                                                                 $(activityItem).toggle(!isChecked);
                                                             }
@@ -1043,27 +1072,32 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 });
                                             }
 
-                                            document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0').contentWindow.document.querySelector('song-activity-stream div').addEventListener('DOMNodeInserted', function (e) {
-                                                if (e.target.tagName === 'DIV') {
-                                                    let filterIds = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0').contentWindow.document.querySelector('.checked-filters');
-                                                    if (filterIds) {
-                                                        filterIds = filterIds.innerText.split('|');
-                                                        // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
-                                                        let actionType = e.target.querySelector('inbox-line-item-action-icon div svg');
-                                                        if (actionType) {
-                                                            actionType = actionType.getAttribute('ng-switch-when');
-                                                            if (filterIds.includes(actionType)) {
-                                                                $(e.target).toggle(false);
-                                                            }
-                                                        } else {
-                                                            actionType = e.target.querySelector('inbox-line-item-action-icon div');
-                                                            if (actionType && !actionType.querySelector('svg') && JSON.stringify(filterIds) === JSON.stringify([''])) {
-                                                                $(e.target).toggle(false);
+                                            const activityIfame = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
+
+                                            if (activityIfame) {
+
+                                                activityIfame.contentWindow.document.querySelector('song-activity-stream div').addEventListener('DOMNodeInserted', (e) => {
+                                                    if (e.target.tagName === 'DIV') {
+                                                        let filterIds = activityIfame.contentWindow.document.querySelector('.checked-filters');
+                                                        if (filterIds) {
+                                                            filterIds = filterIds.innerText.split('|');
+                                                            // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
+                                                            let actionType = e.target.querySelector('inbox-line-item-action-icon div svg');
+                                                            if (actionType) {
+                                                                actionType = actionType.getAttribute('ng-switch-when');
+                                                                if (filterIds.includes(actionType)) {
+                                                                    $(e.target).toggle(false);
+                                                                }
+                                                            } else {
+                                                                actionType = e.target.querySelector('inbox-line-item-action-icon div');
+                                                                if (actionType && !actionType.querySelector('svg') && JSON.stringify(filterIds) === JSON.stringify([''])) {
+                                                                    $(e.target).toggle(false);
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }
                                         });
 
                                         let isAnnotation = false;
@@ -1076,7 +1110,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         }
 
                                         chrome.runtime.sendMessage({ ["song_appendReplyButton"]: [isAnnotation] });
-                                        
+
                                         const lyricsContainer = $('.Lyrics__Container-sc-1ynbvzw-6')[0] || $(".lyrics section")[0];
                                         let text = lyricsContainer.innerText;
 
@@ -1333,7 +1367,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                         return;
                                                     }
                                                     const username = iqValue.getAttribute('href').slice(1);
-                                                    console.log(username);
                                                     const quillEditor = $('.ql-editor');
                                                     if (quillEditor.length === 0) {
                                                         console.error('no quill editor');
@@ -1369,8 +1402,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 forumPostUnit.appendChild(replyButton);
                                             }
 
-                                            var observer = new MutationObserver(function (mutations) {
-                                                mutations.forEach(function (mutation) {
+                                            var observer = new MutationObserver((mutations) => {
+                                                mutations.forEach((mutation) => {
                                                     if (mutation.addedNodes) {
                                                         var newNodes = mutation.addedNodes;
                                                         for (var i = 0; i < newNodes.length; i++) {
@@ -1432,6 +1465,89 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     files: ["./src/css/profile.css"]
                                 }
                             );
+
+                            chrome.scripting.executeScript(
+                                {
+                                    target: { tabId: tabId },
+                                    func: () => {
+                                        // if exists, remove the inner text (without removing the svg child) of the elements that have the class "u-quarter_vertical_margins" and at least one of the following classes: square_button--facebook, square_button--twitter, square_button--instagram
+                                        // the inner text is the username in the social media
+                                        const socialMediaButtons = $(".square_button--facebook, .square_button--twitter, .square_button--instagram").filter((i, el) => $(el).hasClass("u-quarter_vertical_margins"));
+                                        if (socialMediaButtons.length) {
+                                            const dict = {
+                                                "square_button--facebook": "Facebook",
+                                                "square_button--twitter": "Twitter",
+                                                "square_button--instagram": "Instagram"
+                                            };
+
+                                            const socialMediaIcons = {
+                                                "Facebook": chrome.runtime.getURL("src/images/socialMediaIcons/facebook.svg"),
+                                                "Twitter": chrome.runtime.getURL("src/images/socialMediaIcons/twitter.svg"),
+                                                "Instagram": chrome.runtime.getURL("src/images/socialMediaIcons/instagram.svg"),
+                                            }
+
+                                            const socialMediaIconsArray = Object.entries(socialMediaIcons);
+                                            console.log(socialMediaIconsArray);
+
+                                            // its a dictionary of the social media name and the username
+                                            const socialMediaUsernames = socialMediaButtons.map((i, el) => {
+                                                const classes = $(el).attr("class").split(" ");
+                                                const socialMediaName = classes.find(className => className in dict);
+                                                
+                                                if (socialMediaName === "square_button--facebook") {
+                                                    return {
+                                                        [dict[socialMediaName]]: "@" + $(el).text().trim()
+                                                    };
+                                                }
+                                                    
+                                                return {
+                                                    [dict[socialMediaName]]: $(el).text().trim()
+                                                };
+                                            }).get();
+
+                                            const socialMediaNames = socialMediaButtons.map((i, el) => {
+                                                const classes = $(el).attr("class").split(" ");
+                                                const socialMediaName = classes.find(className => className in dict);
+                                                return dict[socialMediaName];
+                                            }).get();
+
+                                            // hide the old buttons, and for each social media button, create a new modern-look button with the social media name as the title attr
+                                            socialMediaButtons.hide();
+
+                                            const socialMediaButtonsContainer = $("<div>", {
+                                                class: "social_media_buttons_container",
+                                            })
+
+                                            socialMediaNames.forEach(socialMediaName => {
+                                                $("<div>", {
+                                                    class: "social_media_button ",
+                                                    title: socialMediaName,
+                                                })
+                                                    .append($("<div>", {
+                                                        class: "social_media_button_icon",
+                                                    })
+                                                        .append($("<img>", {
+                                                            src: socialMediaIconsArray.find(icon => icon[0] === socialMediaName)[1],
+                                                        }))
+                                                    )
+                                                    .append($("<div>", {
+                                                        class: "social_media_button_username",
+                                                        text: socialMediaUsernames.find(username => Object.keys(username)[0] === socialMediaName)[socialMediaName],
+                                                    }))
+                                                    .appendTo(socialMediaButtonsContainer);
+                                            });
+
+                                            // add the buttons as a child of the element with the tag name "profile-artist-pane", and before the element with the attribute "ng-init" equal to "$ctrl.show_leaderboard = true"
+                                            socialMediaButtonsContainer.insertBefore($("profile-artist-pane").find("[ng-init='$ctrl.show_leaderboard = true']"));
+
+                                            socialMediaButtonsContainer.find('.social_media_button').each((i, el) => {
+                                                $(el).click(() => {
+                                                    socialMediaButtons[i].click();
+                                                });
+                                            });
+                                        }
+                                    }
+                                });
                             break;
                     }
                 }

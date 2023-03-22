@@ -110,6 +110,64 @@ export function song_modernTextEditor() {
     });
 }
 
+export async function searchVideo() {
+
+    console.log("searchVideo called");
+
+    const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
+
+    const title = $('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataField-nhmb0p-1 .TextInput-sc-2wssth-0').value;
+    const artist = $('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataSelectField-nhmb0p-2 .TagInput__Container-sc-17py0eg-0 .TagInput__MultiValueLabel-sc-17py0eg-2').textContent;
+    const query = [title, artist];
+    const modifiedQuery = query.map(part => {
+        if (part.split(" - ").length === 2 && nonLatinRegex.test(part.split(" - ")[1])) {
+            const langsParts = part.split(" - ");
+            return langsParts[1];
+        }
+        return part;
+    }).join(" - ");
+
+    console.log(modifiedQuery);
+
+    // TODO: don't hardcode the API key
+    const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+
+    // Clear any previous search results
+    const youtubeInput = $("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
+    youtubeInput.value = "";
+
+    // Make the API request
+    $.get(
+        'https://www.googleapis.com/youtube/v3/search',
+        {
+            part: 'id',
+            q: query,
+            type: 'video',
+            order: 'relevance',
+            key: apiKey
+        },
+        function (data) {
+            // Check if there are any search results
+            if (data.items.length == 0) {
+                // add ".no-results" class to the youtube input
+                youtubeInput.addClass("no-results");
+            }
+            else {
+                // Get the video ID of the first search result
+                var videoId = data.items[0].id.videoId;
+                var url = 'https://www.youtube.com/watch?v=' + videoId;
+                youtubeInput.click();
+                youtubeInput.setAttribute("value", url);
+                const event = new InputEvent("input", {
+                    bubbles: true,
+                    data: url,
+                });
+                youtubeInput.dispatchEvent(event);
+            }
+        }
+    );
+}
+
 export function appendReplyButton() {
     /*var commentClassName = "comment" || "Comment__Container-qhf03b-0 joncYs";
 

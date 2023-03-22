@@ -1,7 +1,7 @@
 /*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 :root {
   --bs-body-color: #212529;
@@ -49,7 +49,7 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
   border-color: black !important;
   background-color: #ffff65 !important;
 }
-a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):hover:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link), a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):has(.ReferentFragmentdesktop__Highlight-sc-110r0d9-1):focus:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link), a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user).referent--highlighted:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
+a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):hover:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.nav_menu-link):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link), a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):has(.ReferentFragmentdesktop__Highlight-sc-110r0d9-1):focus:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.nav_menu-link):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link), a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user).referent--highlighted:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.nav_menu-link):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
   text-decoration: underline !important;
 }
 a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):hover.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0, a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):hover.referent, a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):has(.ReferentFragmentdesktop__Highlight-sc-110r0d9-1):focus.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0, a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user):has(.ReferentFragmentdesktop__Highlight-sc-110r0d9-1):focus.referent, a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user).referent--highlighted.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0, a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU):not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user).referent--highlighted.referent {
@@ -191,7 +191,7 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
 .header {
   background: #ffff65 !important;
   background-color: #ffff65 !important;
-  color: #000000 !important;
+  color: black !important;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   position: sticky !important;
@@ -208,7 +208,7 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
 .header .dusnMI svg,
 .header .jNXEyt svg,
 .header .jLiBUJ svg {
-  fill: #000000 !important;
+  fill: black !important;
   top: 0 !important;
 }
 .header-primary .dusnMI .knRXtG,
@@ -220,12 +220,12 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
 .header .dusnMI .knRXtG,
 .header .jNXEyt .knRXtG,
 .header .jLiBUJ .knRXtG {
-  color: #000000 !important;
+  color: black !important;
 }
 
 .header-action-label,
 .header-action {
-  color: #000000 !important;
+  color: black !important;
 }
 
 .container {
@@ -238,12 +238,12 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
   padding: 10px;
 }
 
-.square_button {
+.square_button, textarea {
   border-radius: 10px !important;
 }
 
 input::-webkit-calendar-picker-indicator {
-  color: #000 !important;
+  color: black !important;
 }
 
 .invalid-input {
@@ -251,7 +251,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .contenteditable-div {
-  color: rgb(0, 0, 0);
+  color: black;
   font-family: Programme, Arial, sans-serif;
   line-height: 1.45;
   -webkit-text-size-adjust: 100%;
@@ -466,7 +466,7 @@ input::-webkit-calendar-picker-indicator {
 .header-nav_menu .PageHeaderdesktop__Link-bhx5ui-4.jQULAr .nav_menu-link,
 .header-nav_menu .nav_menu-item .TextLabel-sc-8kw9oj-0.jlOURg,
 .header-nav_menu .nav_menu-item .nav_menu-link {
-  color: #000 !important;
+  color: black !important;
   width: auto !important;
   height: auto !important;
   letter-spacing: 0.5px !important;
@@ -530,7 +530,7 @@ input::-webkit-calendar-picker-indicator {
   outline: 2px solid #ff1464 !important;
   box-shadow: none !important;
   padding: 5px !important;
-  color: #000 !important;
+  color: black !important;
   font-family: Programme, Arial, sans-serif;
   font-size: 14px !important;
   font-weight: 200 !important;
@@ -587,6 +587,7 @@ input::-webkit-calendar-picker-indicator {
 .header-actions *:not([open-header-menus=open_header_menus]) .PageHeadershared__Dropdown-sc-1cjax99-1.PageHeaderDropdowndesktop__Container-sc-12d2okf-0,
 .header-actions *:not([open-header-menus=open_header_menus]) .feed_dropdown {
   border-radius: 10px !important;
+  min-width: 500px !important;
 }
 .PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer0 .feed_dropdown-item--unread:not(.details_loaded):before,
 .PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ *:not([open-header-menus=open_header_menus]) #iFrameResizer1 .feed_dropdown-item--unread:not(.details_loaded):before,
@@ -713,6 +714,10 @@ input::-webkit-calendar-picker-indicator {
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
+.PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt svg,
+.logo_container svg {
+  vertical-align: middle !important;
+}
 
 .PageHeaderMenu__Container-sc-13myo8l-0.emAXHD .PageHeaderMenu__Iq-sc-13myo8l-1.jLiBUJ {
   display: none;
@@ -727,12 +732,12 @@ input::-webkit-calendar-picker-indicator {
   position: fixed !important;
 }
 .lyrics_controls.sticky .square_button {
-  background: #fff !important;
+  background: white !important;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   border-width: 0.15rem;
   border-style: solid;
   border-radius: 0;
-  border-color: #000;
+  border-color: black;
   padding: 4px 8px !important;
 }
 
@@ -789,7 +794,7 @@ input::-webkit-calendar-picker-indicator {
   top: 0;
   z-index: 2;
   margin-top: -4.7rem;
-  background: #fff;
+  background: white;
   border-radius: 10px 10px 0 0 !important;
   width: auto;
 }
@@ -797,7 +802,7 @@ input::-webkit-calendar-picker-indicator {
   position: sticky;
   top: 60px;
   z-index: 3;
-  background: #fff;
+  background: white;
   border-radius: 10px 10px 0 0 !important;
   border-bottom: none !important;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
@@ -806,22 +811,22 @@ input::-webkit-calendar-picker-indicator {
   border-radius: 0 0 10px 10px !important;
   border-top: none !important;
   font-size: 1.125rem !important;
-  background: #fff;
-  color: #000;
+  background: white;
+  color: black;
 }
 *:has(.ql-editor) .ql-container p {
   margin: 0 !important;
 }
 *:has(.ql-editor) .ql-container .ql-editor *:not(a) {
-  color: #000;
+  color: black;
 }
 *:has(.ql-editor) .ql-container .ql-editor *::-moz-selection {
   background: #ff1464;
-  color: #fff;
+  color: white;
 }
 *:has(.ql-editor) .ql-container .ql-editor *::selection {
   background: #ff1464;
-  color: #fff;
+  color: white;
 }
 *:has(.ql-editor) .ql-container .ql-clipboard {
   position: fixed;
@@ -847,7 +852,7 @@ input::-webkit-calendar-picker-indicator {
   right: 0;
   top: 100%;
   margin-top: 8px;
-  background: #fff;
+  background: white;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
@@ -883,7 +888,7 @@ input::-webkit-calendar-picker-indicator {
 }
 .RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem:hover {
   background: #ff1464;
-  color: #fff;
+  color: white;
 }
 .RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem:nth-child(1) label .chkboxmspan, .RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem:nth-child(2) label .chkboxmspan {
   top: -5px;
@@ -893,6 +898,9 @@ input::-webkit-calendar-picker-indicator {
   z-index: 1000 !important;
 }
 
+/*.magic-wand-button-container {
+
+}*/
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .PageHeaderAuthLinksdesktop__Container-sc-10sr9hk-1.cDEgGV {
   margin-right: 210px !important;
 }
@@ -900,7 +908,7 @@ input::-webkit-calendar-picker-indicator {
   border: none !important;
 }
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .PageHeaderdesktop__Link-bhx5ui-4.PageHeaderdesktop__SocialLinks-bhx5ui-5.ctUFCG a svg {
-  fill: #000 !important;
+  fill: black !important;
 }
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .PageHeaderdesktop__Link-bhx5ui-4.PageHeaderdesktop__SocialLinks-bhx5ui-5.ctUFCG a:hover {
   padding: 0 !important;
@@ -918,7 +926,7 @@ input::-webkit-calendar-picker-indicator {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   overflow: hidden;
-  border-color: #000;
+  border-color: black;
   border-width: 0.1rem;
   border-radius: 10px;
   width: 100%;
@@ -998,7 +1006,7 @@ input::-webkit-calendar-picker-indicator {
 }
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .HomeContentdesktop__CenteredFlexColumn-sc-1xfg7l1-1.btjJtO .hZoFSc .jsfXOw *,
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #top-songs .hZoFSc .jsfXOw * {
-  border-color: #000;
+  border-color: black;
 }
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .HomeContentdesktop__CenteredFlexColumn-sc-1xfg7l1-1.btjJtO .hZoFSc .jsfXOw:hover,
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #top-songs .hZoFSc .jsfXOw:hover {
@@ -1108,12 +1116,17 @@ input::-webkit-calendar-picker-indicator {
   transition: all 0.05s ease;
   width: 100%;
 }
+.HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #videos .jHQizl {
+  background-color: #fcff68 !important;
+}
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #videos .jHQizl .kMmimq {
+  background-color: #fcff68 !important;
   border-radius: 10px;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT #videos .jHQizl .kMmimq .SizedImage__Container-sc-1hyeaua-0 {
+  background-color: #fcff68 !important;
   transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   bottom: unset;
   overflow: hidden;
@@ -1133,7 +1146,7 @@ input::-webkit-calendar-picker-indicator {
   opacity: 0.3;
   border-radius: 10px;
   border: none;
-  color: #000;
+  color: black;
   font-weight: 600;
   font-size: 1.2rem;
   padding: 10px 20px;

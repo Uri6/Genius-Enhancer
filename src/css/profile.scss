@@ -1,7 +1,7 @@
 /*
-* This code is licensed under the terms of the "LICENSE.md" file
-* located in the root directory of this code package.
-*/
+ * This code is licensed under the terms of the "LICENSE.md" file
+ * located in the root directory of this code package.
+ */
 
 @keyframes shine {
     0% {
@@ -82,13 +82,13 @@ artist-songs-and-albums {
                     border-radius: 15px;
                     background-color: rgb(255, 255, 101) !important;
                     padding-bottom: 5px !important;
-    
+
                     .cover_art {
                         border-radius: 10px;
                         background-color: unset !important;
                         outline: 0 !important;
                         transition: all 0.2s ease-in-out !important;
-    
+
                         &::after {
                             content: "";
                             position: absolute;
@@ -107,10 +107,10 @@ artist-songs-and-albums {
                             transform: translateX(-100%);
                         }
                     }
-    
+
                     &:hover {
                         background-color: rgb(255, 143, 40) !important;
-    
+
                         .cover_art {
                             transform: perspective(75em) rotateX(15deg) scale(1.1) translateY(-10px) !important;
                             border-radius: 2px !important;
@@ -131,7 +131,7 @@ artist-songs-and-albums {
     .full_width_button {
         background-color: rgb(255, 143, 40) !important;
         border-radius: 10px;
-        color: rgb(0, 0, 0) !important;
+        color: black !important;
         padding: 10px 20px !important;
         margin: 15px 0 !important;
         transition: all 0.2s ease-in-out !important;
@@ -141,7 +141,7 @@ artist-songs-and-albums {
 
         &:hover {
             background-color: rgb(255, 255, 101) !important;
-            color: rgb(0, 0, 0) !important;
+            color: black !important;
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2) !important;
             text-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
         }
@@ -149,12 +149,77 @@ artist-songs-and-albums {
 }
 
 .profile_identity_and_description {
-    .white_container {
+
+    .white_container,
+    .statistics_panel {
         border-radius: 10px !important;
 
         &:has(paginated-leaderboard) {
             user-attribution {
                 border-radius: 5px !important;
+            }
+        }
+    }
+}
+
+profile-annotation,
+profile-contributions-group {
+
+    .standalone_annotation,
+    .profile_contributions_group>* a,
+    .profile_contributions_group>* div {
+        border-radius: 10px !important;
+    }
+}
+
+.social_media_buttons_container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+    padding-bottom: 25px;
+
+    .social_media_button {
+        background-color: #e9e9e9;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        border-radius: 50%;
+        outline: 0.5px solid black;
+        margin-right: 10px;
+
+        .social_media_button_icon {
+            border: none;
+            margin-top: -1px;
+            transform: scale(0.6);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .social_media_button_username {
+            position: relative;
+            // add 17.5px to the left and then divide by 2 to center the text
+            transform: translateX(calc(17.5px - 50%)) scale(0.4);
+            top: -35px;
+            background-color: #e9e9e9;
+            border-radius: 0 0 5px 5px;
+            opacity: 0;
+            transition: transform 0.2s ease-in-out, opacity 0.1s ease-in-out !important;
+        }
+
+        &:hover {
+            background-color: #ff1464;
+            margin-right: 10px;
+
+            .social_media_button_icon {
+                transform: scale(0.7);
+            }
+
+            .social_media_button_username {
+                transform: translateX(calc(17.5px - 50%)) translateY(35px) scale(1);
+                opacity: 1;
+                display: inline-block;
+                transition: transform 0.2s ease-in-out, opacity 0.2s cubic-bezier(0, 0, 0, 1) !important;
             }
         }
     }
