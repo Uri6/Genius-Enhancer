@@ -1,0 +1,31 @@
+/*
+* This code was not written by me (Uri Sivani) and is subject to the license of the original project.
+* Please refer to the original project website for more information.
+*/
+
+.dragsort--noAnim,
+.dragsort--noAnim~[draggable] {
+    transition: 0s !important;
+}
+
+.dragsort--dragStart {
+    .dragsort--dragElem {
+        opacity: 0;
+    }
+
+    .dragsort--hide {
+        width: 0 !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-width: 0 !important;
+    }
+
+    >* {
+        transition: var(--dragsort-trans-dur, .18s) cubic-bezier(.6, .1, .4, 1.2);
+
+        >* {
+            pointer-events: none;
+        }
+    }
+}

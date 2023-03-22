@@ -2,28 +2,24 @@
 * This code was not written by me (Uri Sivani) and is subject to the license of the original project.
 * Please refer to the original project website for more information.
 */
-
 .dragsort--noAnim,
-.dragsort--noAnim ~ [draggable]{
-    transition: 0s !important;
+.dragsort--noAnim ~ [draggable] {
+  transition: 0s !important;
 }
 
 .dragsort--dragStart .dragsort--dragElem {
-    opacity: 0;
+  opacity: 0;
 }
-
 .dragsort--dragStart .dragsort--hide {
-    width: 0 !important;
-    height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border-width: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-width: 0 !important;
 }
-
-.dragsort--dragStart > *{
-    transition: var(--dragsort-trans-dur, .18s) cubic-bezier(.6, .1, .4, 1.2);
+.dragsort--dragStart > * {
+  transition: var(--dragsort-trans-dur, 0.18s) cubic-bezier(0.6, 0.1, 0.4, 1.2);
 }
-
-.dragsort--dragStart > * > *{
-    pointer-events: none;
-}
+.dragsort--dragStart > * > * {
+  pointer-events: none;
+}/*# sourceMappingURL=dragsort.css.map */

@@ -801,6 +801,23 @@ export async function appendIcon() {
                 $('.blured-background').append($('.tagify__dropdown:first'));
             }, 0.1);
         });
+
+        
+
+        var dragsort = new DragSort(tagify_tags.DOM.scope, {
+            selector:'.'+tagify_tags.settings.classNames.tag,
+            callbacks: {
+                dragEnd: onDragEnd
+            }
+        })
+        
+        function onDragEnd(elm){
+            tagify_tags.updateValueByDOMTags()
+            // recolor the tags
+            tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
+                tagElm.style.cssText = '--tag-bg:' + tagElm.__tagifyTagData.color
+            })
+        }
     });
 
     // allow to open & close the popup with shortcuts
