@@ -218,7 +218,7 @@ export async function getArtistsList(query) {
     const encodedName = encodeURIComponent(query);
 
     // Construct the URL to call the Genius API search endpoint
-    const url = `https://genius.com/api/artists/autocomplete?q=${encodedName}&limit=20`;
+    const url = `https://genius.com/api/artists/autocomplete?q=${encodedName}`;
 
     // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
@@ -232,12 +232,18 @@ export async function getArtistsList(query) {
     }));
 }
 
+/**
+ * Retrieves a list of credits from the Genius API based on a search query
+ * 
+ * @param {string} query - The search query for credits
+ * @returns {Promise<Array>} - A Promise that resolves to an array of unique credits matching the search query
+ */
 export async function getCreditsList(query) {
     // Encode the search query to include special characters
     const encodedName = encodeURIComponent(query);
 
     // Construct the URL to call the Genius API search endpoint
-    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}&limit=20`;
+    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}`;
 
     // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
@@ -258,12 +264,14 @@ export function replaceTextarea(textareaClasses) {
     }
 
     const textarea = document.getElementsByClassName(textareaClasses)[0];
-    console.log("textarea: ", textarea);
+    if (!textarea) {
+      throw new Error("could not find textarea");
+    }
     let content = textarea.value;
     textarea.style.display = "none";
     const editor = document.createElement("div");
     textarea.parentNode.appendChild(editor);
-    // add scrolling-container="html" to the editor
+    
     const quill = new Quill(editor, {
         modules: {
             toolbar: [
@@ -305,25 +313,29 @@ export function replaceTextarea(textareaClasses) {
     quill.clipboard.dangerouslyPasteHTML(content);
 
     quill.on("text-change", function (delta, oldDelta, source) {
-        let htmlContent = quill.root.innerHTML;
+        let htmlContent = quill.root.innerHTML; // Remove this line.
         htmlContent = htmlContent
             .replace(/<strong>/g, "<b>")
-            .replace(/<\/strong>/g, "</b>");
-        htmlContent = htmlContent
+            .replace(/<\/strong>/g, "</b>")
+
             .replace(/<em>/g, "<i>")
-            .replace(/<\/em>/g, "</i>");
-        htmlContent = htmlContent
+            .replace(/<\/em>/g, "</i>")
+
             .replace(/<br>/g, "\n")
+            
             .replace(/<p><\/p>/g, "")
             .replace(/<p>/g, "")
             .replace(/<\/p>/g, "\n")
-            .replace(/\n\n/g, "\n");
-        htmlContent = htmlContent
+            .replace(/\n\n/g, "\n")
+
             .replace(/&nbsp;/g, " ")
             .replace(/&amp;/g, "&")
             .replace(/&lt;/g, "<")
             .replace(/&gt;/g, ">");
+            
         // still working on the while loop below
+        // the bug is that it's separating linked lines into two separate elements
+        // for now, I solved it only for the case of two lines
         while (
             htmlContent.match(
                 /<a [^>]*href="([^"\r\n]+)"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>\n<a [^>]*href="\1"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>/g
@@ -335,7 +347,6 @@ export function replaceTextarea(textareaClasses) {
                     return (
                         "[" +
                         text1.replace(/<br[^>]*>/g, "\n") +
-                        "\n" +
                         text2.replace(/<br[^>]*>/g, "\n") +
                         "](" +
                         url +
@@ -344,6 +355,7 @@ export function replaceTextarea(textareaClasses) {
                 }
             );
         }
+
         htmlContent = htmlContent
             .replace(
                 /<a href="([^"\r\n]+)" target="[^"\r\n]+">([^<\r\n]+)<\/a>/g,

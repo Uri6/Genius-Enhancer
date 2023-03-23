@@ -41,21 +41,6 @@ def add_license_comment(directory):
                         with open(file_path, "wb") as f:
                             f.write(lines.encode("utf-8"))
 
-def encrypt(file):
-    # check if it is a file: if it is a file, encrypt it; if it is a folder, call this function with the folder as the parameter
-    if not os.path.isfile(file):
-        for item in os.listdir(file):
-            encrypt(file + '/' + item)
-        return
-    print('Encrypting {}'.format(file))
-    if file.endswith('.js'):
-        pass
-    elif file.endswith('.css'):
-        with open(file, 'r') as f:
-            data = csscompressor.compress(f.read())
-        with open(file, 'w') as f:
-            f.write(data)
-
 
 def copytree(src, dst):
     if os.name == 'nt':  # for Windows
@@ -97,6 +82,13 @@ def copytree(src, dst):
                             skip = True
             if not skip:
                 shutil.copy(src + sep + file, dst + sep + file)
+                # if its css file, compress it
+                if file.endswith('.css'):
+                    with open(dst + sep + file, 'r', encoding='utf-8') as f:
+                        print('Compresing {}'.format(dst + sep + file))
+                        data = csscompressor.compress(f.read())
+                    with open(dst + sep + file, 'w', encoding='utf-8') as f:
+                        f.write(data)
 
 
 rootDir = os.path.dirname(os.path.realpath(__file__))
@@ -110,7 +102,7 @@ manifest.close()
 
 dst_path = rootDir + '/Builds/' + version
 
-#add_license_comment(rootDir)
+# add_license_comment(rootDir)
 
 if os.path.exists(dst_path):
     shutil.rmtree(dst_path)
@@ -118,8 +110,6 @@ if os.path.exists(dst_path):
 os.mkdir(dst_path)
 
 copytree(rootDir, dst_path)
-
-encrypt(dst_path)
 
 # remove any .zip files in the Builds folder
 for file in os.listdir(rootDir + '/Builds'):

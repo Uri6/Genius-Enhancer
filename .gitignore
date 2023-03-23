@@ -25,3 +25,6 @@ src/images/magicWand/512x512.png
 
 # CSS source maps
 *.css.map
+
+# Mac OS system files
+*.ds_store
