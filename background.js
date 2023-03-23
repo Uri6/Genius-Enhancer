@@ -232,7 +232,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
             //{ type: "js", file: "./lib/axios/axios.min.js" },
-            //{ type: "js", file: "./lib/oauth/oauth.min.js" },
         ];
 
         const cssFiles = files
@@ -1493,13 +1492,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             const socialMediaUsernames = socialMediaButtons.map((i, el) => {
                                                 const classes = $(el).attr("class").split(" ");
                                                 const socialMediaName = classes.find(className => className in dict);
-                                                
+
                                                 if (socialMediaName === "square_button--facebook") {
                                                     return {
                                                         [dict[socialMediaName]]: "@" + $(el).text().trim()
                                                     };
                                                 }
-                                                    
+
                                                 return {
                                                     [dict[socialMediaName]]: $(el).text().trim()
                                                 };
