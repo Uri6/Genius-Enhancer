@@ -190,7 +190,7 @@ chrome.runtime.onMessage.addListener((
             console.info("function called: ", func.name);
             console.info("arguments: ", args);
             console.info("response: ", res);
-            
+
             sendResponse(res);
         });
     });
@@ -384,7 +384,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         },
                                     },
                                     function (isForumPage) {
-                                        if (isForumPage[0].result) {
+                                        if (isForumPage?.[0]?.result) {
                                             if (tab.url.endsWith("/forums")) {
                                                 pageType = "forums (main)";
                                             } else if (
