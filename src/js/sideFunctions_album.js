@@ -802,16 +802,14 @@ export async function appendIcon() {
             }, 0.1);
         });
 
-        
-
         var dragsort = new DragSort(tagify_tags.DOM.scope, {
             selector:'.'+tagify_tags.settings.classNames.tag,
             callbacks: {
                 dragEnd: onDragEnd
             }
         })
-        
-        function onDragEnd(elm){
+
+        function onDragEnd(){
             tagify_tags.updateValueByDOMTags()
             // recolor the tags
             tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
@@ -850,7 +848,7 @@ export async function appendIcon() {
 /**
  * Searches for album artwork from iTunes API based on album and artist name obtained from the web page
  * The results are saved in the Chrome storage and also returned as a promise
- * 
+ *
  * @returns {Promise<Array<String>>} A promise that resolves to an array of album artwork URLs
  */
 export async function autolinkArtwork() {
@@ -923,12 +921,19 @@ export async function autolinkArtwork() {
 }
 
 export async function saveEverything() {
+    function parseCookies() {
+        const cookies = document.cookie.split('; ');
+        const cookieObject = {};
 
-    // TODO: refactor this into an API call
+        for (const cookie of cookies) {
+            const [key, value] = cookie.split('=');
+            cookieObject[key] = decodeURIComponent(value);
+        }
 
-    // axios.defaults.withCredentials = true
+        return cookieObject;
+    }
 
-    /*const getDetails = () => {
+    const getDetails = () => {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
@@ -949,10 +954,11 @@ export async function saveEverything() {
             // Parse the JSON string and return the resulting object
             return JSON.parse(meta);
         }
-    }*/
+    }
 
-    //const details = getDetails();
-    //const albumSongs = details.album_appearances;
+    const details = getDetails();
+
+    const albumSongs = details.album_appearances;
 
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
@@ -963,155 +969,47 @@ export async function saveEverything() {
         }
     });
 
-    const tagsNames = tags.map((tag) => {
-        return tag.name;
-    });
-
-    const numOfSongs = Array.from(
-        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
-    ).length;
-
-    const albumSongs = Array.from(
-        document.getElementsByClassName("u-display_block")
-    ).slice(0, numOfSongs);
-
     // unit the album songs with the youtube links
     if (youtubeLinks.length) {
         albumSongs.forEach((song) => {
-            song.youtubeLink = youtubeLinks[albumSongs.indexOf(song)];
+            song.youtube_link = youtubeLinks[albumSongs.indexOf(song)];
         });
     }
 
     console.log("albumSongs: ", albumSongs);
 
-    let everythingIsSaved = false;
+    const gapi = axios.create({
+        baseUrl: "https://genius.com/api",
+        withCredentials: true,
+        headers: {
+            "X-CSRF-Token": parseCookies()["_csrf_token"],
+        },
+    })
 
-    const progressBar = document.createElement("div");
-    progressBar.id = "progressBar";
-    progressBar.style.left = "0";
-    progressBar.style.width = "0%";
-    progressBar.style.height = "3px";
-    progressBar.style.backgroundColor = "#4CAF50";
-    progressBar.style.zIndex = "10000";
-    progressBar.style.height = "10px";
+    for (const song of albumSongs) {
+        // get song details
+        const songDetails = (await gapi.get(song.song.api_path)).data.response.song;
 
-    $("header-with-cover-art").after(progressBar);
+        const params = {
+            tags: [
+                ...tags.map((tag) => {
+                    return {
+                        id: +tag.id,
+                        name: tag.name
+                    };
+                }),
+                ...songDetails.tags.map((tag) => ({
+                    name: tag.name,
+                    id: tag.id,
+                })),
+            ],
+        };
 
-    albumSongs.forEach(async (song) => {
-
-        //axios.put(`https://genius.com/api${song.song.api_path}`, {
-        //    text_format: "html,markdown",
-        //    song: {
-        //        tags: tags.map((tag) => {
-        //            return {
-        //                id: +tag.id,
-        //                name: tag.name,
-        //            };
-        //        }),
-        //    }
-        //});
-
-        const iframe = document.createElement("iframe");
-        iframe.classList.add("extension-song");
-        iframe.sandbox = "allow-scripts allow-same-origin";
-        iframe.style.display = "none";
-        iframe.src = song.href;
-        document.body.appendChild(iframe);
-
-        await new Promise((resolve) => (iframe.onload = resolve));
-
-        let currentWidth = $(progressBar).width();
-        let newWidth = `${currentWidth + (1 / (albumSongs.length / 3))}%`;
-        $(progressBar).width(newWidth);
-
-        while (!iframe.contentWindow.document.querySelector("button.SmallButton__Container-mg33hl-0")) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-
-        iframe.contentWindow.document
-            .querySelector("button.SmallButton__Container-mg33hl-0")
-            .click();
-
-        let existingTags = [];
-        iframe.contentWindow.document
-            .querySelector("[data-testid='tags-input']")
-            .querySelectorAll(".TagInput__MultiValueLabel-sc-17py0eg-2.blnjJQ")
-            .forEach((e) => {
-                existingTags.push(e.innerText);
-            });
-
-        const tagsForThisSong = tagsNames.filter((e) => !existingTags.includes(e));
-        console.log(
-            "song: ",
-            song.innerText,
-            " tags: ",
-            tagsNames,
-            " existing tags: ",
-            existingTags,
-            " tags for this song: ",
-            tagsForThisSong,
-            " youtube link: ",
-            song.youtubeLink
-        );
-
-        const youtubeURLInput = iframe.contentWindow.document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
-
-        if (youtubeURLInput) {
-            youtubeURLInput.click();
-            youtubeURLInput.setAttribute("value", song.youtubeLink);
-            const event = new InputEvent("input", {
-                bubbles: true,
-                data: song.youtubeLink,
-            });
-            youtubeURLInput.dispatchEvent(event);
-        }
-
-        for (const tag of tagsForThisSong) {
-            const input = iframe.contentWindow.document.querySelector("input#react-select-7-input");
-            input.value = tag;
-            const event = new InputEvent("input", {
-                bubbles: true,
-                data: tag,
-            });
-            input.dispatchEvent(event);
-
-            while (!iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option").length) {
-                await new Promise((resolve) => setTimeout(resolve, 100));
-            }
-
-            const options = iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
-            options[0].click();
-        }
-
-        currentWidth = $(progressBar).width();
-        newWidth = `${currentWidth + (2 / (albumSongs.length / 3))}%`;
-        $(progressBar).width(newWidth);
-
-        // if it's the last song, set everythingIsSaved to true
-        if (song === albumSongs[albumSongs.length - 1]) {
-            everythingIsSaved = true;
-        }
-
-        while (iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").disabled) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-        iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").click();
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        iframe.remove();
-    });
-
-    while (!everythingIsSaved) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await gapi.put(song.song.api_path, {
+            text_format: "html,markdown",
+            song: Object.assign(params, song.youtube_link ? { youtube_link: song.youtube_link } : {}),
+        });
     }
-
-    progressBar.style.width = "100%";
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    document.getElementById("progressBar").remove();
-    document.querySelectorAll(".extension-song").forEach((e) => e.remove());
-
 }
 
 export function addSongAsTheNext() {
