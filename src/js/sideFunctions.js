@@ -226,8 +226,8 @@ export async function getArtistsList(query) {
 
     // Extract the artists from the response and map them to a new object with just their name and ID
     return jsonResponse.response.artists.map((artist) => ({
-        name: artist.name,
-        image: artist.image_url,
+        value: artist.name,
+        avatar: artist.image_url,
         id: artist.id,
     }));
 }
@@ -251,8 +251,7 @@ export async function getCreditsList(query) {
 
     // Extract the artists from the response and map them to a new object with just their name and ID
     return jsonResponse.response.custom_performance_roles.map((credit) => ({
-        type: credit._type,
-        label: credit.label,
+        value: credit.label,
         id: credit.id,
     }));
 }

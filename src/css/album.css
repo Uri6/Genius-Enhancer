@@ -17,28 +17,6 @@
   margin: 10px 0 0 10px;
 }
 
-.gb-save-button {
-  position: absolute;
-  background-color: #1cc674;
-  border: none;
-  bottom: 35px;
-  right: 40px;
-  width: 113px;
-  height: 50px;
-  font-family: "Programme";
-  text-align: center;
-  font-size: 25px;
-  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-  color: #000 !important;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  overflow: hidden;
-}
-.gb-save-button:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
 .bio-icon,
 .people-icon,
 .release-date-icon {
@@ -197,7 +175,8 @@
   position: absolute;
   width: 1200px;
   min-height: 700px;
-  border-radius: 4px;
+  max-height: 700px;
+  border-radius: 10px;
   padding: 20px;
   border: none;
   background: #fffe65;
@@ -216,6 +195,27 @@
   top: 10px;
   cursor: pointer;
 }
+.blured-background .extension-box .gb-save-button {
+  position: absolute;
+  background-color: #1cc674;
+  border: none;
+  bottom: 15px;
+  right: 20px;
+  width: 113px;
+  height: 50px;
+  font-family: "Programme";
+  text-align: center;
+  font-size: 25px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+  color: #000 !important;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.blured-background .extension-box .gb-save-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
 .blured-background .extension-box .title {
   position: relative;
   left: 65px;
@@ -231,8 +231,36 @@
 .blured-background .extension-box .title.add-media-title {
   top: 110px;
 }
-
-.gb-textarea {
+.blured-background .extension-box .add-credits-inputs-container {
+  top: 85px;
+  left: 65px;
+  width: 553px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.blured-background .extension-box .add-credits-inputs-container .add-credits-inputs {
+  display: inline-flex;
+  flex-direction: row;
+}
+.blured-background .extension-box .add-credits-inputs-container .delete-button-container {
+  border-radius: 10px;
+  width: 43px;
+  height: 43px;
+  margin-left: 10px;
+  justify-content: center;
+  align-items: center;
+  display: inline-flex;
+}
+.blured-background .extension-box .add-credits-inputs-container .delete-button-container .delete-button {
+  width: 33px;
+  height: 33px;
+}
+.blured-background .extension-box .add-credits-inputs-container .delete-button-container:hover {
+  background-color: rgba(252, 87, 84, 0.4);
+  cursor: pointer;
+}
+.blured-background .extension-box .gb-textarea {
   border: none;
   outline-style: solid;
   outline-width: 0;
@@ -251,35 +279,48 @@
   position: relative;
   color: #000 !important;
 }
-.gb-textarea.add-tags {
+.blured-background .extension-box .gb-textarea.tagify[aria-expanded=true] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.blured-background .extension-box .gb-textarea.add-tags {
   top: 50px;
   left: 65px;
   width: 500px;
 }
-.gb-textarea.add-tags:focus, .gb-textarea.add-tags.tagify--focus {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.gb-textarea.add-credits {
-  top: 85px;
+.blured-background .extension-box .gb-textarea.add-credits {
   width: 245px;
 }
-.gb-textarea.add-credits.role {
-  left: 65px;
+.blured-background .extension-box .gb-textarea.add-credits.artist {
+  margin-left: 10px;
 }
-.gb-textarea.add-credits.artist {
-  left: 75px;
+.blured-background .extension-box .gb-textarea.add-credits.artist, .blured-background .extension-box .gb-textarea.add-credits.role {
+  margin-bottom: 10px;
 }
-.gb-textarea.add-media {
+.blured-background .extension-box .gb-textarea.add-credits.add {
+  background-color: rgba(203, 203, 203, 0);
+  color: rgba(0, 0, 0, 0.4) !important;
+  margin-top: 2px;
+  height: 43px;
+  border: none;
+  outline: 2px solid #cbcbcb;
+  transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
+}
+.blured-background .extension-box .gb-textarea.add-credits.add:hover {
+  cursor: pointer;
+  background-color: rgba(203, 203, 203, 0.4);
+  outline-width: 0px;
+}
+.blured-background .extension-box .gb-textarea.add-media {
   top: 120px;
   left: 65px;
   width: 500px;
   transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
 }
-.gb-textarea.add-media:not(.details) {
+.blured-background .extension-box .gb-textarea.add-media:not(.details) {
   z-index: 2;
 }
-.gb-textarea.add-media.details {
+.blured-background .extension-box .gb-textarea.add-media.details {
   background-color: #f1f1f1;
   border-radius: 0 0 10px 10px;
   padding: 17.5px 5px 5px 5px;
@@ -287,18 +328,18 @@
   z-index: 1;
   cursor: default;
 }
-.gb-textarea.add-media.details:not(.image-container):not(.image):not(.title):not(.artist) {
+.blured-background .extension-box .gb-textarea.add-media.details:not(.image-container):not(.image):not(.title):not(.artist) {
   height: 80px;
   width: 480px;
   left: 75px;
 }
-.gb-textarea.add-media.details:has(> .title[title=""]), .gb-textarea.add-media.details:has(> .title:not([title])) {
+.blured-background .extension-box .gb-textarea.add-media.details:has(> .title[title=""]), .blured-background .extension-box .gb-textarea.add-media.details:has(> .title:not([title])) {
   height: 0 !important;
 }
-.gb-textarea.add-media.details * {
+.blured-background .extension-box .gb-textarea.add-media.details * {
   position: absolute;
 }
-.gb-textarea.add-media.details .image-container {
+.blured-background .extension-box .gb-textarea.add-media.details .image-container {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
@@ -306,7 +347,7 @@
   width: 100px !important;
   height: 56.25px !important;
 }
-.gb-textarea.add-media.details .image-container .image:not([src=""]) {
+.blured-background .extension-box .gb-textarea.add-media.details .image-container .image:not([src=""]) {
   border-radius: 4px;
   margin-right: 10px;
   width: 100%;
@@ -314,7 +355,7 @@
   -o-object-fit: cover;
      object-fit: cover;
 }
-.gb-textarea.add-media.details .title {
+.blured-background .extension-box .gb-textarea.add-media.details .title {
   display: inline-block;
   font-family: "Programme";
   font-size: 18px;
@@ -329,7 +370,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.gb-textarea.add-media.details .artist {
+.blured-background .extension-box .gb-textarea.add-media.details .artist {
   display: inline-block;
   font-family: "Programme";
   font-size: 14px;
@@ -340,7 +381,7 @@
   left: 120px;
   top: 47px;
 }
-.gb-textarea.add-media.details .length {
+.blured-background .extension-box .gb-textarea.add-media.details .length {
   display: inline-block;
   font-family: "Programme";
   font-size: 16px;
@@ -350,40 +391,37 @@
   right: 5px;
   top: 33px;
 }
-.gb-textarea.error {
+.blured-background .extension-box .gb-textarea.error {
   outline-width: 2px !important;
 }
-.gb-textarea.error.error-animation {
+.blured-background .extension-box .gb-textarea.error.error-animation {
   background-color: #fc5753;
 }
-.gb-textarea::-moz-placeholder {
+.blured-background .extension-box .gb-textarea::-moz-placeholder {
   font-family: "Programme";
   font-size: 18px;
   color: rgba(0, 0, 0, 0.4) !important;
   -moz-transition: all 0.2s;
   transition: all 0.2s;
 }
-.gb-textarea::placeholder {
+.blured-background .extension-box .gb-textarea::placeholder {
   font-family: "Programme";
   font-size: 18px;
   color: rgba(0, 0, 0, 0.4) !important;
   transition: all 0.2s;
 }
-.gb-textarea:hover {
+.blured-background .extension-box .gb-textarea:hover {
   cursor: pointer;
   background-color: #979797;
 }
-.gb-textarea:hover.add-credits {
-  cursor: not-allowed !important;
-}
-.gb-textarea:focus, .gb-textarea.tagify--focus {
+.blured-background .extension-box .gb-textarea:focus, .blured-background .extension-box .gb-textarea.tagify--focus {
   cursor: text;
   background-color: #cbcbcb;
 }
-.gb-textarea:focus::-moz-placeholder, .gb-textarea.tagify--focus::-moz-placeholder {
+.blured-background .extension-box .gb-textarea:focus::-moz-placeholder, .blured-background .extension-box .gb-textarea.tagify--focus::-moz-placeholder {
   color: rgba(0, 0, 0, 0.25) !important;
 }
-.gb-textarea:focus::placeholder, .gb-textarea.tagify--focus::placeholder {
+.blured-background .extension-box .gb-textarea:focus::placeholder, .blured-background .extension-box .gb-textarea.tagify--focus::placeholder {
   color: rgba(0, 0, 0, 0.25) !important;
 }
 

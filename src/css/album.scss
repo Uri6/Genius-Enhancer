@@ -24,30 +24,6 @@
     }
 }
 
-.gb-save-button {
-    position: absolute;
-    background-color: #1cc674;
-    border: none;
-    bottom: 35px;
-    right: 40px;
-    width: 113px;
-    height: 50px;
-    font-family: "Programme";
-    text-align: center;
-    font-size: 25px;
-    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-    color: #000 !important;
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-    overflow: hidden;
-
-    &:hover {
-        cursor: pointer;
-        transform: scale(1.05);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-}
-
-
 .bio-icon,
 .people-icon,
 .release-date-icon {
@@ -225,7 +201,8 @@
         position: absolute;
         width: 1200px;
         min-height: 700px;
-        border-radius: 4px;
+        max-height: 700px;
+        border-radius: 10px;
         padding: 20px;
         border: none;
         background: #fffe65;
@@ -248,6 +225,29 @@
             cursor: pointer;
         }
 
+        .gb-save-button {
+            position: absolute;
+            background-color: #1cc674;
+            border: none;
+            bottom: 15px;
+            right: 20px;
+            width: 113px;
+            height: 50px;
+            font-family: "Programme";
+            text-align: center;
+            font-size: 25px;
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+            color: #000 !important;
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            overflow: hidden;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.05);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+        }
+
         .title {
             position: relative;
             left: 65px;
@@ -266,175 +266,222 @@
                 top: 110px;
             }
         }
-    }
-}
 
-.gb-textarea {
-    border: none;
-    outline-style: solid;
-    outline-width: 0;
-    outline-color: #fc5753;
-    resize: none;
-    overflow: hidden;
-    font-family: "Programme";
-    font-size: 18px;
-    font-weight: 500px;
-    justify-content: center;
-    writing-mode: horizontal-tb !important;
-    column-count: initial !important;
-    text-align: start;
-    transition: all 0.2s !important;
-    position: relative;
-    color: #000 !important;
-
-    &.add-tags {
-        top: 50px;
-        left: 65px;
-        width: 500px;
-
-        &:focus,
-        &.tagify--focus {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-    }
-
-    &.add-credits {
-        top: 85px;
-        width: 245px;
-
-        &.role {
+        .add-credits-inputs-container {
+            top: 85px;
             left: 65px;
-        }
+            width: 553px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
 
-        &.artist {
-            left: 75px;
-        }
-    }
-
-    &.add-media {
-        top: 120px;
-        left: 65px;
-        width: 500px;
-        transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
-
-        &:not(.details) {
-            z-index: 2
-        }
-
-        &.details {
-            background-color: #f1f1f1;
-            border-radius: 0 0 10px 10px;
-            padding: 17.5px 5px 5px 5px;
-            top: 110px;
-            z-index: 1;
-            cursor: default;
-
-            &:not(.image-container):not(.image):not(.title):not(.artist) {
-                height: 80px;
-                width: 480px;
-                left: 75px;
-            }
-
-            &:has(> .title[title=""]),
-            &:has(> .title:not([title])) {
-                height: 0 !important;
-            }
-
-            * {
-                position: absolute;
-            }
-
-            .image-container {
+            .add-credits-inputs {
                 display: inline-flex;
                 flex-direction: row;
-                align-items: center;
-                justify-content: flex-start;
-                width: 100px !important;
-                height: 56.25px !important;
+            }
 
-                .image:not([src=""]) {
-                    border-radius: 4px;
-                    margin-right: 10px;
-                    // make sure it will be in the height of the container, and keep the aspect ratio
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
+            .delete-button-container {
+                border-radius: 10px;
+                width: 43px;
+                height: 43px;
+                margin-left: 10px;
+                justify-content: center;
+                align-items: center;
+                display: inline-flex;
+
+                .delete-button {
+                    width: 33px;
+                    height: 33px;
+                }
+
+                &:hover {
+                    background-color: rgba(252, 87, 84, 0.4);
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .gb-textarea {
+            border: none;
+            outline-style: solid;
+            outline-width: 0;
+            outline-color: #fc5753;
+            resize: none;
+            overflow: hidden;
+            font-family: "Programme";
+            font-size: 18px;
+            font-weight: 500px;
+            justify-content: center;
+            writing-mode: horizontal-tb !important;
+            column-count: initial !important;
+            text-align: start;
+            transition: all 0.2s !important;
+            position: relative;
+            color: #000 !important;
+
+            &.tagify {
+
+                &[aria-expanded="true"] {
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
                 }
             }
 
-            .title {
-                display: inline-block;
+            &.add-tags {
+                top: 50px;
+                left: 65px;
+                width: 500px;
+            }
+
+            &.add-credits {
+                width: 245px;
+
+                &.artist {
+                    margin-left: 10px;
+                }
+
+                &.artist,
+                &.role {
+                    margin-bottom: 10px;
+                }
+
+                &.add {
+                    background-color: rgba(203, 203, 203, 0);
+                    color: rgba(0, 0, 0, 0.4) !important;
+                    margin-top: 2px;
+                    height: 43px;
+                    border: none;
+                    outline: 2px solid #cbcbcb;
+                    transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: rgba(203, 203, 203, 0.4);
+                        outline-width: 0px;
+                    }
+                }
+            }
+
+            &.add-media {
+                top: 120px;
+                left: 65px;
+                width: 500px;
+                transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
+
+                &:not(.details) {
+                    z-index: 2
+                }
+
+                &.details {
+                    background-color: #f1f1f1;
+                    border-radius: 0 0 10px 10px;
+                    padding: 17.5px 5px 5px 5px;
+                    top: 110px;
+                    z-index: 1;
+                    cursor: default;
+
+                    &:not(.image-container):not(.image):not(.title):not(.artist) {
+                        height: 80px;
+                        width: 480px;
+                        left: 75px;
+                    }
+
+                    &:has(> .title[title=""]),
+                    &:has(> .title:not([title])) {
+                        height: 0 !important;
+                    }
+
+                    * {
+                        position: absolute;
+                    }
+
+                    .image-container {
+                        display: inline-flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: flex-start;
+                        width: 100px !important;
+                        height: 56.25px !important;
+
+                        .image:not([src=""]) {
+                            border-radius: 4px;
+                            margin-right: 10px;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+
+                    .title {
+                        display: inline-block;
+                        font-family: "Programme";
+                        font-size: 18px;
+                        font-weight: 500;
+                        color: #000;
+                        max-width: 330px;
+                        max-height: 22px;
+                        text-align: left;
+                        left: 120px;
+                        top: 22px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .artist {
+                        display: inline-block;
+                        font-family: "Programme";
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: rgba(0, 0, 0, 0.4);
+                        max-width: 340px;
+                        text-align: left;
+                        left: 120px;
+                        top: 47px;
+                    }
+
+                    .length {
+                        display: inline-block;
+                        font-family: "Programme";
+                        font-size: 16px;
+                        font-weight: 500;
+                        max-width: 360px;
+                        text-align: left;
+                        right: 5px;
+                        top: 33px;
+                    }
+                }
+            }
+
+            &.error {
+                outline-width: 2px !important;
+
+                &.error-animation {
+                    background-color: #fc5753;
+                }
+            }
+
+            &::placeholder {
                 font-family: "Programme";
                 font-size: 18px;
-                font-weight: 500;
-                color: #000;
-                max-width: 330px;
-                max-height: 22px;
-                text-align: left;
-                left: 120px;
-                top: 22px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+                color: rgba(0, 0, 0, 0.4) !important;
+                transition: all 0.2s;
             }
 
-            .artist {
-                display: inline-block;
-                font-family: "Programme";
-                font-size: 14px;
-                font-weight: 500;
-                color: rgba(0, 0, 0, 0.4);
-                max-width: 340px;
-                text-align: left;
-                left: 120px;
-                top: 47px;
+            &:hover {
+                cursor: pointer;
+                background-color: #979797;
             }
 
-            .length {
-                display: inline-block;
-                font-family: "Programme";
-                font-size: 16px;
-                font-weight: 500;
-                max-width: 360px;
-                text-align: left;
-                right: 5px;
-                top: 33px;
+            &:focus,
+            &.tagify--focus {
+                cursor: text;
+                background-color: #cbcbcb;
+
+                &::placeholder {
+                    color: rgba(0, 0, 0, 0.25) !important;
+                }
             }
-        }
-    }
-
-    &.error {
-        outline-width: 2px !important;
-
-        &.error-animation {
-            background-color: #fc5753;
-        }
-    }
-
-    &::placeholder {
-        font-family: "Programme";
-        font-size: 18px;
-        color: rgba(0, 0, 0, 0.4) !important;
-        transition: all 0.2s;
-    }
-
-    &:hover {
-        cursor: pointer;
-        background-color: #979797;
-
-        &.add-credits {
-            cursor: not-allowed !important;
-        }
-    }
-
-    &:focus,
-    &.tagify--focus {
-        cursor: text;
-        background-color: #cbcbcb;
-
-        &::placeholder {
-            color: rgba(0, 0, 0, 0.25) !important;
         }
     }
 }

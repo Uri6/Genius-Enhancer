@@ -3,7 +3,7 @@
  * located in the root directory of this code package.
  */
 
-export function missingInfo(bio, people, releaseDate) {
+export async function missingInfo(bio, people, releaseDate) {
     const imgs = {
         bios: {
             exists: chrome.runtime.getURL("/src/images/bio/Exists/48x48.png"),
@@ -19,25 +19,11 @@ export function missingInfo(bio, people, releaseDate) {
         }
     }
 
-    // This functoin written by @wnull (@wine in Genius.com)
-    const getDetails = () => {
-        let matches = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
-        let replaces = {
-            '&#039;': `'`,
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"'
-        };
-
-        if (matches) {
-            let meta = matches[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
-            // full metadata album & another data
-            return JSON.parse(meta);
-        }
-    }
-
-    let albumObject = getDetails();
+    let albumObject = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
+            resolve(response);
+        });
+    });
     const tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
     let song_index = 0;
 
@@ -221,7 +207,19 @@ export async function getPlaylistVideos(playlistLink) {
 
 export async function appendIcon() {
     let hashmap;
-
+    /*
+        const roleDefaultWhitelist = await new Promise((resolve) => {
+            chrome.runtime.sendMessage({ "getRolesList": ["A"] }, async (response) => {
+                resolve(response);
+            });
+        });
+    
+        const artistDefaultWhitelist = await new Promise((resolve) => {
+            chrome.runtime.sendMessage({ "getArtistsList": ["A"] }, async (response) => {
+                resolve(response);
+            });
+        });
+    */
     const userValidation = () => {
         const disable_add_tag = (placeholderText) => {
             document.getElementById("gb-add-tags").placeholder = placeholderText;
@@ -244,11 +242,267 @@ export async function appendIcon() {
         }
     }
 
+    const getRandomColor = () => {
+        const rand = (min, max) => {
+            return min + Math.random() * (max - min);
+        }
+
+        const h = rand(1, 360) | 0,
+            s = rand(40, 70) | 0,
+            l = rand(65, 72) | 0;
+
+        return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+    };
+
+    const transformTag = (tagData) => {
+        tagData.color = getRandomColor();
+        tagData.style = "--tag-bg:" + tagData.color;
+        tagData.value = tagData.value.trim().replace(/ +/g, ' ');
+    };
+
+    const tags_transformTag = (tagData) => {
+        transformTag(tagData);
+
+        switch (tagData.value.toLowerCase()) {
+            case "pop":
+            case "genius pop":
+                tagData.value = "Pop Genius";
+                tagData.id = 16;
+                break;
+            case "rap":
+            case "genius rap":
+                tagData.value = "Rap Genius";
+                tagData.id = 1434;
+                break;
+            case "rock":
+            case "genius rock":
+                tagData.value = "Rock Genius";
+                tagData.id = 567;
+                break;
+            case "r&b":
+            case "genius r&b":
+                tagData.value = "R&B Genius";
+                tagData.id = 352;
+                break;
+            case "country":
+            case "genius country":
+                tagData.value = "Country Genius";
+                tagData.id = 413;
+                break;
+            case "hip hop":
+            case "genius hip hop":
+            case "genius hip-hop":
+            case "hip hop genius":
+            case "hip-hop genius":
+                tagData.value = "Hip-Hop";
+                tagData.id = 3783;
+                break;
+        }
+    };
+
+    const addCreditsInputs = (/*roleDefaultWhitelist, artistDefaultWhitelist*/) => {
+
+        let controller;
+
+        const inputs = $("<div>", {
+            class: "add-credits-inputs",
+        }).insertBefore($(".add-credits.add"));
+
+        const roleInput = $("<input>", {
+            class: "add-credits role rcorners gb-textarea",
+            type: "text",
+            placeholder: "Role",
+            spellcheck: "false",
+            "data-gramm": "false",
+        }).appendTo(inputs);
+
+        const artistInput = $("<input>", {
+            class: "add-credits artist rcorners gb-textarea",
+            type: "text",
+            placeholder: "Artist",
+            spellcheck: "false",
+            "data-gramm": "false",
+        }).appendTo(inputs);
+
+        $("<div>", {
+            class: "delete-button-container",
+            on: {
+                click: function () {
+                    inputs.remove();
+                }
+            }
+        })
+            .append($("<img>", {
+                class: "delete-button",
+                src: chrome.runtime.getURL("src/images/other/delete.svg"),
+            }))
+            .appendTo(inputs);
+
+        const tagify_role = new Tagify(roleInput[0], {
+            delimiters: null,
+            mode: "select",
+            templates: {
+                tag: function (tagData) {
+                    console.log(tagData);
+                    try {
+                        return `<tag title='${tagData.value}' tag-id='${tagData.id}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
+                                        <div>
+                                            <span class='tagify__tag-text'>${tagData.value}</span>
+                                        </div>
+                                    </tag>`;
+                    } catch (err) {
+                        console.error(err);
+                    }
+                },
+
+                dropdownItem: function (tagData) {
+                    try {
+                        return `<div ${this.getAttributes(tagData)} class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
+                                            <span>${tagData.value}</span>
+                                        </div>`;
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            },
+            whitelist: /*roleDefaultWhitelist*/[],
+            dropdown: {
+                enabled: 0,
+                classname: "tags-look",
+                maxItems: 7,
+                closeOnSelect: true,
+                highlightFirst: true
+            },
+            enforceWhitelist: true,
+            maxTags: 1,
+            autoComplete: {
+                enabled: true
+            },
+            editTags: 1
+        });
+
+        const tagify_artist = new Tagify(artistInput[0], {
+            delimiters: ",",
+            templates: {
+                tag: function (tagData) {
+                    console.log(tagData);
+                    try {
+                        return `<tag
+                                    title='${tagData.value}'
+                                    tag-id='${tagData.id}'
+                                    contenteditable='false'
+                                    spellcheck="false"
+                                    class='tagify__tag ${tagData.class ? tagData.class : ""}'
+                                    ${this.getAttributes(tagData)}>
+                                    <x title='remove tag' class='tagify__tag__removeBtn'></x>
+                                    <div>
+                                        <div class='tagify__tag__avatar-wrap'>
+                                            <img onerror="this.style.visibility='hidden'" src="${tagData.avatar}">
+                                        </div>
+                                        <span class='tagify__tag-text'>${tagData.value}</span>
+                                    </div>
+                                </tag>`;
+                    } catch (err) {
+                        console.error(err);
+                    }
+                },
+
+                dropdownItem: function (tagData) {
+                    try {
+                        return `<div
+                                ${this.getAttributes(tagData)}
+                                class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
+                                    ${tagData.avatar ? `
+                                    <div class='tagify__dropdown__item__avatar-wrap'>
+                                        <img onerror="this.style.visibility='hidden'" src="${tagData.avatar}">
+                                    </div>` : ''
+                            }
+                                    <span>${tagData.value}</span>
+                            </div>`;
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            },
+            whitelist: /*artistDefaultWhitelist*/[],
+            enforceWhitelist: true,
+            autoComplete: {
+                enabled: true
+            },
+            editTags: 0,
+            transformTag: transformTag,
+            dropdown: {
+                enabled: 0,
+                classname: "users-list",
+                maxItems: 7,
+                closeOnSelect: true,
+                highlightFirst: true
+            },
+        });
+
+        roleInput.addClass('has-tagify');
+        artistInput.addClass('has-tagify');
+
+        const searchRole = (e) => {
+            const roleValue = e.detail.value;
+            tagify_role.whitelist = /*roleDefaultWhitelist*/[];
+
+            controller && controller.abort();
+            controller = new AbortController();
+
+            tagify_role.loading(true).dropdown.hide();
+
+            new Promise((resolve) => {
+                chrome.runtime.sendMessage({ "getCreditsList": [roleValue] }, async (response) => {
+                    resolve(response);
+                });
+            })
+                .then((response) => {
+                    if (response) {
+                        tagify_role.whitelist = response;
+                        tagify_role.loading(false).dropdown.show(roleValue);
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+
+        const searchArtist = (e) => {
+            const artistValue = e.detail.value;
+            tagify_artist.whitelist = /*artistDefaultWhitelist*/[];
+
+            controller && controller.abort();
+            controller = new AbortController();
+
+            tagify_artist.loading(true).dropdown.hide();
+
+            new Promise((resolve) => {
+                chrome.runtime.sendMessage({ "getArtistsList": [artistValue] }, async (response) => {
+                    resolve(response);
+                });
+            })
+                .then((response) => {
+                    if (response) {
+                        tagify_artist.whitelist = response;
+                        tagify_artist.loading(false).dropdown.show(artistValue);
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+
+        tagify_role.on('input', searchRole);
+        tagify_artist.on('input', searchArtist);
+    };
+
     const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
-    const icon_elem = $("<img>").addClass("extension-icon").attr({
-        "alt": "genius bot extension icon",
-        "title": "Alt + G",
-        "src": chrome.runtime.getURL("src/images/icons/2/128x128.png")
+    const icon_elem = $("<img>", {
+        class: "extension-icon",
+        alt: "genius enhancer extension icon",
+        title: "Alt + G",
+        src: chrome.runtime.getURL("src/images/icons/2/128x128.png")
     });
     buttonBackground.append(icon_elem);
 
@@ -299,7 +553,7 @@ export async function appendIcon() {
             class: "add-tags rcorners gb-textarea",
             id: "gb-add-tags",
             type: "text",
-            placeholder: "Tags",
+            placeholder: "Tag",
             spellcheck: "false",
             "data-gramm": "false",
             on: {
@@ -314,39 +568,34 @@ export async function appendIcon() {
 
         $("<div>", {
             class: "add-credits-title title",
-            text: "Credit Artists"
+            text: "Credit Artists",
         }).appendTo(popupBox);
 
-        $("<input>", {
-            class: "add-credits role rcorners gb-textarea",
+        const addCreditsContainer = $("<div>", {
+            class: "add-credits-inputs-container",
+        }).appendTo(popupBox);
+
+        $("<div>", {
+            class: "add-credits add rcorners gb-textarea",
             type: "text",
-            placeholder: "Role",
+            text: "Add",
             spellcheck: "false",
             "data-gramm": "false",
-            disabled: ""
-        }).appendTo(popupBox);
+            on: {
+                click: () => {
+                    addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
 
-        $("<input>", {
-            class: "add-credits artist rcorners gb-textarea",
-            type: "text",
-            placeholder: "Artist",
-            spellcheck: "false",
-            "data-gramm": "false",
-            disabled: ""
-        }).appendTo(popupBox);
+                    const lastRoleInput = $(".add-credits-inputs-container .add-credits.role.tagify .tagify__input").last();
+                    lastRoleInput.focus();
+                }
+            },
+        }).appendTo(addCreditsContainer);
 
-        // $("<input>", {
-        //     class: "add-credits add rcorners gb-textarea",
-        //     type: "text",
-        //     placeholder: "Add",
-        //     spellcheck: "false",
-        //     "data-gramm": "false",
-        //     disabled: ""
-        // }).appendTo(popupBox);
+        addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
 
         $("<div>", {
             class: "add-media-title title",
-            text: "Link Media"
+            text: "Link Media",
         }).appendTo(popupBox);
 
         const addMediaInput = $("<input>", {
@@ -507,7 +756,7 @@ export async function appendIcon() {
 
         const autolinkArtworkTitle = $('<div>', {
             class: 'autolink-artwork-title',
-            text: "Autolink\nartwork"
+            text: "Autolink\nArtwork"
         }).appendTo(autolinkArtworkContainer);
 
         autolinkArtworkContainer.on("click", async () => {
@@ -675,7 +924,7 @@ export async function appendIcon() {
                     return obj;
                 }, {});
             }
-        })
+        });
 
         const tagify_tagsWhitelist = $("datalist#tagsList option").map(function (_, o) {
             let searchByStr;
@@ -693,7 +942,7 @@ export async function appendIcon() {
         }).get();
 
         const tagify_tags = new Tagify(document.getElementById("gb-add-tags"), {
-            delimiters: null,
+            delimiters: ",",
             templates: {
                 tag: function (tagData) {
                     console.log(tagData);
@@ -719,76 +968,28 @@ export async function appendIcon() {
                     }
                 }
             },
-            enforceWhitelist: true,
             whitelist: tagify_tagsWhitelist,
-            transformTag: transformTag,
+            enforceWhitelist: true,
+            autoComplete: {
+                enabled: true
+            },
+            editTags: 1,
+            transformTag: tags_transformTag,
             dropdown: {
                 enabled: 0,
                 classname: "tags-look",
-                maxItems: 20
-            }
+                maxItems: 20,
+                closeOnSelect: false,
+                highlightFirst: true
+            },
         });
 
-        function getRandomColor() {
-            function rand(min, max) {
-                return min + Math.random() * (max - min);
-            }
-
-            const h = rand(1, 360) | 0,
-                s = rand(40, 70) | 0,
-                l = rand(65, 72) | 0;
-
-            return 'hsl(' + h + ',' + s + '%,' + l + '%)';
-        }
-
-        function transformTag(tagData) {
-            tagData.color = getRandomColor();
-            tagData.style = "--tag-bg:" + tagData.color;
-            tagData.value = tagData.value.trim().replace(/ +/g, ' ');
-
-            switch (tagData.value.toLowerCase()) {
-                case "pop":
-                case "genius pop":
-                    tagData.value = "Pop Genius";
-                    tagData.id = 16;
-                    break;
-                case "rap":
-                case "genius rap":
-                    tagData.value = "Rap Genius";
-                    tagData.id = 1434;
-                    break;
-                case "rock":
-                case "genius rock":
-                    tagData.value = "Rock Genius";
-                    tagData.id = 567;
-                    break;
-                case "r&b":
-                case "genius r&b":
-                    tagData.value = "R&B Genius";
-                    tagData.id = 352;
-                    break;
-                case "country":
-                case "genius country":
-                    tagData.value = "Country Genius";
-                    tagData.id = 413;
-                    break;
-                case "hip hop":
-                case "genius hip hop":
-                case "genius hip-hop":
-                case "hip hop genius":
-                case "hip-hop genius":
-                    tagData.value = "Hip-Hop";
-                    tagData.id = 3783;
-                    break;
-            }
-        }
-
-        $('#tagify_tags').on('input', function (e) {
+        $('#tagify_tags').on('input', (e) => {
             $('.blured-background').append($('.tagify__dropdown').eq(0));
         });
 
         if ($('#tagsList').length) {
-            hashmap = Array.prototype.reduce.call($('#tagsList option'), function (obj, option) {
+            hashmap = Array.prototype.reduce.call($('#tagsList option'), (obj, option) => {
                 if (!obj[option.value.toLowerCase()]) {
                     obj[option.value.toLowerCase()] = option.value;
                 }
@@ -796,45 +997,43 @@ export async function appendIcon() {
             }, {});
         }
 
-        $('input[type="tags"]').on('click', function () {
-            setTimeout(function () {
+        $('input[type="tags"]').on('click', () => {
+            setTimeout(() => {
                 $('.blured-background').append($('.tagify__dropdown:first'));
             }, 0.1);
         });
 
-        
-
-        var dragsort = new DragSort(tagify_tags.DOM.scope, {
-            selector:'.'+tagify_tags.settings.classNames.tag,
-            callbacks: {
-                dragEnd: onDragEnd
-            }
-        })
-        
-        function onDragEnd(elm){
+        const onDragEnd = (elm) => {
             tagify_tags.updateValueByDOMTags()
-            // recolor the tags
             tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
                 tagElm.style.cssText = '--tag-bg:' + tagElm.__tagifyTagData.color
             })
         }
+
+        new DragSort(tagify_tags.DOM.scope, {
+            selector: '.' + tagify_tags.settings.classNames.tag,
+            callbacks: {
+                dragEnd: onDragEnd
+            }
+        });
     });
 
+
     // allow to open & close the popup with shortcuts
-    $(window).on('keyup', function (event) {
-        switch (event.key) {
-            case "Escape":
+    $(window).on('keyup', (event) => {
+        switch (event.keyCode || event.which) {
+            case 27: // Escape key
                 const closeIcon = $('.close-icon');
                 if (!!closeIcon.length) {
                     closeIcon[0].click();
                 }
                 break;
-            case "g":
+            case 71: // 'G' or 'g' key
                 if (event.altKey && !$('.blured-background').length) {
                     $('.extension-icon')[0].click();
                 }
                 break;
-            case "s":
+            case 83: // 'S' or 's' key
                 const saveButton = $('.gb-save-button');
                 if (event.altKey && !!saveButton.length) {
                     saveButton[0].click();
@@ -928,35 +1127,16 @@ export async function saveEverything() {
 
     // axios.defaults.withCredentials = true
 
-    /*const getDetails = () => {
-        // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
-        const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
-
-        // Define an object containing HTML entity codes and their corresponding characters
-        const replaces = {
-            '&#039;': `'`,
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"'
-        };
-
-        // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
-        if (metaElem) {
-            // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
-            const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
-
-            // Parse the JSON string and return the resulting object
-            return JSON.parse(meta);
-        }
-    }*/
-
-    //const details = getDetails();
+    //const details = await new Promise((resolve) => {
+    //    chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
+    //        resolve(response);
+    //    });
+    //});
     //const albumSongs = details.album_appearances;
 
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
-    const tags = $(".extension-box tag").toArray().map((tag) => {
+    const tags = $(".extension-box .add-tags tag").toArray().map((tag) => {
         return {
             id: tag.getAttribute("tag-id"),
             name: tag.getAttribute("title")
@@ -965,6 +1145,15 @@ export async function saveEverything() {
 
     const tagsNames = tags.map((tag) => {
         return tag.name;
+    });
+
+    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs").toArray().map((credit) => {
+        return {
+            role: $(credit).find(".role tag")[0].getAttribute("title"),
+            artists: $(credit).find(".artist tag").toArray().map((artist) => {
+                return artist.getAttribute("title");
+            })
+        }
     });
 
     const numOfSongs = Array.from(
@@ -989,7 +1178,7 @@ export async function saveEverything() {
     const progressBar = document.createElement("div");
     progressBar.id = "progressBar";
     progressBar.style.left = "0";
-    progressBar.style.width = "0%";
+    progressBar.style.width = "4%";
     progressBar.style.height = "3px";
     progressBar.style.backgroundColor = "#4CAF50";
     progressBar.style.zIndex = "10000";
@@ -1050,6 +1239,8 @@ export async function saveEverything() {
             existingTags,
             " tags for this song: ",
             tagsForThisSong,
+            " credits: ",
+            credits,
             " youtube link: ",
             song.youtubeLink
         );
@@ -1081,6 +1272,60 @@ export async function saveEverything() {
 
             const options = iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
             options[0].click();
+        }
+
+        for (const credit of credits) {
+            iframe.contentWindow.document.querySelector(".Button__Container-rtu9rw-0.RepeatableInputPair__Button-sc-13uxopg-6").click();
+
+            let inputs = iframe.contentWindow.document.querySelectorAll(".CustomPerformances__Container-sc-1isj7jl-0 .RepeatableInputPair__Row-sc-13uxopg-2");
+            inputs = inputs[inputs.length - 1];
+
+            const roleInput = inputs.querySelectorAll("div.RepeatableInputPair__RowItem-sc-13uxopg-5")[0].querySelector("input");
+            roleInput.value = credit.role;
+            const event = new InputEvent("input", {
+                bubbles: true,
+                data: credit.role,
+            });
+            roleInput.dispatchEvent(event);
+
+            while (!iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option").length) {
+                await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+
+            const options = iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option");
+
+            console.log("options: ", options);
+            
+            let roleIndex = -1;
+            options.forEach((option, index) => {
+                if (option.innerText === credit.role) {
+                    roleIndex = index;
+                }
+                console.log("option: ", option.innerText, " index: ", index);
+            });
+            if (roleIndex !== -1) {
+                options[roleIndex].click();
+            } else {
+                options[0].click();
+            }
+
+            for (const artist of credit.artists) {
+                const artistInput = inputs.querySelectorAll("div.RepeatableInputPair__RowItem-sc-13uxopg-5")[1].querySelector("input");
+                artistInput.value = artist;
+                const event = new InputEvent("input", {
+                    bubbles: true,
+                    data: artist,
+                });
+                artistInput.dispatchEvent(event);
+
+                while (!iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option").length && !iframe.contentWindow.document.querySelector("div.css-47gho1-option")) {
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                }
+
+                let options = iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option");
+                options = options.length ? options : iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
+                options[0].click();
+            }
         }
 
         currentWidth = $(progressBar).width();
