@@ -802,6 +802,8 @@ export async function appendIcon() {
             }, 0.1);
         });
 
+
+
         var dragsort = new DragSort(tagify_tags.DOM.scope, {
             selector:'.'+tagify_tags.settings.classNames.tag,
             callbacks: {
@@ -809,7 +811,7 @@ export async function appendIcon() {
             }
         })
 
-        function onDragEnd(){
+        function onDragEnd(elm){
             tagify_tags.updateValueByDOMTags()
             // recolor the tags
             tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
@@ -933,6 +935,10 @@ export async function saveEverything() {
         return cookieObject;
     }
 
+    // TODO: refactor this into an API call
+
+    axios.defaults.withCredentials = true
+
     const getDetails = () => {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
@@ -972,7 +978,7 @@ export async function saveEverything() {
     // unit the album songs with the youtube links
     if (youtubeLinks.length) {
         albumSongs.forEach((song) => {
-            song.youtube_link = youtubeLinks[albumSongs.indexOf(song)];
+            song.youtubeLink = youtubeLinks[albumSongs.indexOf(song)];
         });
     }
 
@@ -988,7 +994,7 @@ export async function saveEverything() {
 
     for (const song of albumSongs) {
         // get song details
-        const songDetails = (await gapi.get(song.song.api_path)).data.response.song;
+        const details = await fetch(`https://genius.com/api${song.song.api_path}`).then((res) => res.json())
 
         const params = {
             tags: [
@@ -998,16 +1004,20 @@ export async function saveEverything() {
                         name: tag.name
                     };
                 }),
-                ...songDetails.tags.map((tag) => ({
+                ...details.response.song.tags.map((tag) => ({
                     name: tag.name,
-                    id: tag.id,
+                    id: +tag.id,
                 })),
             ],
         };
 
-        await gapi.put(song.song.api_path, {
+        console.log("params: ", params)
+
+        gapi.put(`https://genius.com/api${song.song.api_path}`, {
             text_format: "html,markdown",
-            song: Object.assign(params, song.youtube_link ? { youtube_link: song.youtube_link } : {}),
+            song: {
+                tags: params.tags,
+            },
         });
     }
 }
