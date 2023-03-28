@@ -213,7 +213,7 @@ export async function appendIcon() {
                 resolve(response);
             });
         });
-    
+
         const artistDefaultWhitelist = await new Promise((resolve) => {
             chrome.runtime.sendMessage({ "getArtistsList": ["A"] }, async (response) => {
                 resolve(response);
@@ -447,7 +447,7 @@ export async function appendIcon() {
             const roleValue = e.detail.value;
             tagify_role.whitelist = /*roleDefaultWhitelist*/[];
 
-            controller && controller.abort();
+            controller?.abort();
             controller = new AbortController();
 
             tagify_role.loading(true).dropdown.hide();
@@ -472,7 +472,7 @@ export async function appendIcon() {
             const artistValue = e.detail.value;
             tagify_artist.whitelist = /*artistDefaultWhitelist*/[];
 
-            controller && controller.abort();
+            controller?.abort();
             controller = new AbortController();
 
             tagify_artist.loading(true).dropdown.hide();
@@ -1049,7 +1049,7 @@ export async function appendIcon() {
 /**
  * Searches for album artwork from iTunes API based on album and artist name obtained from the web page
  * The results are saved in the Chrome storage and also returned as a promise
- * 
+ *
  * @returns {Promise<Array<String>>} A promise that resolves to an array of album artwork URLs
  */
 export async function autolinkArtwork() {
@@ -1295,7 +1295,7 @@ export async function saveEverything() {
             const options = iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option");
 
             console.log("options: ", options);
-            
+
             let roleIndex = -1;
             options.forEach((option, index) => {
                 if (option.innerText === credit.role) {
