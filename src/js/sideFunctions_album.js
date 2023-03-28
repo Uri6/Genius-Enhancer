@@ -935,8 +935,6 @@ export async function saveEverything() {
         return cookieObject;
     }
 
-    // TODO: refactor this into an API call
-
     axios.defaults.withCredentials = true
 
     const getDetails = () => {
@@ -968,17 +966,26 @@ export async function saveEverything() {
 
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
-    const tags = $(".extension-box tag").toArray().map((tag) => {
+    const tags = $(".extension-box .add-tags tag").toArray().map((tag) => {
         return {
             id: tag.getAttribute("tag-id"),
             name: tag.getAttribute("title")
         }
     });
 
+    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs").toArray().map((credit) => {
+        return {
+            role: $(credit).find(".role tag")[0].getAttribute("title"),
+            artists: $(credit).find(".artist tag").toArray().map((artist) => {
+                return artist.getAttribute("title");
+            })
+        }
+    });
+
     // unit the album songs with the youtube links
     if (youtubeLinks.length) {
         albumSongs.forEach((song) => {
-            song.youtubeLink = youtubeLinks[albumSongs.indexOf(song)];
+            song.youtube_url = youtubeLinks[albumSongs.indexOf(song)];
         });
     }
 
@@ -1009,6 +1016,8 @@ export async function saveEverything() {
                     id: +tag.id,
                 })),
             ],
+            youtube_url: song.youtube_url ? song.youtube_url : details.response.song.youtube_url,
+
         };
 
         console.log("params: ", params)
@@ -1017,6 +1026,7 @@ export async function saveEverything() {
             text_format: "html,markdown",
             song: {
                 tags: params.tags,
+                youtube_url: params.youtube_url,
             },
         });
     }
