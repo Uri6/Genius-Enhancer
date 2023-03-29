@@ -923,6 +923,8 @@ export async function autolinkArtwork() {
 }
 
 export async function saveEverything() {
+    console.log("saveEverything");
+
     function parseCookies() {
         const cookies = document.cookie.split('; ');
         const cookieObject = {};
@@ -935,9 +937,7 @@ export async function saveEverything() {
         return cookieObject;
     }
 
-    axios.defaults.withCredentials = true
-
-    const getDetails = () => {
+    function getDetails() {
         // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
 
@@ -966,21 +966,24 @@ export async function saveEverything() {
 
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
-    const tags = $(".extension-box .add-tags tag").toArray().map((tag) => {
+    const tags = $(".extension-box .add-tags tag")?.toArray().map((tag) => {
         return {
             id: tag.getAttribute("tag-id"),
             name: tag.getAttribute("title")
         }
     });
 
-    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")?.toArray().map((credit) => {
-        return {
-            role: $(credit).find(".role tag")[0]?.getAttribute("title"),
-            artists: $(credit).find(".artist tag")?.toArray().map((artist) => {
-                return artist?.getAttribute("title");
-            })
-        }
-    });
+    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")?.toArray()
+        .map((credit) => {
+            return {
+                role: $(credit).find(".role tag")[0]?.getAttribute("title"),
+                artists: $(credit).find(".artist tag")?.toArray().map((artist) => {
+                    // JSON parse the artist "full-response" attr to get the full response
+                    return JSON.parse(artist?.getAttribute("full-response"));
+                })
+            }
+        })
+        .filter((credit) => credit.role && credit.artists.length);
 
     // unit the album songs with the youtube links
     if (youtubeLinks.length) {
@@ -1005,19 +1008,34 @@ export async function saveEverything() {
 
         const params = {
             tags: [
-                ...tags.map((tag) => {
-                    return {
+                ...tags
+                    .map((tag) => {
+                        return {
+                            id: +tag.id,
+                            name: tag.name
+                        };
+                    }),
+                ...details.response.song.tags
+                    .map((tag) => ({
+                        name: tag.name,
                         id: +tag.id,
-                        name: tag.name
-                    };
-                }),
-                ...details.response.song.tags.map((tag) => ({
-                    name: tag.name,
-                    id: +tag.id,
-                })),
+                    })),
             ],
             youtube_url: song.youtube_url ? song.youtube_url : details.response.song.youtube_url,
-
+            custom_performances: [
+                ...credits
+                    .map((credit) => {
+                        return {
+                            label: credit.role,
+                            artists: credit.artists,
+                        }
+                    }),
+                ...details.response.song.custom_performances
+                    .map((credit) => ({
+                        label: credit.label,
+                        artists: credit.artists,
+                    })),
+            ],
         };
 
         console.log("params: ", params)
@@ -1027,6 +1045,7 @@ export async function saveEverything() {
             song: {
                 tags: params.tags,
                 youtube_url: params.youtube_url,
+                custom_performances: params.custom_performances,
             },
         });
     }
