@@ -149,6 +149,7 @@ chrome.runtime.onMessage.addListener((
             case "song_searchVideo" in message:
                 func = searchVideo;
                 args = message.song_searchVideo;
+                break;
             case "forums_replaceButtons" in message:
                 func = replaceButtons;
                 args = message.forums_replaceButtons;
@@ -174,7 +175,8 @@ chrome.runtime.onMessage.addListener((
                         func === getPlaylistVideos ||
                         func === getDetails ||
                         func === getArtistsList ||
-                        func === getCreditsList
+                        func === getCreditsList ||
+                        func === searchVideo
                     ) {
                         resolve(results[0].result);
                     } else {
@@ -796,20 +798,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 "transform": "translate(0px, 0px)"
                                             });
                                         });
-
-                                        // auto remove the background of the image of the artist when hovering the element ".jHQizl .kMmimq"
-                                        // notice it isn't a css background, it's an image!
-                                        const img = document.querySelector('.jHQizl .kMmimq');
-                                        const apiKey = 'YOUR_API_KEY';
-
-                                        remove.bg.init({ apiKey });
-
-                                        remove.bg.removeBackgroundFromImage(img, (result) => {
-                                            img.src = result.dataUrl;
-                                        }, (e) => {
-                                            console.error(e);
-                                        });
-
                                     })
                                 }
                             );
@@ -963,9 +951,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             console.log(e);
 
                                             setTimeout(() => {
-                                                const youtubeInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('YouTube URL')");
+                                                const ytInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('YouTube URL')");
 
-                                                if (youtubeInputContainer.length && !$('.magic-wand-button-container').length) {
+                                                if (ytInputContainer.length && !$('.magic-wand-button-container').length) {
                                                     $("<div>", {
                                                         class: "magic-wand-button-container",
                                                     })
@@ -973,9 +961,27 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                             class: "magic-wand-button-icon",
                                                             src: chrome.runtime.getURL("/src/images/magicWand/26x26.png"),
                                                         }))
-                                                        .insertAfter(youtubeInputContainer)
+                                                        .insertAfter(ytInputContainer)
                                                         .click(() => {
-                                                            chrome.runtime.sendMessage({ "song_searchVideo": [true] });
+                                                            let ytURL = await new Promise((resolve) => {
+                                                                chrome.runtime.sendMessage({ "song_searchVideo": [true] }, (response) => {
+                                                                    resolve(response);
+                                                                });
+                                                            });
+
+                                                            if (ytURL.length > 0) {
+                                                                // Clear any previous search results
+                                                                const youtubeInput = $("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
+                                                                youtubeInput.value = "";
+
+                                                                youtubeInput.click();
+                                                                youtubeInput.setAttribute("value", ytURL);
+                                                                const event = new InputEvent("input", {
+                                                                    bubbles: true,
+                                                                    data: ytURL,
+                                                                });
+                                                                youtubeInput.dispatchEvent(event);
+                                                            }
                                                         });
                                                 }
                                             }, 1000);
