@@ -973,11 +973,11 @@ export async function saveEverything() {
         }
     });
 
-    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs").toArray().map((credit) => {
+    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")?.toArray().map((credit) => {
         return {
-            role: $(credit).find(".role tag")[0].getAttribute("title"),
-            artists: $(credit).find(".artist tag").toArray().map((artist) => {
-                return artist.getAttribute("title");
+            role: $(credit).find(".role tag")[0]?.getAttribute("title"),
+            artists: $(credit).find(".artist tag")?.toArray().map((artist) => {
+                return artist?.getAttribute("title");
             })
         }
     });
