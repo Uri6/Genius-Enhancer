@@ -1002,7 +1002,7 @@ export async function appendIcon() {
                 $('.blured-background').append($('.tagify__dropdown:first'));
             }, 0.1);
         });
-
+        
         const onDragEnd = (elm) => {
             tagify_tags.updateValueByDOMTags()
             tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
@@ -1122,345 +1122,130 @@ export async function autolinkArtwork() {
 }
 
 export async function saveEverything() {
+    console.log("saveEverything");
 
-    // TODO: refactor this into an API call
+    function parseCookies() {
+        const cookies = document.cookie.split('; ');
+        const cookieObject = {};
 
-    // axios.defaults.withCredentials = true
+        for (const cookie of cookies) {
+            const [key, value] = cookie.split('=');
+            cookieObject[key] = decodeURIComponent(value);
+        }
 
-    //const details = await new Promise((resolve) => {
-    //    chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
-    //        resolve(response);
-    //    });
-    //});
-    //const albumSongs = details.album_appearances;
+        return cookieObject;
+    }
+
+    function getDetails() {
+        // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
+        const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
+
+        // Define an object containing HTML entity codes and their corresponding characters
+        const replaces = {
+            '&#039;': `'`,
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"'
+        };
+
+        // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
+        if (metaElem) {
+            // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
+            const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
+
+            // Parse the JSON string and return the resulting object
+            return JSON.parse(meta);
+        }
+    }
+
+    const details = getDetails();
+
+    const albumSongs = details.album_appearances;
 
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
-    const tags = $(".extension-box .add-tags tag").toArray().map((tag) => {
+    const tags = $(".extension-box .add-tags tag")?.toArray().map((tag) => {
         return {
             id: tag.getAttribute("tag-id"),
             name: tag.getAttribute("title")
         }
     });
 
-    const tagsNames = tags.map((tag) => {
-        return tag.name;
-    });
-
-    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs").toArray().map((credit) => {
-        return {
-            role: $(credit).find(".role tag")[0].getAttribute("title"),
-            artists: $(credit).find(".artist tag").toArray().map((artist) => {
-                return artist.getAttribute("title");
-            })
-        }
-    });
-
-    const numOfSongs = Array.from(
-        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
-    ).length;
-
-    const albumSongs = Array.from(
-        document.getElementsByClassName("u-display_block")
-    ).slice(0, numOfSongs);
+    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")?.toArray()
+        .map((credit) => {
+            return {
+                role: $(credit).find(".role tag")[0]?.getAttribute("title"),
+                artists: $(credit).find(".artist tag")?.toArray().map((artist) => {
+                    // JSON parse the artist "full-response" attr to get the full response
+                    return JSON.parse(artist?.getAttribute("full-response"));
+                })
+            }
+        })
+        .filter((credit) => credit.role && credit.artists.length);
 
     // unit the album songs with the youtube links
     if (youtubeLinks.length) {
         albumSongs.forEach((song) => {
-            song.youtubeLink = youtubeLinks[albumSongs.indexOf(song)];
+            song.youtube_url = youtubeLinks[albumSongs.indexOf(song)];
         });
     }
 
     console.log("albumSongs: ", albumSongs);
 
-    let everythingIsSaved = false;
+    const gapi = axios.create({
+        baseUrl: "https://genius.com/api",
+        withCredentials: true,
+        headers: {
+            "X-CSRF-Token": parseCookies()["_csrf_token"],
+        },
+    })
 
-    const progressBar = document.createElement("div");
-    progressBar.id = "progressBar";
-    progressBar.style.left = "0";
-    progressBar.style.width = "4%";
-    progressBar.style.height = "3px";
-    progressBar.style.backgroundColor = "#4CAF50";
-    progressBar.style.zIndex = "10000";
-    progressBar.style.height = "10px";
+    for (const song of albumSongs) {
+        // get song details
+        const details = await fetch(`https://genius.com/api${song.song.api_path}`).then((res) => res.json())
 
-    $("header-with-cover-art").after(progressBar);
-
-    albumSongs.forEach(async (song) => {
-
-        //axios.put(`https://genius.com/api${song.song.api_path}`, {
-        //    text_format: "html,markdown",
-        //    song: {
-        //        tags: tags.map((tag) => {
-        //            return {
-        //                id: +tag.id,
-        //                name: tag.name,
-        //            };
-        //        }),
-        //    }
-        //});
-
-        const iframe = document.createElement("iframe");
-        iframe.classList.add("extension-song");
-        iframe.sandbox = "allow-scripts allow-same-origin";
-        iframe.style.display = "none";
-        iframe.src = song.href;
-        document.body.appendChild(iframe);
-
-        await new Promise((resolve) => (iframe.onload = resolve));
-
-        let currentWidth = $(progressBar).width();
-        let newWidth = `${currentWidth + (1 / (albumSongs.length / 3))}%`;
-        $(progressBar).width(newWidth);
-
-        while (!iframe.contentWindow.document.querySelector("button.SmallButton__Container-mg33hl-0")) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-
-        iframe.contentWindow.document
-            .querySelector("button.SmallButton__Container-mg33hl-0")
-            .click();
-
-        let existingTags = [];
-        iframe.contentWindow.document
-            .querySelector("[data-testid='tags-input']")
-            .querySelectorAll(".TagInput__MultiValueLabel-sc-17py0eg-2.blnjJQ")
-            .forEach((e) => {
-                existingTags.push(e.innerText);
-            });
-
-        const tagsForThisSong = tagsNames.filter((e) => !existingTags.includes(e));
-        console.log(
-            "song: ",
-            song.innerText,
-            " tags: ",
-            tagsNames,
-            " existing tags: ",
-            existingTags,
-            " tags for this song: ",
-            tagsForThisSong,
-            " credits: ",
-            credits,
-            " youtube link: ",
-            song.youtubeLink
-        );
-
-        const youtubeURLInput = iframe.contentWindow.document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
-
-        if (youtubeURLInput) {
-            youtubeURLInput.click();
-            youtubeURLInput.setAttribute("value", song.youtubeLink);
-            const event = new InputEvent("input", {
-                bubbles: true,
-                data: song.youtubeLink,
-            });
-            youtubeURLInput.dispatchEvent(event);
-        }
-
-        for (const tag of tagsForThisSong) {
-            const input = iframe.contentWindow.document.querySelector("input#react-select-7-input");
-            input.value = tag;
-            const event = new InputEvent("input", {
-                bubbles: true,
-                data: tag,
-            });
-            input.dispatchEvent(event);
-
-            while (!iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option").length) {
-                await new Promise((resolve) => setTimeout(resolve, 100));
-            }
-
-            const options = iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
-            options[0].click();
-        }
-
-        for (const credit of credits) {
-            iframe.contentWindow.document.querySelector(".Button__Container-rtu9rw-0.RepeatableInputPair__Button-sc-13uxopg-6").click();
-
-            let inputs = iframe.contentWindow.document.querySelectorAll(".CustomPerformances__Container-sc-1isj7jl-0 .RepeatableInputPair__Row-sc-13uxopg-2");
-            inputs = inputs[inputs.length - 1];
-
-            const roleInput = inputs.querySelectorAll("div.RepeatableInputPair__RowItem-sc-13uxopg-5")[0].querySelector("input");
-            roleInput.value = credit.role;
-            const event = new InputEvent("input", {
-                bubbles: true,
-                data: credit.role,
-            });
-            roleInput.dispatchEvent(event);
-
-            while (!iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option").length) {
-                await new Promise((resolve) => setTimeout(resolve, 100));
-            }
-
-            const options = iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option");
-
-            console.log("options: ", options);
-
-            let roleIndex = -1;
-            options.forEach((option, index) => {
-                if (option.innerText === credit.role) {
-                    roleIndex = index;
-                }
-                console.log("option: ", option.innerText, " index: ", index);
-            });
-            if (roleIndex !== -1) {
-                options[roleIndex].click();
-            } else {
-                options[0].click();
-            }
-
-            for (const artist of credit.artists) {
-                const artistInput = inputs.querySelectorAll("div.RepeatableInputPair__RowItem-sc-13uxopg-5")[1].querySelector("input");
-                artistInput.value = artist;
-                const event = new InputEvent("input", {
-                    bubbles: true,
-                    data: artist,
-                });
-                artistInput.dispatchEvent(event);
-
-                while (!iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option").length && !iframe.contentWindow.document.querySelector("div.css-47gho1-option")) {
-                    await new Promise((resolve) => setTimeout(resolve, 100));
-                }
-
-                let options = iframe.contentWindow.document.querySelectorAll("div.css-10kklk1-option");
-                options = options.length ? options : iframe.contentWindow.document.querySelectorAll("div.css-47gho1-option");
-                options[0].click();
-            }
-        }
-
-        currentWidth = $(progressBar).width();
-        newWidth = `${currentWidth + (2 / (albumSongs.length / 3))}%`;
-        $(progressBar).width(newWidth);
-
-        // if it's the last song, set everythingIsSaved to true
-        if (song === albumSongs[albumSongs.length - 1]) {
-            everythingIsSaved = true;
-        }
-
-        while (iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").disabled) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-        iframe.contentWindow.document.querySelector("button.IconButton__Button-z735f6-0.fsRAyK.Modaldesktop__SaveIconButton-sc-1e03w42-7.jyxyfC").click();
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        iframe.remove();
-    });
-
-    while (!everythingIsSaved) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    progressBar.style.width = "100%";
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    document.getElementById("progressBar").remove();
-    document.querySelectorAll(".extension-song").forEach((e) => e.remove());
-
-}
-
-export function addSongAsTheNext() {
-    // look for an element with the classes "square_input square_input--full_width ac_input" (it's the input for the song name) inserted into the DOM
-    // then add an "on/off" button to it which will add the song as the next song in the queue if turned on
-    // save to the local storage the state of the button (on/off) [and if it's already true, change the button to on]
-
-    // in the same observer, look for the "Add to queue" button (it has the class "ac_even" or "ac_odd") and add a click event listener to it
-    // if the button is on, add the song as the next song in the queue
-    // for adding the song as the next song in the queue, click on the button ".button--unstyled" which is child of an elem with the classes "editable_tracklist-row-number-edit_icon editable_tracklist-row-number-edit_icon--no_number"
-    // then, write in the input with the class "square_input editable_tracklist-row-number-input u-x_small_right_margin ng-pristine ng-valid ng-empty ng-touched" the length-3 of $(".editable_tracklist-row-number")
-    // then, click on the first element with the classes "inline_icon inline_icon--gray u-x_small_right_margin u-clickable"
-
-    const addSongAsNext_ = () => {
-        setTimeout(() => {
-            // save the last word in the innerText of ".text_label text_label--gray" element into the var "songNum"
-            // the ".text_label text_label--gray" should be a child of the ".tracklist-row__number" element without "ng-repeat" attribute ot "ng-if" attribute
-            let songNum = $("div.text_label.text_label--gray").not("[ng-repeat]").not("[ng-if]").first().text().split(" ").pop();
-            let buttonsLength = $(".button--unstyled").length;
-            let button = $(".button--unstyled")[buttonsLength - 1];
-            button.click();
-            let input = document.querySelector("input.square_input.editable_tracklist-row-number-input.u-x_small_right_margin.ng-pristine.ng-valid");
-            setTimeout(() => {
-                input.classList.remove("ng-empty");
-                input.classList.add("ng-not-empty");
-                input.value = songNum;
-                let event = new Event("input", { bubbles: true });
-                input.dispatchEvent(event);
-            }, 5);
-            setTimeout(() => {
-                document.querySelectorAll(".button--unstyled")[buttonsLength].click();
-            }, 5);
-        }, 5);
-    }
-
-    let observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length) {
-                let addedElem = mutation.addedNodes[0];
-                if (!addedElem || !addedElem.children) return;
-                let input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
-
-                if (input) {
-                    let container = document.createElement("div");
-                    container.classList.add("add-song-as-next-container");
-                    let label = document.createElement("label");
-                    label.classList.add("add-song-as-next-label");
-                    label.innerText = "Add as next";
-                    label.htmlFor = "add-song-as-next-checkbox";
-                    let span = document.createElement("span");
-                    span.classList.add("add-song-as-next-span", "chkboxmspan");
-                    $(label).prepend(span);
-                    let checkbox = document.createElement("input");
-                    checkbox.classList.add("add-song-as-next-checkbox", "chkboxm");
-                    checkbox.type = "checkbox";
-                    checkbox.id = "add-song-as-next-checkbox";
-                    $(container).append(checkbox);
-                    $(container).append(label);
-                    $(input).parent().append(container);
-
-                    chrome.storage.local.get("add_song_as_next", (result) => {
-                        if (result.add_song_as_next) {
-                            checkbox.checked = true;
+        const params = {
+            tags: [
+                ...tags
+                    .map((tag) => {
+                        return {
+                            id: +tag.id,
+                            name: tag.name
+                        };
+                    }),
+                ...details.response.song.tags
+                    .map((tag) => ({
+                        name: tag.name,
+                        id: +tag.id,
+                    })),
+            ],
+            youtube_url: song.youtube_url ? song.youtube_url : details.response.song.youtube_url,
+            custom_performances: [
+                ...credits
+                    .map((credit) => {
+                        return {
+                            label: credit.role,
+                            artists: credit.artists,
                         }
-                    });
+                    }),
+                ...details.response.song.custom_performances
+                    .map((credit) => ({
+                        label: credit.label,
+                        artists: credit.artists,
+                    })),
+            ],
+        };
 
-                    checkbox.addEventListener("change", () => {
-                        chrome.storage.local.set({ "add_song_as_next": checkbox.checked });
-                    });
-                    $('input[on-select="$ctrl.add_song(data)"]').on("keydown", (e) => {
-                        console.log("keydown", e);
-                        chrome.storage.local.get("add_song_as_next", (result) => {
-                            if (result.add_song_as_next) {
-                                if (e.keyCode === 13) {
-                                    addSongAsNext_();
-                                }
-                            }
-                        });
-                    });
-                }
+        console.log("params: ", params)
 
-                if (addedElem.classList.contains("ac_even") || addedElem.classList.contains("ac_odd")) {
-                    console.log("found add to queue button");
-                    let addToQueueButton = addedElem;
-                    chrome.storage.local.get("add_song_as_next", (result) => {
-                        if (result.add_song_as_next) {
-                            $(addToQueueButton).on("click", addSongAsNext_);
-                        }
-                    });
-                }
-            }
+        gapi.put(`https://genius.com/api${song.song.api_path}`, {
+            text_format: "html,markdown",
+            song: {
+                tags: params.tags,
+                youtube_url: params.youtube_url,
+                custom_performances: params.custom_performances,
+            },
         });
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
-    // run a keydown event listener on the body
-    // if the key is enter log the element which has the focus
-    document.body.addEventListener("keydown", (e) => {
-        if (e.keyCode === 13) {
-            console.log(document.activeElement);
-        }
-    });
+    }
 }
