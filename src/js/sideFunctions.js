@@ -229,6 +229,7 @@ export async function getArtistsList(query) {
         value: artist.name,
         avatar: artist.image_url,
         id: artist.id,
+        full_response: artist,
     }));
 }
 
@@ -312,8 +313,7 @@ export function replaceTextarea(textareaClasses) {
     quill.clipboard.dangerouslyPasteHTML(content);
 
     quill.on("text-change", function (delta, oldDelta, source) {
-        let htmlContent = quill.root.innerHTML; // Remove this line.
-        htmlContent = htmlContent
+        let htmlContent = quill.root.innerHTML
             .replace(/<strong>/g, "<b>")
             .replace(/<\/strong>/g, "</b>")
 
