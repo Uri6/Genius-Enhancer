@@ -11,7 +11,7 @@
 
 ##
 
-A chrome extension that elevates your Genius.com experience by incorporating automation tools and productivity boosters.
+A Chrome extension featuring automation tools, productivity enhancements, and a modern style for Genius.com.
 
 <hr>
 
