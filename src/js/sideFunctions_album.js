@@ -1250,3 +1250,109 @@ export async function saveEverything() {
         });
     }
 }
+
+export function addSongAsTheNext() {
+    // look for an element with the classes "square_input square_input--full_width ac_input" (it's the input for the song name) inserted into the DOM
+    // then add an "on/off" button to it which will add the song as the next song in the queue if turned on
+    // save to the local storage the state of the button (on/off) [and if it's already true, change the button to on]
+
+    // in the same observer, look for the "Add to queue" button (it has the class "ac_even" or "ac_odd") and add a click event listener to it
+    // if the button is on, add the song as the next song in the queue
+    // for adding the song as the next song in the queue, click on the button ".button--unstyled" which is child of an elem with the classes "editable_tracklist-row-number-edit_icon editable_tracklist-row-number-edit_icon--no_number"
+    // then, write in the input with the class "square_input editable_tracklist-row-number-input u-x_small_right_margin ng-pristine ng-valid ng-empty ng-touched" the length-3 of $(".editable_tracklist-row-number")
+    // then, click on the first element with the classes "inline_icon inline_icon--gray u-x_small_right_margin u-clickable"
+
+    const addSongAsNext_ = () => {
+        setTimeout(() => {
+            // save the last word in the innerText of ".text_label text_label--gray" element into the var "songNum"
+            // the ".text_label text_label--gray" should be a child of the ".tracklist-row__number" element without "ng-repeat" attribute ot "ng-if" attribute
+            let songNum = $("div.text_label.text_label--gray").not("[ng-repeat]").not("[ng-if]").first().text().split(" ").pop();
+            let buttonsLength = $(".button--unstyled").length;
+            let button = $(".button--unstyled")[buttonsLength - 1];
+            button.click();
+            let input = document.querySelector("input.square_input.editable_tracklist-row-number-input.u-x_small_right_margin.ng-pristine.ng-valid");
+            setTimeout(() => {
+                input.classList.remove("ng-empty");
+                input.classList.add("ng-not-empty");
+                input.value = songNum;
+                let event = new Event("input", { bubbles: true });
+                input.dispatchEvent(event);
+            }, 5);
+            setTimeout(() => {
+                document.querySelectorAll(".button--unstyled")[buttonsLength].click();
+            }, 5);
+        }, 5);
+    }
+
+    let observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length) {
+                let addedElem = mutation.addedNodes[0];
+                if (!addedElem || !addedElem.children) return;
+                let input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
+
+                if (input) {
+                    let container = document.createElement("div");
+                    container.classList.add("add-song-as-next-container");
+                    let label = document.createElement("label");
+                    label.classList.add("add-song-as-next-label");
+                    label.innerText = "Add as next";
+                    label.htmlFor = "add-song-as-next-checkbox";
+                    let span = document.createElement("span");
+                    span.classList.add("add-song-as-next-span", "chkboxmspan");
+                    $(label).prepend(span);
+                    let checkbox = document.createElement("input");
+                    checkbox.classList.add("add-song-as-next-checkbox", "chkboxm");
+                    checkbox.type = "checkbox";
+                    checkbox.id = "add-song-as-next-checkbox";
+                    $(container).append(checkbox);
+                    $(container).append(label);
+                    $(input).parent().append(container);
+
+                    chrome.storage.local.get("add_song_as_next", (result) => {
+                        if (result.add_song_as_next) {
+                            checkbox.checked = true;
+                        }
+                    });
+
+                    checkbox.addEventListener("change", () => {
+                        chrome.storage.local.set({ "add_song_as_next": checkbox.checked });
+                    });
+                    $('input[on-select="$ctrl.add_song(data)"]').on("keydown", (e) => {
+                        console.log("keydown", e);
+                        chrome.storage.local.get("add_song_as_next", (result) => {
+                            if (result.add_song_as_next) {
+                                if (e.keyCode === 13) {
+                                    addSongAsNext_();
+                                }
+                            }
+                        });
+                    });
+                }
+
+                if (addedElem.classList.contains("ac_even") || addedElem.classList.contains("ac_odd")) {
+                    console.log("found add to queue button");
+                    let addToQueueButton = addedElem;
+                    chrome.storage.local.get("add_song_as_next", (result) => {
+                        if (result.add_song_as_next) {
+                            $(addToQueueButton).on("click", addSongAsNext_);
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // run a keydown event listener on the body
+    // if the key is enter log the element which has the focus
+    document.body.addEventListener("keydown", (e) => {
+        if (e.keyCode === 13) {
+            console.log(document.activeElement);
+        }
+    });
+}
