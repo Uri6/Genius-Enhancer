@@ -4,9 +4,10 @@
  * Please refer to the original project website for more information.
  */
 :root {
-  --tagify-dd-color-primary:rgb(53, 149, 246);
-  --tagify-dd-bg-color:white;
-  --tagify-dd-item-pad:0.3em 0.5em;
+  --tagify-dd-color-primary: rgb(53, 149, 246);
+  --tagify-dd-bg-color: white;
+  --tagify-dd-item-pad: 0.3em 0.5em;
+  --tagify-dd-user-item-pad: .5em .7em;
 }
 
 .tagify {
@@ -15,31 +16,31 @@
   flex-wrap: wrap;
   padding: 0;
   line-height: 0;
-  --tags-disabled-bg:#F1F1F1;
-  --tags-border-color:#DDD;
-  --tags-hover-border-color:#CCC;
-  --tags-focus-border-color:#3595f6;
-  --tag-border-radius:10px;
-  --tag-bg:#E5E5E5;
-  --tag-hover:#D3E2E2;
-  --tag-text-color:black;
-  --tag-text-color--edit:black;
-  --tag-pad:0.3em 0.5em;
-  --tag-inset-shadow-size:1.1em;
-  --tag-invalid-color:#D39494;
-  --tag-invalid-bg:rgba(211, 148, 148, 0.5);
-  --tag-remove-bg:rgba(211, 148, 148, 0.3);
-  --tag-remove-btn-color:black;
-  --tag-remove-btn-bg:none;
-  --tag-remove-btn-bg--hover:#c77777;
-  --input-color:inherit;
-  --tag--min-width:1ch;
-  --tag--max-width:auto;
-  --tag-hide-transition:0.3s;
-  --placeholder-color:rgba(0, 0, 0, 0.4);
-  --placeholder-color-focus:rgba(0, 0, 0, 0.25);
-  --loader-size:.8em;
-  --readonly-striped:1;
+  --tags-disabled-bg: #F1F1F1;
+  --tags-border-color: #DDD;
+  --tags-hover-border-color: #CCC;
+  --tags-focus-border-color: #3595f6;
+  --tag-border-radius: 10px;
+  --tag-bg: #E5E5E5;
+  --tag-hover: #D3E2E2;
+  --tag-text-color: black;
+  --tag-text-color--edit: black;
+  --tag-pad: 0.3em 0.5em;
+  --tag-inset-shadow-size: 1.1em;
+  --tag-invalid-color: #D39494;
+  --tag-invalid-bg: rgba(211, 148, 148, 0.5);
+  --tag-remove-bg: rgba(211, 148, 148, 0.3);
+  --tag-remove-btn-color: black;
+  --tag-remove-btn-bg: none;
+  --tag-remove-btn-bg--hover: #c77777;
+  --input-color: inherit;
+  --tag--min-width: 1ch;
+  --tag--max-width: auto;
+  --tag-hide-transition: 0.3s;
+  --placeholder-color: rgba(0, 0, 0, 0.4);
+  --placeholder-color-focus: rgba(0, 0, 0, 0.25);
+  --loader-size: 24px;
+  --readonly-striped: 1;
   cursor: text;
   outline: 0;
   position: relative;
@@ -47,7 +48,7 @@
   transition: 0.1s;
 }
 .tagify:hover:not(.tagify--focus):not(.tagify--invalid) {
-  --tags-border-color:var(--tags-hover-border-color);
+  --tags-border-color: var(--tags-hover-border-color);
 }
 .tagify[disabled] {
   background: var(--tags-disabled-bg);
@@ -121,14 +122,14 @@
   margin-left: 0;
 }
 
-.tagify + input, .tagify + textarea {
+.tagify + input,
+.tagify + textarea {
   position: absolute !important;
   left: -9999em !important;
   transform: scale(0) !important;
 }
 
 .tagify__tag {
-  display: inline-flex;
   align-items: center;
   margin: 5px 0 5px 5px;
   position: relative;
@@ -137,6 +138,28 @@
   line-height: normal;
   cursor: default;
   transition: 0.13s ease-out;
+}
+.tagify__tag:not(:has(.tagify__tag__avatar-wrap)) {
+  display: inline-flex;
+}
+.tagify__tag:has(.tagify__tag__avatar-wrap) {
+  display: flex;
+}
+.tagify__tag .tagify__tag__avatar-wrap {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  white-space: normal;
+  border-radius: 50%;
+  background: silver;
+  margin-right: 5px;
+  transition: 0.12s ease-out;
+}
+.tagify__tag .tagify__tag__avatar-wrap img {
+  width: 100%;
+  vertical-align: top;
+  pointer-events: none;
+  border-radius: 50%;
 }
 .tagify__tag > div {
   vertical-align: top;
@@ -181,8 +204,11 @@
   box-shadow: 0 0 0 var(--tag-inset-shadow-size) var(--tag-bg) inset;
 }
 .tagify__tag:focus div::before, .tagify__tag:hover:not([readonly]) div::before {
-  --tag-bg-inset:-2.5px;
-  --tag-bg:var(--tag-hover);
+  --tag-bg-inset: -2.5px;
+  --tag-bg: var(--tag-hover);
+}
+.tagify__tag:hover .tagify__tag__avatar-wrap {
+  transform: scale(1.2) translateX(-5%);
 }
 
 .tagify__tag--loading {
@@ -192,7 +218,7 @@
   display: none;
 }
 .tagify__tag--loading::after {
-  --loader-size:.4em;
+  --loader-size: .4em;
   content: "";
   vertical-align: middle;
   opacity: 1;
@@ -234,7 +260,7 @@
   opacity: 0.5;
 }
 .tagify__tag.tagify--notAllowed:not(.tagify__tag--editable) div::before {
-  --tag-bg:var(--tag-invalid-bg);
+  --tag-bg: var(--tag-invalid-bg);
   transition: 0.2s;
 }
 .tagify__tag[readonly] .tagify__tag__removeBtn {
@@ -443,12 +469,12 @@
 }
 
 .tagify--focus {
-  --tags-border-color:var(--tags-focus-border-color);
+  --tags-border-color: var(--tags-focus-border-color);
   transition: 0s;
 }
 
 .tagify--invalid {
-  --tags-border-color:#D39494;
+  --tags-border-color: #D39494;
 }
 
 .tagify__dropdown {
@@ -579,4 +605,36 @@
   white-space: nowrap;
   text-indent: -20px;
   border: 0;
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 1em;
+  grid-template-areas: "avatar name" "avatar email";
+}
+.tagify__dropdown.users-list .tagify__dropdown__item:hover .tagify__dropdown__item__avatar-wrap {
+  transform: scale(1.2);
+}
+.tagify__dropdown.users-list .tagify__dropdown__item strong {
+  grid-area: name;
+  width: 100%;
+  align-self: center;
+}
+.tagify__dropdown.users-list .tagify__dropdown__item__avatar-wrap {
+  grid-area: avatar;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #EEE;
+  transition: 0.1s ease-out;
+}
+.tagify__dropdown.users-list .tagify__dropdown__item__avatar-wrap img {
+  width: 100%;
+  vertical-align: top;
+}
+.tagify__dropdown.users-list .tagify__dropdown__item__addAll {
+  border-bottom: 1px solid #DDD;
+  gap: 0;
 }/*# sourceMappingURL=tagify.css.map */
