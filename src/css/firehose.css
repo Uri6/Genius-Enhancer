@@ -27,7 +27,11 @@ body #main #firehose .activity_stream_event_unit.unread:not(.details_loaded):bef
   background-position: 0 0;
   border-radius: 10px 10px 0 0;
 }
-body #main #firehose .activity_stream_event_unit .target, body #main #firehose .activity_stream_event_unit .target .event_context, body #main #firehose .activity_stream_event_unit .target *.annotation_container, body #main #firehose .activity_stream_event_unit .target *.stand_alone_annotation_container, body #main #firehose .activity_stream_event_unit .target *.stand_alone_referent {
+body #main #firehose .activity_stream_event_unit .target,
+body #main #firehose .activity_stream_event_unit .target .event_context,
+body #main #firehose .activity_stream_event_unit .target *.annotation_container,
+body #main #firehose .activity_stream_event_unit .target *.stand_alone_annotation_container,
+body #main #firehose .activity_stream_event_unit .target *.stand_alone_referent {
   border-radius: 10px !important;
 }
 body #main #firehose_filters input::-moz-placeholder {
@@ -47,12 +51,14 @@ body #main #firehose_filters #selected_users .selected_user .user_badge {
   border-radius: 10px !important;
   max-width: 154px !important;
 }
-body #main #firehose_filters #selected_users .selected_user .user_badge .login:hover, body #main #firehose_filters #selected_users .selected_user .user_badge .iq_value:hover {
+body #main #firehose_filters #selected_users .selected_user .user_badge .login:hover,
+body #main #firehose_filters #selected_users .selected_user .user_badge .iq_value:hover {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   color: white !important;
 }
-body #main #firehose_filters #selected_users .selected_user .user_badge .login:hover.iq_value, body #main #firehose_filters #selected_users .selected_user .user_badge .iq_value:hover.iq_value {
+body #main #firehose_filters #selected_users .selected_user .user_badge .login:hover.iq_value,
+body #main #firehose_filters #selected_users .selected_user .user_badge .iq_value:hover.iq_value {
   font-size: 12px !important;
 }
 body #main #firehose_filters #selected_users .selected_user .user_badge .iq_value {

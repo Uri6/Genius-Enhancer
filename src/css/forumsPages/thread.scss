@@ -299,11 +299,11 @@ body {
     .button {
       border-radius: 10px !important;
       transform: scale(0.9) !important;
-  
+
       &:before {
         position: unset !important;
       }
-  
+
       span {
         display: none !important;
       }
@@ -358,7 +358,9 @@ body {
     .meta {
       top: calc(100% - 10px);
 
-      a:not(.destroy), span, #text {
+      a:not(.destroy),
+      span,
+      #text {
         color: #256767 !important;
       }
     }
@@ -493,7 +495,9 @@ body {
         background-color: rgba(128, 128, 128, 0.4) !important;
 
         .text {
-          .title, .provider {
+
+          .title,
+          .provider {
             padding: 0 !important;
             background-color: transparent !important;
           }
@@ -557,7 +561,8 @@ body {
   background: none !important;
   padding-top: 30px !important;
 
-  .comment-title, label[for="forum_post_follow_discussion"] {
+  .comment-title,
+  label[for="forum_post_follow_discussion"] {
     color: #000 !important;
   }
 

@@ -46,7 +46,7 @@ html {
   &.current {
     background-color: rgba(128, 128, 128, 0.4) !important;
   }
-  
+
   &:hover {
     color: rgba(128, 128, 128, 0.4);
   }
@@ -108,7 +108,7 @@ html {
   }
 }
 
-.group_summary{
+.group_summary {
   &:hover {
     background-color: rgba(128, 128, 128, 0.4) !important;
   }
@@ -263,7 +263,7 @@ html {
 .gb-new-button {
   color: #000 !important;
   fill: #000 !important;
-  transform: scale(0.1, -0.1) translate(0,512);
+  transform: scale(0.1, -0.1) translate(0, 512);
   transition: all 0.3s ease;
 
   &:hover {
@@ -284,86 +284,95 @@ html {
   border: none !important;
   border-radius: 5px !important;
   padding: 5px 10px !important;
+
   .follows {
     align-items: center;
     justify-content: center;
+
     h1 {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 24px;
-        padding-top: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 24px;
+      padding-top: 10px;
     }
+
     .follower_unit {
-        width: 150px;
-        margin: 16px;
-        border: none;
-        .user_tooltip {
-            position: relative;
-            .info {
-              .avatar_wrapper {
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                overflow: hidden;
-                img.avatar {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border: none;
-                }
-              }            
-              .basics {
-                  text-align: left;
+      width: 150px;
+      margin: 16px;
+      border: none;
 
-                  .user_role {
-                      .verified {
-                          color: #71CC5B;
-                      }
-                  }
+      .user_tooltip {
+        position: relative;
 
-                  .login {
-                      font-size: 14px;
-                      font-weight: bold;
-                      color: #262626;
-                      margin-top: 8px;
-                      text-shadow: none;
-                  }
+        .info {
+          .avatar_wrapper {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
 
-                  .iqs {
-                      font-size: 12px;
-                      color: #8e8e8e;
-                      margin-top: 4px;
-                  }
+            img.avatar {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border: none;
+            }
+          }
 
-                  .buttons {
-                      .user_message {
-                          background-color: #3897f0;
-                          color: #fff;
-                          border-radius: 4px;
-                          padding: 8px 16px;
-                          font-size: 12px;
-                          margin-top: 8px;
-                          &:hover {
-                              background-color: #2d7de1;
-                          }
-                      }
+          .basics {
+            text-align: left;
 
-                      .toggle_follow {
-                          background-color: #fff;
-                          color: #3897f0;
-                          border: 2px solid #3897f0;
-                          border-radius: 4px;
-                          padding: 8px 16px;
-                          font-size: 12px;
-                          margin-top: 8px;
-                          &:hover {
-                              background-color: #f2f2f2;
-                          }
-                      }
-                  }
+            .user_role {
+              .verified {
+                color: #71CC5B;
               }
             }
+
+            .login {
+              font-size: 14px;
+              font-weight: bold;
+              color: #262626;
+              margin-top: 8px;
+              text-shadow: none;
+            }
+
+            .iqs {
+              font-size: 12px;
+              color: #8e8e8e;
+              margin-top: 4px;
+            }
+
+            .buttons {
+              .user_message {
+                background-color: #3897f0;
+                color: #fff;
+                border-radius: 4px;
+                padding: 8px 16px;
+                font-size: 12px;
+                margin-top: 8px;
+
+                &:hover {
+                  background-color: #2d7de1;
+                }
+              }
+
+              .toggle_follow {
+                background-color: #fff;
+                color: #3897f0;
+                border: 2px solid #3897f0;
+                border-radius: 4px;
+                padding: 8px 16px;
+                font-size: 12px;
+                margin-top: 8px;
+
+                &:hover {
+                  background-color: #f2f2f2;
+                }
+              }
+            }
+          }
         }
+      }
     }
   }
 }

@@ -139,6 +139,7 @@ label {
 
     &.disabled {
         border-color: $grey;
+
         &:after {
             background-color: $grey;
         }

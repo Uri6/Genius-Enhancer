@@ -238,7 +238,8 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
   padding: 10px;
 }
 
-.square_button, textarea {
+.square_button,
+textarea {
   border-radius: 10px !important;
 }
 

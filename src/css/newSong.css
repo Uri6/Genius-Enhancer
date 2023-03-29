@@ -53,7 +53,8 @@ body textarea {
   resize: none !important;
   min-height: 2.5rem !important;
 }
-body #main .add_song_page > h1:first-child, body #main .add_song_page .add_song_page-helper_text {
+body #main .add_song_page > h1:first-child,
+body #main .add_song_page .add_song_page-helper_text {
   display: none !important;
 }
 body #main label,

@@ -24,7 +24,8 @@ body {
         border: 1px solid #bbb !important;
         color: #000 !important;
 
-        &.required.missing, &.add_song_page-lyrics_textarea.missing {
+        &.required.missing,
+        &.add_song_page-lyrics_textarea.missing {
             border: 2px solid red !important;
         }
 
@@ -48,7 +49,8 @@ body {
 
     #main {
 
-        .add_song_page>h1:first-child, .add_song_page .add_song_page-helper_text {
+        .add_song_page>h1:first-child,
+        .add_song_page .add_song_page-helper_text {
             display: none !important;
         }
 
