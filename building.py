@@ -66,7 +66,8 @@ def copytree(src, dst):
             bad_files = [".py", ".ts", ".map", ".scss", ".sass",
                          ".psd", ".gitignore", "todo", "changelog.md",
                          "tsconfig.json", "package.json", "yarn.lock",
-                         ".yarnrc.yml", ".prettierignore"]
+                         ".yarnrc.yml", ".prettierignore", ".env.example",
+                         ".env"]
             for bad_file in bad_files:
                 if file.endswith(bad_file):
                     skip = True
