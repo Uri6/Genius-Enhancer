@@ -947,6 +947,28 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     target: { tabId: tabId },
                                     func: () => {
 
+                                        // show the artwork size as a title of the element
+                                        let imageUrl = document.querySelector('.SizedImage__Image-sc-1hyeaua-1').src;
+
+                                        if (imageUrl.includes("https://t2.genius.com/unsafe/")) {
+                                            // Find the index of the last occurrence of "/"
+                                            var endIndex = imageUrl.lastIndexOf("/");
+
+                                            // Remove the prefix from the image URL & decode any HTML encoded characters in the URL
+                                            imageUrl = decodeURIComponent(imageUrl.slice(endIndex + 1));
+                                        }
+
+                                        console.log(imageUrl)
+
+                                        const img = new Image();
+                                        img.src = imageUrl;
+                                        img.onload = () => {
+                                            const width = img.width;
+                                            const height = img.height;
+
+                                            document.querySelector('.SizedImage__Image-sc-1hyeaua-1').title = `Resolution: ${width}x${height}`;
+                                        }
+
                                         $(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", (e) => {
                                             console.log(e);
 
@@ -1000,14 +1022,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                             // Clear any previous search results
                                                             const youtubeInput = document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
                                                             youtubeInput.value = "";
-                                                            
+
                                                             youtubeInput.click();
                                                             youtubeInput.value = ytURL;
                                                             const event = new InputEvent("input", {
                                                                 bubbles: true,
                                                                 data: ytURL,
                                                             });
-                                                            youtubeInput.dispatchEvent(event);                                                            
+                                                            youtubeInput.dispatchEvent(event);
                                                         }
                                                     });
                                                 }
