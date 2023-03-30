@@ -899,9 +899,12 @@ input::-webkit-calendar-picker-indicator {
   z-index: 1000 !important;
 }
 
-/*.magic-wand-button-container {
+.magic-wand-button-container {
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+}
 
-}*/
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .PageHeaderAuthLinksdesktop__Container-sc-10sr9hk-1.cDEgGV {
   margin-right: 210px !important;
 }

@@ -952,37 +952,64 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                             setTimeout(() => {
                                                 const ytInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('YouTube URL')");
+                                                console.log(ytInputContainer);
+
+                                                const label = ytInputContainer.find(".Fieldshared__FieldLabel-dxskot-2");
+                                                console.log(ytInputContainer);
 
                                                 if (ytInputContainer.length && !$('.magic-wand-button-container').length) {
-                                                    $("<div>", {
+                                                    const magicWandContainer = $("<div>", {
                                                         class: "magic-wand-button-container",
                                                     })
                                                         .append($("<img>", {
                                                             class: "magic-wand-button-icon",
                                                             src: chrome.runtime.getURL("/src/images/magicWand/26x26.png"),
                                                         }))
-                                                        .insertAfter(ytInputContainer)
-                                                        .click(() => {
-                                                            let ytURL = await new Promise((resolve) => {
-                                                                chrome.runtime.sendMessage({ "song_searchVideo": [true] }, (response) => {
-                                                                    resolve(response);
-                                                                });
-                                                            });
+                                                        .appendTo(ytInputContainer);
 
-                                                            if (ytURL.length > 0) {
-                                                                // Clear any previous search results
-                                                                const youtubeInput = $("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
-                                                                youtubeInput.value = "";
+                                                    magicWandContainer.on("click", async function () {
+                                                        const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
 
-                                                                youtubeInput.click();
-                                                                youtubeInput.setAttribute("value", ytURL);
-                                                                const event = new InputEvent("input", {
-                                                                    bubbles: true,
-                                                                    data: ytURL,
-                                                                });
-                                                                youtubeInput.dispatchEvent(event);
+                                                        const titleField = document.querySelector('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataField-nhmb0p-1 .TextInput-sc-2wssth-0');
+                                                        const title = titleField.value;
+
+                                                        const artistField = document.querySelector('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataSelectField-nhmb0p-2 .TagInput__Container-sc-17py0eg-0 .TagInput__MultiValueLabel-sc-17py0eg-2');
+                                                        const artist = artistField.textContent;
+
+                                                        const query = [artist, title];
+
+                                                        console.log(query);
+
+                                                        const modifiedQuery = query.map(part => {
+                                                            if (part.includes(" - ") && nonLatinRegex.test(part.split(" - ")[1])) {
+                                                                const [, langPart] = part.split(" - ");
+                                                                return langPart;
                                                             }
+                                                            return part;
+                                                        }).join(" - ");
+
+                                                        console.log(modifiedQuery);
+
+                                                        let ytURL = await new Promise((resolve) => {
+                                                            chrome.runtime.sendMessage({ "song_searchVideo": [modifiedQuery] }, (response) => {
+                                                                resolve(response);
+                                                            });
                                                         });
+
+                                                        if (ytURL.length > 0) {
+                                                            // Clear any previous search results
+                                                            const youtubeInput = document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
+                                                            youtubeInput.value = "";
+                                                            
+                                                            youtubeInput.click();
+                                                            youtubeInput.value = ytURL;
+                                                            const event = new InputEvent("input", {
+                                                                bubbles: true,
+                                                                data: ytURL,
+                                                            });
+                                                            youtubeInput.dispatchEvent(event);                                                            
+                                                        }
+                                                    });
                                                 }
                                             }, 1000);
                                         });

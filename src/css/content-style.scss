@@ -879,9 +879,11 @@ input {
   z-index: 1000 !important;
 }
 
-/*.magic-wand-button-container {
-  
-}*/
+.magic-wand-button-container {
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+}
 
 
 // home page
