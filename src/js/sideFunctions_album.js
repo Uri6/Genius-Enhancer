@@ -27,6 +27,10 @@ export async function missingInfo(bio, people, releaseDate) {
     const tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
     let song_index = 0;
 
+    if (albumObject.album_appearances.length === 0) {
+        return;
+    }
+
     albumObject.album_appearances.forEach(({ song }) => {
         let elem = tracklist[song_index];
 
@@ -1003,7 +1007,7 @@ export async function appendIcon() {
                 $('.blured-background').append($('.tagify__dropdown:first'));
             }, 0.1);
         });
-        
+
         const onDragEnd = (elm) => {
             tagify_tags.updateValueByDOMTags()
             tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
