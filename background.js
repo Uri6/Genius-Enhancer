@@ -106,6 +106,14 @@ chrome.runtime.onMessage.addListener((
                 func = removeQuill;
                 args = [''];
                 break;
+            case "album_appendIcon" in message:
+                func = appendIcon;
+                args = message.album_appendIcon;
+                break;
+            case "album_addSongAsTheNext" in message:
+                func = addSongAsTheNext;
+                args = message.album_addSongAsTheNext;
+                break;
             case "album_missingInfo" in message:
                 func = missingInfo;
                 args = message.album_missingInfo;
@@ -803,7 +811,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             );
                             break;
                         case 'album':
-                            // create the tags & artists datalists
+
+                            chrome.scripting.insertCSS(
+                                {
+                                    target: { tabId: tabId },
+                                    files: ["./src/css/album.css"]
+                                }
+                            );
+
                             chrome.scripting.executeScript(
                                 {
                                     target: { tabId: tabId },
@@ -825,6 +840,32 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                             // Return the element
                                             return tagElem;
+                                        }
+
+                                        if (!$('.extension-icon').length) {
+                                            chrome.runtime.sendMessage({ "album_appendIcon": [true] });
+                                            chrome.runtime.sendMessage({ "album_autolinkArtwork": [true] });
+                                            chrome.runtime.sendMessage({ "album_addSongAsTheNext": [true] });
+                                            chrome.storage.local.get(["bios", "people", "releaseDate"], (res) => {
+                                                console.info("bios: " + res.bios, " people: " + res.people, " releaseDate: " + res.releaseDate);
+                                                chrome.runtime.sendMessage({ "album_missingInfo": [res.bios, res.people, res.releaseDate] });
+                                            });
+
+                                            if ($('.header_with_cover_art metadata .metadata_unit').length) {
+                                                $('.header_with_cover_art metadata .metadata_unit').text($('.header_with_cover_art .metadata_unit').text().replace("Released ", ""));
+                                                $('.header_with_cover_art metadata')
+                                                    .prepend($('<img>', {
+                                                        src: chrome.runtime.getURL("/src/images/releaseDate/Simple/32x32.png"),
+                                                        class: "release_date_icon",
+                                                        title: "Release Date"
+                                                    }));
+                                                $('.header_with_cover_art-primary_info h2 .drop-target')
+                                                    .prepend($('<img>', {
+                                                        src: chrome.runtime.getURL("/src/images/artist/Simple/32x32.png"),
+                                                        class: "artist_icon",
+                                                        title: "Artist"
+                                                    }));
+                                            }
                                         }
 
                                         getTagsList().then(res => {
@@ -861,63 +902,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                             $('body').append(dataListElem);
                                         });
-
-                                        if ($('.header_with_cover_art metadata .metadata_unit').length) {
-                                            $('.header_with_cover_art metadata .metadata_unit').text($('.header_with_cover_art .metadata_unit').text().replace("Released ", ""));
-                                            $('.header_with_cover_art metadata')
-                                                .prepend($('<img>', {
-                                                    src: chrome.runtime.getURL("/src/images/releaseDate/Simple/32x32.png"),
-                                                    class: "release_date_icon",
-                                                    title: "Release Date"
-                                                }));
-                                            $('.header_with_cover_art-primary_info h2 .drop-target')
-                                                .prepend($('<img>', {
-                                                    src: chrome.runtime.getURL("/src/images/artist/Simple/32x32.png"),
-                                                    class: "artist_icon",
-                                                    title: "Artist"
-                                                }));
-                                        }
-                                    })
-                                }
-                            );
-
-                            chrome.scripting.insertCSS(
-                                {
-                                    target: { tabId: tabId },
-                                    files: ["./src/css/album.css"]
-                                }
-                            );
-
-                            chrome.scripting.executeScript(
-                                {
-                                    target: { tabId: tabId },
-                                    func: appendIcon
-                                }
-                            );
-
-                            chrome.storage.local.get(["bios", "people", "releaseDate"], (res) => {
-                                console.info("bios: " + res.bios, " people: " + res.people, " releaseDate: " + res.releaseDate);
-                                chrome.scripting.executeScript(
-                                    {
-                                        target: { tabId: tabId },
-                                        func: missingInfo,
-                                        args: [res.bios, res.people, res.releaseDate]
-                                    }
-                                );
-                            });
-
-                            chrome.scripting.executeScript(
-                                {
-                                    target: { tabId: tabId },
-                                    func: addSongAsTheNext
-                                }
-                            );
-
-                            chrome.scripting.executeScript(
-                                {
-                                    target: { tabId: tabId },
-                                    func: (() => {
-                                        chrome.runtime.sendMessage({ "album_autolinkArtwork": [true] });
                                     })
                                 }
                             );
