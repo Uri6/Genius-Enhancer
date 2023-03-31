@@ -19,12 +19,8 @@ export async function fixNonLatin(text) {
                     resolve(response);
                 });
             });
-            console.log("modifiedPart: ");
-            console.log(modifiedPart);
             return modifiedPart;
         }));
-        console.log("modifiedText: ");
-        console.log(modifiedText);
         return modifiedText;
     }
 

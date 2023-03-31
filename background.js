@@ -882,7 +882,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         const query = [title, artist];
 
                                         const albumArtworks = await new Promise((resolve) => {
-                                            chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, true] }, (response) => {
+                                            chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "album", true] }, (response) => {
                                                 resolve(response);
                                             });
                                         });
@@ -988,13 +988,20 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             console.log(e);
 
                                             setTimeout(() => {
+
+                                                const titleField = document.querySelector('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataField-nhmb0p-1 .TextInput-sc-2wssth-0');
+                                                const title = titleField.value;
+
+                                                const artistField = document.querySelector('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataSelectField-nhmb0p-2 .TagInput__Container-sc-17py0eg-0 .TagInput__MultiValueLabel-sc-17py0eg-2');
+                                                const artist = artistField.textContent;
+
+                                                const query = [artist, title];
+
+                                                console.log(query);
+
                                                 const ytInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('YouTube URL')");
-                                                console.log(ytInputContainer);
 
-                                                const label = ytInputContainer.find(".Fieldshared__FieldLabel-dxskot-2");
-                                                console.log(ytInputContainer);
-
-                                                if (ytInputContainer.length && !$('.magic-wand-button-container').length) {
+                                                if (ytInputContainer.length && !ytInputContainer.find(".magic-wand-button-container").length) {
                                                     const magicWandContainer = $("<div>", {
                                                         class: "magic-wand-button-container",
                                                     })
@@ -1006,16 +1013,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                                     magicWandContainer.on("click", async function () {
                                                         const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
-
-                                                        const titleField = document.querySelector('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataField-nhmb0p-1 .TextInput-sc-2wssth-0');
-                                                        const title = titleField.value;
-
-                                                        const artistField = document.querySelector('.Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataSelectField-nhmb0p-2 .TagInput__Container-sc-17py0eg-0 .TagInput__MultiValueLabel-sc-17py0eg-2');
-                                                        const artist = artistField.textContent;
-
-                                                        const query = [artist, title];
-
-                                                        console.log(query);
 
                                                         const modifiedQuery = query.map(part => {
                                                             if (part.includes(" - ") && nonLatinRegex.test(part.split(" - ")[1])) {
@@ -1035,7 +1032,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                                         if (ytURL.length > 0) {
                                                             // Clear any previous search results
-                                                            const youtubeInput = document.querySelector("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0");
+                                                            const youtubeInput = document.querySelectorAll("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0")[0];
                                                             youtubeInput.value = "";
 
                                                             youtubeInput.click();
@@ -1047,6 +1044,44 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                             youtubeInput.dispatchEvent(event);
                                                         }
                                                     });
+                                                }
+
+                                                const artworkInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('Song Art')");
+
+                                                if (artworkInputContainer.length > 0 && !artworkInputContainer.find(".magic-wand-button-container").length) {
+                                                    const magicWandContainer = $("<div>", {
+                                                        class: "magic-wand-button-container",
+                                                        disabled: true,
+                                                        style: "cursor: not-allowed;"
+                                                    })
+                                                        .append($("<img>", {
+                                                            class: "magic-wand-button-icon",
+                                                            src: chrome.runtime.getURL("/src/images/magicWand/26x26.png"),
+                                                        }))
+                                                        .appendTo(artworkInputContainer)
+
+                                                    /*magicWandContainer.on("click", async function () {
+                                                        let artwork = await new Promise((resolve) => {
+                                                            chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "song", false] }, (response) => {
+                                                                resolve(response);
+                                                            });
+                                                        });
+
+                                                        if (artwork.length) {
+                                                            artwork = artwork[0];
+
+                                                            const artworkInput = document.querySelectorAll("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0")[2];
+                                                            artworkInput.value = "";
+
+                                                            artworkInput.click();
+                                                            artworkInput.value = artwork;
+                                                            const event = new InputEvent("input", {
+                                                                bubbles: true,
+                                                                data: artwork,
+                                                            });
+                                                            artworkInput.dispatchEvent(event);
+                                                        }
+                                                    });*/
                                                 }
                                             }, 1000);
                                         });

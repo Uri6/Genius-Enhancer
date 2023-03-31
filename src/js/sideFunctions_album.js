@@ -1082,7 +1082,7 @@ export async function appendIcon() {
  *
  * @returns {Promise<Array<String>>} A promise that resolves to an array of album artwork URLs
  */
-export async function autolinkArtwork(query, minimize = false) {
+export async function autolinkArtwork(query, type, minimize = false) {
 
     // Fix non-latin characters
     const modifiedQuery = await new Promise((resolve) => {
@@ -1097,7 +1097,7 @@ export async function autolinkArtwork(query, minimize = false) {
             type: "GET",
             crossDomain: true,
             url: 'https://itunesartwork.bendodson.com/api.php',
-            data: { query: modifiedQuery, entity: 'album', country: 'us', type: 'request' },
+            data: { query: modifiedQuery, entity: type, country: 'us', type: 'request' },
             dataType: 'json'
         });
 
@@ -1119,6 +1119,10 @@ export async function autolinkArtwork(query, minimize = false) {
             dataType: 'json'
         });
 
+        console.log("iTunes artwork data:", data);
+        console.log("iTunes artwork data2:", data2);
+        console.log("iTunes artwork data3:", data3);
+
         let itunesResult = [""];
         if (!data3.error && data3.length) {
             itunesResult = data3;
@@ -1131,6 +1135,7 @@ export async function autolinkArtwork(query, minimize = false) {
             }
         }
 
+        console.log("iTunes artwork result:", itunesResult);
         return itunesResult;
     } catch (error) {
         console.error(error);
