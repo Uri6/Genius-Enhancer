@@ -373,7 +373,7 @@ export async function appendIcon() {
             dropdown: {
                 enabled: 0,
                 classname: "tags-look",
-                maxItems: 7,
+                maxItems: 50,
                 closeOnSelect: true,
                 highlightFirst: true
             },
@@ -439,7 +439,7 @@ export async function appendIcon() {
             dropdown: {
                 enabled: 0,
                 classname: "users-list",
-                maxItems: 7,
+                maxItems: 50,
                 closeOnSelect: true,
                 highlightFirst: true
             },
@@ -780,13 +780,8 @@ export async function appendIcon() {
                     }))
                     .appendTo(imagesStack);
 
-                const album_artwork_results = await new Promise((resolve, reject) => {
-                    chrome.storage.local.get("album_artwork_results", (result) => {
-                        resolve(result.album_artwork_results);
-                    });
-                });
-
-                console.log("album_artwork_results: ", album_artwork_results);
+                // stringify the inner text of the element #albumArtworks
+                const album_artwork_results = JSON.parse($('#albumArtworks').text());
 
                 autolinkArtworkContainer.css('backgroundColor', '#333a3c');
                 autolinkArtworkContainer.css('cursor', 'default');
@@ -899,12 +894,42 @@ export async function appendIcon() {
                 event.preventDefault();
             })
             .on('click', function () {
+                let error = false;
+                const addCreditsInputs = $('.extension-box .add-credits-inputs-container .add-credits-inputs');
+                if (addCreditsInputs.length) {
+                    // for each row of credits, there's two inputs - ".add-credits.role" and ".add-credits.artist"
+                    // if one of them has a tag child and the other doesn't, then add the error animation
+                    // dont use for loop
+                    addCreditsInputs.each(function () {
+                        const role = $(this).find('tags.add-credits.role');
+                        const artist = $(this).find('tags.add-credits.artist');
+                        console.log("role: ", role, "artist: ", artist);
+                        console.log("role.find('tag'): ", role.find('tag'), "artist.find('tag'): ", artist.find('tag'));
+                        if (role.find('tag').length && !artist.find('tag').length) {
+                            artist.addClass('error-animation');
+                            setTimeout(function () {
+                                artist.removeClass('error-animation');
+                            }, 200);
+                            error = true;
+                        }
+                        if (artist.find('tag').length && !role.find('tag').length) {
+                            role.addClass('error-animation');
+                            setTimeout(function () {
+                                role.removeClass('error-animation');
+                            }, 200);
+                            error = true;
+                        }
+                    });
+                }
                 if ($('.extension-box .error').length) {
                     // make a flashing animation on the error inputs
                     $('.extension-box .error').addClass('error-animation');
                     setTimeout(function () {
                         $('.extension-box .error').removeClass('error-animation');
                     }, 200);
+                    error = true;
+                }
+                if (error) {
                     return;
                 }
                 chrome.runtime.sendMessage({ 'album_saveEverything': [true] });
@@ -1057,26 +1082,14 @@ export async function appendIcon() {
  *
  * @returns {Promise<Array<String>>} A promise that resolves to an array of album artwork URLs
  */
-export async function autolinkArtwork() {
-    // A helper function that checks if a given text string contains Hebrew characters
-    const containsHebrew = (text) => {
-        return /[א-ת]/.test(text);
-    }
+export async function autolinkArtwork(query, minimize = false) {
 
-    // Get the album title and artist name from the page DOM
-    let albumTitle = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
-    let artistName = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerHTML;
-    let nameToSearch = [albumTitle, artistName];
-
-    // If the album or artist name contains Hebrew characters, split it and use the non-Hebrew part for the search query
-    for (let i = 0; i < nameToSearch.length; i++) {
-        if (containsHebrew(nameToSearch[i])) {
-            const langsParts = nameToSearch[i].split(" - ")
-            nameToSearch[i] = langsParts[i === 0 ? 1 : 0];
-        }
-    }
-
-    nameToSearch = nameToSearch[0];
+    // Fix non-latin characters
+    const modifiedQuery = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ "fixNonLatin": [query] }, (response) => {
+            resolve(response.join(" "));
+        });
+    });
 
     try {
         // Make a GET request to the iTunes Artwork API to get a URL for the album artwork
@@ -1084,7 +1097,7 @@ export async function autolinkArtwork() {
             type: "GET",
             crossDomain: true,
             url: 'https://itunesartwork.bendodson.com/api.php',
-            data: { query: nameToSearch, entity: 'album', country: 'us', type: 'request' },
+            data: { query: modifiedQuery, entity: 'album', country: 'us', type: 'request' },
             dataType: 'json'
         });
 
@@ -1106,23 +1119,21 @@ export async function autolinkArtwork() {
             dataType: 'json'
         });
 
-        let itunesResult = "";
+        let itunesResult = [""];
         if (!data3.error && data3.length) {
-            // Replace the large image URLs with smaller ones to save bandwidth and performance
-            for (let i = 0; i < data3.length; i++) {
-                data3[i] = data3[i].url.replace("/600x600bb.jpg", "/115x115.jpg");
-            }
             itunesResult = data3;
+
+            // Replace the large image URLs with smaller ones to save bandwidth and performance
+            if (minimize) {
+                itunesResult = data3.map((url) => url.url.replace("/600x600bb.jpg", "/115x115.jpg"));
+            } else {
+                itunesResult = data3.map((url) => url.url.replace("/600x600bb.jpg", "/1000x1000-999.jpg"));
+            }
         }
 
-        console.log("result: ", itunesResult);
-
-        // Store the result in Chrome storage
-        chrome.storage.local.set({ "album_artwork_results": itunesResult });
         return itunesResult;
-
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 

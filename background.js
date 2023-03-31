@@ -4,6 +4,7 @@
  */
 
 import {
+    fixNonLatin,
     getDetails,
     getArtistsList,
     getCreditsList,
@@ -82,6 +83,10 @@ chrome.runtime.onMessage.addListener((
         let func, args;
 
         switch (true) {
+            case "fixNonLatin" in message:
+                func = fixNonLatin;
+                args = message.fixNonLatin;
+                break;
             case "getDetails" in message:
                 func = getDetails;
                 args = [''];
@@ -128,7 +133,7 @@ chrome.runtime.onMessage.addListener((
                 break;
             case "album_autolinkArtwork" in message:
                 func = autolinkArtwork;
-                args = [''];
+                args = message.album_autolinkArtwork;
                 break;
             case "album_getPlaylistVideos" in message:
                 func = getPlaylistVideos;
@@ -170,7 +175,7 @@ chrome.runtime.onMessage.addListener((
                 return;
         }
 
-        let res = new Promise((resolve) => {
+        new Promise((resolve) => {
             chrome.scripting
                 .executeScript({
                     target: { tabId: tabId },
@@ -179,12 +184,14 @@ chrome.runtime.onMessage.addListener((
                 })
                 .then((results) => {
                     if (
+                        func === autolinkArtwork ||
                         func === identifyPageType ||
                         func === getPlaylistVideos ||
                         func === getDetails ||
                         func === getArtistsList ||
                         func === getCreditsList ||
-                        func === searchVideo
+                        func === searchVideo ||
+                        func === fixNonLatin
                     ) {
                         resolve(results[0].result);
                     } else {
@@ -822,7 +829,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             chrome.scripting.executeScript(
                                 {
                                     target: { tabId: tabId },
-                                    func: (() => {
+                                    func: (async () => {
                                         const getTagsList = async function () {
                                             // Initialize variable for later use
                                             let tagElem;
@@ -844,7 +851,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                         if (!$('.extension-icon').length) {
                                             chrome.runtime.sendMessage({ "album_appendIcon": [true] });
-                                            chrome.runtime.sendMessage({ "album_autolinkArtwork": [true] });
                                             chrome.runtime.sendMessage({ "album_addSongAsTheNext": [true] });
                                             chrome.storage.local.get(["bios", "people", "releaseDate"], (res) => {
                                                 console.info("bios: " + res.bios, " people: " + res.people, " releaseDate: " + res.releaseDate);
@@ -867,6 +873,29 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     }));
                                             }
                                         }
+
+
+
+                                        // Get the album title and artist name from the page DOM
+                                        const title = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
+                                        const artist = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerText;
+                                        const query = [title, artist];
+
+                                        const albumArtworks = await new Promise((resolve) => {
+                                            chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, true] }, (response) => {
+                                                resolve(response);
+                                            });
+                                        });
+
+                                        console.log("albumArtworks: ", albumArtworks);
+
+                                        // set the result as the inner text of the "albumArtworks" element
+                                        $('<div>', {
+                                            id: "albumArtworks",
+                                            style: "display: none;",
+                                            text: JSON.stringify(albumArtworks)
+                                        })
+                                            .appendTo('body');
 
                                         getTagsList().then(res => {
                                             const replaces = {

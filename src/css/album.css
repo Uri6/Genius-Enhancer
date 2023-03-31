@@ -394,7 +394,7 @@
 .blured-background .extension-box .gb-textarea.error {
   outline-width: 2px !important;
 }
-.blured-background .extension-box .gb-textarea.error.error-animation {
+.blured-background .extension-box .gb-textarea.error-animation {
   background-color: #fc5753;
 }
 .blured-background .extension-box .gb-textarea::-moz-placeholder {

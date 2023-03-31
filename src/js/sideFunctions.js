@@ -4,16 +4,42 @@
  */
 
 /**
- * Checks if the given text contains any Hebrew characters
+ * Checks if the given text contains any non Latin characters
  * 
- * @param {string} text - The text to check for Hebrew characters
- * @returns {boolean} - Returns true if the text contains Hebrew characters, false otherwise
+ * @param {string} text - The text to check for non Latin characters
+ * @returns {string} - The fixed text
  */
-export function containsHebrew(text) {
-    // Use a regular expression to check if the text contains any Hebrew characters
-    // The regular expression /[א-ת]/ matches any Hebrew character
-    return /[א-ת]/.test(text);
+export async function fixNonLatin(text) {
+    // Check if the input is an array of strings
+    if (Array.isArray(text)) {
+        // Map over each string in the array and apply the fixNonLatin function recursively
+        let modifiedText = await Promise.all(text.map(async (str) => {
+            const modifiedPart = await new Promise((resolve) => {
+                chrome.runtime.sendMessage({ "fixNonLatin": [str] }, (response) => {
+                    resolve(response);
+                });
+            });
+            console.log("modifiedPart: ");
+            console.log(modifiedPart);
+            return modifiedPart;
+        }));
+        console.log("modifiedText: ");
+        console.log(modifiedText);
+        return modifiedText;
+    }
+
+    const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
+
+    if (nonLatinRegex.test(text)) {
+        if (text.split(" - ").length === 2 && nonLatinRegex.test(text.split(" - ")[1])) {
+            const langsParts = text.split(" - ");
+            return langsParts[1];
+        }
+    }
+
+    return text;
 }
+
 
 export function insertAfter(newNode, existingNode) {
     existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
@@ -218,7 +244,7 @@ export async function getArtistsList(query) {
     const encodedName = encodeURIComponent(query);
 
     // Construct the URL to call the Genius API search endpoint
-    const url = `https://genius.com/api/artists/autocomplete?q=${encodedName}`;
+    const url = `https://genius.com/api/artists/autocomplete?q=${encodedName}&limit=50`;
 
     // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
@@ -244,7 +270,7 @@ export async function getCreditsList(query) {
     const encodedName = encodeURIComponent(query);
 
     // Construct the URL to call the Genius API search endpoint
-    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}`;
+    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}&limit=50`;
 
     // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
@@ -265,13 +291,13 @@ export function replaceTextarea(textareaClasses) {
 
     const textarea = document.getElementsByClassName(textareaClasses)[0];
     if (!textarea) {
-      throw new Error("could not find textarea");
+        throw new Error("could not find textarea");
     }
     let content = textarea.value;
     textarea.style.display = "none";
     const editor = document.createElement("div");
     textarea.parentNode.appendChild(editor);
-    
+
     const quill = new Quill(editor, {
         modules: {
             toolbar: [
@@ -321,7 +347,7 @@ export function replaceTextarea(textareaClasses) {
             .replace(/<\/em>/g, "</i>")
 
             .replace(/<br>/g, "\n")
-            
+
             .replace(/<p><\/p>/g, "")
             .replace(/<p>/g, "")
             .replace(/<\/p>/g, "\n")
@@ -331,7 +357,7 @@ export function replaceTextarea(textareaClasses) {
             .replace(/&amp;/g, "&")
             .replace(/&lt;/g, "<")
             .replace(/&gt;/g, ">");
-            
+
         // still working on the while loop below
         // the bug is that it's separating linked lines into two separate elements
         // for now, I solved it only for the case of two lines

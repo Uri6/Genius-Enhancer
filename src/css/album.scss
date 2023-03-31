@@ -455,10 +455,10 @@
 
             &.error {
                 outline-width: 2px !important;
+            }
 
-                &.error-animation {
-                    background-color: #fc5753;
-                }
+            &.error-animation {
+                background-color: #fc5753;
             }
 
             &::placeholder {

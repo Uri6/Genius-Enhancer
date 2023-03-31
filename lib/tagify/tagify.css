@@ -485,6 +485,9 @@
   transform: translateY(1px);
   overflow: hidden;
 }
+.tagify__dropdown .tagify__dropdown__wrapper {
+  max-height: 200px;
+}
 .tagify__dropdown[placement=top] {
   margin-top: 0;
   transform: translateY(-100%);
