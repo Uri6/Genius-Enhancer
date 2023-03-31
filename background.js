@@ -201,8 +201,9 @@ chrome.runtime.onMessage.addListener((
         }).then((res) => {
             console.info("----------------------------------------");
             console.info(
-                "%c new message received ", "background-color: #222; color: #bada55; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
+                "%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
             )
+            console.info("time received: ", new Date().toLocaleTimeString('en-US', { hour12: false }));
             console.info("message received: ", message);
             console.info("function called: ", func.name);
             console.info("arguments: ", args);
@@ -236,6 +237,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         "%c new tab loaded ",
         "background-color: #fffe65; color: #000; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
     );
+    console.info("time loaded: " + new Date().toLocaleTimeString('en-US', { hour12: false }));
     console.info("tab id: " + tabId);
     console.info("changeInfo: " + changeInfo.status);
     console.info("tab: " + tab.title + ", " + tab.url);
@@ -273,7 +275,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             { type: "css", file: "./lib/quilljs/quill.snow.css" },
             { type: "js", file: "./lib/jquery/jquery.min.js" },
             { type: "js", file: "./lib/jquery/jquery-ui.js" },
-            { type: "js", file: "./lib/bootstrap/bootstrap.min.js" },
+            //{ type: "js", file: "./lib/bootstrap/bootstrap.min.js" },
             { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" },
             { type: "js", file: "./lib/dragsort/dragsort.js" },
             { type: "js", file: "./lib/quilljs/quill.min.js" },
@@ -301,6 +303,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 files: jsFiles,
             });
         }
+
+        console.info("----------------------------------------");
+        console.info(
+            "%c loaded files ", "background-color: #ad2885; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
+        )
+        console.info("time loaded: ", new Date().toLocaleTimeString('en-US', { hour12: false }));
+        console.info("css files: ", cssFiles);
+        console.info("js files: ", jsFiles);
 
         if (isGeniusPage) {
             new Promise((resolve, reject) => {
@@ -471,7 +481,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             if (searchBar.length == 0) {
                                 searchBar = $(".quick_search.search.quick_search--header");
                             }
-                            searchBar.blur(function () {
+                            searchBar.blur(() => {
                                 searchBar.val("");
                             });
 
@@ -502,62 +512,70 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 }
                             });
 
-                            // if an element with the classes "AnnotationPortaldesktop__Sticky-sc-17hre1n-2 daeaLL" added, remove the class "daeaLL" from it
-                            $(document).on("DOMNodeInserted", (e) => {
+                            const $body = $('body');
+                            const $modalWindow = $('.modal_window');
 
-                                if ($('.search_results_autocomplete_container .feed_dropdown').hasClass("feed_dropdown--left_align")) {
-                                    $('.search_results_autocomplete_container .feed_dropdown').removeClass("feed_dropdown--left_align");
+                            $(document).on('DOMNodeInserted', (e) => {
+                                const $target = $(e.target);
+
+                                if ($target.hasClass('feed_dropdown--left_align')) {
+                                    $target.removeClass('feed_dropdown--left_align');
                                 }
 
-                                /* replace the elememt
-                                    <div ng-if="focused" ng-click="unfocus()" stop-propagation="click" class="global_search-submit_button global_search-submit_button--focused ng-scope">
-                                        <svg src="x.svg" class="global_search-search_icon global_search-search_icon--close inline_icon inline_icon--down_4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path d="M22 1.39L20.61 0 11 9.62 1.39 0 0 1.39 9.62 11 0 20.61 1.39 22 11 12.38 20.61 22 22 20.61 12.38 11 22 1.39"></path></svg>
-                                    </div>
-                                   with
-                                    <div ng-if="!focused" ng-click="focus()" stop-propagation="click" class="global_search-submit_button ng-scope">
-                                        <svg src="magnifying_glass.svg" class="global_search-search_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.48 21.59"><path d="M21.48 20.18L14.8 13.5a8.38 8.38 0 1 0-1.43 1.4l6.69 6.69zM2 8.31a6.32 6.32 0 1 1 6.32 6.32A6.32 6.32 0 0 1 2 8.31z"></path></svg>
-                                    </div>
-                                    make sure to replace only the inner path and check only him on the condition
-                                */
-
-                                if (e.target.parentElement.classList.contains("global_search-search_icon") && e.target.tagName == "path" && e.target.getAttribute("d") == "M22 1.39L20.61 0 11 9.62 1.39 0 0 1.39 9.62 11 0 20.61 1.39 22 11 12.38 20.61 22 22 20.61 12.38 11 22 1.39") {
-                                    e.target.setAttribute("d", "M21.48 20.18L14.8 13.5a8.38 8.38 0 1 0-1.43 1.4l6.69 6.69zM2 8.31a6.32 6.32 0 1 1 6.32 6.32A6.32 6.32 0 0 1 2 8.31z");
-                                    e.target.parentElement.setAttribute("class", "global_search-search_icon");
-
-
+                                if (
+                                    e.target.tagName === 'path' &&
+                                    e.target.getAttribute('d') ===
+                                    'M22 1.39L20.61 0 11 9.62 1.39 0 0 1.39 9.62 11 0 20.61 1.39 22 11 12.38 20.61 22 22 20.61 12.38 11 22 1.39' &&
+                                    e.target.parentElement.classList.contains('global_search-search_icon')
+                                ) {
+                                    e.target.setAttribute(
+                                        'd',
+                                        'M21.48 20.18L14.8 13.5a8.38 8.38 0 1 0-1.43 1.4l6.69 6.69zM2 8.31a6.32 6.32 0 1 1 6.32 6.32A6.32 6.32 0 0 1 2 8.31z'
+                                    );
+                                    e.target.parentElement.classList.add('global_search-search_icon');
                                 }
 
                                 setTimeout(() => {
-                                    if ($(e.target).attr("class") == "modal_window" && $(e.target).find(".modal_window-content").length > 0 && ($(e.target).find(".modal_window-content").find("conversation-with-user").length > 0 || $(e.target).find(".modal_window-content").find("conversation-messages").length > 0)) {
+                                    if (
+                                        $target.hasClass('modal_window') &&
+                                        $target.find('.modal_window-content').length > 0 &&
+                                        ($target.find('.modal_window-content').find('conversation-with-user').length > 0 ||
+                                            $target.find('.modal_window-content').find('conversation-messages').length > 0)
+                                    ) {
+                                        $body.removeClass('u-noscroll u-dark_overlay');
+                                        $target.css('pointer-events', 'none');
+                                        $target.find('.modal_window-content').css('pointer-events', 'auto');
 
-                                        $("body").removeClass("u-noscroll u-dark_overlay");
-                                        $(e.target).css("pointer-events", "none");
-                                        $(e.target).find(".modal_window-content").css("pointer-events", "auto");
-
-                                        if ($(".modal_window").length > 1) {
-                                            $(".modal_window").first().remove();
+                                        if ($modalWindow.length > 1) {
+                                            $modalWindow.first().remove();
                                         }
 
-                                        const oldCloseButton = $(e.target).find(".modal_window-close_button");
+                                        const oldCloseButton = $target.find('.modal_window-close_button');
                                         if (oldCloseButton.length > 0) {
-                                            $(oldCloseButton).css("display", "none");
+                                            oldCloseButton.hide();
                                         }
 
                                         const closeButton = document.createElement('img');
-                                        closeButton.className = "modal_window-close_button";
-                                        closeButton.src = chrome.runtime.getURL("/src/images/other/closeIcon.png");
-                                        closeButton.setAttribute("onmouseover", "this.src=\'" + chrome.runtime.getURL("/src/images/other/closeIconX.png") + "\'");
-                                        closeButton.setAttribute("onmouseout", "this.src=\'" + chrome.runtime.getURL("/src/images/other/closeIcon.png") + "\'");
-                                        closeButton.setAttribute("title", "Esc");
+                                        closeButton.className = 'modal_window-close_button';
+                                        closeButton.src = chrome.runtime.getURL('/src/images/other/closeIcon.png');
+                                        closeButton.setAttribute(
+                                            'onmouseover',
+                                            `this.src='${chrome.runtime.getURL('/src/images/other/closeIconX.png')}'`
+                                        );
+                                        closeButton.setAttribute(
+                                            'onmouseout',
+                                            `this.src='${chrome.runtime.getURL('/src/images/other/closeIcon.png')}'`
+                                        );
+                                        closeButton.setAttribute('title', 'Esc');
 
                                         closeButton.addEventListener("click", () => {
                                             oldCloseButton.click();
                                         });
 
-                                        $(e.target).find(".modal_window-content").prepend(closeButton);
+                                        $target.find(".modal_window-content").prepend(closeButton);
 
                                         // make the ".modal_window-content" element movable (with the mouse)
-                                        $(e.target).find(".modal_window-content").draggable({
+                                        $target.find(".modal_window-content").draggable({
                                             handle: ".modal_window-header",
                                             containment: "window",
                                             scroll: false
@@ -642,13 +660,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         });
 
                                         // on every input which isn't child of .search-field, if "enter" is pressed, click the submit button (#song_submit)
-                                        document.querySelectorAll('input').forEach((input) => {
-                                            if (!input.parentElement.classList.contains('search-field')) {
-                                                input.addEventListener('keydown', (e) => {
-                                                    if (e.key == 'Enter') {
-                                                        document.querySelector('#song_submit').click();
-                                                    }
-                                                });
+                                        $('input:not(.search-field input)').on('keydown', function (e) {
+                                            if (e.key === 'Enter') {
+                                                $('#song_submit').click();
                                             }
                                         });
 
@@ -958,7 +972,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             chrome.scripting.executeScript(
                                 {
                                     target: { tabId: tabId },
-                                    func: () => {
+                                    func: async () => {
 
                                         // Show the artwork res when hovering over the artwork
                                         const artworkElem = $('.SizedImage__Image-sc-1hyeaua-1');
@@ -985,7 +999,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         }
 
                                         $(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", (e) => {
-                                            console.log(e);
 
                                             setTimeout(() => {
 
@@ -1049,11 +1062,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 const artworkInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('Song Art')");
 
                                                 if (artworkInputContainer.length > 0 && !artworkInputContainer.find(".magic-wand-button-container").length) {
-                                                    const magicWandContainer = $("<div>", {
-                                                        class: "magic-wand-button-container",
-                                                        disabled: true,
-                                                        style: "cursor: not-allowed;"
-                                                    })
+                                                    /*const magicWandContainer = */$("<div>", {
+                                                    class: "magic-wand-button-container",
+                                                    disabled: true,
+                                                    style: "cursor: not-allowed;"
+                                                })
                                                         .append($("<img>", {
                                                             class: "magic-wand-button-icon",
                                                             src: chrome.runtime.getURL("/src/images/magicWand/26x26.png"),
@@ -1087,6 +1100,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         });
 
                                         $(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", (e) => {
+
                                             if (!$(".RecentActivity__FilteringContainer").length) {
 
                                                 const filterContainer = $('<div>', {
@@ -1233,7 +1247,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }
                                         });
 
-                                        let isAnnotation = false;
+                                        /*let isAnnotation = false;
 
                                         if (document.getElementsByClassName("annotation_sidebar_unit").length == 2) {
                                             isAnnotation = true;
@@ -1316,7 +1330,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                         function isRTL(language) {
                                             return (language === "Arabic" || language === "Hebrew");
-                                        }
+                                        }*/
                                     }
                                 }
                             );
