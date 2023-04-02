@@ -4,7 +4,7 @@
  */
 
 body {
-    background: #ffff65 !important;
+    background: linear-gradient(45deg, #65ffa0, #a7dbdd) !important;
 
     h1,
     h2,
@@ -23,13 +23,14 @@ body {
         border-radius: 10px !important;
         border: 1px solid #bbb !important;
         color: #000 !important;
+        transition: all 0.2s ease-in-out !important;
 
         &.required.missing,
         &.add_song_page-lyrics_textarea.missing {
             border: 2px solid red !important;
         }
 
-        &:not(.add_song_page-lyrics_textarea) {
+        &:not(.add_song_page-lyrics_textarea):not([value="Choose a tag"]) {
             min-height: 2.5rem !important;
         }
 
@@ -55,12 +56,21 @@ body {
         }
 
         label,
-        span {
+        span,
+        .small_label {
             text-transform: none !important;
 
             &.error {
                 display: none !important;
             }
+        }
+
+        .small_label {
+            color: #626262 !important;
+        }
+
+        label:not(.small_label) {
+            color: #919a99 !important;
         }
 
         .lyrics_style_guide {
@@ -94,7 +104,21 @@ body {
                 border-radius: 10px !important;
 
                 margin-right: 5px !important;
+                margin-top: 0 !important;
+                margin-bottom: 7px !important;
+
+                >span {
+                    padding: 0 0.25rem !important;
+                }
             }
+        }
+
+        .chzn-drop {
+            transition: all 0s !important;
+        }
+
+        [for="song_soundcloud_url"], #song_soundcloud_url {
+            display: none !important;
         }
 
         .modern-chooser {
@@ -124,6 +148,14 @@ body {
                 background-color: rgba(128, 128, 128, 0.8);
                 color: black;
             }
+        }
+
+        #song_submit {
+            margin: 0 auto;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            width: 100px;
         }
     }
 }

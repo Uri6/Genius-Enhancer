@@ -3,7 +3,7 @@
  * located in the root directory of this code package.
  */
 body {
-  background: #ffff65 !important;
+  background: linear-gradient(45deg, #65ffa0, #a7dbdd) !important;
 }
 body h1,
 body h2,
@@ -21,6 +21,7 @@ body .chzn-choices {
   border-radius: 10px !important;
   border: 1px solid #bbb !important;
   color: #000 !important;
+  transition: all 0.2s ease-in-out !important;
 }
 body input:not(.quick_search):not([type=checkbox]):not([type=radio]).required.missing, body input:not(.quick_search):not([type=checkbox]):not([type=radio]).add_song_page-lyrics_textarea.missing,
 body select.required.missing,
@@ -31,10 +32,10 @@ body .chzn-choices.required.missing,
 body .chzn-choices.add_song_page-lyrics_textarea.missing {
   border: 2px solid red !important;
 }
-body input:not(.quick_search):not([type=checkbox]):not([type=radio]):not(.add_song_page-lyrics_textarea),
-body select:not(.add_song_page-lyrics_textarea),
-body textarea:not(.add_song_page-lyrics_textarea),
-body .chzn-choices:not(.add_song_page-lyrics_textarea) {
+body input:not(.quick_search):not([type=checkbox]):not([type=radio]):not(.add_song_page-lyrics_textarea):not([value="Choose a tag"]),
+body select:not(.add_song_page-lyrics_textarea):not([value="Choose a tag"]),
+body textarea:not(.add_song_page-lyrics_textarea):not([value="Choose a tag"]),
+body .chzn-choices:not(.add_song_page-lyrics_textarea):not([value="Choose a tag"]) {
   min-height: 2.5rem !important;
 }
 body input:not(.quick_search):not([type=checkbox]):not([type=radio]):hover,
@@ -58,12 +59,20 @@ body #main .add_song_page .add_song_page-helper_text {
   display: none !important;
 }
 body #main label,
-body #main span {
+body #main span,
+body #main .small_label {
   text-transform: none !important;
 }
 body #main label.error,
-body #main span.error {
+body #main span.error,
+body #main .small_label.error {
   display: none !important;
+}
+body #main .small_label {
+  color: #626262 !important;
+}
+body #main label:not(.small_label) {
+  color: #919a99 !important;
 }
 body #main .lyrics_style_guide {
   border-radius: 10px !important;
@@ -90,6 +99,17 @@ body #main .chzn-choices li:not(.search-field) {
   background-color: #009994 !important;
   border-radius: 10px !important;
   margin-right: 5px !important;
+  margin-top: 0 !important;
+  margin-bottom: 7px !important;
+}
+body #main .chzn-choices li:not(.search-field) > span {
+  padding: 0 0.25rem !important;
+}
+body #main .chzn-drop {
+  transition: all 0s !important;
+}
+body #main [for=song_soundcloud_url], body #main #song_soundcloud_url {
+  display: none !important;
 }
 body #main .modern-chooser {
   display: flex;
@@ -115,4 +135,11 @@ body #main .modern-chooser .modern-chooser-button:hover {
 body #main .modern-chooser .modern-chooser-button-active {
   background-color: rgba(128, 128, 128, 0.8);
   color: black;
+}
+body #main #song_submit {
+  margin: 0 auto;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  width: 100px;
 }/*# sourceMappingURL=newSong.css.map */
