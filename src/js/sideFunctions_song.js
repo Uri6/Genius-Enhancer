@@ -111,28 +111,16 @@ export function song_modernTextEditor() {
 }
 
 export async function searchVideo(query) {
-
-    console.log("searchVideo called");
-
     // TODO: don't hardcode the API key
     const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
 
-    // Make the API request and return the the first video ID joined with the URL (https://www.youtube.com/watch?v=VIDEO_ID)
     try {
-        const data = await $.get(
-            'https://www.googleapis.com/youtube/v3/search',
-            {
-                part: 'id',
-                q: query,
-                type: 'video',
-                order: 'relevance',
-                key: apiKey
-            }
+        const response = await fetch(
+            `https://www.googleapis.com/youtube/v3/search?part=id&q=${encodeURIComponent(query)}&type=video&order=relevance&key=${apiKey}`
         );
-        const videoId = data.items[0].id.videoId;
-        const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-        console.log(videoUrl);
-        return videoUrl;
+        const data = await response.json();
+        const [{ id: { videoId } }] = data.items;
+        return `https://www.youtube.com/watch?v=${videoId}`;
     } catch (error) {
         console.error(error);
     }
