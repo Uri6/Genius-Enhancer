@@ -168,42 +168,33 @@ export async function getPlaylistVideos(playlistLink) {
     if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
         throw new Error("Invalid playlist link");
     }
-    const playlistId = playlistLink.split("list=")[1];
+
+    const playlistId = new URL(playlistLink).searchParams.get('list');
     const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
 
-    // Fetch the playlist metadata
     const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
     if (!metadataResponse.ok) {
         throw new Error("Failed to fetch playlist metadata");
     }
 
-    // Extract the playlist metadata
-    let metadataData = await metadataResponse.json();
-    metadataData = metadataData.items[0].snippet;
-    const playlistTitle = metadataData.title;
-    const artistName = metadataData.channelTitle;
+    const metadataData = (await metadataResponse.json()).items[0].snippet;
     const thumbnails = metadataData.thumbnails;
-    let playlistImage = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default;
-    playlistImage = playlistImage.url;
+    const playlistImage = (thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default).url;
 
-    // Fetch the playlist videos
     const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
     if (!videosResponse.ok) {
         throw new Error("Failed to fetch playlist videos");
     }
 
-    // Extract the videos data
     const videosData = await videosResponse.json();
     const videoTitles = videosData.items.map(item => item.snippet.title);
     const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
-    const playlistLength = videoLinks.length;
 
-    // Return an object containing the metadata and the video links
     return {
-        artistName,
-        playlistTitle,
+        artistName: metadataData.channelTitle,
+        playlistTitle: metadataData.title,
         playlistImage,
-        playlistLength,
+        playlistLength: videoLinks.length,
         videoTitles,
         videoLinks
     };
