@@ -56,6 +56,7 @@ body {
 #genius-page {
     color: #0c6036;
     font-size: 15px;
+    letter-spacing: 0.05em;
 }
 
 #creator {
@@ -73,30 +74,39 @@ body {
     text-align: left;
 }
 
-#features-box {
-    padding-top: 15px;
-    border-color: $blue;
-}
+#features-box, #no-features-box {
+    outline-color: $blue;
 
-#no-features-box {
-    border-color: $blue;
+    &#features-box {
+        padding-top: 15px;
+    }
+
+    &:hover {
+        outline-width: 3px;
+    }
 }
 
 #err-box {
-    border-color: #d14140;
+    outline-color: #d14140;
     box-shadow: 0 0 10px #666;
 }
 
 #info-box {
-    border-color: #0c6036;
+    outline-color: #0c6036;
     box-shadow: 0 0 10px #666;
 }
 
 fieldset {
     margin: 20px;
     padding: 0 10px 10px;
-    border: 1px solid;
+    outline: 1.5px solid;
     border-radius: 10px;
+    border: none;
+    transition: outline 0.05s ease-in-out, background-color 0.15s ease-in-out;
+
+    &:hover:not(#features-box):not(#no-features-box) {
+        background-color: #cccb50;
+    }
 }
 
 legend {
