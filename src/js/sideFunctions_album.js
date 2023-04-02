@@ -1145,23 +1145,17 @@ export async function autolinkArtwork(query, type, minimize = false) {
 export async function saveEverything() {
     console.log("saveEverything");
 
-    function parseCookies() {
-        const cookies = document.cookie.split('; ');
-        const cookieObject = {};
+    const parseCookies = () => {
+        return Object.fromEntries(
+            document.cookie.split('; ').map(cookie => {
+                const [key, value] = cookie.split('=');
+                return [key, decodeURIComponent(value)];
+            })
+        );
+    };
 
-        for (const cookie of cookies) {
-            const [key, value] = cookie.split('=');
-            cookieObject[key] = decodeURIComponent(value);
-        }
-
-        return cookieObject;
-    }
-
-    function getDetails() {
-        // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
+    const getDetails = () => {
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
-
-        // Define an object containing HTML entity codes and their corresponding characters
         const replaces = {
             '&#039;': `'`,
             '&amp;': '&',
@@ -1170,45 +1164,36 @@ export async function saveEverything() {
             '&quot;': '"'
         };
 
-        // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
         if (metaElem) {
-            // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
             const meta = metaElem[1].replace(/&[\w\d#]{2,5};/g, match => replaces[match]);
-
-            // Parse the JSON string and return the resulting object
             return JSON.parse(meta);
         }
-    }
+    };
 
     const details = getDetails();
-
     const albumSongs = details.album_appearances;
-
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
 
-    const tags = $(".extension-box .add-tags tag")?.toArray().map((tag) => {
-        return {
+    const tags = $(".extension-box .add-tags tag")
+        ?.toArray()
+        .map(tag => ({
             id: tag.getAttribute("tag-id"),
             name: tag.getAttribute("title")
-        }
-    });
+        }));
 
-    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")?.toArray()
-        .map((credit) => {
-            return {
-                role: $(credit).find(".role tag")[0]?.getAttribute("title"),
-                artists: $(credit).find(".artist tag")?.toArray().map((artist) => {
-                    // JSON parse the artist "full-response" attr to get the full response
-                    return JSON.parse(artist?.getAttribute("full-response"));
-                })
-            }
-        })
-        .filter((credit) => credit.role && credit.artists.length);
+    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")
+        ?.toArray()
+        .map(credit => ({
+            role: $(credit).find(".role tag")[0]?.getAttribute("title"),
+            artists: $(credit).find(".artist tag")
+                ?.toArray()
+                .map(artist => JSON.parse(artist?.getAttribute("full-response")))
+        }))
+        .filter(credit => credit.role && credit.artists.length);
 
-    // unit the album songs with the youtube links
     if (youtubeLinks.length) {
-        albumSongs.forEach((song) => {
-            song.youtube_url = youtubeLinks[albumSongs.indexOf(song)];
+        albumSongs.forEach((song, index) => {
+            song.youtube_url = youtubeLinks[index];
         });
     }
 
@@ -1220,45 +1205,24 @@ export async function saveEverything() {
         headers: {
             "X-CSRF-Token": parseCookies()["_csrf_token"],
         },
-    })
+    });
 
     for (const song of albumSongs) {
-        // get song details
-        const details = await fetch(`https://genius.com/api${song.song.api_path}`).then((res) => res.json())
+        const { response: { song: songDetails } } = await fetch(`https://genius.com/api${song.song.api_path}`).then(res => res.json());
 
         const params = {
             tags: [
-                ...tags
-                    .map((tag) => {
-                        return {
-                            id: +tag.id,
-                            name: tag.name
-                        };
-                    }),
-                ...details.response.song.tags
-                    .map((tag) => ({
-                        name: tag.name,
-                        id: +tag.id,
-                    })),
+                ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
+                ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id })),
             ],
-            youtube_url: song.youtube_url ? song.youtube_url : details.response.song.youtube_url,
+            youtube_url: song.youtube_url || songDetails.youtube_url,
             custom_performances: [
-                ...credits
-                    .map((credit) => {
-                        return {
-                            label: credit.role,
-                            artists: credit.artists,
-                        }
-                    }),
-                ...details.response.song.custom_performances
-                    .map((credit) => ({
-                        label: credit.label,
-                        artists: credit.artists,
-                    })),
+                ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
+                ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists })),
             ],
         };
 
-        console.log("params: ", params)
+        console.log("params: ", params);
 
         gapi.put(`https://genius.com/api${song.song.api_path}`, {
             text_format: "html,markdown",
