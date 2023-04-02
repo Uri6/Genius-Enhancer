@@ -142,4 +142,12 @@ body #main #song_submit {
   display: flex;
   justify-content: center;
   width: 100px;
+}
+body #footer {
+  padding-top: 2rem;
+  background: linear-gradient(180deg, rgba(34, 34, 34, 0), rgba(34, 34, 34, 0.8), rgb(34, 34, 34), rgb(34, 34, 34)) !important;
+}
+body #footer .site_map > * {
+  background-color: transparent !important;
+  border-top: none !important;
 }/*# sourceMappingURL=newSong.css.map */
