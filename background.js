@@ -20,7 +20,7 @@ import {
     autolinkArtwork,
     getPlaylistVideos,
     saveEverything,
-    addSongAsTheNext,
+    addSongAsNext,
 } from "./src/js/sideFunctions_album.js";
 import {
     appleMusicPopUp,
@@ -115,9 +115,9 @@ chrome.runtime.onMessage.addListener((
                 func = appendIcon;
                 args = message.album_appendIcon;
                 break;
-            case "album_addSongAsTheNext" in message:
-                func = addSongAsTheNext;
-                args = message.album_addSongAsTheNext;
+            case "album_addSongAsNext" in message:
+                func = addSongAsNext;
+                args = message.album_addSongAsNext;
                 break;
             case "album_missingInfo" in message:
                 func = missingInfo;
@@ -865,7 +865,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                         if (!$('.extension-icon').length) {
                                             chrome.runtime.sendMessage({ "album_appendIcon": [true] });
-                                            chrome.runtime.sendMessage({ "album_addSongAsTheNext": [true] });
+                                            chrome.runtime.sendMessage({ "album_addSongAsNext": [true] });
                                             chrome.storage.local.get(["bios", "people", "releaseDate"], (res) => {
                                                 console.info("bios: " + res.bios, " people: " + res.people, " releaseDate: " + res.releaseDate);
                                                 chrome.runtime.sendMessage({ "album_missingInfo": [res.bios, res.people, res.releaseDate] });
