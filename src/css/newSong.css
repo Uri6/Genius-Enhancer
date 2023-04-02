@@ -108,7 +108,8 @@ body #main .chzn-choices li:not(.search-field) > span {
 body #main .chzn-drop {
   transition: all 0s !important;
 }
-body #main [for=song_soundcloud_url], body #main #song_soundcloud_url {
+body #main [for=song_soundcloud_url],
+body #main #song_soundcloud_url {
   display: none !important;
 }
 body #main .modern-chooser {

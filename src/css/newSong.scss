@@ -117,7 +117,8 @@ body {
             transition: all 0s !important;
         }
 
-        [for="song_soundcloud_url"], #song_soundcloud_url {
+        [for="song_soundcloud_url"],
+        #song_soundcloud_url {
             display: none !important;
         }
 
@@ -161,7 +162,6 @@ body {
 
     #footer {
         padding-top: 2rem;
-
         background: linear-gradient(180deg, rgba(34, 34, 34, 0), rgba(34, 34, 34, 0.8), rgba(34, 34, 34, 1), rgba(34, 34, 34, 1)) !important;
 
         .site_map {
