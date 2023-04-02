@@ -1093,50 +1093,31 @@ export async function autolinkArtwork(query, type, minimize = false) {
 
     try {
         // Make a GET request to the iTunes Artwork API to get a URL for the album artwork
-        const data = await $.ajax({
-            type: "GET",
-            crossDomain: true,
-            url: 'https://itunesartwork.bendodson.com/api.php',
-            data: { query: modifiedQuery, entity: type, country: 'us', type: 'request' },
-            dataType: 'json'
-        });
+        const data = await fetch('https://itunesartwork.bendodson.com/api.php?' + new URLSearchParams({
+            query: modifiedQuery,
+            entity: type,
+            country: 'us',
+            type: 'request'
+        })).then(response => response.json());
 
         // Make a GET request to the URL returned by the previous request to get more information about the album artwork
-        const data2 = await $.ajax({
-            type: "GET",
-            crossDomain: true,
-            url: data.url,
-            data: {},
-            dataType: 'json'
-        });
+        const data2 = await fetch(data.url).then(response => response.json());
 
         // Make a POST request to the iTunes Artwork API with the data returned by the previous request to get the actual image URLs for the artwork
-        const data3 = await $.ajax({
-            type: "POST",
-            crossDomain: true,
-            url: 'https://itunesartwork.bendodson.com/api.php',
-            data: { json: JSON.stringify(data2), type: 'data', entity: 'album' },
-            dataType: 'json'
-        });
+        const data3 = await fetch('https://itunesartwork.bendodson.com/api.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ json: JSON.stringify(data2), type: 'data', entity: 'album' })
+        }).then(response => response.json());
 
-        console.log("iTunes artwork data:", data);
-        console.log("iTunes artwork data2:", data2);
-        console.log("iTunes artwork data3:", data3);
-
-        let itunesResult = [""];
         if (!data3.error && data3.length) {
-            itunesResult = data3;
-
-            // Replace the large image URLs with smaller ones to save bandwidth and performance
-            if (minimize) {
-                itunesResult = data3.map((url) => url.url.replace("/600x600bb.jpg", "/115x115.jpg"));
-            } else {
-                itunesResult = data3.map((url) => url.url.replace("/600x600bb.jpg", "/1000x1000-999.jpg"));
-            }
+            const imageSize = minimize ? "/115x115.jpg" : "/1000x1000-999.jpg";
+            return data3.map((url) => url.url.replace("/600x600bb.jpg", imageSize));
         }
 
-        console.log("iTunes artwork result:", itunesResult);
-        return itunesResult;
+        return [""];
     } catch (error) {
         console.error(error);
     }
@@ -1327,13 +1308,5 @@ export function addSongAsNext() {
     observer.observe(document.body, {
         childList: true,
         subtree: true
-    });
-
-    // run a keydown event listener on the body
-    // if the key is enter log the element which has the focus
-    document.body.addEventListener("keydown", (e) => {
-        if (e.keyCode === 13) {
-            console.log(document.activeElement);
-        }
     });
 }
