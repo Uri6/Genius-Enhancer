@@ -22,23 +22,20 @@ export function spotifyPopUp(show) {
 }
 
 export function song_modernTextEditor() {
-    console.log("song_modernTextEditor called");
-
     let flag = true;
 
-    const observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
             if (
                 mutation.type === "attributes" &&
                 mutation.attributeName === "class" &&
                 !$(".ql-toolbar-container").length
             ) {
+                const target = mutation.target;
                 if (
-                    !mutation.target.classList.contains("ng-hide") &&
-                    mutation.target.classList.contains("wysiwyg_input") &&
-                    mutation.target.classList.contains(
-                        "wysiwyg_input--full_width"
-                    )
+                    !target.classList.contains("ng-hide") &&
+                    target.classList.contains("wysiwyg_input") &&
+                    target.classList.contains("wysiwyg_input--full_width")
                 ) {
                     chrome.runtime.sendMessage({
                         replaceTextarea: [
@@ -47,15 +44,13 @@ export function song_modernTextEditor() {
                     });
                     flag = true;
 
-                    $(document).on("DOMNodeRemoved", function (e) {
+                    document.addEventListener("DOMNodeRemoved", (e) => {
                         if (flag) {
-                            console.log("removed: ", e.target);
-                            setTimeout(function () {
+                            setTimeout(() => {
+                                const ngIfAttr = e.target.getAttribute("ng-if");
                                 if (
-                                    $(e.target).attr("ng-if") ===
-                                    "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
-                                    $(e.target).attr("ng-if") ===
-                                    "!lyrics_ctrl.saving"
+                                    ngIfAttr === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
+                                    ngIfAttr === "!lyrics_ctrl.saving"
                                 ) {
                                     chrome.runtime.sendMessage({
                                         removeQuill: true,
@@ -70,20 +65,19 @@ export function song_modernTextEditor() {
         });
     });
 
-    if ($(".wysiwyg_input.wysiwyg_input--full_width").length) {
-        observer.observe(
-            document.getElementsByClassName(
-                "wysiwyg_input wysiwyg_input--full_width"
-            )[0],
-            {
-                attributes: true,
-                childList: false,
-                characterData: false,
-            }
-        );
+    const targetNode = document.querySelector(
+        ".wysiwyg_input.wysiwyg_input--full_width"
+    );
+
+    if (targetNode) {
+        observer.observe(targetNode, {
+            attributes: true,
+            childList: false,
+            characterData: false,
+        });
     }
 
-    $(document).on("DOMNodeInserted", function (e) {
+    document.addEventListener("DOMNodeInserted", (e) => {
         if (
             e.target.className ===
             "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo" &&
@@ -95,8 +89,8 @@ export function song_modernTextEditor() {
                 ],
             });
 
-            $(document).on("DOMNodeRemoved", () => {
-                setTimeout(function () {
+            document.addEventListener("DOMNodeRemoved", () => {
+                setTimeout(() => {
                     if (
                         document.querySelectorAll(
                             ".LyricsEditdesktop__Controls-sc-19lxrhp-5.bwjuqY button"
