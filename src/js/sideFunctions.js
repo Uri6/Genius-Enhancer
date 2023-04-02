@@ -36,7 +36,6 @@ export async function fixNonLatin(text) {
     return text;
 }
 
-
 export function insertAfter(newNode, existingNode) {
     existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 }
@@ -279,6 +278,13 @@ export async function getCreditsList(query) {
     }));
 }
 
+/**
+ * Replaces a textarea with a Quill rich text editor
+ * 
+ * @param {string} textareaClasses - The classes of the textarea to replace
+ * @throws {Error} - Throws an error if the textarea could not be found
+ * @returns {void}
+ */
 export function replaceTextarea(textareaClasses) {
     if ($(".ql-editor").length) {
         console.info("Quill already exists");
@@ -403,6 +409,8 @@ export function replaceTextarea(textareaClasses) {
 
 /**
  * Removes the Quill rich text editor from the DOM
+ * 
+ * @returns {void}
  */
 export function removeQuill() {
     // Remove the Quill toolbar container from the DOM

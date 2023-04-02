@@ -163,6 +163,13 @@ export function restyleMissingInfo() {
     releaseDateIcons.forEach((icon) => icon.style.left = releaseDateLeftPosition);
 }
 
+/**
+ * Retrieves information about a YouTube playlist, including the artist name, playlist title, image, and a list of video titles and links
+ * 
+ * @param {string} playlistLink - The link to the YouTube playlist to retrieve information for
+ * @throws {Error} - If the playlist link is not a valid YouTube playlist link, or if there is an error fetching the playlist metadata or videos
+ * @returns {Promise<Object>} - A Promise that resolves to an object containing the artist name, playlist title, image, and a list of video titles and links for the playlist
+ */
 export async function getPlaylistVideos(playlistLink) {
     const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
     if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
@@ -1066,7 +1073,6 @@ export async function appendIcon() {
     });
 }
 
-
 /**
  * Searches for album artwork from iTunes API based on album and artist name obtained from the web page
  * The results are saved in the Chrome storage and also returned as a promise
@@ -1114,6 +1120,11 @@ export async function autolinkArtwork(query, type, minimize = false) {
     }
 }
 
+/**
+ * Saves details about a set of songs, including YouTube links, tags, and credits, to the Genius API
+ * 
+ * @returns {void}
+ */
 export async function saveEverything() {
     console.log("saveEverything");
 
@@ -1207,6 +1218,12 @@ export async function saveEverything() {
     }
 }
 
+/**
+ * Adds a "Add as next" checkbox to the add to queue modal and, when checked,
+ * adds the selected song as the next song to play in the queue
+ * 
+ * @returns {void}
+ */
 export function addSongAsNext() {
     const addSongAsNext_ = () => {
         setTimeout(() => {

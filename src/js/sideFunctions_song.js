@@ -15,12 +15,22 @@ export function appleMusicPopUp(show) {
     appleMusicIframe.toggle(show);
 }
 
+/**
+ * Toggles the visibility of the Spotify player iframe
+ * 
+ * @param {boolean} show - Whether to show (true) or hide (false) the iframe
+ */
 export function spotifyPopUp(show) {
     const spotiftElem = $("#gb-spotify-player");
     if (!spotiftElem.length) return;
     spotiftElem.toggle(show);
 }
 
+/**
+ * Initializes the modern text editor for a song, and monitoring for changes in the DOM to remove the editor when necessary
+ * 
+ * @returns {void}
+ */
 export function song_modernTextEditor() {
     let flag = true;
 
@@ -104,6 +114,12 @@ export function song_modernTextEditor() {
     });
 }
 
+/**
+ * Search for a video on YouTube using the YouTube Data API v3
+ * 
+ * @param {string} query - The search query for the video
+ * @returns {Promise<string>} - A Promise that resolves to the URL of the most relevant video for the given search query
+ */
 export async function searchVideo(query) {
     // TODO: don't hardcode the API key
     const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
