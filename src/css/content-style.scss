@@ -589,7 +589,10 @@ input {
     .feed_dropdown {
 
       border-radius: 10px !important;
-      min-width: 500px !important;
+
+      &:not(:has(>[href="/feedback/new"])) {
+        min-width: 500px !important;
+      }
 
       .feed_dropdown-item--unread:not(.details_loaded):before {
         content: "";
