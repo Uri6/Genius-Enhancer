@@ -166,9 +166,16 @@ profile-annotation,
 profile-contributions-group {
 
     .standalone_annotation,
-    .profile_contributions_group>* a,
-    .profile_contributions_group>* div {
+    .profile_contributions_group {
         border-radius: 10px !important;
+
+        >* {
+
+            div,
+            a {
+                border-radius: 10px !important;
+            }
+        }
     }
 }
 
