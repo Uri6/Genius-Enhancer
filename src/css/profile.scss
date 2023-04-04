@@ -172,11 +172,18 @@ profile-contributions-group {
         >* {
 
             div,
-            a {
+            a,
+            img,
+            hr:not([size]) {
                 border-radius: 10px !important;
             }
         }
     }
+}
+
+
+.embedly_preview.embedly_preview--video>iframe {
+    border-radius: 10px !important;
 }
 
 .social_media_buttons_container {

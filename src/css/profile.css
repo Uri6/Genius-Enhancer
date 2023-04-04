@@ -125,12 +125,24 @@ profile-contributions-group .profile_contributions_group {
 }
 profile-annotation .standalone_annotation > * div,
 profile-annotation .standalone_annotation > * a,
+profile-annotation .standalone_annotation > * img,
+profile-annotation .standalone_annotation > * hr:not([size]),
 profile-annotation .profile_contributions_group > * div,
 profile-annotation .profile_contributions_group > * a,
+profile-annotation .profile_contributions_group > * img,
+profile-annotation .profile_contributions_group > * hr:not([size]),
 profile-contributions-group .standalone_annotation > * div,
 profile-contributions-group .standalone_annotation > * a,
+profile-contributions-group .standalone_annotation > * img,
+profile-contributions-group .standalone_annotation > * hr:not([size]),
 profile-contributions-group .profile_contributions_group > * div,
-profile-contributions-group .profile_contributions_group > * a {
+profile-contributions-group .profile_contributions_group > * a,
+profile-contributions-group .profile_contributions_group > * img,
+profile-contributions-group .profile_contributions_group > * hr:not([size]) {
+  border-radius: 10px !important;
+}
+
+.embedly_preview.embedly_preview--video > iframe {
   border-radius: 10px !important;
 }
 
