@@ -476,7 +476,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             }
 
                             // clean the search bar from the "Search" text when not focused
-                            // the search bar is the element with the classes "PageHeaderSearchdesktop__Input-eom9vk-2 gajVFV" or "quick_search search quick_search--header"
                             var searchBar = $(".PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV");
                             if (searchBar.length == 0) {
                                 searchBar = $(".quick_search.search.quick_search--header");
@@ -489,10 +488,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 $(".search_results_autocomplete_container").addClass("ng-hide");
                             });
 
-                            // there's three elements with the class "PageHeaderdesktop__Link-bhx5ui-4 jQULAr"
-                            // if the element have the href "/#featured-stories" is clicked, scroll to the "HomeContentdesktop__Section-sc-1xfg7l1-4 bBDcg" element
-                            // if the element have the href "/#top-songs" is clicked, scroll to the "HomeContentdesktop__CenteredFlexColumn-sc-1xfg7l1-1 btjJtO" element
-                            // if the element have the href "/#videos" is clicked, scroll to the "HomeContentdesktop__Section-sc-1xfg7l1-4 gveVlf" element
+                            // insert the theme button to the .header-actions
+                            $("<input>", {
+                                id: "ge-theme-toggle",
+                                class: "ge-theme-toggle",
+                                type: "checkbox",
+                                on: {
+                                    click: function () {
+                                        if ($(this).is(":checked")) {
+                                            $("body").addClass("ge-dark-mode");
+                                        }
+                                        else {
+                                            $("body").removeClass("ge-dark-mode");
+                                        }
+                                    }
+                                }
+                            })
+                                .prependTo($(".header-actions"));
+
                             function scrollToElement(element) {
                                 var elementOffset = element.offset().top;
                                 $("html, body").animate({ scrollTop: elementOffset }, 500);
