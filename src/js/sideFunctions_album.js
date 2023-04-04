@@ -371,7 +371,7 @@ export async function appendIcon() {
             dropdown: {
                 enabled: 0,
                 classname: "tags-look",
-                maxItems: 50,
+                maxItems: 100,
                 closeOnSelect: true,
                 highlightFirst: true
             },

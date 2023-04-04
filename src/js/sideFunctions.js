@@ -265,7 +265,7 @@ export async function getCreditsList(query) {
     const encodedName = encodeURIComponent(query);
 
     // Construct the URL to call the Genius API search endpoint
-    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}&limit=50`;
+    const url = `https://genius.com/api/custom_performance_roles/autocomplete?q=${encodedName}&limit=100`;
 
     // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
