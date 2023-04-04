@@ -194,14 +194,6 @@ body.ge-dark-mode .header-action-label,
 body.ge-dark-mode .header-action {
   color: #e2e2e2 !important;
 }
-body.ge-dark-mode .container {
-  border-radius: 6px 6px 6px 6px;
-}
-body.ge-dark-mode .rcorners {
-  border-radius: 10px;
-  background: #cbcbcb;
-  padding: 10px;
-}
 body.ge-dark-mode .square_button,
 body.ge-dark-mode textarea {
   color: #e2e2e2 !important;
@@ -213,16 +205,9 @@ body.ge-dark-mode textarea .TextLabel-sc-8kw9oj-0 {
 body.ge-dark-mode svg {
   fill: #e2e2e2 !important;
 }
-body.ge-dark-mode .SongTags__Tag-xixwg3-2 {
-  color: #e2e2e2 !important;
-  border-color: #e2e2e2 !important;
-  background-color: #1b1b1b !important;
-}
 body.ge-dark-mode .ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0,
 body.ge-dark-mode .referent {
-  display: inline-block;
   background-color: #1b1b1b !important;
-  margin-left: 5px;
   color: #e2e2e2 !important;
 }
 body.ge-dark-mode .ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0 .ReferentFragmentdesktop__Highlight-sc-110r0d9-1,
@@ -248,9 +233,6 @@ body.ge-dark-mode .ql-editor {
 }
 body.ge-dark-mode .ql-editor p {
   color: #e2e2e2 !important;
-}
-body.ge-dark-mode .ql-editor a {
-  color: #ff1464 !important;
 }
 
 .header-primary,

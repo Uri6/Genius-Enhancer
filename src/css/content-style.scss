@@ -224,19 +224,6 @@ body.ge-dark-mode {
   .header-action {
     color: #e2e2e2 !important;
   }
-
-  .container {
-    -moz-border-radius: 6px 6px 6px 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px 6px 6px 6px;
-  }
-
-  .rcorners {
-    border-radius: 10px;
-    background: #cbcbcb;
-    padding: 10px;
-  }
-
   .square_button,
   textarea {
     color: #e2e2e2 !important;
@@ -250,17 +237,9 @@ body.ge-dark-mode {
     fill: #e2e2e2 !important;
   }
 
-  .SongTags__Tag-xixwg3-2 {
-    color: #e2e2e2 !important;
-    border-color: #e2e2e2 !important;
-    background-color: #1b1b1b !important;
-  }
-
   .ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0,
   .referent {
-    display: inline-block;
     background-color: #1b1b1b !important;
-    margin-left: 5px;
     color: #e2e2e2 !important;
 
     .ReferentFragmentdesktop__Highlight-sc-110r0d9-1 {
@@ -287,14 +266,10 @@ body.ge-dark-mode {
 
   .ql-editor {
     background-color: #121212 !important;
-  }
 
-  .ql-editor p {
-    color: #e2e2e2 !important;
-  }
-
-  .ql-editor a {
-    color: #ff1464 !important;
+    p {
+      color: #e2e2e2 !important;
+    }
   }
 }
 
