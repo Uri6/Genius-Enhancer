@@ -195,6 +195,8 @@
     -webkit-box-pack: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(2px);
+    -moz-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
 
     .extension-box {
@@ -215,8 +217,8 @@
         -moz-user-select: none;
         -webkit-user-select: none;
         -ms-user-select: none;
-        user-select: none;
         -o-user-select: none;
+        user-select: none;
 
         .close-icon {
             position: absolute;
@@ -501,6 +503,8 @@
     &::before {
         border-radius: 20px;
         box-shadow: 0 0 4px 4px #f7f7f7 inset;
+        -webkit-backdrop-filter: blur(7.5px);
+        -moz-backdrop-filter: blur(7.5px);
         backdrop-filter: blur(7.5px);
     }
 
@@ -513,6 +517,8 @@
         pyong-button .pyong_button {
             margin-left: 337px !important;
             margin-top: 250px !important;
+            -webkit-backdrop-filter: blur(7.5px);
+            -moz-backdrop-filter: blur(7.5px);
             backdrop-filter: blur(7.5px);
         }
 

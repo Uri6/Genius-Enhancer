@@ -208,8 +208,6 @@ body {
 .group_list {
   overflow-y: auto !important;
   max-height: 280px !important;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     display: none;

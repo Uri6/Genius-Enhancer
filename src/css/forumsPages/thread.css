@@ -167,8 +167,6 @@ body {
   overflow-y: auto;
   max-height: 400px;
   display: block;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
   border-radius: 5px !important;
   outline: 4px solid #ff1464 !important;
   background-color: #ff1464 !important;
