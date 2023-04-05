@@ -115,7 +115,7 @@ strong {
   src: url('https://assets.genius.com/fonts/programme_bold.woff2') format('woff2');
 }
 
-@keyframes gb-opacity-in {
+@keyframes ge-opacity-in {
   0% {
     opacity: 0%;
   }
@@ -125,7 +125,7 @@ strong {
   }
 }
 
-@keyframes gb-opacity-out {
+@keyframes ge-opacity-out {
   0% {
     opacity: 100%;
   }
@@ -135,7 +135,7 @@ strong {
   }
 }
 
-@keyframes gb-zoom-in {
+@keyframes ge-zoom-in {
   0% {
     transform: scale(0, 0);
   }
@@ -145,7 +145,7 @@ strong {
   }
 }
 
-@keyframes gb-zoom-out {
+@keyframes ge-zoom-out {
   0% {
     transform: scale(1, 1);
   }
@@ -155,7 +155,7 @@ strong {
   }
 }
 
-@keyframes gb-slide-rtl {
+@keyframes ge-slide-rtl {
   from {
     right: 35px;
     transform: scale(0.2, 0.2);
@@ -169,25 +169,25 @@ strong {
   }
 }
 
-.gb-fade-in {
-  animation: gb-opacity-in 0.5s ease;
+.ge-fade-in {
+  animation: ge-opacity-in 0.5s ease;
 }
 
-.gb-fade-out {
-  animation: gb-opacity-out 0.4s ease;
+.ge-fade-out {
+  animation: ge-opacity-out 0.4s ease;
 }
 
-.gb-zoom-in {
-  animation: gb-zoom-in 0.4s ease;
+.ge-zoom-in {
+  animation: ge-zoom-in 0.4s ease;
 }
 
-.gb-zoom-out {
-  animation: gb-zoom-out 0.3 ease;
+.ge-zoom-out {
+  animation: ge-zoom-out 0.3 ease;
 }
 
-.gb-animate-right {
+.ge-animate-right {
   position: relative;
-  animation: gb-slide-rtl 0.4s
+  animation: ge-slide-rtl 0.4s
 }
 
 .disable-scrolling {
@@ -280,7 +280,6 @@ input {
   color: black;
   font-family: Programme, Arial, sans-serif;
   line-height: 1.45;
-  text-size-adjust: 100%;
   font-size: var(--bs-body-font-size);
 
   writing-mode: horizontal-tb !important;
@@ -314,7 +313,6 @@ input {
 .bracket {
   color: red;
 }
-
 
 .modal_window {
   z-index: 991 !important;

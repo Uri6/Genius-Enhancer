@@ -7,7 +7,7 @@ export function replaceButtons(createDiscussion, follow) {
     if (createDiscussion) {
         const createDiscussionElement = document.getElementsByClassName("create_discussion");
         for (var i = 0; i < createDiscussionElement.length; i++) {
-            createDiscussionElement[i].innerHTML = `<svg class="gb-new-button" version="1.0" 
+            createDiscussionElement[i].innerHTML = `<svg class="ge-new-button" version="1.0" 
                                                     width="18pt" height="18pt" viewBox="0 0 512 512"
                                                     preserveAspectRatio="xMidYMid meet">
                                                     <g transform="translate(0,512) scale(0.1,-0.1)"
@@ -37,7 +37,7 @@ export function replaceButtons(createDiscussion, follow) {
     if (follow) {
         const unfollowElement = document.getElementsByClassName("new_status_unfollow");
         for (var i = 0; i < unfollowElement.length; i++) {
-            unfollowElement[i].innerHTML = `<svg class="gb-new-button" version="1.0" 
+            unfollowElement[i].innerHTML = `<svg class="ge-new-button" version="1.0" 
                                             width="18pt" height="18pt" viewBox="0 0 512 512"
                                             preserveAspectRatio="xMidYMid meet">
                                             <g transform="translate(0,512) scale(0.024,-0.024)"
@@ -79,7 +79,7 @@ export function replaceButtons(createDiscussion, follow) {
 
         const followElement = document.getElementsByClassName("new_status_follow");
         for (var i = 0; i < followElement.length; i++) {
-            followElement[i].innerHTML = `<svg class="gb-new-button" version="1.0" 
+            followElement[i].innerHTML = `<svg class="ge-new-button" version="1.0" 
                                             width="18pt" height="18pt" viewBox="0 0 512 512"
                                             preserveAspectRatio="xMidYMid meet">
                                             <g transform="translate(0,512) scale(0.1,-0.1)"

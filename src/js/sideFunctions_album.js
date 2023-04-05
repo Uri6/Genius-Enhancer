@@ -37,7 +37,7 @@ export async function missingInfo(bio, people, releaseDate) {
         if (people) {
             let img_elem = document.createElement('img');
             const peopleAreMissing = song.writer_artists.length === 0 || song.producer_artists.length === 0;
-            img_elem.classList.add("people-icon", "gb-fade-in");
+            img_elem.classList.add("people-icon", "ge-fade-in");
             if (peopleAreMissing) {
                 img_elem.src = imgs.people.missing;
                 img_elem.setAttribute("alt", "missing people");
@@ -51,7 +51,7 @@ export async function missingInfo(bio, people, releaseDate) {
 
         if (bio) {
             const img_elem = document.createElement("img");
-            img_elem.classList.add("bio-icon", "gb-fade-in");
+            img_elem.classList.add("bio-icon", "ge-fade-in");
             if (song.description_preview === '') {
                 img_elem.src = imgs.bios.missing;
                 img_elem.setAttribute("alt", "missing bio");
@@ -65,7 +65,7 @@ export async function missingInfo(bio, people, releaseDate) {
 
         if (releaseDate) {
             const img_elem = document.createElement("img");
-            img_elem.classList.add("release-date-icon", "gb-fade-in");
+            img_elem.classList.add("release-date-icon", "ge-fade-in");
             if (!song.release_date_for_display) {
                 img_elem.src = imgs.releaseDate.missing;
                 img_elem.setAttribute("alt", "missing release date");
@@ -93,24 +93,24 @@ export function removeMissingInfo(bio, people, releaseDate) {
 
     if (bio) {
         bioIcons.forEach((icon) => {
-            icon.classList.remove("gb-fade-in");
-            icon.classList.add("gb-fade-out");
+            icon.classList.remove("ge-fade-in");
+            icon.classList.add("ge-fade-out");
             icon.remove()
         })
     }
 
     else if (people) {
         peopleIcons.forEach((icon) => {
-            icon.classList.remove("gb-fade-in");
-            icon.classList.add("gb-fade-out");
+            icon.classList.remove("ge-fade-in");
+            icon.classList.add("ge-fade-out");
             icon.remove()
         })
     }
 
     else if (releaseDate) {
         releaseDateIcons.forEach((icon) => {
-            icon.classList.remove("gb-fade-in");
-            icon.classList.add("gb-fade-out");
+            icon.classList.remove("ge-fade-in");
+            icon.classList.add("ge-fade-out");
             icon.remove()
         })
     }
@@ -224,7 +224,7 @@ export async function appendIcon() {
     */
     const userValidation = () => {
         const disable_add_tag = (placeholderText) => {
-            document.getElementById("gb-add-tags").placeholder = placeholderText;
+            document.getElementById("ge-add-tags").placeholder = placeholderText;
         }
 
         const user_picture = document.getElementsByClassName("header-user_avatar clipped_background_image")[0];
@@ -311,7 +311,7 @@ export async function appendIcon() {
         }).insertBefore($(".add-credits.add"));
 
         const roleInput = $("<input>", {
-            class: "add-credits role rcorners gb-textarea",
+            class: "add-credits role rcorners ge-textarea",
             type: "text",
             placeholder: "Role",
             spellcheck: "false",
@@ -319,7 +319,7 @@ export async function appendIcon() {
         }).appendTo(inputs);
 
         const artistInput = $("<input>", {
-            class: "add-credits artist rcorners gb-textarea",
+            class: "add-credits artist rcorners ge-textarea",
             type: "text",
             placeholder: "Artist",
             spellcheck: "false",
@@ -515,12 +515,12 @@ export async function appendIcon() {
         $('body').addClass('disable-scrolling');
 
         const popupDiv = $("<dialog>", {
-            class: "blured-background gb-fade-in",
+            class: "blured-background ge-fade-in",
             open: true
         }).appendTo("body");
 
         const popupBox = $("<div>", {
-            class: "extension-box gb-zoom-in"
+            class: "extension-box ge-zoom-in"
         }).appendTo(popupDiv);
 
         $('<img>', {
@@ -535,8 +535,8 @@ export async function appendIcon() {
                 },
                 click: function () {
                     if (confirm('If you\'ve made changes, they won\'t save.\nAre you sure you want to close this window?')) {
-                        $('.extension-box').addClass('gb-zoom-out');
-                        $('.blured-background').addClass('gb-fade-out');
+                        $('.extension-box').addClass('ge-zoom-out');
+                        $('.blured-background').addClass('ge-fade-out');
                         $('body').removeClass('disable-scrolling');
                         setTimeout(() => { $('.blured-background').remove(); }, 400);
                     }
@@ -553,8 +553,8 @@ export async function appendIcon() {
         }).appendTo(popupBox);
 
         $("<input>", {
-            class: "add-tags rcorners gb-textarea",
-            id: "gb-add-tags",
+            class: "add-tags rcorners ge-textarea",
+            id: "ge-add-tags",
             type: "text",
             placeholder: "Tag",
             spellcheck: "false",
@@ -579,7 +579,7 @@ export async function appendIcon() {
         }).appendTo(popupBox);
 
         $("<div>", {
-            class: "add-credits add rcorners gb-textarea",
+            class: "add-credits add rcorners ge-textarea",
             type: "text",
             text: "Add",
             spellcheck: "false",
@@ -602,8 +602,8 @@ export async function appendIcon() {
         }).appendTo(popupBox);
 
         const addMediaInput = $("<input>", {
-            class: "add-media rcorners gb-textarea",
-            id: "gb-add-media",
+            class: "add-media rcorners ge-textarea",
+            id: "ge-add-media",
             type: "text",
             placeholder: "Youtube Playlist",
             spellcheck: "false",
@@ -611,7 +611,7 @@ export async function appendIcon() {
         }).appendTo(popupBox);
 
         $("<div>", {
-            class: "gb-textarea add-media details"
+            class: "ge-textarea add-media details"
         })
             .append($("<div>", {
                 class: "add-media details image-container",
@@ -766,7 +766,7 @@ export async function appendIcon() {
             if (!$('.artwork-images-stack').length) {
 
                 const imagesStack = $('<div>', {
-                    class: 'artwork-images-stack gb-animate-right'
+                    class: 'artwork-images-stack ge-animate-right'
                 });
 
                 $('<div>', {
@@ -882,7 +882,7 @@ export async function appendIcon() {
         popupBox.append(autolinkArtworkContainer);
 
         const saveButton = $('<input>')
-            .addClass('gb-save-button rcorners')
+            .addClass('ge-save-button rcorners')
             .attr({
                 'value': 'Save',
                 'readonly': 'readonly',
@@ -931,8 +931,8 @@ export async function appendIcon() {
                     return;
                 }
                 chrome.runtime.sendMessage({ 'album_saveEverything': [true] });
-                $('.extension-box').eq(0).addClass('gb-zoom-out');
-                $('.blured-background').eq(0).addClass('gb-fade-out');
+                $('.extension-box').eq(0).addClass('ge-zoom-out');
+                $('.blured-background').eq(0).addClass('ge-fade-out');
                 $('body').removeClass('disable-scrolling');
                 setTimeout(() => {
                     $('.blured-background').eq(0).remove();
@@ -969,7 +969,7 @@ export async function appendIcon() {
             };
         }).get();
 
-        const tagify_tags = new Tagify(document.getElementById("gb-add-tags"), {
+        const tagify_tags = new Tagify(document.getElementById("ge-add-tags"), {
             delimiters: ",",
             templates: {
                 tag: function (tagData) {
@@ -1062,7 +1062,7 @@ export async function appendIcon() {
                 }
                 break;
             case 83: // 'S' or 's' key
-                const saveButton = $('.gb-save-button');
+                const saveButton = $('.ge-save-button');
                 if (event.altKey && !!saveButton.length) {
                     saveButton[0].click();
                 }

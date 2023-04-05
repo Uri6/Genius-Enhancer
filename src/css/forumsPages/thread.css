@@ -217,16 +217,16 @@ body {
   color: #000 !important;
 }
 
-.gb-new-button {
+.ge-new-button {
   color: #000 !important;
   fill: #000 !important;
   transform: scale(0.1, -0.1) translate(0, 512);
   transition: all 0.3s ease;
 }
-.gb-new-button:hover {
+.ge-new-button:hover {
   background-color: #ffff65 !important;
 }
-.gb-new-button.active {
+.ge-new-button.active {
   background-color: #ffff65 !important;
 }
 

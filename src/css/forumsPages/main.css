@@ -81,9 +81,9 @@
 .group_summary .create_discussion.active {
   background-color: none !important;
 }
-.group_summary .button:hover .gb-new-button, .group_summary .button.active .gb-new-button,
-.group_summary .create_discussion:hover .gb-new-button,
-.group_summary .create_discussion.active .gb-new-button {
+.group_summary .button:hover .ge-new-button, .group_summary .button.active .ge-new-button,
+.group_summary .create_discussion:hover .ge-new-button,
+.group_summary .create_discussion.active .ge-new-button {
   fill: #ffff65 !important;
 }
 
@@ -96,7 +96,7 @@
   color: #000;
 }
 
-.gb-new-button {
+.ge-new-button {
   fill: #979797 !important;
   transition: all 0.3s ease;
 }

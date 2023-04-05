@@ -21,7 +21,7 @@ export function appleMusicPopUp(show) {
  * @param {boolean} show - Whether to show (true) or hide (false) the iframe
  */
 export function spotifyPopUp(show) {
-    const spotiftElem = $("#gb-spotify-player");
+    const spotiftElem = $("#ge-spotify-player");
     if (!spotiftElem.length) return;
     spotiftElem.toggle(show);
 }

@@ -195,7 +195,7 @@
   top: 10px;
   cursor: pointer;
 }
-.blured-background .extension-box .gb-save-button {
+.blured-background .extension-box .ge-save-button {
   position: absolute;
   background-color: #1cc674;
   border: none;
@@ -211,7 +211,7 @@
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   overflow: hidden;
 }
-.blured-background .extension-box .gb-save-button:hover {
+.blured-background .extension-box .ge-save-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -260,7 +260,7 @@
   background-color: rgba(252, 87, 84, 0.4);
   cursor: pointer;
 }
-.blured-background .extension-box .gb-textarea {
+.blured-background .extension-box .ge-textarea {
   border: none;
   outline-style: solid;
   outline-width: 0;
@@ -279,25 +279,25 @@
   position: relative;
   color: #000 !important;
 }
-.blured-background .extension-box .gb-textarea.tagify[aria-expanded=true] {
+.blured-background .extension-box .ge-textarea.tagify[aria-expanded=true] {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-.blured-background .extension-box .gb-textarea.add-tags {
+.blured-background .extension-box .ge-textarea.add-tags {
   top: 50px;
   left: 65px;
   width: 500px;
 }
-.blured-background .extension-box .gb-textarea.add-credits {
+.blured-background .extension-box .ge-textarea.add-credits {
   width: 245px;
 }
-.blured-background .extension-box .gb-textarea.add-credits.artist {
+.blured-background .extension-box .ge-textarea.add-credits.artist {
   margin-left: 10px;
 }
-.blured-background .extension-box .gb-textarea.add-credits.artist, .blured-background .extension-box .gb-textarea.add-credits.role {
+.blured-background .extension-box .ge-textarea.add-credits.artist, .blured-background .extension-box .ge-textarea.add-credits.role {
   margin-bottom: 10px;
 }
-.blured-background .extension-box .gb-textarea.add-credits.add {
+.blured-background .extension-box .ge-textarea.add-credits.add {
   background-color: rgba(203, 203, 203, 0);
   color: rgba(0, 0, 0, 0.4) !important;
   margin-top: 2px;
@@ -306,21 +306,21 @@
   outline: 2px solid #cbcbcb;
   transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
 }
-.blured-background .extension-box .gb-textarea.add-credits.add:hover {
+.blured-background .extension-box .ge-textarea.add-credits.add:hover {
   cursor: pointer;
   background-color: rgba(203, 203, 203, 0.4);
   outline-width: 0px;
 }
-.blured-background .extension-box .gb-textarea.add-media {
+.blured-background .extension-box .ge-textarea.add-media {
   top: 120px;
   left: 65px;
   width: 500px;
   transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
 }
-.blured-background .extension-box .gb-textarea.add-media:not(.details) {
+.blured-background .extension-box .ge-textarea.add-media:not(.details) {
   z-index: 2;
 }
-.blured-background .extension-box .gb-textarea.add-media.details {
+.blured-background .extension-box .ge-textarea.add-media.details {
   background-color: #f1f1f1;
   border-radius: 0 0 10px 10px;
   padding: 17.5px 5px 5px 5px;
@@ -328,18 +328,18 @@
   z-index: 1;
   cursor: default;
 }
-.blured-background .extension-box .gb-textarea.add-media.details:not(.image-container):not(.image):not(.title):not(.artist) {
+.blured-background .extension-box .ge-textarea.add-media.details:not(.image-container):not(.image):not(.title):not(.artist) {
   height: 80px;
   width: 480px;
   left: 75px;
 }
-.blured-background .extension-box .gb-textarea.add-media.details:has(> .title[title=""]), .blured-background .extension-box .gb-textarea.add-media.details:has(> .title:not([title])) {
+.blured-background .extension-box .ge-textarea.add-media.details:has(> .title[title=""]), .blured-background .extension-box .ge-textarea.add-media.details:has(> .title:not([title])) {
   height: 0 !important;
 }
-.blured-background .extension-box .gb-textarea.add-media.details * {
+.blured-background .extension-box .ge-textarea.add-media.details * {
   position: absolute;
 }
-.blured-background .extension-box .gb-textarea.add-media.details .image-container {
+.blured-background .extension-box .ge-textarea.add-media.details .image-container {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
@@ -347,7 +347,7 @@
   width: 100px !important;
   height: 56.25px !important;
 }
-.blured-background .extension-box .gb-textarea.add-media.details .image-container .image:not([src=""]) {
+.blured-background .extension-box .ge-textarea.add-media.details .image-container .image:not([src=""]) {
   border-radius: 4px;
   margin-right: 10px;
   width: 100%;
@@ -355,7 +355,7 @@
   -o-object-fit: cover;
      object-fit: cover;
 }
-.blured-background .extension-box .gb-textarea.add-media.details .title {
+.blured-background .extension-box .ge-textarea.add-media.details .title {
   display: inline-block;
   font-family: "Programme";
   font-size: 18px;
@@ -370,7 +370,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.blured-background .extension-box .gb-textarea.add-media.details .artist {
+.blured-background .extension-box .ge-textarea.add-media.details .artist {
   display: inline-block;
   font-family: "Programme";
   font-size: 14px;
@@ -381,7 +381,7 @@
   left: 120px;
   top: 47px;
 }
-.blured-background .extension-box .gb-textarea.add-media.details .length {
+.blured-background .extension-box .ge-textarea.add-media.details .length {
   display: inline-block;
   font-family: "Programme";
   font-size: 16px;
@@ -391,37 +391,37 @@
   right: 5px;
   top: 33px;
 }
-.blured-background .extension-box .gb-textarea.error {
+.blured-background .extension-box .ge-textarea.error {
   outline-width: 2px !important;
 }
-.blured-background .extension-box .gb-textarea.error-animation {
+.blured-background .extension-box .ge-textarea.error-animation {
   background-color: #fc5753;
 }
-.blured-background .extension-box .gb-textarea::-moz-placeholder {
+.blured-background .extension-box .ge-textarea::-moz-placeholder {
   font-family: "Programme";
   font-size: 18px;
   color: rgba(0, 0, 0, 0.4) !important;
   -moz-transition: all 0.2s;
   transition: all 0.2s;
 }
-.blured-background .extension-box .gb-textarea::placeholder {
+.blured-background .extension-box .ge-textarea::placeholder {
   font-family: "Programme";
   font-size: 18px;
   color: rgba(0, 0, 0, 0.4) !important;
   transition: all 0.2s;
 }
-.blured-background .extension-box .gb-textarea:hover {
+.blured-background .extension-box .ge-textarea:hover {
   cursor: pointer;
   background-color: #979797;
 }
-.blured-background .extension-box .gb-textarea:focus, .blured-background .extension-box .gb-textarea.tagify--focus {
+.blured-background .extension-box .ge-textarea:focus, .blured-background .extension-box .ge-textarea.tagify--focus {
   cursor: text;
   background-color: #cbcbcb;
 }
-.blured-background .extension-box .gb-textarea:focus::-moz-placeholder, .blured-background .extension-box .gb-textarea.tagify--focus::-moz-placeholder {
+.blured-background .extension-box .ge-textarea:focus::-moz-placeholder, .blured-background .extension-box .ge-textarea.tagify--focus::-moz-placeholder {
   color: rgba(0, 0, 0, 0.25) !important;
 }
-.blured-background .extension-box .gb-textarea:focus::placeholder, .blured-background .extension-box .gb-textarea.tagify--focus::placeholder {
+.blured-background .extension-box .ge-textarea:focus::placeholder, .blured-background .extension-box .ge-textarea.tagify--focus::placeholder {
   color: rgba(0, 0, 0, 0.25) !important;
 }
 
