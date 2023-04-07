@@ -69,13 +69,13 @@ a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-e
         background-color: $genius-yellow !important;
       }
 
-      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.nav_menu-link):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.discussion_list_meta_user_link) {
+      &:not(.SongTags__Tag-xixwg3-2):not(.ql-container *):not(.lyrics_style_guide *):not(.nav_menu-link):not(.feed_dropdown-item):not(.Link__StyledLink-h3isu4-0):not(.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0):not(.referent):not(.discussion_list_meta_user_link) {
         text-decoration: underline !important;
       }
 
       &.ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0,
       &.referent {
-        display: inline-block;
+        display: inline block;
         background-color: $genius-yellow !important;
         margin-left: 5px;
 
