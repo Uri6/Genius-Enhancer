@@ -186,55 +186,62 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
   padding: 0.75rem 10px !important;
 }
 
-body.ge-dark-mode {
+/*body.ge-dark-mode {
   background-color: #1b1b1b !important;
   color: #e2e2e2 !important;
-}
-body.ge-dark-mode .header-action-label,
-body.ge-dark-mode .header-action {
-  color: #e2e2e2 !important;
-}
-body.ge-dark-mode .square_button,
-body.ge-dark-mode textarea {
-  color: #e2e2e2 !important;
-}
-body.ge-dark-mode .square_button .TextLabel-sc-8kw9oj-0,
-body.ge-dark-mode textarea .TextLabel-sc-8kw9oj-0 {
-  color: #e2e2e2 !important;
-}
-body.ge-dark-mode svg {
-  fill: #e2e2e2 !important;
-}
-body.ge-dark-mode .ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0,
-body.ge-dark-mode .referent {
-  background-color: #1b1b1b !important;
-  color: #e2e2e2 !important;
-}
-body.ge-dark-mode .ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0 .ReferentFragmentdesktop__Highlight-sc-110r0d9-1,
-body.ge-dark-mode .referent .ReferentFragmentdesktop__Highlight-sc-110r0d9-1 {
-  background-color: rgba(0, 0, 0, 0) !important;
-  color: #e2e2e2 !important;
-}
-body.ge-dark-mode .white-container,
-body.ge-dark-mode .white_container,
-body.ge-dark-mode .statistics_panel {
-  background-color: #0d0f11 !important;
-}
-body.ge-dark-mode .ql-container *,
-body.ge-dark-mode .ql-container *:before,
-body.ge-dark-mode .ql-container *:after {
-  color: #e2e2e2 !important;
-}
-body.ge-dark-mode .ql-container {
-  background-color: #121212 !important;
-}
-body.ge-dark-mode .ql-editor {
-  background-color: #121212 !important;
-}
-body.ge-dark-mode .ql-editor p {
-  color: #e2e2e2 !important;
-}
 
+  .header-action-label,
+  .header-action {
+    color: #e2e2e2 !important;
+  }
+  .square_button,
+  textarea {
+    color: #e2e2e2 !important;
+
+    .TextLabel-sc-8kw9oj-0 {
+      color: #e2e2e2 !important;
+    }
+  }
+
+  svg {
+    fill: #e2e2e2 !important;
+  }
+
+  .ReferentFragmentdesktop__ClickTarget-sc-110r0d9-0,
+  .referent {
+    background-color: #1b1b1b !important;
+    color: #e2e2e2 !important;
+
+    .ReferentFragmentdesktop__Highlight-sc-110r0d9-1 {
+      background-color: rgba(0, 0, 0, 0) !important;
+      color: #e2e2e2 !important;
+    }
+  }
+
+  .white-container,
+  .white_container,
+  .statistics_panel {
+    background-color: #0d0f11 !important;
+  }
+
+  .ql-container *,
+  .ql-container *:before,
+  .ql-container *:after {
+    color: #e2e2e2 !important;
+  }
+
+  .ql-container {
+    background-color: #121212 !important;
+  }
+
+  .ql-editor {
+    background-color: #121212 !important;
+
+    p {
+      color: #e2e2e2 !important;
+    }
+  }
+}*/
 .header-primary,
 .dmNhEr,
 .header {

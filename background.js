@@ -269,6 +269,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         // TODO: migrate to using the npm packages
         const files = [
             { type: "css", file: "./src/css/content-style.css" },
+            { type: "css", file: "./src/css/darkmode.css" },
             { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
