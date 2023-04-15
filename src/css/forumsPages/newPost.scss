@@ -18,7 +18,7 @@ html {
 
 // change the background color
 body {
-  background-color: #ffff65 !important;
+  background: linear-gradient(180deg, #66c2a5, #1f77b4, #1f77b4, #1f77b4) !important;
 }
 
 #container {
@@ -34,46 +34,140 @@ body {
     #group_container {
       height: 100% !important;
       width: 100% !important;
-      background-color: #ffff65 !important;
-      color: #ffff65 !important;
       align-items: left !important;
       margin-bottom: 0 !important;
 
       #group_discussion {
+        background: transparent !important;
         margin: 0 auto !important;
+        padding-right: 0 !important;
         float: none !important;
-      }
-
-      #groups_sidebar,
-      .discussions_search_bar {
-        background-color: #c6c289 !important;
-        float: none !important;
-        left: 1% !important;
-        top: 1% !important;
         border: none !important;
-        transition: all 0.3s ease;
-        position: sticky !important;
 
-        display: inline-block !important;
-        vertical-align: top !important;
-        margin-left: 10px !important;
+        .group_title {
+          text-align: center !important;
+          background: linear-gradient(90deg, #416DD2, #C1437B);
+          border-radius: 5px !important;
+          padding-top: 22px !important;
+          padding-bottom: 14px !important;
+          margin: 0 0 20px 0 !important;
+          color: rgba(255, 255, 255, 0.6) !important;
 
-        border-radius: 5px !important;
-        padding: 5px 10px;
+          font-size: 50px !important;
+          text-transform: uppercase;
+          font-weight: bold;
+          letter-spacing: 2px;
 
-        transition: all 0.3s ease !important;
+          &:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+          }
+        }
 
-        .small_label,
-        .group_list {
-          background-color: #c6c289 !important;
-          color: #000 !important;
-          font-family: 'IBM Plex Sans', sans-serif !important;
-          font-weight: 600 !important;
+        .new_discussion {
+          width: 100% !important;
+          margin: 0 auto !important;
+          padding: 0 !important;
           border: none !important;
-          text-transform: none !important;
+          background: transparent !important;
 
-          .group_name {
-            color: #ffff65 !important;
+          input:not(#discussion_submit),
+          textarea {
+            border-radius: 5px !important;
+            background: rgba(128, 128, 128, 0.4) !important;
+            color: #000 !important;
+            border: none !important;
+            font-family: 'IBM Plex Sans', sans-serif !important;
+            width: 100% !important;
+
+            &::placeholder {
+              color: rgba(0, 0, 0, 0.4) !important;
+            }
+
+            &:hover {
+              background: rgba(128, 128, 128, 0.6) !important;
+            }
+
+            &:focus {
+              background: rgba(128, 128, 128, 0.4) !important;
+            }
+          }
+
+          .markdown_preview_container {
+            background: transparent !important;
+            border: none !important;
+            border-radius: 5px !important;
+            color: #000 !important;
+            font-family: 'IBM Plex Sans', sans-serif !important;
+            width: 100% !important;
+
+            .embedly.preview {
+              background: rgba(128, 128, 128, 0.4) !important;
+              border-radius: 5px !important;
+              width: 100% !important;
+            }
+
+            &:not( :has(p),
+              :has(h1),
+              :has(h2),
+              :has(h3),
+              :has(h4),
+              :has(h5),
+              :has(h6),
+              :has(blockquote),
+              :has(ul),
+              :has(ol),
+              :has(pre),
+              :has(table),
+              :has(hr),
+              :has(img),
+              :has(a),
+              :has(iframe),
+              :has(embed)) {
+              display: none !important;
+            }
+
+            &::before {
+              content: "Preview" !important;
+              color: #000 !important;
+              font-family: 'IBM Plex Sans', sans-serif !important;
+              font-size: 15px !important;
+              font-weight: 600 !important;
+              margin-bottom: 10px !important;
+              display: block !important;
+              background: transparent !important;
+              background-color: transparent !important;
+            }
+          }
+
+          label {
+            color: #000 !important;
+            font-family: 'IBM Plex Sans', sans-serif !important;
+            font-weight: 600 !important;
+          }
+
+          .facebox {
+            color: rgba(0, 0, 0, 0.6) !important;
+            border: none !important;
+            border-radius: 5px !important;
+            margin-left: 5px !important;
+
+            &:hover {
+              // change the color to royal blue
+              color: #1f53ee !important;
+            }
+          }
+
+          p:has(#discussion_submit) {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            #discussion_submit {
+              border: none !important;
+              border-radius: 5px !important;
+              background: linear-gradient(90deg, #8e66c2, #b41f69);
+              padding: 7.5px 15px !important;
+            }
           }
         }
       }
@@ -81,47 +175,48 @@ body {
   }
 }
 
-#groups_sidebar {
-  background-color: rgba(128, 128, 128, 0.2) !important;
-  float: none !important;
-  left: 1% !important;
-  top: 5% !important;
-  border: none !important;
-  transition: all 0.3s ease;
-  position: sticky !important;
-  outline: 2px solid #ff1464 !important;
+.discussion_thread-discussion_and_group_list {
+  margin-left: 10px !important;
 
-  display: inline-block !important;
-  vertical-align: top !important;
-  margin: 0 !important;
-
-  border-radius: 5px !important;
-  padding: 5px 10px;
-
-  transition: all 0.3s ease !important;
-
-  .groups_sidebar-search {
-    // pad only the bottome and top by 5px
-    padding: 10px 0 !important;
-
-    // hide the placeholder
-    input::placeholder {
-      color: transparent !important;
-    }
-  }
-
-  .small_label,
-  .group_list {
-    background: transparent !important;
-    color: #000 !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-    font-weight: 600 !important;
+  #groups_sidebar {
+    background-color: rgba(128, 128, 128, 0.4) !important;
+    float: none !important;
+    left: 1% !important;
+    top: 5% !important;
     border: none !important;
-    text-transform: none !important;
+    transition: all 0.3s ease;
+    position: sticky !important;
 
-    .group_name {
+    display: inline-block !important;
+    vertical-align: top !important;
+    margin: 0 !important;
+
+    border-radius: 5px !important;
+    padding: 5px 10px;
+
+    transition: all 0.3s ease !important;
+
+    .groups_sidebar-search {
+      padding: 10px 0 !important;
+
+      input::placeholder {
+        color: transparent !important;
+      }
+    }
+
+    .small_label,
+    .group_list {
+      background: transparent !important;
+      color: #000 !important;
+      font-family: 'IBM Plex Sans', sans-serif !important;
+      font-weight: 600 !important;
       border: none !important;
-      color: #000;
+      text-transform: none !important;
+
+      .group_name {
+        color: #000 !important;
+        border: none !important;
+      }
     }
   }
 }
@@ -133,7 +228,6 @@ body {
   margin-bottom: 10px;
   border-bottom: 0px !important;
   box-shadow: 0 0 0px #000;
-
   border-radius: 5px !important;
   padding: 5px 10px;
 
@@ -159,22 +253,25 @@ body {
     color: rgba(128, 128, 128, 0.4);
   }
 
+  &.discussion_summary {
+    background-color: #574143 !important;
+
+    &:hover {
+      background-color: #413335 !important;
+    }
+  }
+
   .button,
   .create_discussion {
-
-    // align to the top right corner
     top: calc(7.5%) !important;
     position: absolute !important;
     float: none !important;
-
     margin-left: 10px;
     background-color: #979797 !important;
     color: #000 !important;
     padding: 5px 5px 5px 7px !important;
     border: none !important;
     box-shadow: none;
-
-    // round corners
     border-radius: 5px !important;
 
     &:hover {
@@ -263,9 +360,9 @@ body {
 }
 
 .clearfix {
-  .markdown_preview_container {
+  /*.markdown_preview_container {
     display: none !important;
-  }
+  }*/
 
   .ql-toolbar {
     position: static;
