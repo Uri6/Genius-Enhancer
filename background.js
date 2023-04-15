@@ -1621,7 +1621,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         // if exists, remove the inner text (without removing the svg child) of the elements that have the class "u-quarter_vertical_margins" and at least one of the following classes: square_button--facebook, square_button--twitter, square_button--instagram
                                         // the inner text is the username in the social media
                                         const socialMediaButtons = $(".square_button--facebook, .square_button--twitter, .square_button--instagram").filter((i, el) => $(el).hasClass("u-quarter_vertical_margins"));
-                                        if (socialMediaButtons.length) {
+                                        if (socialMediaButtons.length && !$(".social_media_buttons_container").length) {
                                             const dict = {
                                                 "square_button--facebook": "Facebook",
                                                 "square_button--twitter": "Twitter",
