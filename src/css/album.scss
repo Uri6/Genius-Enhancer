@@ -558,12 +558,18 @@
             .header_with_cover_art-primary_info {
                 margin-left: 10px !important;
 
+                .header_with_cover_art-primary_info-title {
+                    .ge-explicit-icon {
+                        height: 15px !important;
+                        width: 15px !important;
+                        display: inline-block !important;
+                    }
+                }
+
                 >div {
                     &:nth-child(1) {
                         display: none !important;
                     }
-
-
                 }
 
                 >h1 {

@@ -889,8 +889,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }
                                         }
 
-
-
                                         // Get the album title and artist name from the page DOM
                                         const title = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
                                         const artist = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerText;
@@ -902,9 +900,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             });
                                         });
 
-                                        console.log("albumArtworks: ", albumArtworks);
-
-                                        // set the result as the inner text of the "albumArtworks" element
+                                        // Set the result as the inner text of the "albumArtworks" element
                                         $('<div>', {
                                             id: "albumArtworks",
                                             style: "display: none;",
@@ -946,6 +942,31 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                             $('body').append(dataListElem);
                                         });
+
+                                        console.log("Album Artworks: " + albumArtworks);
+
+                                        const albumObject = await new Promise((resolve) => {
+                                            chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
+                                                resolve(response);
+                                            });
+                                        });
+
+                                        console.log("Album Object: ", albumObject);
+
+                                        const albumID = albumObject.dfp_kv.find(x => x.name === "album_id").values[0];
+                                        const isExplicit = albumObject.dfp_kv.find(x => x.name === "is_explicit").values[0];
+
+                                        console.log("Album ID: " + albumID);
+                                        console.log("Is Explicit: " + isExplicit);
+
+                                        if (isExplicit) {
+                                            $('.header_with_cover_art-primary_info-title').append($('<img>', {
+                                                class: "ge-explicit-icon",
+                                                src: chrome.runtime.getURL("/src/images/explicit/explicit.svg"),
+                                            }));
+
+                                            console.log("Explicit");
+                                        }
                                     })
                                 }
                             );

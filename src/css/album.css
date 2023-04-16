@@ -479,6 +479,11 @@
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-primary_info_container .header_with_cover_art-primary_info {
   margin-left: 10px !important;
 }
+.header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-primary_info_container .header_with_cover_art-primary_info .header_with_cover_art-primary_info-title .ge-explicit-icon {
+  height: 15px !important;
+  width: 15px !important;
+  display: inline-block !important;
+}
 .header_with_cover_art .header_with_cover_art-inner .header_with_cover_art-primary_info_container .header_with_cover_art-primary_info > div:nth-child(1) {
   display: none !important;
 }
