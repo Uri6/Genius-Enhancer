@@ -948,7 +948,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 resolve(response);
                                             });
                                         });
-                                        
+
                                         const isExplicit = albumObject.dfp_kv.find(x => x.name === "is_explicit").values[0] === "true";
 
                                         if (isExplicit && !$('.ge-explicit-icon').length) {
@@ -1625,6 +1625,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 }
                             );
 
+                            if (url.toLowerCase().endsWith("/uri6")) {
+
+                                chrome.scripting.executeScript(
+                                    {
+                                        target: { tabId: tabId },
+                                        files: ["./lib/particles/particles.min.js"]
+                                    }
+                                );
+                            }
+
                             chrome.scripting.executeScript(
                                 {
                                     target: { tabId: tabId },
@@ -1704,6 +1714,21 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                     socialMediaButtons[i].click();
                                                 });
                                             });
+                                        }
+
+                                        if (window.location.href.toLowerCase().endsWith("/uri6")) {
+                                            console.log("uri6");
+
+                                            const geDeveloper = $(".profile_identity_and_description").find("img[src='https://s3.amazonaws.com/filepicker-images-rapgenius/vf7FK21SAmZZGeRc3hAu_transpGenius.png']");
+
+                                            if (geDeveloper.length) {
+                                                geDeveloper.wrap("<div class='ge-developer-image' id='ge-developer-image'></div>");
+                                                geDeveloper.hover(() => {
+                                                    particlesJS.load('ge-developer-image', chrome.runtime.getURL("/lib/particles/particles.json"));
+                                                }, () => {
+                                                    particlesJS('ge-developer-image', {});
+                                                });
+                                            }
                                         }
                                     }
                                 });

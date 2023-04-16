@@ -190,4 +190,23 @@ profile-contributions-group .profile_contributions_group > * hr:not([size]) {
   opacity: 1;
   display: inline-block;
   transition: transform 0.2s ease-in-out, opacity 0.2s cubic-bezier(0, 0, 0, 1) !important;
+}
+
+.ge-developer-image {
+  width: 360px;
+  height: 157px;
+  position: relative;
+}
+.ge-developer-image img, .ge-developer-image canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.ge-developer-image img {
+  z-index: 1;
+}
+.ge-developer-image canvas {
+  z-index: 0;
 }/*# sourceMappingURL=profile.css.map */
