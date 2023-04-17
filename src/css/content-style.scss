@@ -8,6 +8,32 @@ $grey: #6e6e6e;
 $genius-yellow: #ffff65;
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 
+@keyframes follow-animation {
+  from {
+    background: white;
+    color: #3399FF;
+  }
+
+  to {
+    background: #2EB82E;
+    border-color: #2EB82E;
+    color: #ffffff;
+  }
+}
+
+@keyframes unfollow-animation {
+  from {
+    background: #2EB82E;
+    color: #ffffff;
+  }
+
+  to {
+    background: white;
+    border-color: #3399FF;
+    color: #3399FF;
+  }
+}
+
 :root {
   --bs-body-color: #212529;
   --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -890,6 +916,72 @@ input {
   height: 23px;
 }
 
+@-webkit-keyframes follow-animation {
+  from {
+    background: white;
+    color: #3399FF;
+    width: 85px;
+    left: 50px;
+  }
+
+  to {
+    background: #2EB82E;
+    border-color: #2EB82E;
+    color: #ffffff;
+    width: 120px;
+    left: 35px;
+  }
+}
+
+@-webkit-keyframes unfollow-animation {
+  from {
+    background: #2EB82E;
+    color: #ffffff;
+    width: 120px;
+    left: 35px;
+  }
+
+  to {
+    background: white;
+    border-color: #3399FF;
+    color: #3399FF;
+    width: 85px;
+    left: 50px;
+  }
+}
+
+#ge-follow-button {
+  -webkit-appearance: none;
+  display: flex;
+
+  &:after {
+    color: #3399FF;
+    background-color: #ffffff;
+    border: 1px solid;
+    border-color: #3399FF;
+    cursor: pointer;
+    text-align: center;
+
+    border-radius: 1.25rem;
+    padding: 0.25rem 0.75rem;
+    font-family: HelveticaNeue, Arial, sans-serif;
+    font-size: 0.75rem;
+
+    content: '+ Follow';
+    -webkit-animation: unfollow-animation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-animation-fill-mode: forwards;
+    animation: unfollow-animation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation-fill-mode: forwards;
+  }
+
+  &:checked:after {
+    content: 'Following';
+    -webkit-animation: follow-animation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-animation-fill-mode: forwards;
+    animation: follow-animation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation-fill-mode: forwards;
+  }
+}
 
 // home page
 

@@ -28,6 +28,7 @@ import {
     song_modernTextEditor,
     appendReplyButton,
     searchVideo,
+    appendFollowButton,
 } from "./src/js/sideFunctions_song.js";
 import {
     replaceButtons,
@@ -158,6 +159,10 @@ chrome.runtime.onMessage.addListener((
             case "song_appendReplyButton" in message:
                 func = appendReplyButton;
                 args = message.song_appendReplyButton;
+                break;
+            case "song_appendFollowButton" in message:
+                func = appendFollowButton;
+                args = message.song_appendFollowButton;
                 break;
             case "song_searchVideo" in message:
                 func = searchVideo;
@@ -1010,6 +1015,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }
                                         }
 
+                                        chrome.runtime.sendMessage({ "song_appendFollowButton": [true] });
+
                                         $(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", (e) => {
 
                                             setTimeout(() => {
@@ -1021,8 +1028,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 const artist = artistField.textContent;
 
                                                 const query = [artist, title];
-
-                                                console.log(query);
 
                                                 const ytInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('YouTube URL')");
 
@@ -1717,8 +1722,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         }
 
                                         if (window.location.href.toLowerCase().endsWith("/uri6")) {
-                                            console.log("uri6");
-
                                             const geDeveloper = $(".profile_identity_and_description").find("img[src='https://s3.amazonaws.com/filepicker-images-rapgenius/vf7FK21SAmZZGeRc3hAu_transpGenius.png']");
 
                                             if (geDeveloper.length) {

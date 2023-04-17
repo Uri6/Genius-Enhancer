@@ -136,6 +136,47 @@ export async function searchVideo(query) {
     }
 }
 
+export async function appendFollowButton() {
+
+    const container = document.querySelector(".StickyContributorToolbar__Left-sc-1s6k5oy-1.lhAIsa");
+
+    if (container) {
+        const id = document.querySelector('[property="twitter:app:url:iphone"]').content.split("/")[3];
+        const parseCookies = () => {
+            return Object.fromEntries(
+                document.cookie.split('; ').map(cookie => {
+                    const [key, value] = cookie.split('=');
+                    return [key, decodeURIComponent(value)];
+                })
+            );
+        };
+        const gapi = axios.create({
+            baseUrl: "https://genius.com/api",
+            withCredentials: true,
+            headers: {
+                "X-CSRF-Token": parseCookies()["_csrf_token"],
+            },
+        });
+
+        const songData = await gapi.get(`https://genius.com/api/songs/${id}`);
+        const currentStatus = songData.data.response.song.current_user_metadata.interactions.following;
+
+        const button = document.createElement("input");
+        button.type = "checkbox";
+        button.id = "ge-follow-button";
+        button.checked = currentStatus;
+
+        button.addEventListener("change", async () => {
+            const action = button.checked ? "follow" : "unfollow";
+            gapi.post(`https://genius.com/api/songs/${id}/${action}`);
+        });
+
+        container.appendChild(button);
+    } else {
+        console.error("Could not find container for follow button");
+    }
+}
+
 export function appendReplyButton() {
     /*var commentClassName = "comment" || "Comment__Container-qhf03b-0 joncYs";
 
