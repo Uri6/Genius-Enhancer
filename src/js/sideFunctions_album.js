@@ -345,7 +345,6 @@ export async function appendIcon() {
             mode: "select",
             templates: {
                 tag: function (tagData) {
-                    console.log(tagData);
                     try {
                         return `<tag title='${tagData.value}' tag-id='${tagData.id}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
                                         <div>
@@ -387,7 +386,6 @@ export async function appendIcon() {
             delimiters: ",",
             templates: {
                 tag: function (tagData) {
-                    console.log(tagData);
                     try {
                         return `<tag
                                     title='${tagData.value}'
@@ -703,7 +701,6 @@ export async function appendIcon() {
 
             try {
                 const response = await getPlaylistVideos(url);
-                console.log(response);
                 if (response === undefined) {
                     throw new Error("Invalid Youtube Playlist URL");
                 }
@@ -973,7 +970,6 @@ export async function appendIcon() {
             delimiters: ",",
             templates: {
                 tag: function (tagData) {
-                    console.log(tagData);
                     try {
                         return `<tag title='${tagData.value}' tag-id='${tagData.id}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
                                 <x title='remove tag' class='tagify__tag__removeBtn'></x>
@@ -1126,7 +1122,6 @@ export async function autolinkArtwork(query, type, minimize = false) {
  * @returns {void}
  */
 export async function saveEverything() {
-    console.log("saveEverything");
 
     const parseCookies = () => {
         return Object.fromEntries(
@@ -1180,8 +1175,6 @@ export async function saveEverything() {
         });
     }
 
-    console.log("albumSongs: ", albumSongs);
-
     const gapi = axios.create({
         baseUrl: "https://genius.com/api",
         withCredentials: true,
@@ -1204,8 +1197,6 @@ export async function saveEverything() {
                 ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists })),
             ],
         };
-
-        console.log("params: ", params);
 
         gapi.put(`https://genius.com/api${song.song.api_path}`, {
             text_format: "html,markdown",
@@ -1285,12 +1276,10 @@ export function addSongAsNext() {
                     });
 
                     checkbox.on("change", (e) => {
-                        console.log("change", e.target.checked);
                         chrome.storage.local.set({ add_song_as_next: e.target.checked });
                     });
 
                     $('input[on-select="$ctrl.add_song(data)"]').on("keydown", (e) => {
-                        console.log("keydown", e);
                         if (e.keyCode === 13) {
                             chrome.storage.local.get("add_song_as_next", (result) => {
                                 if (result.add_song_as_next) {

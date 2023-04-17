@@ -8,6 +8,42 @@ $grey: #6e6e6e;
 $genius-yellow: #ffff65;
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 
+
+
+@-webkit-keyframes follow-animation {
+  from {
+    background: white;
+    color: #3399FF;
+    width: 85px;
+    left: 50px;
+  }
+
+  to {
+    background: #2EB82E;
+    border-color: #2EB82E;
+    color: #ffffff;
+    width: 120px;
+    left: 35px;
+  }
+}
+
+@-webkit-keyframes unfollow-animation {
+  from {
+    background: #2EB82E;
+    color: #ffffff;
+    width: 120px;
+    left: 35px;
+  }
+
+  to {
+    background: white;
+    border-color: #3399FF;
+    color: #3399FF;
+    width: 85px;
+    left: 50px;
+  }
+}
+
 @keyframes follow-animation {
   from {
     background: white;
@@ -921,41 +957,8 @@ input {
   height: 23px;
 }
 
-@-webkit-keyframes follow-animation {
-  from {
-    background: white;
-    color: #3399FF;
-    width: 85px;
-    left: 50px;
-  }
-
-  to {
-    background: #2EB82E;
-    border-color: #2EB82E;
-    color: #ffffff;
-    width: 120px;
-    left: 35px;
-  }
-}
-
-@-webkit-keyframes unfollow-animation {
-  from {
-    background: #2EB82E;
-    color: #ffffff;
-    width: 120px;
-    left: 35px;
-  }
-
-  to {
-    background: white;
-    border-color: #3399FF;
-    color: #3399FF;
-    width: 85px;
-    left: 50px;
-  }
-}
-
 #ge-follow-button {
+  appearance: none;
   -webkit-appearance: none;
   display: flex;
 
@@ -963,14 +966,14 @@ input {
     color: #3399FF;
     background-color: #ffffff;
     border: 1px solid;
-    border-color: #3399FF;
-    cursor: pointer;
-    text-align: center;
-
     border-radius: 1.25rem;
+    border-color: #3399FF;
     padding: 0.25rem 0.75rem;
+    cursor: pointer;
+
     font-family: HelveticaNeue, Arial, sans-serif;
     font-size: 0.75rem;
+    text-align: center;
 
     content: '+ Follow';
     -webkit-animation: unfollow-animation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
