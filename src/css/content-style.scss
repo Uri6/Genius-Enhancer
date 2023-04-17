@@ -597,6 +597,11 @@ input {
   }
 }
 
+.feed_dropdown--left_align:has(search-results) {
+  left: unset !important;
+  right: 1rem !important;
+}
+
 .PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ,
 .header-actions {
   position: absolute !important;
