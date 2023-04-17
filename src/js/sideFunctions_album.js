@@ -967,7 +967,7 @@ export async function appendIcon() {
                 id: o.value,
                 searchBy: searchByStr
             };
-        }).get();
+        }).get().filter((v, i, a) => a.findIndex(t => (t.value === v.value)) === i);
 
         const tagify_tags = new Tagify(document.getElementById("ge-add-tags"), {
             delimiters: ",",
