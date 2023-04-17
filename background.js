@@ -1263,6 +1263,59 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }
                                         });
 
+                                        const elemIsAnnotationEditForm = (element) => {
+                                            const isForm = element.nodeName === 'FORM';
+                                            const hasClasses = element.classList.contains('AnnotationEditFormdesktop__Form-sc-15key0q-0') &&
+                                                element.classList.contains('daiNnm');
+                                            return isForm && hasClasses || element.querySelector('form.AnnotationEditFormdesktop__Form-sc-15key0q-0.daiNnm');
+                                        };
+
+                                        const handleInput = (textarea) => {
+                                            const inputValue = textarea.value.trim();
+                                            if (inputValue) {
+                                                sessionStorage.setItem('ge-input-tracker', inputValue);
+                                            }
+                                        };
+
+                                        const handleRestore = (textarea) => {
+                                            const text = sessionStorage.getItem('ge-input-tracker');
+                                            if (text) {
+                                                textarea.focus();
+                                                document.execCommand('selectAll', false, null);
+                                                document.execCommand('insertText', false, text);
+                                            }
+                                        };
+
+                                        document.addEventListener('DOMNodeInserted', (event) => {
+                                            const insertedNode = event.target;
+                                            const isElementNode = insertedNode.nodeType === Node.ELEMENT_NODE;
+                                            const tracked = insertedNode.classList?.contains('ge-text-tracking');
+                                            const isTextArea = insertedNode.nodeName === 'TEXTAREA';
+
+                                            if (!isElementNode || tracked || !elemIsAnnotationEditForm(insertedNode)) {
+                                                return;
+                                            }
+
+                                            insertedNode.classList.add('ge-text-tracking');
+                                            const textarea = isTextArea ? insertedNode : insertedNode.querySelector('textarea');
+                                            if (textarea) {
+                                                textarea.addEventListener('input', () => handleInput(textarea));
+                                            }
+
+                                            const toolbar = insertedNode.querySelector('.TextEditor__Toolbar-sc-128gj0x-0');
+                                            if (toolbar) {
+                                                const restoreButton = document.createElement('div');
+                                                restoreButton.classList.add('ge-restore-button', 'kviCal');
+                                                restoreButton.innerText = 'Restore';
+                                                restoreButton.addEventListener('click', () => handleRestore(textarea));
+                                                toolbar.insertBefore(restoreButton, toolbar.children[1]);
+                                            }
+                                        });
+
+                                        window.addEventListener('beforeunload', () => {
+                                            sessionStorage.removeItem("ge-input-tracker");
+                                        });
+
                                         /*let isAnnotation = false;
 
                                         if (document.getElementsByClassName("annotation_sidebar_unit").length == 2) {
