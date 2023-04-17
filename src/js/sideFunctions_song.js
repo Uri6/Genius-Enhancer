@@ -140,7 +140,7 @@ export async function appendFollowButton() {
 
     const container = document.querySelector(".StickyContributorToolbar__Left-sc-1s6k5oy-1.lhAIsa");
 
-    if (container) {
+    if (container && !document.querySelector("#ge-follow-button")) {
         const id = document.querySelector('[property="twitter:app:url:iphone"]').content.split("/")[3];
         const parseCookies = () => {
             return Object.fromEntries(
