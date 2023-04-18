@@ -171,7 +171,7 @@ profile-contributions-group {
 
         >* {
 
-            div,
+            div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)),
             a,
             img,
             hr:not([size]) {
@@ -244,7 +244,8 @@ profile-contributions-group {
     height: 157px;
     position: relative;
 
-    img, canvas {
+    img,
+    canvas {
         position: absolute;
         top: 0;
         left: 0;

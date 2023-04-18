@@ -123,19 +123,19 @@ profile-contributions-group .standalone_annotation,
 profile-contributions-group .profile_contributions_group {
   border-radius: 10px !important;
 }
-profile-annotation .standalone_annotation > * div,
+profile-annotation .standalone_annotation > * div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)),
 profile-annotation .standalone_annotation > * a,
 profile-annotation .standalone_annotation > * img,
 profile-annotation .standalone_annotation > * hr:not([size]),
-profile-annotation .profile_contributions_group > * div,
+profile-annotation .profile_contributions_group > * div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)),
 profile-annotation .profile_contributions_group > * a,
 profile-annotation .profile_contributions_group > * img,
 profile-annotation .profile_contributions_group > * hr:not([size]),
-profile-contributions-group .standalone_annotation > * div,
+profile-contributions-group .standalone_annotation > * div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)),
 profile-contributions-group .standalone_annotation > * a,
 profile-contributions-group .standalone_annotation > * img,
 profile-contributions-group .standalone_annotation > * hr:not([size]),
-profile-contributions-group .profile_contributions_group > * div,
+profile-contributions-group .profile_contributions_group > * div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)),
 profile-contributions-group .profile_contributions_group > * a,
 profile-contributions-group .profile_contributions_group > * img,
 profile-contributions-group .profile_contributions_group > * hr:not([size]) {
@@ -197,7 +197,8 @@ profile-contributions-group .profile_contributions_group > * hr:not([size]) {
   height: 157px;
   position: relative;
 }
-.ge-developer-image img, .ge-developer-image canvas {
+.ge-developer-image img,
+.ge-developer-image canvas {
   position: absolute;
   top: 0;
   left: 0;
