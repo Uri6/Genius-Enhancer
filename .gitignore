@@ -32,5 +32,6 @@ src/images/magicWand/512x512.png
 # Mac OS system files
 *.ds_store
 
+# NPM
 .yarn
 node_modules

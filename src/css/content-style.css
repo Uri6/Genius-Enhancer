@@ -5,22 +5,22 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 @keyframes follow-animation {
   from {
-    background: white;
+    background: transparent;
     color: #3399FF;
   }
   to {
     background: #2EB82E;
     border-color: #2EB82E;
-    color: #ffffff;
+    color: white;
   }
 }
 @keyframes unfollow-animation {
   from {
     background: #2EB82E;
-    color: #ffffff;
+    color: white;
   }
   to {
-    background: white;
+    background: transparent;
     border-color: #3399FF;
     color: #3399FF;
   }
@@ -759,10 +759,6 @@ input::-webkit-calendar-picker-indicator {
   vertical-align: middle !important;
 }
 
-.PageHeaderMenu__Container-sc-13myo8l-0.emAXHD .PageHeaderMenu__Iq-sc-13myo8l-1.jLiBUJ {
-  display: none;
-}
-
 .lyrics_controls.sticky {
   padding-top: 50px !important;
   background: none !important;
@@ -956,7 +952,7 @@ input::-webkit-calendar-picker-indicator {
 }
 #ge-follow-button:after {
   color: #3399FF;
-  background-color: #ffffff;
+  background: transparent;
   border: 1px solid;
   border-radius: 1.25rem;
   border-color: #3399FF;

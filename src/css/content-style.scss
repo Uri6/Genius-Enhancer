@@ -8,11 +8,9 @@ $grey: #6e6e6e;
 $genius-yellow: #ffff65;
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 
-
-
 @-webkit-keyframes follow-animation {
   from {
-    background: white;
+    background: transparent;
     color: #3399FF;
     width: 85px;
     left: 50px;
@@ -21,7 +19,7 @@ $genius-yellow: #ffff65;
   to {
     background: #2EB82E;
     border-color: #2EB82E;
-    color: #ffffff;
+    color: white;
     width: 120px;
     left: 35px;
   }
@@ -30,13 +28,13 @@ $genius-yellow: #ffff65;
 @-webkit-keyframes unfollow-animation {
   from {
     background: #2EB82E;
-    color: #ffffff;
+    color: white;
     width: 120px;
     left: 35px;
   }
 
   to {
-    background: white;
+    background: transparent;
     border-color: #3399FF;
     color: #3399FF;
     width: 85px;
@@ -46,25 +44,25 @@ $genius-yellow: #ffff65;
 
 @keyframes follow-animation {
   from {
-    background: white;
+    background: transparent;
     color: #3399FF;
   }
 
   to {
     background: #2EB82E;
     border-color: #2EB82E;
-    color: #ffffff;
+    color: white;
   }
 }
 
 @keyframes unfollow-animation {
   from {
     background: #2EB82E;
-    color: #ffffff;
+    color: white;
   }
 
   to {
-    background: white;
+    background: transparent;
     border-color: #3399FF;
     color: #3399FF;
   }
@@ -721,31 +719,6 @@ input {
   }
 }
 
-
-.PageHeaderMenu__Container-sc-13myo8l-0.emAXHD {
-  .PageHeaderMenu__Iq-sc-13myo8l-1.jLiBUJ {
-    //border-radius: 5px;
-    //background-color: rgba(0, 0, 0, 0.5);
-    //padding: 5px;
-    //// hide it by moving it out of the screen
-    //transform: translateX(100%);
-    //z-index: -1;
-    //// make sure that when it's shown, it doesn't overlap the other elements
-    //position: absolute;
-    //transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    display: none;
-  }
-
-  //&:hover {
-  //  .PageHeaderMenu__Iq-sc-13myo8l-1.jLiBUJ {
-  //    // show it by moving it back to the screen
-  //    transform: translateX(0);
-  //    z-index: 1;
-  //    position: relative;
-  //  }
-  //}
-}
-
 .lyrics_controls.sticky {
   padding-top: 50px !important;
   background: none !important;
@@ -902,7 +875,6 @@ input {
     max-height: 200px;
     overflow-y: auto;
     width: 300px;
-    // make sure the items will be in two columns
     column-count: 2;
     column-gap: 10px;
 
@@ -964,7 +936,7 @@ input {
 
   &:after {
     color: #3399FF;
-    background-color: #ffffff;
+    background: transparent;
     border: 1px solid;
     border-radius: 1.25rem;
     border-color: #3399FF;
@@ -1003,7 +975,6 @@ input {
   border-radius: 5px !important;
 
   .gjKdJM {
-
     transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
 
     &:first-child:before {
@@ -1021,7 +992,8 @@ input {
   }
 }
 
-// home page
+// Home page
+// TODO: Move to home page stylesheet
 
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT {
 
@@ -1312,7 +1284,7 @@ input {
     transition: all 0.5s ease;
 
     &[href="/contributor_guidelines"] {
-      // make sure the whole text fits in one line
+      // Fit the text in one line
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
