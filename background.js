@@ -1263,57 +1263,109 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }
                                         });
 
-                                        const elemIsAnnotationEditForm = (element) => {
-                                            const isForm = element.nodeName === 'FORM';
-                                            const hasClasses = element.classList.contains('AnnotationEditFormdesktop__Form-sc-15key0q-0') &&
-                                                element.classList.contains('daiNnm');
-                                            return isForm && hasClasses || element.querySelector('form.AnnotationEditFormdesktop__Form-sc-15key0q-0.daiNnm');
+                                        const ANNOTATION_FORM_CLASS = 'AnnotationEditFormdesktop__Form-sc-15key0q-0';
+                                        const LYRICS_TEXTAREA_CLASS = 'ExpandingTextarea__Textarea-sc-4cgivl-0';
+
+                                        const isAnnotationEditForm = (element) => {
+                                            return element?.classList?.contains(ANNOTATION_FORM_CLASS) && element.nodeName === 'FORM' ||
+                                                element.querySelector(`form.${ANNOTATION_FORM_CLASS}`);
                                         };
 
-                                        const handleInput = (textarea) => {
-                                            const inputValue = textarea.value.trim();
-                                            if (inputValue) {
-                                                sessionStorage.setItem('ge-input-tracker', inputValue);
+                                        const isLyricsEditTextarea = (element) => {
+                                            return element?.classList?.contains(LYRICS_TEXTAREA_CLASS) && element.nodeName === 'TEXTAREA' ||
+                                                element.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
+                                        };
+
+                                        const updateRestoreButtonState = (restoreButton, type) => {
+                                            const text = sessionStorage.getItem(`ge-input-tracker-${type}`);
+
+                                            if (text) {
+                                                restoreButton.title = `Restore ${type} input`;
+                                                restoreButton.disabled = false;
+                                                restoreButton.classList.remove('disabled');
+                                            } else {
+                                                restoreButton.title = `No ${type} input to restore`;
+                                                restoreButton.disabled = true;
+                                                // add the class disabled to the button
+                                                restoreButton.classList.add('disabled');
                                             }
                                         };
 
-                                        const handleRestore = (textarea) => {
-                                            const text = sessionStorage.getItem('ge-input-tracker');
+                                        const handleInput = (textarea, type) => {
+                                            const inputValue = textarea.value.trim();
+                                            if (inputValue) {
+                                                sessionStorage.setItem(`ge-input-tracker-${type}`, inputValue);
+                                            }
+                                            const restoreButton = document.querySelector(`.ge-restore-button.${type}`);
+                                            updateRestoreButtonState(restoreButton, type);
+                                        };
+
+                                        const handleRestore = (textarea, type) => {
+                                            const text = sessionStorage.getItem(`ge-input-tracker-${type}`);
                                             if (text) {
+                                                console.info(`Restoring ${type} input: ${text}`);
+                                                if (type === 'lyrics') {
+                                                    textarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
+                                                }
                                                 textarea.focus();
-                                                document.execCommand('selectAll', false, null);
-                                                document.execCommand('insertText', false, text);
+                                                textarea.value = text;
+                                                const event = new Event("input", {
+                                                    bubbles: true,
+                                                    cancelable: true,
+                                                });
+                                                textarea.dispatchEvent(event);
                                             }
                                         };
 
                                         document.addEventListener('DOMNodeInserted', (event) => {
                                             const insertedNode = event.target;
-                                            const isElementNode = insertedNode.nodeType === Node.ELEMENT_NODE;
-                                            const tracked = insertedNode.classList?.contains('ge-text-tracking');
-                                            const isTextArea = insertedNode.nodeName === 'TEXTAREA';
+                                            if (insertedNode.nodeType !== Node.ELEMENT_NODE || insertedNode.classList?.contains('ge-text-tracking')) return;
 
-                                            if (!isElementNode || tracked || !elemIsAnnotationEditForm(insertedNode)) {
-                                                return;
-                                            }
+                                            const isAnnotationEdit = isAnnotationEditForm(insertedNode);
+                                            const isLyricsEdit = isLyricsEditTextarea(insertedNode);
+
+                                            if (!isAnnotationEdit && !isLyricsEdit) return;
+
+                                            const type = isAnnotationEdit
+                                                ? 'annotation'
+                                                : 'lyrics';
+                                            const toolbarQuery = isAnnotationEdit
+                                                ? 'div.Fieldshared__FieldControlWithLabel-dxskot-1>div.TextEditor__Toolbar-sc-128gj0x-0'
+                                                : 'div.LyricsEditdesktop__ControlsContainer-sc-19lxrhp-2>div.LyricsEditdesktop__Controls-sc-19lxrhp-3';
+                                            const buttonClass = isAnnotationEdit
+                                                ? 'kviCal'
+                                                : 'kpOoZB coQEbB';
+                                            const buttonTag = isAnnotationEdit
+                                                ? 'div'
+                                                : 'button';
 
                                             insertedNode.classList.add('ge-text-tracking');
-                                            const textarea = isTextArea ? insertedNode : insertedNode.querySelector('textarea');
+                                            const textarea = insertedNode.nodeName === 'TEXTAREA'
+                                                ? insertedNode
+                                                : insertedNode.querySelector('textarea');
+
                                             if (textarea) {
-                                                textarea.addEventListener('input', () => handleInput(textarea));
+                                                console.info(`Tracking ${type} input (textarea:`, textarea, `)`);
+                                                textarea.addEventListener('input', () => handleInput(textarea, type));
                                             }
 
-                                            const toolbar = insertedNode.querySelector('.TextEditor__Toolbar-sc-128gj0x-0');
-                                            if (toolbar) {
-                                                const restoreButton = document.createElement('div');
-                                                restoreButton.classList.add('ge-restore-button', 'kviCal');
+                                            const toolbar = document.querySelector(toolbarQuery);
+                                            if (toolbar && !toolbar.querySelector('.ge-restore-button')) {
+                                                const restoreButton = document.createElement(buttonTag);
+                                                restoreButton.className = `ge-restore-button ${type} ${buttonClass}`;
                                                 restoreButton.innerText = 'Restore';
-                                                restoreButton.addEventListener('click', () => handleRestore(textarea));
+                                                restoreButton.addEventListener('click', () => handleRestore(textarea, type));
+                                                updateRestoreButtonState(restoreButton, type);
                                                 toolbar.insertBefore(restoreButton, toolbar.children[1]);
                                             }
                                         });
 
                                         window.addEventListener('beforeunload', () => {
-                                            sessionStorage.removeItem("ge-input-tracker");
+                                            Object.keys(sessionStorage).forEach((key) => {
+                                                if (key.startsWith('ge-input-tracker-')) {
+                                                    sessionStorage.removeItem(key);
+                                                }
+                                            });
                                         });
 
                                         /*let isAnnotation = false;

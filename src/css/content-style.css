@@ -443,6 +443,7 @@ input::-webkit-calendar-picker-indicator {
 .PageHeaderInboxdesktop__Label-sc-18cqfy1-1,
 .SongPage__FeedbackBanner-sc-19xhmoi-2.gNhDlQ,
 .PageHeaderMenu__Title-sc-13myo8l-2.dpzskF,
+.PageHeaderMenu__Iq-sc-13myo8l-1,
 .header-action-label,
 .TextLabel-sc-8kw9oj-0.hEVcyj[color=""] {
   display: none !important;
@@ -983,6 +984,10 @@ input::-webkit-calendar-picker-indicator {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+.ge-restore-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #lyrics-root .eMhbqy {
