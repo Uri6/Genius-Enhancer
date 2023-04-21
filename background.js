@@ -274,7 +274,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         // TODO: migrate to using the npm packages
         const files = [
             { type: "css", file: "./src/css/content-style.css" },
-            { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
+            // { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
             { type: "css", file: "./lib/quilljs/quill.snow.css" },
@@ -967,10 +967,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                             break;
                         case 'song':
-                            chrome.scripting.executeScript({
-                                target: { tabId: tabId },
-                                files: ["./lib/geniuspot/geniuspot.min.js"]
-                            });
+                            // chrome.scripting.executeScript({
+                            //     target: { tabId: tabId },
+                            //     files: ["./lib/geniuspot/geniuspot.min.js"]
+                            // });
 
                             chrome.storage.local.get("ModernTextEditor", (res) => {
                                 if (res.ModernTextEditor) {
@@ -1115,153 +1115,153 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }, 1000);
                                         });
 
-                                        $(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", (e) => {
-
-                                            if (!$(".RecentActivity__FilteringContainer").length) {
-
-                                                const filterContainer = $('<div>', {
-                                                    class: 'RecentActivity__FilteringContainer'
-                                                });
-
-                                                const button = $('<span>', {
-                                                    class: 'RecentActivity__FilteringTitle',
-                                                    text: 'Filter'
-                                                }).appendTo(filterContainer);
-
-                                                // Define the options for the dropdown
-                                                const options = [
-                                                    { id: 'created|edited|proposed_an_edit_to|merged|accepted|rejected|deleted|pinned', text: 'Annotations, Proposals, Q&A' },
-                                                    { id: 'added_a_suggestion_to|replied_to|integrated|archived|marked', text: 'Comments, Suggestions' },
-                                                    { id: 'followed|unfollowed', text: 'Follows' },
-                                                    { id: '', text: 'Geniusbot' },
-                                                    { id: 'edited_the_lyrics_of|recognized|marked_complete|verified_the_lyrics_of|unverified_the_lyrics_of', text: 'Lyrics Edits' },
-                                                    { id: 'edited_the_metadata_of|locked|unlocked', text: 'Metadata' },
-                                                    { id: 'pyonged', text: 'Pyongs' },
-                                                    { id: 'downvoted|upvoted', text: 'Voting' }
-                                                ];
-
-                                                // Create a select element for the dropdown
-                                                const filterDropdown = $('<div>', {
-                                                    class: 'RecentActivity__FilteringDropdown',
-                                                    style: 'display: none;'
-                                                });
-
-                                                // Create an option element for each option and add it to the dropdown
-                                                options.forEach((option) => {
-                                                    $('<div>', {
-                                                        class: 'RecentActivity__FilteringDropdownItem'
-                                                    })
-                                                        .append($('<input>', {
-                                                            type: 'checkbox',
-                                                            class: 'chkboxm',
-                                                            id: option.text,
-                                                            name: option.text,
-                                                            'filter-id': option.id,
-                                                            checked: true
-                                                        }))
-                                                        .append($('<label>', {
-                                                            for: option.text,
-                                                        })
-                                                            .append($('<span>', {
-                                                                class: 'chkboxmspan'
-                                                            }))
-                                                            .append($('<span>', {
-                                                                class: 'RecentActivity__FilteringDropdownItemText',
-                                                                text: option.text
-                                                            }))
-                                                        )
-                                                        .appendTo(filterDropdown);
-                                                });
-
-                                                // Add the dropdown to the page
-                                                $(e.target).find('.RecentActivity__Title-d62qa5-1.ilJdac').after(filterContainer);
-                                                $(filterContainer).append(filterDropdown);
-
-                                                // When the dropdown is clicked, show the options
-                                                $(button).click(() => {
-                                                    $(filterDropdown).toggle();
-                                                });
-
-                                                // When the user clicks anywhere outside of the dropdown, hide it (make sure it won't hide when clicking on the button)
-                                                $(document).click((e) => {
-                                                    if (!$(e.target).is(button) && !$(e.target).is(filterDropdown) && !$(e.target).is(filterDropdown.find('*'))) {
-                                                        $(filterDropdown).hide();
-                                                    }
-                                                });
-
-                                                $('.RecentActivity__FilteringDropdownItem').click(() => {
-                                                    $(this).find('.chkboxm').prop('checked', !$(this).find('.chkboxm').prop('checked'));
-                                                });
-
-                                                // When the user clicks on an option, show/hide the activity items
-                                                $(filterDropdown).find('.chkboxm').click(() => {
-                                                    const filterIds = $(this).attr('filter-id').split('|');
-                                                    const isChecked = $(this).prop('checked');
-
-                                                    // the activity items are in the .PlaceholderSpinnerIframe__Iframe-sc-1vue620-0 iframe, so we need to get the iframe's document
-                                                    const iframe = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
-
-                                                    // each div child of the element with the tag name song-activity-stream is an activity item
-                                                    const activityItems = Array.from(iframe.contentWindow.document.querySelector('song-activity-stream div').children);
-
-                                                    activityItems.forEach((activityItem) => {
-                                                        // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
-                                                        let actionType = activityItem.querySelector('inbox-line-item-action-icon div svg');
-                                                        if (actionType) {
-                                                            actionType = actionType.getAttribute('ng-switch-when');
-                                                            if (filterIds.includes(actionType)) {
-                                                                $(activityItem).toggle(!isChecked);
-                                                            }
-                                                        } else {
-                                                            actionType = activityItem.querySelector('inbox-line-item-action-icon div');
-                                                            if (actionType && !actionType.querySelector('svg') && filterIds === ['']) {
-                                                                $(activityItem).toggle(!isChecked);
-                                                            }
-                                                        }
-                                                    });
-
-                                                    // insert to the iframe a .checked-filters div element with all the checked filters ids (if there's already a .checked-filters div element, remove it)
-                                                    const checkedFilters = document.querySelectorAll('.RecentActivity__FilteringDropdownItem input:checked');
-                                                    const checkedFiltersIds = Array.from(checkedFilters).map(checkedFilter => checkedFilter.getAttribute('filter-id')).join('|');
-                                                    const checkedFiltersDiv = iframe.contentWindow.document.querySelector('.checked-filters');
-                                                    if (checkedFiltersDiv) {
-                                                        checkedFiltersDiv.remove();
-                                                    }
-                                                    $('<div>', {
-                                                        class: 'checked-filters',
-                                                        style: 'display: none;',
-                                                        text: checkedFiltersIds
-                                                    }).prependTo(iframe.contentWindow.document);
-                                                });
-                                            }
-
-                                            const activityIfame = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
-
-                                            if (activityIfame) {
-
-                                                activityIfame.contentWindow.document.querySelector('song-activity-stream div').addEventListener('DOMNodeInserted', (e) => {
-                                                    if (e.target.tagName === 'DIV') {
-                                                        let filterIds = activityIfame.contentWindow.document.querySelector('.checked-filters');
-                                                        if (filterIds) {
-                                                            filterIds = filterIds.innerText.split('|');
-                                                            // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
-                                                            let actionType = e.target.querySelector('inbox-line-item-action-icon div svg');
-                                                            if (actionType) {
-                                                                actionType = actionType.getAttribute('ng-switch-when');
-                                                                if (filterIds.includes(actionType)) {
-                                                                    $(e.target).toggle(false);
-                                                                }
-                                                            } else {
-                                                                actionType = e.target.querySelector('inbox-line-item-action-icon div');
-                                                                if (actionType && !actionType.querySelector('svg') && JSON.stringify(filterIds) === JSON.stringify([''])) {
-                                                                    $(e.target).toggle(false);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        });
+                                        // $(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", (e) => {
+                                        //
+                                        //     if (!$(".RecentActivity__FilteringContainer").length) {
+                                        //
+                                        //         const filterContainer = $('<div>', {
+                                        //             class: 'RecentActivity__FilteringContainer'
+                                        //         });
+                                        //
+                                        //         const button = $('<span>', {
+                                        //             class: 'RecentActivity__FilteringTitle',
+                                        //             text: 'Filter'
+                                        //         }).appendTo(filterContainer);
+                                        //
+                                        //         // Define the options for the dropdown
+                                        //         const options = [
+                                        //             { id: 'created|edited|proposed_an_edit_to|merged|accepted|rejected|deleted|pinned', text: 'Annotations, Proposals, Q&A' },
+                                        //             { id: 'added_a_suggestion_to|replied_to|integrated|archived|marked', text: 'Comments, Suggestions' },
+                                        //             { id: 'followed|unfollowed', text: 'Follows' },
+                                        //             { id: '', text: 'Geniusbot' },
+                                        //             { id: 'edited_the_lyrics_of|recognized|marked_complete|verified_the_lyrics_of|unverified_the_lyrics_of', text: 'Lyrics Edits' },
+                                        //             { id: 'edited_the_metadata_of|locked|unlocked', text: 'Metadata' },
+                                        //             { id: 'pyonged', text: 'Pyongs' },
+                                        //             { id: 'downvoted|upvoted', text: 'Voting' }
+                                        //         ];
+                                        //
+                                        //         // Create a select element for the dropdown
+                                        //         const filterDropdown = $('<div>', {
+                                        //             class: 'RecentActivity__FilteringDropdown',
+                                        //             style: 'display: none;'
+                                        //         });
+                                        //
+                                        //         // Create an option element for each option and add it to the dropdown
+                                        //         options.forEach((option) => {
+                                        //             $('<div>', {
+                                        //                 class: 'RecentActivity__FilteringDropdownItem'
+                                        //             })
+                                        //                 .append($('<input>', {
+                                        //                     type: 'checkbox',
+                                        //                     class: 'chkboxm',
+                                        //                     id: option.text,
+                                        //                     name: option.text,
+                                        //                     'filter-id': option.id,
+                                        //                     checked: true
+                                        //                 }))
+                                        //                 .append($('<label>', {
+                                        //                     for: option.text,
+                                        //                 })
+                                        //                     .append($('<span>', {
+                                        //                         class: 'chkboxmspan'
+                                        //                     }))
+                                        //                     .append($('<span>', {
+                                        //                         class: 'RecentActivity__FilteringDropdownItemText',
+                                        //                         text: option.text
+                                        //                     }))
+                                        //                 )
+                                        //                 .appendTo(filterDropdown);
+                                        //         });
+                                        //
+                                        //         // Add the dropdown to the page
+                                        //         $(e.target).find('.RecentActivity__Title-d62qa5-1.ilJdac').after(filterContainer);
+                                        //         $(filterContainer).append(filterDropdown);
+                                        //
+                                        //         // When the dropdown is clicked, show the options
+                                        //         $(button).click(() => {
+                                        //             $(filterDropdown).toggle();
+                                        //         });
+                                        //
+                                        //         // When the user clicks anywhere outside of the dropdown, hide it (make sure it won't hide when clicking on the button)
+                                        //         $(document).click((e) => {
+                                        //             if (!$(e.target).is(button) && !$(e.target).is(filterDropdown) && !$(e.target).is(filterDropdown.find('*'))) {
+                                        //                 $(filterDropdown).hide();
+                                        //             }
+                                        //         });
+                                        //
+                                        //         $('.RecentActivity__FilteringDropdownItem').click(() => {
+                                        //             $(this).find('.chkboxm').prop('checked', !$(this).find('.chkboxm').prop('checked'));
+                                        //         });
+                                        //
+                                        //         // When the user clicks on an option, show/hide the activity items
+                                        //         $(filterDropdown).find('.chkboxm').click(() => {
+                                        //             const filterIds = $(this).attr('filter-id').split('|');
+                                        //             const isChecked = $(this).prop('checked');
+                                        //
+                                        //             // the activity items are in the .PlaceholderSpinnerIframe__Iframe-sc-1vue620-0 iframe, so we need to get the iframe's document
+                                        //             const iframe = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
+                                        //
+                                        //             // each div child of the element with the tag name song-activity-stream is an activity item
+                                        //             const activityItems = Array.from(iframe.contentWindow.document.querySelector('song-activity-stream div').children);
+                                        //
+                                        //             activityItems.forEach((activityItem) => {
+                                        //                 // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
+                                        //                 let actionType = activityItem.querySelector('inbox-line-item-action-icon div svg');
+                                        //                 if (actionType) {
+                                        //                     actionType = actionType.getAttribute('ng-switch-when');
+                                        //                     if (filterIds.includes(actionType)) {
+                                        //                         $(activityItem).toggle(!isChecked);
+                                        //                     }
+                                        //                 } else {
+                                        //                     actionType = activityItem.querySelector('inbox-line-item-action-icon div');
+                                        //                     if (actionType && !actionType.querySelector('svg') && filterIds === ['']) {
+                                        //                         $(activityItem).toggle(!isChecked);
+                                        //                     }
+                                        //                 }
+                                        //             });
+                                        //
+                                        //             // insert to the iframe a .checked-filters div element with all the checked filters ids (if there's already a .checked-filters div element, remove it)
+                                        //             const checkedFilters = document.querySelectorAll('.RecentActivity__FilteringDropdownItem input:checked');
+                                        //             const checkedFiltersIds = Array.from(checkedFilters).map(checkedFilter => checkedFilter.getAttribute('filter-id')).join('|');
+                                        //             const checkedFiltersDiv = iframe.contentWindow.document.querySelector('.checked-filters');
+                                        //             if (checkedFiltersDiv) {
+                                        //                 checkedFiltersDiv.remove();
+                                        //             }
+                                        //             $('<div>', {
+                                        //                 class: 'checked-filters',
+                                        //                 style: 'display: none;',
+                                        //                 text: checkedFiltersIds
+                                        //             }).prependTo(iframe.contentWindow.document);
+                                        //         });
+                                        //     }
+                                        //
+                                        //     const activityIfame = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
+                                        //
+                                        //     if (activityIfame) {
+                                        //
+                                        //         activityIfame.contentWindow.document.querySelector('song-activity-stream div').addEventListener('DOMNodeInserted', (e) => {
+                                        //             if (e.target.tagName === 'DIV') {
+                                        //                 let filterIds = activityIfame.contentWindow.document.querySelector('.checked-filters');
+                                        //                 if (filterIds) {
+                                        //                     filterIds = filterIds.innerText.split('|');
+                                        //                     // the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
+                                        //                     let actionType = e.target.querySelector('inbox-line-item-action-icon div svg');
+                                        //                     if (actionType) {
+                                        //                         actionType = actionType.getAttribute('ng-switch-when');
+                                        //                         if (filterIds.includes(actionType)) {
+                                        //                             $(e.target).toggle(false);
+                                        //                         }
+                                        //                     } else {
+                                        //                         actionType = e.target.querySelector('inbox-line-item-action-icon div');
+                                        //                         if (actionType && !actionType.querySelector('svg') && JSON.stringify(filterIds) === JSON.stringify([''])) {
+                                        //                             $(e.target).toggle(false);
+                                        //                         }
+                                        //                     }
+                                        //                 }
+                                        //             }
+                                        //         });
+                                        //     }
+                                        // });
 
                                         const ANNOTATION_FORM_CLASS = 'AnnotationEditFormdesktop__Form-sc-15key0q-0';
                                         const LYRICS_TEXTAREA_CLASS = 'ExpandingTextarea__Textarea-sc-4cgivl-0';
@@ -1317,48 +1317,48 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                             }
                                         };
 
-                                        document.addEventListener('DOMNodeInserted', (event) => {
-                                            const insertedNode = event.target;
-                                            if (insertedNode.nodeType !== Node.ELEMENT_NODE || insertedNode.classList?.contains('ge-text-tracking')) return;
-
-                                            const isAnnotationEdit = isAnnotationEditForm(insertedNode);
-                                            const isLyricsEdit = isLyricsEditTextarea(insertedNode);
-
-                                            if (!isAnnotationEdit && !isLyricsEdit) return;
-
-                                            const type = isAnnotationEdit
-                                                ? 'annotation'
-                                                : 'lyrics';
-                                            const toolbarQuery = isAnnotationEdit
-                                                ? 'div.Fieldshared__FieldControlWithLabel-dxskot-1>div.TextEditor__Toolbar-sc-128gj0x-0'
-                                                : 'div.LyricsEditdesktop__ControlsContainer-sc-19lxrhp-2>div.LyricsEditdesktop__Controls-sc-19lxrhp-3';
-                                            const buttonClass = isAnnotationEdit
-                                                ? 'kviCal'
-                                                : 'kpOoZB coQEbB';
-                                            const buttonTag = isAnnotationEdit
-                                                ? 'div'
-                                                : 'button';
-
-                                            insertedNode.classList.add('ge-text-tracking');
-                                            const textarea = insertedNode.nodeName === 'TEXTAREA'
-                                                ? insertedNode
-                                                : insertedNode.querySelector('textarea');
-
-                                            if (textarea) {
-                                                console.info(`Tracking ${type} input (textarea:`, textarea, `)`);
-                                                textarea.addEventListener('input', () => handleInput(textarea, type));
-                                            }
-
-                                            const toolbar = document.querySelector(toolbarQuery);
-                                            if (toolbar && !toolbar.querySelector('.ge-restore-button')) {
-                                                const restoreButton = document.createElement(buttonTag);
-                                                restoreButton.className = `ge-restore-button ${type} ${buttonClass}`;
-                                                restoreButton.innerText = 'Restore';
-                                                restoreButton.addEventListener('click', () => handleRestore(textarea, type));
-                                                updateRestoreButtonState(restoreButton, type);
-                                                toolbar.insertBefore(restoreButton, toolbar.children[1]);
-                                            }
-                                        });
+                                        // document.addEventListener('DOMNodeInserted', (event) => {
+                                        //     const insertedNode = event.target;
+                                        //     if (insertedNode.nodeType !== Node.ELEMENT_NODE || insertedNode.classList?.contains('ge-text-tracking')) return;
+                                        //
+                                        //     const isAnnotationEdit = isAnnotationEditForm(insertedNode);
+                                        //     const isLyricsEdit = isLyricsEditTextarea(insertedNode);
+                                        //
+                                        //     if (!isAnnotationEdit && !isLyricsEdit) return;
+                                        //
+                                        //     const type = isAnnotationEdit
+                                        //         ? 'annotation'
+                                        //         : 'lyrics';
+                                        //     const toolbarQuery = isAnnotationEdit
+                                        //         ? 'div.Fieldshared__FieldControlWithLabel-dxskot-1>div.TextEditor__Toolbar-sc-128gj0x-0'
+                                        //         : 'div.LyricsEditdesktop__ControlsContainer-sc-19lxrhp-2>div.LyricsEditdesktop__Controls-sc-19lxrhp-3';
+                                        //     const buttonClass = isAnnotationEdit
+                                        //         ? 'kviCal'
+                                        //         : 'kpOoZB coQEbB';
+                                        //     const buttonTag = isAnnotationEdit
+                                        //         ? 'div'
+                                        //         : 'button';
+                                        //
+                                        //     insertedNode.classList.add('ge-text-tracking');
+                                        //     const textarea = insertedNode.nodeName === 'TEXTAREA'
+                                        //         ? insertedNode
+                                        //         : insertedNode.querySelector('textarea');
+                                        //
+                                        //     if (textarea) {
+                                        //         console.info(`Tracking ${type} input (textarea:`, textarea, `)`);
+                                        //         textarea.addEventListener('input', () => handleInput(textarea, type));
+                                        //     }
+                                        //
+                                        //     const toolbar = document.querySelector(toolbarQuery);
+                                        //     if (toolbar && !toolbar.querySelector('.ge-restore-button')) {
+                                        //         const restoreButton = document.createElement(buttonTag);
+                                        //         restoreButton.className = `ge-restore-button ${type} ${buttonClass}`;
+                                        //         restoreButton.innerText = 'Restore';
+                                        //         restoreButton.addEventListener('click', () => handleRestore(textarea, type));
+                                        //         updateRestoreButtonState(restoreButton, type);
+                                        //         toolbar.insertBefore(restoreButton, toolbar.children[1]);
+                                        //     }
+                                        // });
 
                                         window.addEventListener('beforeunload', () => {
                                             Object.keys(sessionStorage).forEach((key) => {
