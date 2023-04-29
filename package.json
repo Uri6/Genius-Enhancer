@@ -13,5 +13,8 @@
     },
     "scripts": {
         "prettier": "prettier --write \"**/*.{js,ts,tsx,html,json}\""
+    },
+    "dependencies": {
+        "sass": "^1.62.1"
     }
 }
