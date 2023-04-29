@@ -5,7 +5,7 @@
 
 /**
  * Toggles the visibility of the Apple Music player iframe
- * 
+ *
  * @param {boolean} show - Whether to show (true) or hide (false) the iframe
  */
 export function appleMusicPopUp(show) {
@@ -17,7 +17,7 @@ export function appleMusicPopUp(show) {
 
 /**
  * Toggles the visibility of the Spotify player iframe
- * 
+ *
  * @param {boolean} show - Whether to show (true) or hide (false) the iframe
  */
 export function spotifyPopUp(show) {
@@ -28,7 +28,7 @@ export function spotifyPopUp(show) {
 
 /**
  * Initializes the modern text editor for a song, and monitoring for changes in the DOM to remove the editor when necessary
- * 
+ *
  * @returns {void}
  */
 export function song_modernTextEditor() {
@@ -98,25 +98,25 @@ export function song_modernTextEditor() {
                     "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo",
                 ],
             });
-
-            document.addEventListener("DOMNodeRemoved", () => {
-                setTimeout(() => {
-                    if (
-                        document.querySelectorAll(
-                            ".LyricsEditdesktop__Controls-sc-19lxrhp-5.bwjuqY button"
-                        ).length < 3
-                    ) {
-                        chrome.runtime.sendMessage({ removeQuill: true });
-                    }
-                }, 100);
-            });
         }
+    });
+
+    document.addEventListener("DOMNodeRemoved", () => {
+        setTimeout(() => {
+            if (
+                document.querySelectorAll(
+                    ".LyricsEditdesktop__Controls-sc-19lxrhp-5.bwjuqY button"
+                ).length < 3
+            ) {
+                chrome.runtime.sendMessage({ removeQuill: true });
+            }
+        }, 100);
     });
 }
 
 /**
  * Search for a video on YouTube using the YouTube Data API v3
- * 
+ *
  * @param {string} query - The search query for the video
  * @returns {Promise<string>} - A Promise that resolves to the URL of the most relevant video for the given search query
  */
