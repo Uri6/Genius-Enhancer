@@ -271,10 +271,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 
     if (changeInfo.status === "complete" && tab.url.includes("genius.com")) {
-        // TODO: migrate to using the npm packages
         const files = [
             { type: "css", file: "./src/css/content-style.css" },
-            // { type: "css", file: "./lib/bootstrap/bootstrap.min.css" },
             { type: "css", file: "./lib/tagify/tagify.css" },
             { type: "css", file: "./lib/dragsort/dragsort.css" },
             { type: "css", file: "./lib/quilljs/quill.snow.css" },
@@ -326,7 +324,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                         },
                         function (returnVal) {
                             if (
-                                returnVal != undefined &&
+                                returnVal !== undefined &&
                                 returnVal[0].result != null
                             ) {
                                 pageObject = returnVal[0].result;
@@ -334,7 +332,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             }
 
                             if (
-                                returnVal == undefined ||
+                                returnVal === undefined ||
                                 returnVal[0].result == null ||
                                 pageType == undefined ||
                                 pageType == "unknown"
