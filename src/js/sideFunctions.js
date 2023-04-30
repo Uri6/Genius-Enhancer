@@ -5,7 +5,7 @@
 
 /**
  * Checks if the given text contains any non Latin characters
- * 
+ *
  * @param {string} text - The text to check for non Latin characters
  * @returns {string} - The fixed text
  */
@@ -13,15 +13,13 @@ export async function fixNonLatin(text) {
     // Check if the input is an array of strings
     if (Array.isArray(text)) {
         // Map over each string in the array and apply the fixNonLatin function recursively
-        let modifiedText = await Promise.all(text.map(async (str) => {
-            const modifiedPart = await new Promise((resolve) => {
+        return await Promise.all(text.map(async (str) => {
+            return await new Promise((resolve) => {
                 chrome.runtime.sendMessage({ "fixNonLatin": [str] }, (response) => {
                     resolve(response);
                 });
             });
-            return modifiedPart;
         }));
-        return modifiedText;
     }
 
     const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
@@ -87,9 +85,7 @@ export function identifyPageType() {
 
     // An array of possible Genius.com URLs
     const geniusAdress = [
-        "http://www.genius.com/",
         "https://www.genius.com/",
-        "http://genius.com/",
         "https://genius.com/",
     ];
 
@@ -256,7 +252,7 @@ export async function getArtistsList(query) {
 
 /**
  * Retrieves a list of credits from the Genius API based on a search query
- * 
+ *
  * @param {string} query - The search query for credits
  * @returns {Promise<Array>} - A Promise that resolves to an array of unique credits matching the search query
  */
@@ -280,7 +276,7 @@ export async function getCreditsList(query) {
 
 /**
  * Replaces a textarea with a Quill rich text editor
- * 
+ *
  * @param {string} textareaClasses - The classes of the textarea to replace
  * @throws {Error} - Throws an error if the textarea could not be found
  * @returns {void}
@@ -409,7 +405,7 @@ export function replaceTextarea(textareaClasses) {
 
 /**
  * Removes the Quill rich text editor from the DOM
- * 
+ *
  * @returns {void}
  */
 export function removeQuill() {

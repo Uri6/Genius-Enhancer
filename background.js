@@ -218,9 +218,7 @@ let isGeniusPage = false;
 let pageObject = {};
 let url = "";
 const geniusAddress = [
-    "http://www.genius.com/",
     "https://www.genius.com/",
-    "http://genius.com/",
     "https://genius.com/"
 ];
 
