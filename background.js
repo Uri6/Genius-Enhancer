@@ -241,7 +241,6 @@ async function handleGeniusPage(tabId) {
             }
 
             headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/forums">Forums</a></li>');
-            headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/genius-help">Genius Help</a></li>');
             headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/songs/new">Add Song</a></li>');
             headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/albums/Genius/Guides">Guides</a></li>');
             headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://larsbutnotleast.xyz/genius">GeniusGraph</a></li>');
@@ -274,6 +273,15 @@ async function handleGeniusPage(tabId) {
             $(".header-actions *").on("click", () => {
                 $(".search_results_autocomplete_container").addClass("ng-hide");
             });
+
+            // const adminHeader = $("div[ng-show='$ctrl.open_header_menus.admin_menu']");
+            const feedbackButton = $("a[href='/feedback/new']");
+            const iosChartbeat = $("a[href='/chartbeat?ios=1']");
+
+            feedbackButton?.remove();
+            iosChartbeat?.remove();
+
+            // adminHeader?.append('<a href="/users/recent_signups" class="feed_dropdown-item feed_dropdown-item--link">Recent Signups</a>');
 
             const $body = $("body");
             const $modalWindow = $(".modal_window");
