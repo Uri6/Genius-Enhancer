@@ -37,40 +37,42 @@ export function song_modernTextEditor() {
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (
-                mutation.type === "attributes" &&
-                mutation.attributeName === "class" &&
-                !$(".ql-toolbar-container").length
+                !(mutation.type === "attributes" &&
+                    mutation.attributeName === "class" &&
+                    !$(".ql-toolbar-container").length)
             ) {
-                const target = mutation.target;
-                if (
-                    !target.classList.contains("ng-hide") &&
-                    target.classList.contains("wysiwyg_input") &&
-                    target.classList.contains("wysiwyg_input--full_width")
-                ) {
-                    chrome.runtime.sendMessage({
-                        replaceTextarea: [
-                            "wysiwyg_input wysiwyg_input--full_width",
-                        ],
-                    });
-                    flag = true;
+                return;
+            }
 
-                    document.addEventListener("DOMNodeRemoved", (e) => {
-                        if (flag) {
-                            setTimeout(() => {
-                                const ngIfAttr = e.target.getAttribute("ng-if");
-                                if (
-                                    ngIfAttr === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
-                                    ngIfAttr === "!lyrics_ctrl.saving"
-                                ) {
-                                    chrome.runtime.sendMessage({
-                                        removeQuill: true,
-                                    });
-                                    flag = false;
-                                }
-                            }, 100);
-                        }
-                    });
-                }
+            const target = mutation.target;
+            if (
+                !target.classList.contains("ng-hide") &&
+                target.classList.contains("wysiwyg_input") &&
+                target.classList.contains("wysiwyg_input--full_width")
+            ) {
+                chrome.runtime.sendMessage({
+                    replaceTextarea: [
+                        "wysiwyg_input wysiwyg_input--full_width"
+                    ]
+                });
+                flag = true;
+
+                document.addEventListener("DOMNodeRemoved", (e) => {
+                    if (flag) {
+                        setTimeout(() => {
+                            const ngIfAttr = e.target.getAttribute("ng-if");
+                            if (
+                                ngIfAttr === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
+                                ngIfAttr === "!lyrics_ctrl.saving"
+                            ) {
+                                chrome.runtime.sendMessage({
+                                    removeQuill: true
+                                });
+                                flag = false;
+                            }
+                        }, 100);
+                    }
+                });
             }
         });
     });
@@ -137,7 +139,6 @@ export async function searchVideo(query) {
 }
 
 export async function appendFollowButton() {
-
     const container = document.querySelector(".StickyContributorToolbar__Left-sc-1s6k5oy-1.lhAIsa");
 
     if (container && !document.querySelector("#ge-follow-button")) {
@@ -175,13 +176,4 @@ export async function appendFollowButton() {
     } else {
         console.error("Could not find container for follow button");
     }
-}
-
-export function appendReplyButton() {
-    /*var commentClassName = "comment" || "Comment__Container-qhf03b-0 joncYs";
-
-  document.getElementsByClassName(commentClassName).array.forEach(element => {
-    console.log(element.childNodes[12]);
-  });*/
-    // return;
 }
