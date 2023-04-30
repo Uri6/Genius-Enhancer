@@ -224,13 +224,6 @@ async function handleGeniusPage(tabId) {
             }
             subNav.insertAfter(logo);
 
-            // header menu items look like this:
-            // <header-menu-item name="Forums" url="https://genius.com/forums" className="ng-isolate-scope">
-            // <li className="nav_menu-item ng-scope" ng-if="url">
-            //   <a className="nav_menu-link ng-binding" ng-href="https://genius.com/forums" href="https://genius.com/forums">Forums</a>
-            // </li>
-            // </header-menu-item>
-
             // we want to find all the header menu items, remove them, then we'll re-add our own
             // custom ones
             let headerMenuItems = $("header-menu-item");
@@ -240,11 +233,12 @@ async function handleGeniusPage(tabId) {
                 headerMenuItems.remove();
             }
 
-            headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/forums">Forums</a></li>');
-            headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/songs/new">Add Song</a></li>');
-            headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/albums/Genius/Guides">Guides</a></li>');
-            headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://larsbutnotleast.xyz/genius">GeniusGraph</a></li>');
-            headerNavMenu.append('<li class="nav_menu-item ng-scope"><a class="nav_menu-link ng-binding" href="https://genius.com/Genius-users-zero-width-space-annotated">ZWSP</a></li>');
+            if ($(".ge-inject").length < 1) {
+                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://genius.com/forums">Forums</a></li>');
+                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://genius.com/songs/new">Add Song</a></li>');
+                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://genius.com/albums/Genius/Guides">Guides</a></li>');
+                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://larsbutnotleast.xyz/genius">GeniusGraph</a></li>');
+            }
 
             // if there's an element with the class "lyrics_controls", when it sticky add the class "sticky" to this element
             // make sure that the class "sticky" is removed when the element is not sticky
