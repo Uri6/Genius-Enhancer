@@ -70,48 +70,6 @@ export async function handleNewSong(tabId) {
                         $("#song_submit").trigger("click");
                     }
                 });
-
-                // if send clicked but (on of the ".required" inputs is empty) or (the input "#song_lyrics_state" is not checked and and textarea ".add_song_page-lyrics_textarea" is empty), add for all of them a red border
-                // else, remove the red border
-                document.querySelector("#song_submit").addEventListener("click", async (e) => {
-
-                    const clickedTag = document.querySelector(".modern-chooser-button-active");
-                    const requiredInputs = document.querySelectorAll(".required");
-                    const lyricsState = document.querySelector("#song_lyrics_state");
-                    const lyricsTextarea = document.querySelector(".add_song_page-lyrics_textarea");
-
-                    requiredInputs.forEach((input) => {
-                        if (!input.value) {
-                            e.preventDefault();
-                            $(input).addClass("missing");
-
-                            input.addEventListener("input", (e) => {
-                                $(e.target).removeClass("missing");
-
-                                if (!e.target.value) {
-                                    $(e.target).addClass("missing");
-                                }
-                            });
-                        }
-                    });
-
-                    if (!lyricsState.checked && !lyricsTextarea.value) {
-                        e.preventDefault();
-                        $(lyricsTextarea).addClass("missing");
-
-                        lyricsTextarea.addEventListener("input", (e) => {
-                            $(e.target).removeClass("missing");
-
-                            if (!e.target.value && !lyricsState.checked) {
-                                $(e.target).addClass("missing");
-                            }
-                        });
-                    }
-
-                    setTimeout(() => {
-                        clickedTag.click();
-                    }, 100);
-                });
             })
         }
     );
