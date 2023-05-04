@@ -33,7 +33,7 @@ or
 
 1. Clone the repository
 ```
-git clone https://github.com/Uri6/genius-enhancer.git
+git clone https://github.com/Uri6/Genius-Enhancer-Beta.git
 ```
 
 2. Go to `chrome://extensions/` in your chrome browser and turn on "developer mode"
