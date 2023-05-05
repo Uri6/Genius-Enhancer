@@ -456,6 +456,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     type: "checkbox",
                                     on: {
                                         click: function () {
+                                            $("body").addClass("ge-theme-transition");
+
                                             if ($(this).is(":checked")) {
                                                 $("body").addClass("ge-dark-mode");
                                                 chrome.storage.local.set({ "darkMode": true });
@@ -464,6 +466,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                                 $("body").removeClass("ge-dark-mode");
                                                 chrome.storage.local.set({ "darkMode": false });
                                             }
+
+                                            setTimeout(() => {
+                                                $("body").removeClass("ge-theme-transition");
+                                            }, 2000);
                                         }
                                     }
                                 })
@@ -473,6 +479,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                     if (res.darkMode) {
                                         darkModeToogle.prop("checked", true);
                                         $("body").addClass("ge-dark-mode");
+                                        $("body").addClass("ge-theme-transition");
+                                        setTimeout(() => {
+                                            $("body").removeClass("ge-theme-transition");
+                                        }, 2000);
                                     }
                                 });
                             }

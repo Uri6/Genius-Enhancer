@@ -1,3 +1,7 @@
+body.ge-theme-transition * {
+    transition: color 0s ease 0s, background 0s ease 0s, background-color 0s ease 0s, border-color 0s ease 0s !important;
+}
+
 body.ge-dark-mode {
     background: #141414;
     color: #f2e6fe;
