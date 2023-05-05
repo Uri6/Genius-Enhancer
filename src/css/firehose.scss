@@ -4,7 +4,25 @@
  */
 
 body {
-    background-color: #ffff65 !important;
+    &:not(.ge-dark-mode) {
+        background-color: #ffff65 !important;
+
+        label,
+        legend,
+        input,
+        input::placeholder,
+        select {
+            color: black !important;
+        }
+
+        #firehose_filters {
+            fieldset {
+                legend {
+                    background-color: #ffff65 !important;
+                }
+            }
+        }
+    }
 
     #main {
         .avatar {
@@ -45,14 +63,6 @@ body {
         }
 
         #firehose_filters {
-
-            label,
-            legend,
-            input,
-            input::placeholder,
-            select {
-                color: black !important;
-            }
 
             #selected_users .selected_user {
                 .user_badge {
@@ -145,7 +155,6 @@ body {
                     padding: 0px 10px !important;
                     border-radius: 10px !important;
                     border: 1px solid #cccccc !important;
-                    background-color: #ffff65 !important;
                     right: -10px !important;
                 }
 

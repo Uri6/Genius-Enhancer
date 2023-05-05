@@ -481,6 +481,9 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .ac_results ul.chzn-choices {
 body.ge-dark-mode *:not(:has(.extension-box) *) .ac_results ul.chzn-choices.focused li.search-field input {
   color: #fff;
 }
+body.ge-dark-mode *:not(:has(.extension-box) *) #firehose_filters fieldset legend {
+  background-color: #171717 !important;
+}
 body.ge-dark-mode *:not(:has(.extension-box) *) #footer {
   background: #141414;
 }
@@ -876,7 +879,7 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .tooltip {
 body.ge-dark-mode *:not(:has(.extension-box) *) .track_listing {
   color: #fff;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .u-white_background {
+body.ge-dark-mode *:not(:has(.extension-box) *) .u-white_background, body.ge-dark-mode *:not(:has(.extension-box) *).u-white_background {
   background: #141414;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .vertical_album_card {

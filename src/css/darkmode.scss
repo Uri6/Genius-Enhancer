@@ -686,6 +686,14 @@ body.ge-dark-mode {
             }
         }
 
+        #firehose_filters {
+            fieldset {
+                legend {
+                    background-color: #171717 !important;
+                }
+            }
+        }
+
         #footer {
             background: #141414;
         }
@@ -1268,7 +1276,8 @@ body.ge-dark-mode {
             color: #fff;
         }
 
-        .u-white_background {
+        .u-white_background,
+        &.u-white_background {
             background: #141414;
         }
 
