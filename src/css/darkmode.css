@@ -1,4 +1,4 @@
-body.ge-theme-transition * {
+body.ge-theme-transition *:not(#ge-theme-toggle) {
   transition: color 0s ease 0s, background 0s ease 0s, background-color 0s ease 0s, border-color 0s ease 0s !important;
 }
 
@@ -284,6 +284,13 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .article_title {
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .article_type {
   border: 1px solid #fff;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) artist-songs-and-albums .full_width_button {
+  background: #303030 !important;
+  color: #fff !important;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) artist-songs-and-albums .full_width_button:hover {
+  background: #353535 !important;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .autocomplete-results li {
   background: #171717;
@@ -713,6 +720,18 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card:not(.mini_card--trans
 body.ge-dark-mode *:not(:has(.extension-box) *) .mini_article_card-title {
   color: #000;
 }
+body.ge-dark-mode *:not(:has(.extension-box) *) mini-song-card a,
+body.ge-dark-mode *:not(:has(.extension-box) *) mini-song-card a.vertical_album_card,
+body.ge-dark-mode *:not(:has(.extension-box) *) vertical-album-card a,
+body.ge-dark-mode *:not(:has(.extension-box) *) vertical-album-card a.vertical_album_card {
+  background: #171717 !important;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) mini-song-card a:hover,
+body.ge-dark-mode *:not(:has(.extension-box) *) mini-song-card a.vertical_album_card:hover,
+body.ge-dark-mode *:not(:has(.extension-box) *) vertical-album-card a:hover,
+body.ge-dark-mode *:not(:has(.extension-box) *) vertical-album-card a.vertical_album_card:hover {
+  background: #303030 !important;
+}
 body.ge-dark-mode *:not(:has(.extension-box) *) .modal_window-content {
   background: #141414;
 }
@@ -770,6 +789,19 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .social-icons-color-standard .em
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .social-icons-color-standard .email .sqs-use--mask {
   fill: #fff;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .social_media_button {
+  background: #141414;
+  outline-color: #fff;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .social_media_button_username {
+  background: #141414;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .social_media_button_icon img {
+  filter: invert(100%);
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .social_media_button:hover {
+  background: #303030;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .solidarity_banner-wrapper {
   display: none;
@@ -884,9 +916,6 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .u-white_background, body.ge-dar
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .vertical_album_card {
   color: #fff;
-}
-body.ge-dark-mode *:not(:has(.extension-box) *) .vertical_album_card:hover {
-  background: #303030;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .voting-total--positive {
   color: #0ecb27 !important;

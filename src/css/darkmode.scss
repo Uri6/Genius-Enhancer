@@ -1,4 +1,4 @@
-body.ge-theme-transition * {
+body.ge-theme-transition *:not(#ge-theme-toggle) {
     transition: color 0s ease 0s, background 0s ease 0s, background-color 0s ease 0s, border-color 0s ease 0s !important;
 }
 
@@ -390,6 +390,15 @@ body.ge-dark-mode {
 
         .article_type {
             border: 1px solid #fff;
+        }
+
+        artist-songs-and-albums .full_width_button {
+            background: #303030 !important;
+            color: #fff !important;
+
+            &:hover {
+                background: #353535 !important;
+            }
         }
 
         .autocomplete-results {
@@ -1027,6 +1036,19 @@ body.ge-dark-mode {
             color: #000;
         }
 
+        mini-song-card,
+        vertical-album-card {
+
+            a,
+            a.vertical_album_card {
+                background: #171717 !important;
+
+                &:hover {
+                    background: #303030 !important;
+                }
+            }
+        }
+
         .modal_window-content {
             background: #141414;
         }
@@ -1110,6 +1132,25 @@ body.ge-dark-mode {
                 .sqs-use--mask {
                     fill: #fff;
                 }
+            }
+        }
+
+        .social_media_button {
+            background: #141414;
+            outline-color: #fff;
+
+            &_username {
+                background: #141414;
+            }
+
+            &_icon {
+                img {
+                    filter: invert(100%);
+                }
+            }
+
+            &:hover {
+                background: #303030;
             }
         }
 
@@ -1283,10 +1324,6 @@ body.ge-dark-mode {
 
         .vertical_album_card {
             color: #fff;
-
-            &:hover {
-                background: #303030;
-            }
         }
 
         .voting-total--positive {
