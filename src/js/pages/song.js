@@ -1,8 +1,8 @@
 export async function handleSongPage(tabId) {
-    // chrome.scripting.executeScript({
-    //     target: { tabId: tabId },
-    //     files: ["./lib/geniuspot/geniuspot.min.js"]
-    // });
+    chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ["/lib/geniuspot/geniuspot.min.js"]
+    });
 
     chrome.storage.local.get("ModernTextEditor", (res) => {
         if (res.ModernTextEditor) {
