@@ -1,12 +1,18 @@
 body.ge-dark-mode {
   background: #141414;
-  color: #fff;
+  color: #f2e6fe;
 }
-body.ge-dark-mode .ng-scope {
+body.ge-dark-mode .ng-scope:not(.numbered_indicator--pink_filled) {
   background: rgba(0, 0, 0, 0);
 }
 body.ge-dark-mode .act-show.cont-groups.ng-scope {
   background: #000;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .standalone_annotation-referent_fragment--with_caret::before,
+body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_embed,
+body.ge-dark-mode *:not(:has(.extension-box) *) .bordered_media_container,
+body.ge-dark-mode *:not(:has(.extension-box) *) .editable_tracklist-row-entry {
+  background-color: #171717;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .act-index.cont-groups.ng-scope {
   background: #000;
@@ -50,18 +56,13 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .activity_stream_event_unit.acti
 body.ge-dark-mode *:not(:has(.extension-box) *) .AegvI svg {
   fill: #fff;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_embed {
-  background: #171717;
-}
 body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_embed--yellow_border {
   border-color: #adad00;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_sidebar_arrow svg {
   background: #141414;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_sidebar_unit {
-  background: #141414;
-}
+body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_sidebar_unit,
 body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_stat-pill {
   background: #141414;
 }
@@ -160,12 +161,15 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .article_rich_text_formatting em
   text-shadow: 0.07em 1px #141414, -0.07em 1px #141414, 0.14em 1px #141414, -0.14em 1px #141414, 0 1px #141414;
   text-decoration: underline;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .article_rich_text_formatting h1 > a {
+body.ge-dark-mode *:not(:has(.extension-box) *) .article_rich_text_formatting h1:not(.header_with_cover_art-primary_info-title) {
+  color: #fff;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .article_rich_text_formatting h1:not(.header_with_cover_art-primary_info-title) > a {
   color: #fff;
   font-weight: 400;
   text-decoration: none;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .article_rich_text_formatting h1 > a:not(:hover) {
+body.ge-dark-mode *:not(:has(.extension-box) *) .article_rich_text_formatting h1:not(.header_with_cover_art-primary_info-title) > a:not(:hover) {
   background: linear-gradient(#000, #000) 1px 94% no-repeat;
   background-size: calc(100% - 1px) 1px;
   text-shadow: 0.07em 1px #141414, -0.07em 1px #141414, 0.14em 1px #141414, -0.14em 1px #141414, 0 1px #141414;
@@ -302,20 +306,17 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .bMPUfx {
 body.ge-dark-mode *:not(:has(.extension-box) *) .bMwme {
   background: #141414;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .bordered_media_container {
-  background: #171717;
-}
 body.ge-dark-mode *:not(:has(.extension-box) *) .ccpa_request--success {
   background: #141414;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .cEryIg {
-  color: #fff;
+  color: #f2e6fe;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .chart_row-content-title {
-  color: #fff;
+  color: #f2e6fe;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .chzn-container {
-  color: #fff;
+  color: #f2e6fe;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .chzn-container .chzn-drop {
   background: #171717;
@@ -400,9 +401,6 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .dUTFUv:hover {
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .dxKApN {
   background: #141414;
-}
-body.ge-dark-mode *:not(:has(.extension-box) *) .editable_tracklist-row-entry {
-  background: #171717;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .editable_tracklist-row-placeholder {
   background: #141414;
@@ -561,9 +559,6 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .hyRooK:hover .EditorialPlacemen
   text-shadow: rgb(20, 20, 20) 0.03em 0px, rgb(20, 20, 20) -0.03em 0px, rgb(20, 20, 20) 0px 0.03em, rgb(20, 20, 20) 0px -0.03em, rgb(20, 20, 20) 0.06em 0px, rgb(20, 20, 20) -0.06em 0px, rgb(20, 20, 20) 0.09em 0px, rgb(20, 20, 20) -0.09em 0px, rgb(20, 20, 20) 0.12em 0px, rgb(20, 20, 20) -0.12em 0px, rgb(20, 20, 20) 0.15em 0px, rgb(20, 20, 20) -0.15em 0px;
   background-image: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255));
   color: rgb(255, 255, 255);
-}
-body.ge-dark-mode *:not(:has(.extension-box) *) h1 {
-  color: #fff;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .ibfdjh {
   background: #000;
@@ -781,12 +776,18 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .song_body {
 body.ge-dark-mode *:not(:has(.extension-box) *) .song_media_controls-controls--docked {
   background: #303030;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .square_button {
-  border-color: #fff;
-  color: #fff;
+body.ge-dark-mode *:not(:has(.extension-box) *) .square_button:not(.square_button--red):not(.square_button--green):not(.square_button--purple):not(.square_button--transparent) {
+  border-color: #f2e6fe;
+  color: #f2e6fe;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .square_button .inline_icon {
-  fill: #fff;
+body.ge-dark-mode *:not(:has(.extension-box) *) .square_button:not(.square_button--red):not(.square_button--green):not(.square_button--purple):not(.square_button--transparent) .inline_icon {
+  fill: #f2e6fe;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .square_button.square_button--transparent {
+  color: #f2e6fe;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .lyrics_controls.sticky .square_button {
+  background: #141414 !important;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .square_button--facebook_inverse {
   color: #3b5998;
@@ -881,13 +882,16 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .vertical_album_card:hover {
   background: #303030;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .voting-total--positive {
-  color: #0ecb27;
+  color: #0ecb27 !important;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .white_container {
   background: #171717;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .windows .gray_container {
   background-color: rgba(37, 37, 37, 0.35);
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .header_with_cover_art {
+  box-shadow: 0 0 4px 4px #141414 inset;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .header_with_cover_art:before {
   box-shadow: 0 0 4px 4px #141414 inset;
