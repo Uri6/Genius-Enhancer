@@ -2,7 +2,20 @@
  * This code is licensed under the terms of the "LICENSE.md" file
  * located in the root directory of this code package.
  */
-body {
+body:not(.ge-dark-mode) {
+  background-color: #ffff65 !important;
+}
+body:not(.ge-dark-mode) input::-moz-placeholder {
+  color: black !important;
+}
+body:not(.ge-dark-mode) label,
+body:not(.ge-dark-mode) legend,
+body:not(.ge-dark-mode) input:not(#ge-theme-toggle),
+body:not(.ge-dark-mode) input::placeholder,
+body:not(.ge-dark-mode) select {
+  color: black !important;
+}
+body:not(.ge-dark-mode) #firehose_filters fieldset legend {
   background-color: #ffff65 !important;
 }
 body #main .avatar {
@@ -33,16 +46,6 @@ body #main #firehose .activity_stream_event_unit .target *.annotation_container,
 body #main #firehose .activity_stream_event_unit .target *.stand_alone_annotation_container,
 body #main #firehose .activity_stream_event_unit .target *.stand_alone_referent {
   border-radius: 10px !important;
-}
-body #main #firehose_filters input::-moz-placeholder {
-  color: black !important;
-}
-body #main #firehose_filters label,
-body #main #firehose_filters legend,
-body #main #firehose_filters input,
-body #main #firehose_filters input::placeholder,
-body #main #firehose_filters select {
-  color: black !important;
 }
 body #main #firehose_filters #selected_users .selected_user .user_badge {
   padding: 5px !important;
@@ -120,7 +123,6 @@ body #main #firehose_filters fieldset legend {
   padding: 0px 10px !important;
   border-radius: 10px !important;
   border: 1px solid #cccccc !important;
-  background-color: #ffff65 !important;
   right: -10px !important;
 }
 body #main #firehose_filters fieldset input {

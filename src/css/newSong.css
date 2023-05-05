@@ -2,16 +2,34 @@
  * This code is licensed under the terms of the "LICENSE.md" file
  * located in the root directory of this code package.
  */
-body {
+body:not(.ge-dark-mode) {
   background: linear-gradient(45deg, #65ffa0, #a7dbdd) !important;
 }
-body h1,
-body h2,
-body h3,
-body h4,
-body h5,
-body h6 {
+body:not(.ge-dark-mode) h1,
+body:not(.ge-dark-mode) h2,
+body:not(.ge-dark-mode) h3,
+body:not(.ge-dark-mode) h4,
+body:not(.ge-dark-mode) h5,
+body:not(.ge-dark-mode) h6,
+body:not(.ge-dark-mode) input:not(.quick_search):not([type=checkbox]):not([type=radio]),
+body:not(.ge-dark-mode) select,
+body:not(.ge-dark-mode) textarea,
+body:not(.ge-dark-mode) .chzn-choices,
+body:not(.ge-dark-mode) .modern-chooser-button-active {
   color: #000 !important;
+}
+body:not(.ge-dark-mode) .modern-chooser-button {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+body:not(.ge-dark-mode) .modern-chooser-button:hover {
+  color: black !important;
+}
+body:not(.ge-dark-mode) #main .lyrics_style_guide *:not(a) {
+  color: black !important;
+}
+body:not(.ge-dark-mode) #main .chzn-choices li:not(.search-field) {
+  background-color: #009994 !important;
+  color: black !important;
 }
 body input:not(.quick_search):not([type=checkbox]):not([type=radio]),
 body select,
@@ -20,7 +38,7 @@ body .chzn-choices {
   background-color: rgba(128, 128, 128, 0.2) !important;
   border-radius: 10px !important;
   border: 1px solid #bbb !important;
-  color: #000 !important;
+  color: white !important;
   transition: all 0.2s ease-in-out !important;
 }
 body input:not(.quick_search):not([type=checkbox]):not([type=radio]).required.missing, body input:not(.quick_search):not([type=checkbox]):not([type=radio]).add_song_page-lyrics_textarea.missing,
@@ -80,7 +98,7 @@ body #main .lyrics_style_guide {
   padding: 1rem !important;
 }
 body #main .lyrics_style_guide *:not(a) {
-  color: black !important;
+  color: white !important;
 }
 body #main .lyrics_style_guide a {
   color: #1873d1 !important;
@@ -96,7 +114,8 @@ body #main .chzn-choices li:not(.search-field) {
   height: 1.8rem !important;
   line-height: 1.4rem !important;
   background-image: none !important;
-  background-color: #009994 !important;
+  background-color: #626262 !important;
+  color: white !important;
   border-radius: 10px !important;
   margin-right: 5px !important;
   margin-top: 0 !important;
@@ -122,7 +141,7 @@ body #main .modern-chooser .modern-chooser-button {
   background-color: rgba(128, 128, 128, 0.4);
   border: none;
   border-radius: 10px;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 1rem;
   margin: 0.5rem;
   padding: 0.75rem 1.25rem;
@@ -130,12 +149,12 @@ body #main .modern-chooser .modern-chooser-button {
 }
 body #main .modern-chooser .modern-chooser-button:hover {
   background-color: rgba(128, 128, 128, 0.6);
-  color: black;
+  color: white;
   cursor: pointer;
 }
 body #main .modern-chooser .modern-chooser-button-active {
   background-color: rgba(128, 128, 128, 0.8);
-  color: black;
+  color: white;
 }
 body #main #song_submit {
   margin: 0 auto;

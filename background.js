@@ -62,6 +62,7 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "add_song_as_next": true });
             chrome.storage.local.set({ "ModernTextEditor": true });
             chrome.storage.local.set({ "OldSongPage": false });
+            chrome.storage.local.set({ "darkMode": false });
             break;
         case "update":
             // var newURL = "https://uri6.github.io/genius-bot/versions/";
@@ -203,26 +204,67 @@ async function handleGeniusPage(tabId) {
         await chrome.storage.local.set({ "pageType": pageType });
     }
 
-    await chrome.scripting.executeScript({
-        target: { tabId: tabId }, func: (() => {
-            // move the div with the classes "PageHeaderdesktop__Subnavigation-bhx5ui-6 koeYQd"
-            // (or the element with the class "header-nav_menu" if there's no element with the classes above)
-            // to after the element with the classes "PageHeaderLogo__Link-sc-175tsd3-0 jNXEyt"
-            // (or to after the element with the class "logo_container" if there's no element with the classes above)
-            let subNav = $(".PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd");
+                chrome.scripting.executeScript(
+                    {
+                        target: { tabId: tabId },
+                        func: (() => {
 
-            // noinspection EqualityComparisonWithCoercionJS
-            if (subNav.length == 0) {
-                subNav = $(".header-nav_menu");
-            }
+                            if (!$('#ge-theme-toggle').length && $(".header-actions").length) {
+                                const darkModeToogle = $("<input>", {
+                                    id: "ge-theme-toggle",
+                                    class: "ge-theme-toggle",
+                                    type: "checkbox",
+                                    on: {
+                                        click: function () {
+                                            $("body").addClass("ge-theme-transition");
 
-            let logo = $(".PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt");
+                                            if ($(this).is(":checked")) {
+                                                $("body").addClass("ge-dark-mode");
+                                                chrome.storage.local.set({ "darkMode": true });
+                                            }
+                                            else {
+                                                $("body").removeClass("ge-dark-mode");
+                                                chrome.storage.local.set({ "darkMode": false });
+                                            }
 
-            // noinspection EqualityComparisonWithCoercionJS
-            if (logo.length == 0) {
-                logo = $(".logo_container");
-            }
-            subNav.insertAfter(logo);
+                                            setTimeout(() => {
+                                                $("body").removeClass("ge-theme-transition");
+                                            }, 200);
+                                        }
+                                    }
+                                })
+                                    .prependTo($(".header-actions"));
+
+                                chrome.storage.local.get("darkMode", (res) => {
+                                    if (res.darkMode) {
+                                        darkModeToogle.prop("checked", true);
+                                        $("body").addClass("ge-dark-mode");
+                                        $("body").addClass("ge-theme-transition");
+                                        setTimeout(() => {
+                                            $("body").removeClass("ge-theme-transition");
+                                        }, 200);
+                                    }
+                                });
+                            }
+
+                            // move the div with the classes "PageHeaderdesktop__Subnavigation-bhx5ui-6 koeYQd"
+                            // (or the element with the class "header-nav_menu" if there's no element with the classes above)
+                            // to after the element with the classes "PageHeaderLogo__Link-sc-175tsd3-0 jNXEyt"
+                            // (or to after the element with the class "logo_container" if there's no element with the classes above)
+                            let subNav = $(".PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd");
+                
+                            // noinspection EqualityComparisonWithCoercionJS
+                            if (subNav.length == 0) {
+                                subNav = $(".header-nav_menu");
+                            }
+                
+                            let logo = $(".PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt");
+                
+                            // noinspection EqualityComparisonWithCoercionJS
+                            if (logo.length == 0) {
+                                logo = $(".logo_container");
+                            }
+                            subNav.insertAfter(logo);
 
             // we want to find all the header menu items, remove them, then we'll re-add our own
             // custom ones
@@ -254,15 +296,15 @@ async function handleGeniusPage(tabId) {
                 });
             }
 
-            // clean the search bar from the "Search" text when not focused
-            // the search bar is the element with the classes "PageHeaderSearchdesktop__Input-eom9vk-2 gajVFV" or "quick_search search quick_search--header"
-            let searchBar = $(".PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV");
-            if (searchBar.length) {
-                searchBar = $(".quick_search.search.quick_search--header");
-            }
-            searchBar.on("blur", () => {
-                searchBar.val("");
-            });
+                            // clean the search bar from the "Search" text when not focused
+                            // the search bar is the element with the classes "PageHeaderSearchdesktop__Input-eom9vk-2 gajVFV" or "quick_search search quick_search--header"
+                            let searchBar = $(".PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV");
+                            if (searchBar.length) {
+                                searchBar = $(".quick_search.search.quick_search--header");
+                            }
+                            searchBar.on("blur", () => {
+                                searchBar.val("");
+                            });
 
             $(".header-actions *").on("click", () => {
                 $(".search_results_autocomplete_container").addClass("ng-hide");
@@ -395,19 +437,51 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 
     if (changeInfo.status === "complete" && tab.url.includes("genius.com")) {
-        const files = [{ type: "css", file: "./src/css/content-style.css" }, {
-            type: "css",
-            file: "./lib/tagify/tagify.css"
-        }, { type: "css", file: "./lib/dragsort/dragsort.css" }, {
-            type: "css",
-            file: "./lib/quilljs/quill.snow.css"
-        }, { type: "js", file: "./lib/jquery/jquery.min.js" }, {
-            type: "js",
-            file: "./lib/jquery/jquery-ui.js"
-        }, { type: "js", file: "./lib/tagify/tagify.polyfills.min.js" }, {
-            type: "js",
-            file: "./lib/dragsort/dragsort.js"
-        }, { type: "js", file: "./lib/quilljs/quill.min.js" }, { type: "js", file: "./lib/axios/axios.min.js" }];
+        const files = [
+            {
+                type: "css",
+                file: "./src/css/content-style.css"
+            },
+            {
+                type: "css",
+                file: "./src/css/darkmode.css"
+            }
+            {
+                type: "css",
+                file: "./lib/tagify/tagify.css"
+            },
+            {
+                type: "css",
+                file: "./lib/dragsort/dragsort.css"
+            },
+            {
+                type: "css",
+                file: "./lib/quilljs/quill.snow.css"
+            },
+            {
+                type: "js",
+                file: "./lib/jquery/jquery.min.js"
+            },
+            {
+                type: "js",
+                file: "./lib/jquery/jquery-ui.js"
+            },
+            {
+                type: "js",
+                file: "./lib/tagify/tagify.polyfills.min.js"
+            },
+            {
+                type: "js",
+                file: "./lib/dragsort/dragsort.js"
+            },
+            {
+                type: "js",
+                file: "./lib/quilljs/quill.min.js"
+            },
+            { type: "js",
+            file: "./lib/axios/axios.min.js"
+            }
+        ];
 
         const cssFiles = files
             .filter((f) => f.type === "css")
