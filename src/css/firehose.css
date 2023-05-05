@@ -10,7 +10,7 @@ body:not(.ge-dark-mode) input::-moz-placeholder {
 }
 body:not(.ge-dark-mode) label,
 body:not(.ge-dark-mode) legend,
-body:not(.ge-dark-mode) input,
+body:not(.ge-dark-mode) input:not(#ge-theme-toggle),
 body:not(.ge-dark-mode) input::placeholder,
 body:not(.ge-dark-mode) select {
   color: black !important;

@@ -9,7 +9,7 @@ body {
 
         label,
         legend,
-        input,
+        input:not(#ge-theme-toggle),
         input::placeholder,
         select {
             color: black !important;

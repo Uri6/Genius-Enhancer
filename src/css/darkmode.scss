@@ -89,6 +89,10 @@ body.ge-dark-mode {
             border-color: #adad00;
         }
 
+        .annotation_label {
+            color: #fff;
+        }
+
         .annotation_sidebar_arrow {
             svg {
                 background: #141414;
@@ -723,6 +727,10 @@ body.ge-dark-mode {
             background: #202020;
         }
 
+        .fp__wrapper.ng-scope {
+            background: #141414;
+        }
+
         .fRTMWj {
             svg {
                 &:hover {
@@ -851,7 +859,7 @@ body.ge-dark-mode {
             background: #171717;
         }
 
-        .inline_icon {
+        .inline_icon:not(.inline_icon--up_1) {
             fill: #fff;
         }
 
@@ -872,10 +880,19 @@ body.ge-dark-mode {
             background: #141414;
             box-shadow: 2px 2px 0 0 #171717;
             border: 1px solid #171717;
-        }
 
-        .iq_notification-message {
-            background: #141414;
+            .iq_notification-message {
+                background: #141414;
+
+                span,
+                em {
+                    color: #fff;
+                }
+            }
+
+            .u-half_left_margin {
+                color: #fff;
+            }
         }
 
         .iuSLgK {
@@ -1114,6 +1131,15 @@ body.ge-dark-mode {
             transition: background .3s ease;
         }
 
+
+        &.render_404 {
+            background: #131313;
+
+            .render_404-image {
+                filter: invert(85%) brightness(0.5);
+            }
+        }
+
         select {
             background: #171717;
             color: #fff;
@@ -1182,17 +1208,23 @@ body.ge-dark-mode {
                 }
             }
 
-            &.square_button--transparent {
+            &.square_button--transparent:not(.voting-upvote--active):not(.voting-upvote:hover) {
                 color: #f2e6fe;
             }
         }
 
-        .lyrics_controls.sticky {
-            .square_button {
-                background: #141414 !important;
+        .lyrics_controls {
+            &.sticky {
+                .square_button {
+                    background: #141414 !important;
+                    border-color: #fff !important;
+                }
+            }
+
+            .square_button>.inline_icon {
+                fill: #fff;
             }
         }
-
 
         .square_button--facebook_inverse {
             color: #3b5998;
@@ -1313,8 +1345,18 @@ body.ge-dark-mode {
             background: #171717;
         }
 
-        .track_listing {
+        .track_listing,
+        .user_badge-login {
             color: #fff;
+        }
+
+        .mini_card {
+
+            &-title,
+            &-subtitle,
+            &-metadata {
+                color: #fff;
+            }
         }
 
         .u-white_background,

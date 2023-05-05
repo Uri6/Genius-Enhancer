@@ -4,15 +4,46 @@
  */
 
 body {
-    background: linear-gradient(45deg, #65ffa0, #a7dbdd) !important;
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        color: #000 !important;
+    &:not(.ge-dark-mode) {
+        background: linear-gradient(45deg, #65ffa0, #a7dbdd) !important;
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        input:not(.quick_search):not([type="checkbox"]):not([type="radio"]),
+        select,
+        textarea,
+        .chzn-choices,
+        .modern-chooser-button-active {
+            color: #000 !important;
+        }
+
+        .modern-chooser-button {
+            color: rgb(0, 0, 0, 0.7) !important;
+
+            &:hover {
+                color: black !important;
+            }
+        }
+
+        #main {
+            .lyrics_style_guide {
+                *:not(a) {
+                    color: black !important;
+                }
+            }
+
+            .chzn-choices {
+                li:not(.search-field) {
+                    background-color: #009994 !important;
+                    color: black !important;
+                }
+            }
+        }
     }
 
     input:not(.quick_search):not([type="checkbox"]):not([type="radio"]),
@@ -22,7 +53,7 @@ body {
         background-color: rgba(128, 128, 128, 0.2) !important;
         border-radius: 10px !important;
         border: 1px solid #bbb !important;
-        color: #000 !important;
+        color: white !important;
         transition: all 0.2s ease-in-out !important;
 
         &.required.missing,
@@ -79,7 +110,7 @@ body {
             padding: 1rem !important;
 
             *:not(a) {
-                color: black !important;
+                color: white !important;
             }
 
             a {
@@ -100,7 +131,8 @@ body {
                 line-height: 1.4rem !important;
 
                 background-image: none !important;
-                background-color: #009994 !important;
+                background-color: #626262 !important;
+                color: white !important;
                 border-radius: 10px !important;
 
                 margin-right: 5px !important;
@@ -132,7 +164,7 @@ body {
                 background-color: rgba(128, 128, 128, 0.4);
                 border: none;
                 border-radius: 10px;
-                color: rgb(0, 0, 0, 0.7);
+                color: rgb(255, 255, 255, 0.7);
                 font-size: 1rem;
                 margin: 0.5rem;
                 padding: 0.75rem 1.25rem;
@@ -140,14 +172,14 @@ body {
 
                 &:hover {
                     background-color: rgba(128, 128, 128, 0.6);
-                    color: black;
+                    color: white;
                     cursor: pointer;
                 }
             }
 
             .modern-chooser-button-active {
                 background-color: rgba(128, 128, 128, 0.8);
-                color: black;
+                color: white;
             }
         }
 

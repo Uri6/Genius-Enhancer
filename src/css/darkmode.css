@@ -63,6 +63,9 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .AegvI svg {
 body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_embed--yellow_border {
   border-color: #adad00;
 }
+body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_label {
+  color: #fff;
+}
 body.ge-dark-mode *:not(:has(.extension-box) *) .annotation_sidebar_arrow svg {
   background: #141414;
 }
@@ -503,6 +506,9 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .footer-wrapper {
 body.ge-dark-mode *:not(:has(.extension-box) *) .fpANxd {
   background: #202020;
 }
+body.ge-dark-mode *:not(:has(.extension-box) *) .fp__wrapper.ng-scope {
+  background: #141414;
+}
 body.ge-dark-mode *:not(:has(.extension-box) *) .fRTMWj svg:hover {
   fill: #ffff64;
 }
@@ -589,7 +595,7 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .igqkaT svg {
 body.ge-dark-mode *:not(:has(.extension-box) *) .inbox_line_item_detail {
   background: #171717;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .inline_icon {
+body.ge-dark-mode *:not(:has(.extension-box) *) .inline_icon:not(.inline_icon--up_1) {
   fill: #fff;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .inline_icon.inline_icon--green {
@@ -607,8 +613,15 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .iq_notification {
   box-shadow: 2px 2px 0 0 #171717;
   border: 1px solid #171717;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .iq_notification-message {
+body.ge-dark-mode *:not(:has(.extension-box) *) .iq_notification .iq_notification-message {
   background: #141414;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .iq_notification .iq_notification-message span,
+body.ge-dark-mode *:not(:has(.extension-box) *) .iq_notification .iq_notification-message em {
+  color: #fff;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .iq_notification .u-half_left_margin {
+  color: #fff;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .iuSLgK {
   background: #141414;
@@ -777,6 +790,12 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .referent--yellow.referent--high
 body.ge-dark-mode *:not(:has(.extension-box) *) .referent--yellow {
   transition: background 0.3s ease;
 }
+body.ge-dark-mode *:not(:has(.extension-box) *).render_404 {
+  background: #131313;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *).render_404 .render_404-image {
+  filter: invert(85%) brightness(0.5);
+}
 body.ge-dark-mode *:not(:has(.extension-box) *) select {
   background: #171717;
   color: #fff;
@@ -822,11 +841,15 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .square_button:not(.square_butto
 body.ge-dark-mode *:not(:has(.extension-box) *) .square_button:not(.square_button--red):not(.square_button--green):not(.square_button--purple):not(.square_button--transparent) .inline_icon {
   fill: #f2e6fe;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .square_button.square_button--transparent {
+body.ge-dark-mode *:not(:has(.extension-box) *) .square_button.square_button--transparent:not(.voting-upvote--active):not(.voting-upvote:hover) {
   color: #f2e6fe;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .lyrics_controls.sticky .square_button {
   background: #141414 !important;
+  border-color: #fff !important;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .lyrics_controls .square_button > .inline_icon {
+  fill: #fff;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .square_button--facebook_inverse {
   color: #3b5998;
@@ -908,7 +931,11 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .tooltip {
   border-color: #fff;
   background: #171717;
 }
-body.ge-dark-mode *:not(:has(.extension-box) *) .track_listing {
+body.ge-dark-mode *:not(:has(.extension-box) *) .track_listing,
+body.ge-dark-mode *:not(:has(.extension-box) *) .user_badge-login {
+  color: #fff;
+}
+body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card-title, body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card-subtitle, body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card-metadata {
   color: #fff;
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .u-white_background, body.ge-dark-mode *:not(:has(.extension-box) *).u-white_background {

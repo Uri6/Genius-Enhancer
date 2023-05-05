@@ -469,7 +469,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                                             setTimeout(() => {
                                                 $("body").removeClass("ge-theme-transition");
-                                            }, 2000);
+                                            }, 200);
                                         }
                                     }
                                 })
@@ -482,7 +482,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                         $("body").addClass("ge-theme-transition");
                                         setTimeout(() => {
                                             $("body").removeClass("ge-theme-transition");
-                                        }, 2000);
+                                        }, 200);
                                     }
                                 });
                             }
