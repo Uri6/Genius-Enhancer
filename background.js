@@ -66,6 +66,7 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "add_song_as_next": true });
             chrome.storage.local.set({ "ModernTextEditor": true });
             chrome.storage.local.set({ "OldSongPage": false });
+            chrome.storage.local.set({ "darkMode": false });
         case 'update':
             // var newURL = "https://uri6.github.io/genius-bot/versions/";
             // chrome.tabs.create({ url: newURL });
@@ -447,6 +448,35 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     {
                         target: { tabId: tabId },
                         func: (() => {
+
+                            if (!$('#ge-theme-toggle').length && $(".header-actions").length) {
+                                const darkModeToogle = $("<input>", {
+                                    id: "ge-theme-toggle",
+                                    class: "ge-theme-toggle",
+                                    type: "checkbox",
+                                    on: {
+                                        click: function () {
+                                            if ($(this).is(":checked")) {
+                                                $("body").addClass("ge-dark-mode");
+                                                chrome.storage.local.set({ "darkMode": true });
+                                            }
+                                            else {
+                                                $("body").removeClass("ge-dark-mode");
+                                                chrome.storage.local.set({ "darkMode": false });
+                                            }
+                                        }
+                                    }
+                                })
+                                    .prependTo($(".header-actions"));
+
+                                chrome.storage.local.get("darkMode", (res) => {
+                                    if (res.darkMode) {
+                                        darkModeToogle.prop("checked", true);
+                                        $("body").addClass("ge-dark-mode");
+                                    }
+                                });
+                            }
+
                             // move the div with the classes "PageHeaderdesktop__Subnavigation-bhx5ui-6 koeYQd"
                             // (or the element with the class "header-nav_menu" if there's no element with the classes above)
                             // to after the element with the classes "PageHeaderLogo__Link-sc-175tsd3-0 jNXEyt"
@@ -477,7 +507,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             }
 
                             // clean the search bar from the "Search" text when not focused
-                            var searchBar = $(".PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV");
+                            let searchBar = $(".PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV");
                             if (searchBar.length == 0) {
                                 searchBar = $(".quick_search.search.quick_search--header");
                             }
@@ -488,24 +518,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             $(".header-actions *").click(() => {
                                 $(".search_results_autocomplete_container").addClass("ng-hide");
                             });
-
-                            // insert the theme button to the .header-actions
-                            $("<input>", {
-                                id: "ge-theme-toggle",
-                                class: "ge-theme-toggle",
-                                type: "checkbox",
-                                on: {
-                                    click: function () {
-                                        if ($(this).is(":checked")) {
-                                            $("body").addClass("ge-dark-mode");
-                                        }
-                                        else {
-                                            $("body").removeClass("ge-dark-mode");
-                                        }
-                                    }
-                                }
-                            })
-                                .prependTo($(".header-actions"));
 
                             function scrollToElement(element) {
                                 var elementOffset = element.offset().top;
