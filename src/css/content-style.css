@@ -38,7 +38,11 @@
   transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-li, a, input, p, #text {
+li,
+a,
+input,
+p,
+#text {
   transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -176,7 +180,7 @@ strong {
 
 header-admin .feed_dropdown,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 {
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] {
   border-radius: 10px;
 }
 header-admin .feed_dropdown > a,
@@ -187,10 +191,10 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]),
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > .ng-scope > *,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > div[ng-if="$ctrl.can('view_chartbeat')"] > *,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > a,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]),
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > .ng-scope > *,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > div[ng-if="$ctrl.can('view_chartbeat')"] > * {
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > a,
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]),
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > .ng-scope > *,
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > div[ng-if="$ctrl.can('view_chartbeat')"] > * {
   border: 0 !important;
   border-radius: 10px;
   padding: 0.75rem 1rem !important;
@@ -203,10 +207,10 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]):hover,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > .ng-scope > *:hover,
 .PageHeaderLoggedIn__AvatarMenu-sc-1i45pz8-1 .PageHeadershared__Dropdown-sc-1cjax99-1 > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > a:hover,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]):hover,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > .ng-scope > *:hover,
-.PageHeaderLoggedIn__Item-on81eb-0 .PageHeadershared__Dropdown-sc-1cjax99-1 > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover {
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > a:hover,
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > div:not(.ng-scope):not([ng-if="$ctrl.can('view_chartbeat')"]):hover,
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > .ng-scope > *:hover,
+.PageHeaderLoggedIn__Item-on81eb-0 > div > [width=narrow] > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover {
   background-color: #ff1464 !important;
   color: white !important;
   padding: 0.75rem 10px !important;
@@ -480,6 +484,7 @@ input::-webkit-calendar-picker-indicator {
   border: none !important;
   padding-right: 10px !important;
   padding-left: 10px !important;
+  color: #000;
 }
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd .PageHeaderdesktop__Link-bhx5ui-4.jQULAr .TextLabel-sc-8kw9oj-0.jlOURg,
 .PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd .PageHeaderdesktop__Link-bhx5ui-4.jQULAr .nav_menu-link,
@@ -585,7 +590,9 @@ input::-webkit-calendar-picker-indicator {
   outline-width: 0 !important;
 }
 .PageHeaderdesktop__Left-bhx5ui-2.ctcvqz .dbBHSq,
-.global_search.global_search--header .dbBHSq {
+.PageHeaderdesktop__Left-bhx5ui-2.ctcvqz form[action="/search"] > div:has(iframe),
+.global_search.global_search--header .dbBHSq,
+.global_search.global_search--header form[action="/search"] > div:has(iframe) {
   left: unset !important;
   right: 1rem !important;
 }
@@ -777,7 +784,8 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt,
-.logo_container {
+.logo_container,
+.dmNhEr > a[href="https://genius.com"]:has(svg) {
   left: 5px;
   transform: scale(0.85);
   margin-top: -3px;
@@ -785,7 +793,8 @@ input::-webkit-calendar-picker-indicator {
   margin-right: 0 !important;
 }
 .PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt svg,
-.logo_container svg {
+.logo_container svg,
+.dmNhEr > a[href="https://genius.com"]:has(svg) svg {
   vertical-align: middle !important;
 }
 

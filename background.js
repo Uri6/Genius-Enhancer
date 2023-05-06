@@ -252,35 +252,34 @@ async function handleGeniusPage(tabId) {
             // (or the element with the class "header-nav_menu" if there's no element with the classes above)
             // to after the element with the classes "PageHeaderLogo__Link-sc-175tsd3-0 jNXEyt"
             // (or to after the element with the class "logo_container" if there's no element with the classes above)
-            let subNav = $(".PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd");
+            const subNav = $(".header-nav_menu, .PageHeaderdesktop__Subnavigation-bhx5ui-6");
 
-            // noinspection EqualityComparisonWithCoercionJS
-            if (subNav.length == 0) {
-                subNav = $(".header-nav_menu");
-            }
-
-            let logo = $(".PageHeaderLogo__Link-sc-175tsd3-0.jNXEyt");
-
-            // noinspection EqualityComparisonWithCoercionJS
-            if (logo.length == 0) {
-                logo = $(".logo_container");
-            }
+            const logo = $(".logo_container, .PageHeaderLogo__Link-sc-175tsd3-0");
             subNav.insertAfter(logo);
 
-            // we want to find all the header menu items, remove them, then we'll re-add our own
-            // custom ones
-            let headerMenuItems = $("header-menu-item");
-            const headerNavMenu = $(".header-nav_menu");
+            // Recreate the header menu content
+            const $headerNavMenu = $(".header-nav_menu, .PageHeaderdesktop__Subnavigation-bhx5ui-6");
+            const $headerMenuItems = $headerNavMenu.find("header-menu-item");
+            const $menuItems = $headerMenuItems.length ? $headerMenuItems : $headerNavMenu.find("a");
+            const onHomePage = !$headerNavMenu.hasClass("header-nav_menu");
 
-            if (headerMenuItems.length > 0) {
-                headerMenuItems.remove();
+            console.log("menu items", $menuItems)
+
+            if ($menuItems.length > 0) {
+                $menuItems.remove();
             }
 
             if ($(".ge-inject").length < 1) {
-                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://genius.com/forums">Forums</a></li>');
-                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://genius.com/songs/new">Add Song</a></li>');
-                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://genius.com/albums/Genius/Guides">Guides</a></li>');
-                headerNavMenu.append('<li class="nav_menu-item ng-scope ge-inject"><a class="nav_menu-link ng-binding" href="https://larsbutnotleast.xyz/genius">GeniusGraph</a></li>');
+                const newItems = [{ title: "Forums", href: "https://genius.com/forums" }, { title: "Add Song", href: "https://genius.com/songs/new" }, { title: "Guides", href: "https://genius.com/albums/Genius/Guides" }, { title: "GeniusGraph", href: "https://larsbutnotleast.xyz/genius" }];
+                newItems.forEach((item) => {
+                    const $item = $(`<a class="nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr" href="${item.href}">${item.title}</a>`);
+                    if (onHomePage) {
+                        $headerNavMenu.append($item);
+                    } else {
+                        // dont forget to remove the classes "PageHeaderdesktop__Link-bhx5ui-4 jQULAr"
+                        $headerNavMenu.append(`<li class="nav_menu-item ng-scope ge-inject">${$item[0].outerHTML.replace('class="nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr"', 'class="nav_menu-link ng-binding"')}</li>`);
+                    }
+                });
             }
 
             // if there's an element with the class "lyrics_controls", when it sticky add the class "sticky" to this element
