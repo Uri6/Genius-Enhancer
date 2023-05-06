@@ -55,7 +55,6 @@ export async function handlePenalties(tabId) {
 
                     iterNodesBySelector("a.button", (button) => {
                         if (!button.classList.contains("keep") && !button.innerText.includes("more")) {
-                            console.log(button);
                             button.remove();
                         }
                     });

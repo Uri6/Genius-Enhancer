@@ -88,7 +88,6 @@ export async function handleForumThread(tabId) {
                             }
                             const existingText = quillEditor.html();
                             if (existingText.includes("@" + username + " ")) {
-                                console.log("already tagged");
                                 return;
                             }
                             const taggedUsernames = existingText.match(/@\w+\s/g) || [];

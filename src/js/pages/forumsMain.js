@@ -20,8 +20,7 @@ export async function handleForumsMain(tabId) {
         {
             target: { tabId: tabId },
             func: () => {
-                // disable sending the input ".discussions_search_bar-text_input" if there's less than 3 characters
-                // if there's less than and the user presses enter, the strok of the box will turn red
+                // disable sending the forums search input (.discussions_search_bar-text_input) if there's less than 3 characters
                 $(document).on("keypress", ".discussions_search_bar-text_input", function(e) {
                     if (e.which !== 13) {
                         return;

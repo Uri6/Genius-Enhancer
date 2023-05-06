@@ -114,7 +114,6 @@ artist-songs-and-albums {
                         .cover_art {
                             transform: perspective(75em) rotateX(15deg) scale(1.1) translateY(-10px) !important;
                             border-radius: 2px !important;
-                            //outline: 2px solid #ff1464 !important;
 
                             &::after {
                                 display: block;
@@ -212,7 +211,6 @@ profile-contributions-group {
 
         .social_media_button_username {
             position: relative;
-            // add 17.5px to the left and then divide by 2 to center the text
             transform: translateX(calc(17.5px - 50%)) scale(0.4);
             top: -35px;
             background-color: #e9e9e9;

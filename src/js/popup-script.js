@@ -56,8 +56,6 @@ const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = 
         const isChecked = $checkbox.prop("checked");
         const altMessageKey = isChecked ?  "album_missingInfo" : "album_missingInfo_remove"
         let updateMessageKey = messageKey.length ? messageKey : altMessageKey;
-        console.log(isChecked);
-        console.log(updateMessageKey);
         chrome.storage.local.set({ [storageKey]: isChecked });
         messageValue ? chrome.runtime.sendMessage({ [updateMessageKey]: messageValue }) : chrome.runtime.sendMessage({ [updateMessageKey]: [isChecked] });
     });

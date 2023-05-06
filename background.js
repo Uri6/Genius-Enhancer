@@ -263,8 +263,6 @@ async function handleGeniusPage(tabId) {
             const $menuItems = $headerMenuItems.length ? $headerMenuItems : $headerNavMenu.find("a");
             const onHomePage = !$headerNavMenu.hasClass("header-nav_menu");
 
-            console.log("menu items", $menuItems)
-
             if ($menuItems.length > 0) {
                 $menuItems.remove();
             }
@@ -276,7 +274,6 @@ async function handleGeniusPage(tabId) {
                     if (onHomePage) {
                         $headerNavMenu.append($item);
                     } else {
-                        // dont forget to remove the classes "PageHeaderdesktop__Link-bhx5ui-4 jQULAr"
                         $headerNavMenu.append(`<li class="nav_menu-item ng-scope ge-inject">${$item[0].outerHTML.replace('class="nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr"', 'class="nav_menu-link ng-binding"')}</li>`);
                     }
                 });
@@ -361,7 +358,6 @@ async function handleGeniusPage(tabId) {
 
                         $target.find(".modal_window-content").prepend(closeButton);
 
-                        // make the ".modal_window-content" element movable (with the mouse)
                         $target.find(".modal_window-content").draggable({
                             handle: ".modal_window-header", containment: "window", scroll: false
                         });

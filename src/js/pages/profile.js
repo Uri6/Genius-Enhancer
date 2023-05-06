@@ -36,7 +36,6 @@ export async function handleProfile(tabId, url) {
                     };
 
                     const socialMediaIconsArray = Object.entries(socialMediaIcons);
-                    console.log(socialMediaIconsArray);
 
                     // its a dictionary of the social media name and the username
                     const socialMediaUsernames = socialMediaButtons.map((i, el) => {

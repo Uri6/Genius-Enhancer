@@ -229,7 +229,7 @@ export async function appendIcon() {
 
         const user_picture = document.getElementsByClassName("header-user_avatar clipped_background_image")[0];
 
-        // check if user is logged in
+        // check if the user is logged in
         if (user_picture) {
             // access user_picture's parent element
             const user_picture_parent = user_picture.parentElement;
@@ -893,13 +893,10 @@ export async function appendIcon() {
                 const addCreditsInputs = $('.extension-box .add-credits-inputs-container .add-credits-inputs');
                 if (addCreditsInputs.length) {
                     // for each row of credits, there's two inputs - ".add-credits.role" and ".add-credits.artist"
-                    // if one of them has a tag child and the other doesn't, then add the error animation
-                    // dont use for loop
+                    // if one of them has a tag child and the other doesn't, we'll make error animation
                     addCreditsInputs.each(function () {
                         const role = $(this).find('tags.add-credits.role');
                         const artist = $(this).find('tags.add-credits.artist');
-                        console.log("role: ", role, "artist: ", artist);
-                        console.log("role.find('tag'): ", role.find('tag'), "artist.find('tag'): ", artist.find('tag'));
                         if (role.find('tag').length && !artist.find('tag').length) {
                             artist.addClass('error-animation');
                             setTimeout(function () {

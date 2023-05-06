@@ -20,17 +20,12 @@ export async function handleForum(tabId) {
         {
             target: { tabId: tabId },
             func: () => {
-                // disable sending the input ".discussions_search_bar-text_input" if there's less than 3 characters
-                // if there's less than and the user presses enter, the strok of the box will turn red
-                // use jquery
+                // disable sending the forums search input (.discussions_search_bar-text_input) if there's less than 3 characters
                 $(document).on("keypress", ".discussions_search_bar-text_input", function(e) {
                     if (e.which === 13) {
                         if (this.value.length < 3) {
                             e.preventDefault();
                             $(this).css("border-color", "red !important");
-                            // notice the user that the input is too short
-                            // dont use placeholder, it's not visible
-                            // use a span element, remove it after 3 seconds
                             if (!document.getElementsByClassName("discussions_search_bar-text_input-error").length) {
                                 var span = document.createElement("span");
                                 span.textContent = "The input is too short (min 3 characters)";

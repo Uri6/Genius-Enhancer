@@ -312,7 +312,6 @@ body {
 .forum_post_container {
   .forum_post_unit {
     &:has(>.first_one) {
-      //background: none !important;
       width: calc(100% + 20px) !important;
       border-radius: 0 0 10px 10px !important;
 
@@ -334,7 +333,6 @@ body {
       }
 
       .body.embedly {
-        //background-color: rgba(128, 128, 128, 0.6) !important;
         border-radius: 5px !important;
         padding: 20px 40px !important;
         border-bottom: 1px solid #333 !important;
