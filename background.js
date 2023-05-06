@@ -32,6 +32,7 @@ import { handleForumThread } from "./src/js/pages/forumThread.js";
 import { handleProfile } from "./src/js/pages/profile.js";
 import { handleNewPost } from "./src/js/pages/newPost.js";
 import { handleForumsMain } from "./src/js/pages/forumsMain.js";
+import { handlePenalties } from "./src/js/pages/mecha.penalties.js";
 
 function getTabId() {
     return new Promise((resolve, reject) => {
@@ -207,6 +208,7 @@ async function handleGeniusPage(tabId) {
     await chrome.scripting.executeScript({
         target: { tabId: tabId },
         func: (() => {
+            const body = $("body");
 
             if (!$('#ge-theme-toggle').length && $(".header-actions").length) {
                 const darkModeToogle = $("<input>", {
@@ -215,7 +217,7 @@ async function handleGeniusPage(tabId) {
                     type: "checkbox",
                     on: {
                         click: function () {
-                            $("body").addClass("ge-theme-transition");
+                            body.addClass("ge-theme-transition");
 
                             if ($(this).is(":checked")) {
                                 $("body").addClass("ge-dark-mode");
@@ -237,8 +239,8 @@ async function handleGeniusPage(tabId) {
                 chrome.storage.local.get("darkMode", (res) => {
                     if (res.darkMode) {
                         darkModeToogle.prop("checked", true);
-                        $("body").addClass("ge-dark-mode");
-                        $("body").addClass("ge-theme-transition");
+                        body.addClass("ge-dark-mode");
+                        body.addClass("ge-theme-transition");
                         setTimeout(() => {
                             $("body").removeClass("ge-theme-transition");
                         }, 200);
@@ -286,7 +288,7 @@ async function handleGeniusPage(tabId) {
             const lyricsControls = $(".lyrics_controls");
             if (lyricsControls.length > 0) {
                 let sticky = lyricsControls.offset().top;
-                $(window).on("scroll", function () {
+                $(window).on("scroll", () => {
                     if ($(window).scrollTop() > sticky) {
                         lyricsControls.addClass("sticky");
                     } else {
@@ -318,7 +320,6 @@ async function handleGeniusPage(tabId) {
 
             // adminHeader?.append('<a href="/users/recent_signups" class="feed_dropdown-item feed_dropdown-item--link">Recent Signups</a>');
 
-            const $body = $("body");
             const $modalWindow = $(".modal_window");
 
             $(document).on("DOMNodeInserted", (e) => {
@@ -335,7 +336,7 @@ async function handleGeniusPage(tabId) {
 
                 setTimeout(() => {
                     if ($target.hasClass("modal_window") && $target.find(".modal_window-content").length > 0 && ($target.find(".modal_window-content").find("conversation-with-user").length > 0 || $target.find(".modal_window-content").find("conversation-messages").length > 0)) {
-                        $body.removeClass("u-noscroll u-dark_overlay");
+                        body.removeClass("u-noscroll u-dark_overlay");
                         $target.css("pointer-events", "none");
                         $target.find(".modal_window-content").css("pointer-events", "auto");
 
@@ -407,6 +408,10 @@ async function handleGeniusPage(tabId) {
             break;
         case "profile":
             await handleProfile(tabId, url);
+            break;
+        case "mecha.penalties":
+            await handlePenalties(tabId);
+            break;
     }
 }
 
@@ -525,7 +530,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
                     if (returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown") {
                         const urlPart = tab.url.split("genius.com/")[1];
-                        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?react=1/") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
                             pageType = "song";
 
                             chrome.storage.local.get("OldSongPage", (res) => {
@@ -541,12 +546,14 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                                     console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
                                 }
                             });
-                        } else if (geniusAddress.some((adress) => tab.url === adress) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
+                        } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
                             pageType = "home";
-                        } else if (geniusAddress.some((adress) => tab.url.startsWith(adress + "firehose"))) {
+                        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
                             pageType = "firehose";
-                        } else if (geniusAddress.some((adress) => tab.url === adress + "new" || tab.url === adress + "new/")) {
+                        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/")) {
                             pageType = "new song";
+                        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
+                            pageType = "mecha.penalties";
                         }
                         chrome.scripting.executeScript({
                             target: { tabId: tabId }, func: () => {
