@@ -10,6 +10,7 @@ body {
   font-family: "Programme";
   -moz-user-select: none;
   -webkit-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   -o-user-select: none;
 }
@@ -104,4 +105,6 @@ fieldset > legend {
 
 fieldset > legend + * {
   clear: both;
-}/*# sourceMappingURL=ge-options-styles.css.map */
+}
+
+/*# sourceMappingURL=ge-options-styles.css.map */

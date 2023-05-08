@@ -14,6 +14,7 @@ body {
   font-family: "Programme";
   -moz-user-select: none;
   -webkit-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   -o-user-select: none;
 }
@@ -154,4 +155,6 @@ label {
   background-color: #1873d1;
   border-radius: 3px;
   transition: 0.3s;
-}/*# sourceMappingURL=ge-popup-styles.css.map */
+}
+
+/*# sourceMappingURL=ge-popup-styles.css.map */

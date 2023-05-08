@@ -97,7 +97,7 @@ export function identifyPageType() {
         "/discussions/": "forum thread",
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const tab = tabs[0];
             chrome.scripting.executeScript(

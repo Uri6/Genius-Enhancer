@@ -168,9 +168,6 @@ html {
 #groups_sidebar .groups_sidebar-search {
   padding: 10px 0 !important;
 }
-#groups_sidebar .groups_sidebar-search input::-moz-placeholder {
-  color: transparent !important;
-}
 #groups_sidebar .groups_sidebar-search input::placeholder {
   color: transparent !important;
 }
@@ -298,8 +295,7 @@ html {
 .popup .follows .follower_unit .user_tooltip .info .avatar_wrapper img.avatar {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border: none;
 }
 .popup .follows .follower_unit .user_tooltip .info .basics {
@@ -342,4 +338,6 @@ html {
 }
 .popup .follows .follower_unit .user_tooltip .info .basics .buttons .toggle_follow:hover {
   background-color: #f2f2f2;
-}/*# sourceMappingURL=forum.css.map */
+}
+
+/*# sourceMappingURL=forum.css.map */

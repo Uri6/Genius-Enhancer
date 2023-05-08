@@ -465,11 +465,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             },
             {
                 type: "js",
-                file: "./lib/jquery/jquery-ui.js"
+                file: "./lib/jquery/jquery-ui.min.js"
             },
             {
                 type: "js",
-                file: "./lib/tagify/tagify.polyfills.min.js"
+                file: "./lib/tagify/tagify.jq.min.js"
             },
             {
                 type: "js",

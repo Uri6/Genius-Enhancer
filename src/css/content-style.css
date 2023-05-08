@@ -4,6 +4,36 @@
  * https://github.com/Uri6/Genius-Enhancer-Beta/blob/main/LICENSE.md
  */
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
+@-webkit-keyframes follow-animation {
+  from {
+    background: transparent;
+    color: #3399FF;
+    width: 85px;
+    left: 50px;
+  }
+  to {
+    background: #2EB82E;
+    border-color: #2EB82E;
+    color: white;
+    width: 120px;
+    left: 35px;
+  }
+}
+@-webkit-keyframes unfollow-animation {
+  from {
+    background: #2EB82E;
+    color: white;
+    width: 120px;
+    left: 35px;
+  }
+  to {
+    background: transparent;
+    border-color: #3399FF;
+    color: #3399FF;
+    width: 85px;
+    left: 50px;
+  }
+}
 @keyframes follow-animation {
   from {
     background: transparent;
@@ -258,6 +288,8 @@ header-admin .feed_dropdown > div[ng-if="$ctrl.can('view_chartbeat')"] > *:hover
 }
 
 .container {
+  -moz-border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px;
   border-radius: 6px 6px 6px 6px;
 }
 
@@ -297,23 +329,19 @@ input::-webkit-calendar-picker-indicator {
   text-shadow: none;
   display: inline-block;
   text-align: start;
-  -webkit-appearance: auto;
-     -moz-appearance: auto;
-          appearance: auto;
+  appearance: auto;
   -webkit-rtl-ordering: logical;
   resize: auto;
   cursor: text;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   background-color: field;
-  -moz-column-count: initial !important;
-       column-count: initial !important;
+  column-count: initial !important;
   margin: 0em;
   border-width: 1px;
   border-style: solid;
   border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
-  -o-border-image: initial;
-     border-image: initial;
+  border-image: initial;
   padding: 2px;
 }
 
@@ -568,9 +596,6 @@ input::-webkit-calendar-picker-indicator {
   height: 100% !important;
   transition: all 0.1s ease !important;
 }
-.PageHeaderdesktop__Left-bhx5ui-2.ctcvqz .PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV::-moz-placeholder, .PageHeaderdesktop__Left-bhx5ui-2.ctcvqz .quick_search.search.quick_search--header::-moz-placeholder, .global_search.global_search--header .PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV::-moz-placeholder, .global_search.global_search--header .quick_search.search.quick_search--header::-moz-placeholder {
-  color: transparent !important;
-}
 .PageHeaderdesktop__Left-bhx5ui-2.ctcvqz .PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV::placeholder,
 .PageHeaderdesktop__Left-bhx5ui-2.ctcvqz .quick_search.search.quick_search--header::placeholder,
 .global_search.global_search--header .PageHeaderSearchdesktop__Input-eom9vk-2.gajVFV::placeholder,
@@ -614,9 +639,7 @@ input::-webkit-calendar-picker-indicator {
   --ray-size: calc(var(--size) * -0.4);
   --offset-orthogonal: calc(var(--size) * 0.65);
   --offset-diagonal: calc(var(--size) * 0.45);
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   outline: none;
   cursor: pointer;
   width: var(--size);
@@ -896,10 +919,6 @@ input::-webkit-calendar-picker-indicator {
 *:has(.ql-editor) .ql-container .ql-editor *:not(a) {
   color: black;
 }
-*:has(.ql-editor) .ql-container .ql-editor *::-moz-selection {
-  background: #ff1464;
-  color: white;
-}
 *:has(.ql-editor) .ql-container .ql-editor *::selection {
   background: #ff1464;
   color: white;
@@ -940,10 +959,8 @@ input::-webkit-calendar-picker-indicator {
   max-height: 200px;
   overflow-y: auto;
   width: 300px;
-  -moz-column-count: 2;
-       column-count: 2;
-  -moz-column-gap: 10px;
-       column-gap: 10px;
+  column-count: 2;
+  column-gap: 10px;
 }
 .RecentActivity__FilteringContainer .RecentActivity__FilteringDropdown .RecentActivity__FilteringDropdownItem {
   display: block;
@@ -985,8 +1002,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 #ge-follow-button {
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   -webkit-appearance: none;
   display: flex;
 }
@@ -1020,9 +1036,7 @@ input::-webkit-calendar-picker-indicator {
 
 .ge-restore-button {
   cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 .ge-restore-button.disabled {
   opacity: 0.5;
@@ -1306,4 +1320,10 @@ input::-webkit-calendar-picker-indicator {
 .HomeContentdesktop__Container-sc-1xfg7l1-0.zvOxT .SquareButton-sc-109lda7-0:hover {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.5;
-}/*# sourceMappingURL=content-style.css.map */
+}
+
+.cursor_pointer {
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=content-style.css.map */

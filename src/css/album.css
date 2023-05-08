@@ -166,7 +166,9 @@
   height: 100vh;
   border: none;
   display: flex;
+  -webkit-box-align: center;
   align-items: center;
+  -webkit-box-pack: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.8);
   -webkit-backdrop-filter: blur(2px);
@@ -188,6 +190,7 @@
   overflow-x: hidden;
   -moz-user-select: none;
   -webkit-user-select: none;
+  -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
 }
@@ -274,8 +277,7 @@
   font-weight: 500px;
   justify-content: center;
   writing-mode: horizontal-tb !important;
-  -moz-column-count: initial !important;
-       column-count: initial !important;
+  column-count: initial !important;
   text-align: start;
   transition: all 0.2s !important;
   position: relative;
@@ -354,8 +356,7 @@
   margin-right: 10px;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .blured-background .extension-box .ge-textarea.add-media.details .title {
   display: inline-block;
@@ -399,13 +400,6 @@
 .blured-background .extension-box .ge-textarea.error-animation {
   background-color: #fc5753;
 }
-.blured-background .extension-box .ge-textarea::-moz-placeholder {
-  font-family: "Programme";
-  font-size: 18px;
-  color: rgba(0, 0, 0, 0.4) !important;
-  -moz-transition: all 0.2s;
-  transition: all 0.2s;
-}
 .blured-background .extension-box .ge-textarea::placeholder {
   font-family: "Programme";
   font-size: 18px;
@@ -419,9 +413,6 @@
 .blured-background .extension-box .ge-textarea:focus, .blured-background .extension-box .ge-textarea.tagify--focus {
   cursor: text;
   background-color: #cbcbcb;
-}
-.blured-background .extension-box .ge-textarea:focus::-moz-placeholder, .blured-background .extension-box .ge-textarea.tagify--focus::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.25) !important;
 }
 .blured-background .extension-box .ge-textarea:focus::placeholder, .blured-background .extension-box .ge-textarea.tagify--focus::placeholder {
   color: rgba(0, 0, 0, 0.25) !important;
@@ -579,4 +570,6 @@
 }
 .column_layout-column_span.column_layout-column_span--secondary .white_container .square_button {
   border-radius: 10px !important;
-}/*# sourceMappingURL=album.css.map */
+}
+
+/*# sourceMappingURL=album.css.map */

@@ -6,7 +6,7 @@
  */
 
 export async function handleSongPage(tabId) {
-    chrome.scripting.executeScript({
+    await chrome.scripting.executeScript({
         target: { tabId: tabId },
         files: ["/lib/geniuspot/geniuspot.min.js"]
     });

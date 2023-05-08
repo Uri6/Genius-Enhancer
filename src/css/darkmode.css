@@ -966,4 +966,6 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .header_with_cover_art {
 }
 body.ge-dark-mode *:not(:has(.extension-box) *) .header_with_cover_art:before {
   box-shadow: 0 0 4px 4px #141414 inset;
-}/*# sourceMappingURL=darkmode.css.map */
+}
+
+/*# sourceMappingURL=darkmode.css.map */

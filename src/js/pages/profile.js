@@ -29,6 +29,28 @@ export async function handleProfile(tabId, url) {
                 // if exists, remove the inner text (without removing the svg child) of the elements that have the class "u-quarter_vertical_margins" and at least one of the following classes: square_button--facebook, square_button--twitter, square_button--instagram
                 // the inner text is the username in the social media
                 const socialMediaButtons = $(".square_button--facebook, .square_button--twitter, .square_button--instagram").filter((i, el) => $(el).hasClass("u-quarter_vertical_margins"));
+
+                if (window.location.pathname.includes("artists/")) {
+                    // noinspection JSJQueryEfficiency
+                    if ($(".copy_id_button").length) {
+                        console.log("Already added button");
+                        return;
+                    }
+
+                    const id = $("meta[name='newrelic-resource-path']").attr("content")?.split("/artists/")?.[1];
+                    console.log("ID", id);
+                    if (id) {
+                        $("<div>", {
+                            class: "copy_id_button text_label text_label--purple u-horizontal_margins u-top_margin u-half_bottom_margin cursor_pointer",
+                            text: "Copy ID"
+                        }).insertAfter($("profile-artist-pane"));
+
+                        $(".copy_id_button").on("click", () => {
+                            navigator.clipboard.writeText(id);
+                        });
+                    }
+                }
+
                 if (socialMediaButtons.length && !$(".social_media_buttons_container").length) {
                     const dict = {
                         "square_button--facebook": "Facebook",
@@ -100,6 +122,23 @@ export async function handleProfile(tabId, url) {
                             socialMediaButtons[i].click();
                         });
                     });
+                }
+
+                // noinspection JSJQueryEfficiency
+                if (!$(".copy_id_button").length) {
+                    // get the id from the `twitter:app:url:iphone` meta tag
+                    const id = $("meta[property='twitter:app:url:iphone']").attr("content")?.split("/")?.[3];
+
+                    if (id) {
+                        $("<div>", {
+                            class: "copy_id_button text_label text_label--purple u-horizontal_margins u-top_margin u-half_bottom_margin cursor_pointer",
+                            text: "Copy ID"
+                        }).insertBefore($("profile-admin-pane"));
+
+                        $(".copy_id_button").on("click", () => {
+                            navigator.clipboard.writeText(id);
+                        });
+                    }
                 }
 
                 if (window.location.href.toLowerCase().endsWith("/uri6")) {

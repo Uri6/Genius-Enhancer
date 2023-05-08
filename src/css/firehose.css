@@ -6,9 +6,6 @@
 body:not(.ge-dark-mode) {
   background-color: #ffff65 !important;
 }
-body:not(.ge-dark-mode) input::-moz-placeholder {
-  color: black !important;
-}
 body:not(.ge-dark-mode) label,
 body:not(.ge-dark-mode) legend,
 body:not(.ge-dark-mode) input:not(#ge-theme-toggle),
@@ -102,8 +99,7 @@ body #main #firehose_filters legend {
   border-width: initial !important;
   border-style: none !important;
   border-color: initial !important;
-  -o-border-image: initial !important;
-     border-image: initial !important;
+  border-image: initial !important;
   font-size: 15px !important;
   padding: 0px !important;
   margin: 0px !important;
@@ -128,4 +124,6 @@ body #main #firehose_filters fieldset legend {
 }
 body #main #firehose_filters fieldset input {
   max-width: 178px;
-}/*# sourceMappingURL=firehose.css.map */
+}
+
+/*# sourceMappingURL=firehose.css.map */

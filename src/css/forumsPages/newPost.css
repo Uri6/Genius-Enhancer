@@ -72,9 +72,6 @@ body {
   font-family: "IBM Plex Sans", sans-serif !important;
   width: 100% !important;
 }
-#container #main #group_container #group_discussion .new_discussion input:not(#discussion_submit)::-moz-placeholder, #container #main #group_container #group_discussion .new_discussion textarea::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.4) !important;
-}
 #container #main #group_container #group_discussion .new_discussion input:not(#discussion_submit)::placeholder,
 #container #main #group_container #group_discussion .new_discussion textarea::placeholder {
   color: rgba(0, 0, 0, 0.4) !important;
@@ -176,9 +173,6 @@ body {
 }
 .discussion_thread-discussion_and_group_list #groups_sidebar .groups_sidebar-search {
   padding: 10px 0 !important;
-}
-.discussion_thread-discussion_and_group_list #groups_sidebar .groups_sidebar-search input::-moz-placeholder {
-  color: transparent !important;
 }
 .discussion_thread-discussion_and_group_list #groups_sidebar .groups_sidebar-search input::placeholder {
   color: transparent !important;
@@ -346,4 +340,6 @@ body {
 }
 .clearfix .ql-editor {
   min-height: 300px;
-}/*# sourceMappingURL=newPost.css.map */
+}
+
+/*# sourceMappingURL=newPost.css.map */

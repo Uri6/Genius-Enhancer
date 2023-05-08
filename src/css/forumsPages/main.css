@@ -121,25 +121,13 @@
   transition: all 0.3s ease;
   background-color: rgba(154, 154, 154, 0.5) !important;
 }
-.discussions_search_bar-text_input::-moz-placeholder {
-  color: black !important;
-  opacity: 0.4 !important;
-  -moz-transition: all 0.2s ease;
-  transition: all 0.2s ease;
-}
 .discussions_search_bar-text_input::placeholder {
   color: black !important;
   opacity: 0.4 !important;
   transition: all 0.2s ease;
 }
-.discussions_search_bar-text_input:hover::-moz-placeholder {
-  opacity: 0.6 !important;
-}
 .discussions_search_bar-text_input:hover::placeholder {
   opacity: 0.6 !important;
-}
-.discussions_search_bar-text_input:focus::-moz-placeholder {
-  opacity: 0 !important;
 }
 .discussions_search_bar-text_input:focus::placeholder {
   opacity: 0 !important;
@@ -160,4 +148,6 @@
 input[type=text].discussions_search_bar-text_input {
   color: #000 !important;
   width: 80% !important;
-}/*# sourceMappingURL=main.css.map */
+}
+
+/*# sourceMappingURL=main.css.map */
