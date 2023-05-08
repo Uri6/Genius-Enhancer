@@ -943,6 +943,9 @@ body.ge-dark-mode *:not(:has(.extension-box) *) .user_badge-login {
 body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card-title, body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card-subtitle, body.ge-dark-mode *:not(:has(.extension-box) *) .mini_card-metadata {
   color: #fff;
 }
+body.ge-dark-mode *:not(:has(.extension-box) *) .user_avatar.profile_header-avatar {
+  border-color: #3d3d3d;
+}
 body.ge-dark-mode *:not(:has(.extension-box) *) .u-white_background, body.ge-dark-mode *:not(:has(.extension-box) *).u-white_background {
   background: #141414;
 }

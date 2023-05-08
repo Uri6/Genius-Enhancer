@@ -547,7 +547,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                             pageType = "home";
                         } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
                             pageType = "firehose";
-                        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/")) {
+                        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
                             pageType = "new song";
                         } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
                             pageType = "mecha.penalties";
