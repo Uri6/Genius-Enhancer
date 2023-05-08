@@ -1,3 +1,10 @@
+/**
+ * @license
+ * This code is licensed under the terms specified in the "LICENSE.md" file
+ * located in the root directory of the project. The license file can also be found at
+ * https://github.com/Uri6/Genius-Enhancer-Beta/blob/main/LICENSE.md
+ */
+
 export async function handleProfile(tabId, url) {
     await chrome.scripting.insertCSS(
         {
@@ -72,11 +79,11 @@ export async function handleProfile(tabId, url) {
                             title: socialMediaName
                         })
                             .append($("<div>", {
-                                    class: "social_media_button_icon"
-                                })
-                                    .append($("<img>", {
-                                        src: socialMediaIconsArray.find(icon => icon[0] === socialMediaName)[1]
-                                    }))
+                                class: "social_media_button_icon"
+                            })
+                                .append($("<img>", {
+                                    src: socialMediaIconsArray.find(icon => icon[0] === socialMediaName)[1]
+                                }))
                             )
                             .append($("<div>", {
                                 class: "social_media_button_username",
@@ -104,6 +111,10 @@ export async function handleProfile(tabId, url) {
                             particlesJS.load("ge-developer-image", chrome.runtime.getURL("/lib/particles/particles.json"));
                         }, () => {
                             particlesJS("ge-developer-image", {});
+                        });
+
+                        $('#ge-developer-image').on('mouseleave', () => {
+                            $('#ge-developer-image canvas').remove();
                         });
                     }
                 }
