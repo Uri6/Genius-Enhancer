@@ -36,8 +36,9 @@ or
 git clone https://github.com/Uri6/Genius-Enhancer-Beta.git
 ```
 
-2. Go to `chrome://extensions/` in your chrome browser and turn on "developer mode"
-3. Click on "Load Unpacked" and select the cloned repository
+2. Compile the scss files
+3. Go to `chrome://extensions/` in your chrome browser and turn on "developer mode"
+4. Click on "Load Unpacked" and select the cloned repository
 
 ## Usage
 1. Go to Genius.com

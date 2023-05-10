@@ -26,7 +26,8 @@ src/images/magicWand/512x512.png
 # Adobe Photoshop files
 *.psd
 
-# CSS source maps
+# SCSS compiled files
+*.css
 *.css.map
 
 # Mac OS system files
