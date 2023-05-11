@@ -15,11 +15,12 @@ vision/
 Builds/
 build
 
-# Image files
+# Images files
 src/images/header/
 src/images/gifs/
 src/images/screenshots/
 src/images/icons/1/
+src/images/icons/2/
 src/images/magicWand/48x48.png
 src/images/magicWand/512x512.png
 

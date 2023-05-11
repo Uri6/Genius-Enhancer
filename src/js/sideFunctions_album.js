@@ -505,7 +505,7 @@ export async function appendIcon() {
         class: "extension-icon",
         alt: "genius enhancer extension icon",
         title: "Alt + G",
-        src: chrome.runtime.getURL("src/images/icons/2/128x128.png")
+        src: chrome.runtime.getURL("src/images/icons/3/128x128.png")
     });
     buttonBackground.append(icon_elem);
 
