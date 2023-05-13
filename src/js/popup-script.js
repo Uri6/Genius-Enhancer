@@ -23,8 +23,6 @@ const createCheckbox = (id, labelText) => {
 };
 
 const GENIUS_PAGE_ELEMENT = createElement("info-box", "genius-page", "Genius Page");
-const NO_SPECIAL_FEATURES_ELEMENT = createElement("no-features-box", "features", "There are (still) no special features here");
-const NOT_GENIUS_ELEMENT = createElement("err-box", "missing-genius-err", "Not a Genius page");
 const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album Page");
 const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song Page");
 
@@ -56,7 +54,7 @@ const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = 
 
     $checkbox.click(() => {
         const isChecked = $checkbox.prop("checked");
-        const altMessageKey = isChecked ?  "album_missingInfo" : "album_missingInfo_remove"
+        const altMessageKey = isChecked ? "album_missingInfo" : "album_missingInfo_remove";
         let updateMessageKey = messageKey.length ? messageKey : altMessageKey;
         chrome.storage.local.set({ [storageKey]: isChecked });
         messageValue ? chrome.runtime.sendMessage({ [updateMessageKey]: messageValue }) : chrome.runtime.sendMessage({ [updateMessageKey]: [isChecked] });
@@ -64,53 +62,34 @@ const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = 
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async () => {
-    chrome.storage.local.get(["pageType", "isGeniusPage"], async (result) => {
-        const { isGeniusPage, pageType } = result;
+    const additions = $("#optional-additions");
 
-        if (!isGeniusPage) {
-            $("#optional-additions").append(NOT_GENIUS_ELEMENT);
-            return;
-        }
+    additions.append(SONG_PAGE_FEATURES_ELEMENT);
 
-        if (pageType == null || pageType === "unknown") {
-            $("#optional-additions")
-                .append(GENIUS_PAGE_FEATURES_ELEMENT)
-                .append(SONG_PAGE_FEATURES_ELEMENT);
-            return;
-        }
+    additions
+        .append(SONG_PAGE_ELEMENT)
+        .append(SONG_PAGE_FEATURES_ELEMENT);
 
-        switch (pageType) {
-            case "song":
-                $("#optional-additions")
-                    .append(SONG_PAGE_ELEMENT)
-                    .append(SONG_PAGE_FEATURES_ELEMENT);
+    handleCheckboxClick("apple-music-pop-up", "appleMusicPopUp", "song_appleMusicPopUp");
+    handleCheckboxClick("spotify-pop-up", "spotifyPopUp", "song_spotifyPopUp");
+    handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
 
-                handleCheckboxClick("apple-music-pop-up", "appleMusicPopUp", "song_appleMusicPopUp");
-                handleCheckboxClick("spotify-pop-up", "spotifyPopUp", "song_spotifyPopUp");
-                handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
-
-                chrome.storage.local.get(["OldSongPage"], (res) => {
-                    $("#old-song-page").prop("checked", res.OldSongPage);
-                });
-
-                $("#old-song-page").click(() => {
-                    const OldSongPageCheckbox = document.getElementById("old-song-page");
-                    chrome.storage.local.set({ OldSongPage: OldSongPageCheckbox.checked });
-                });
-                break;
-            case "album":
-                $("#optional-additions")
-                    .append(ALBUM_PAGE_ELEMENT)
-                    .append(ALBUM_PAGE_FEATURES_ELEMENT);
-
-                handleCheckboxClick("bios", "bios", "", [true, false, false]);
-                handleCheckboxClick("people", "people", "", [false, true, false]);
-                handleCheckboxClick("release-date", "releaseDate", "", [false, false, true]);
-
-                break;
-            default:
-                $("#optional-additions").append(GENIUS_PAGE_ELEMENT);
-                break;
-        }
+    chrome.storage.local.get(["OldSongPage"], (res) => {
+        $("#old-song-page").prop("checked", res.OldSongPage);
     });
+
+    $("#old-song-page").click(() => {
+        const OldSongPageCheckbox = document.getElementById("old-song-page");
+        chrome.storage.local.set({ OldSongPage: OldSongPageCheckbox.checked });
+    });
+
+    additions
+        .append(ALBUM_PAGE_ELEMENT)
+        .append(ALBUM_PAGE_FEATURES_ELEMENT);
+
+    handleCheckboxClick("bios", "bios", "", [true, false, false]);
+    handleCheckboxClick("people", "people", "", [false, true, false]);
+    handleCheckboxClick("release-date", "releaseDate", "", [false, false, true]);
+
+    additions.append(GENIUS_PAGE_ELEMENT);
 });
