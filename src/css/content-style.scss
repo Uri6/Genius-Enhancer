@@ -178,7 +178,6 @@ strong {
   font-weight: bold !important;
 }
 
-
 @font-face {
   font-family: 'Programme';
   src: url('https://assets.genius.com/fonts/programme_bold.woff2') format('woff2');
@@ -186,7 +185,7 @@ strong {
 
 @keyframes ge-opacity-in {
   0% {
-    opacity: 0%;
+    opacity: 0;
   }
 
   100% {
@@ -200,7 +199,7 @@ strong {
   }
 
   100% {
-    opacity: 0%;
+    opacity: 0;
   }
 }
 
@@ -1100,12 +1099,9 @@ input {
       position: absolute;
       width: 50%;
       height: 50%;
-      background: linear-gradient(45deg, #F88F6F, #FFC6A3);
       transform: translate(-50%, -50%);
       border-radius: 20px;
       opacity: 0;
-      transform: scale(0);
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.35s ease;
       z-index: 0;
       overflow: hidden;
     }
@@ -1117,7 +1113,7 @@ input {
 
   .HomeContentdesktop__CenteredFlexColumn-sc-1xfg7l1-1.btjJtO,
   #top-songs {
-    background: linear-gradient(180deg, #99E47A, #C6C289);
+    background: #99E47A;
 
     .hZoFSc {
       display: flex;
@@ -1141,17 +1137,7 @@ input {
           }
 
           .gIwQZZ {
-            &:nth-child(1) {
-              background: linear-gradient(45deg, #99E47A, #C6C289);
-            }
-
-            &:nth-child(2) {
-              background: linear-gradient(45deg, #ace793, #e7e3a7);
-            }
-
-            &:nth-child(3) {
-              background: linear-gradient(45deg, #c0f0a9, #f0f0c0);
-            }
+            background-color: #99E47A;
           }
         }
 
@@ -1192,8 +1178,6 @@ input {
   }
 
   #community {
-    background: linear-gradient(180deg, #C6C289, #FFC6A3);
-
     .kFMCQL {
       display: none;
     }
@@ -1222,7 +1206,7 @@ input {
   }
 
   .HomeContentdesktop__Section-sc-1xfg7l1-4.bBDcg {
-    background: linear-gradient(180deg, #FFC6A3, #F88F6F);
+    background: #FFC6A3;
     padding-bottom: 75px;
 
     .kcEpRx {
@@ -1255,7 +1239,6 @@ input {
   }
 
   #videos {
-    background: linear-gradient(180deg, #F88F6F, #121212);
     padding-bottom: 75px;
 
     .PageGriddesktop-a6v82w-0.Communitydesktop__ChartHeader-x5mxcf-2.kFMCQL {
@@ -1327,10 +1310,9 @@ input {
   }
 
   .SquareButton-sc-109lda7-0 {
-    background: linear-gradient(45deg, #B8E75C, #007361);
-    opacity: 0.3;
+    background: white;
+    border: solid black 2px !important;
     border-radius: 10px;
-    border: none;
     color: black;
     font-weight: 600;
     font-size: 1.2rem;
