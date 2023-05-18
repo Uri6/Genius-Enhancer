@@ -20,8 +20,22 @@ body.ge-dark-mode {
         background: #000;
     }
 
+    .modal_window:has(conversation-with-user),
+    .modal_window:has(conversation-messages) {
+        .modal_window-content {
+            .conversation-message--left {
+                background-color: #414141;
+            }
+
+            .conversation-message--right {
+                background-color: #2e2e2e;
+            }
+        }
+    }
+
     *:not(:has(.extension-box) *) {
 
+        .standalone_annotation,
         .standalone_annotation-referent_fragment--with_caret::before,
         .annotation_embed,
         .bordered_media_container,
@@ -51,15 +65,10 @@ body.ge-dark-mode {
             }
         }
 
-        .act-bookmarklet {
-            color: #fff;
-        }
-
-        .act-developers {
-            color: #fff;
-        }
-
-        .act-web_annotator {
+        .act-bookmarklet,
+        .act-developers,
+        .act-web_annotator,
+        inbox {
             color: #fff;
         }
 
@@ -458,6 +467,10 @@ body.ge-dark-mode {
             color: #f2e6fe;
         }
 
+        .chart_row-metadata_element .inline_icon {
+            fill: #fff;
+        }
+
         .chzn-container {
             color: #f2e6fe;
 
@@ -554,6 +567,10 @@ body.ge-dark-mode {
                     fill: #ffff64;
                 }
             }
+        }
+
+        defer-compile svg {
+            fill: #fff;
         }
 
         .dgdgAp {
@@ -865,9 +882,12 @@ body.ge-dark-mode {
             background: #171717;
         }
 
+        .inline_icon[src="unlock.svg"],
         .inline_icon:not(.inline_icon--up_1) {
             fill: #fff;
         }
+
+        inline_icon inline_icon--reading_size inline_icon--up_1 tooltip-list_item-icon
 
         .inline_icon.inline_icon--green {
             fill: #0ecb27;
@@ -1115,12 +1135,16 @@ body.ge-dark-mode {
             color: #ccc;
         }
 
+        .referent:not(.referent--green) {
+            color: #000;
+        }
+
         .referent_container--inverse {
             background: #adad00;
         }
 
         .referent--green {
-            background: #1ad633;
+            background: #1a9c2b;
             transition: background .3s ease;
         }
 
@@ -1278,10 +1302,6 @@ body.ge-dark-mode {
 
         .sqs-block {
             background: #141414;
-        }
-
-        .standalone_annotation {
-            background: #171717;
         }
 
         .statistic_and_label-primary {
