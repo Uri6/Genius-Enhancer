@@ -125,8 +125,7 @@ export function restyleMissingInfo() {
     let bioIcons = document.querySelectorAll(".bio-icon");
     let releaseDateIcons = document.querySelectorAll(".release-date-icon");
 
-    // make sure at least one of the icons is present
-    // if not, wait until they are
+    // Wait until at least one of the icons is loaded
     do {
         peopleIcons = document.querySelectorAll('.people-icon');
         bioIcons = document.querySelectorAll('.bio-icon');
@@ -523,6 +522,11 @@ export async function appendIcon() {
             class: "extension-box ge-zoom-in"
         }).appendTo(popupDiv);
 
+        // Create a container for the left column
+        const leftColumn = $("<div>", {
+            class: "left-column-container"
+        }).appendTo(popupBox);
+
         $('<img>', {
             class: 'close-icon',
             src: chrome.runtime.getURL('/src/images/other/closeIcon.png'),
@@ -547,209 +551,9 @@ export async function appendIcon() {
             }
         }).appendTo(popupBox);
 
-        $("<div>", {
-            class: "add-tags-title title",
-            text: "Tag Songs"
-        }).appendTo(popupBox);
-
-        $("<input>", {
-            class: "add-tags rcorners ge-textarea",
-            id: "ge-add-tags",
-            type: "text",
-            placeholder: "Tag",
-            spellcheck: "false",
-            "data-gramm": "false",
-            on: {
-                keydown: function (e) {
-                    if (e.keyCode === 13) {
-                        e.preventDefault();
-                        return false;
-                    }
-                }
-            }
-        }).appendTo(popupBox);
-
-        $("<div>", {
-            class: "add-credits-title title",
-            text: "Credit Artists",
-        }).appendTo(popupBox);
-
-        const addCreditsContainer = $("<div>", {
-            class: "add-credits-inputs-container",
-        }).appendTo(popupBox);
-
-        $("<div>", {
-            class: "add-credits add rcorners ge-textarea",
-            type: "text",
-            text: "Add",
-            spellcheck: "false",
-            "data-gramm": "false",
-            on: {
-                click: () => {
-                    addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
-
-                    const lastRoleInput = $(".add-credits-inputs-container .add-credits.role.tagify .tagify__input").last();
-                    lastRoleInput.focus();
-                }
-            },
-        }).appendTo(addCreditsContainer);
-
-        addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
-
-        $("<div>", {
-            class: "add-media-title title",
-            text: "Link Media",
-        }).appendTo(popupBox);
-
-        const addMediaInput = $("<input>", {
-            class: "add-media rcorners ge-textarea",
-            id: "ge-add-media",
-            type: "text",
-            placeholder: "Youtube Playlist",
-            spellcheck: "false",
-            "data-gramm": "false"
-        }).appendTo(popupBox);
-
-        $("<div>", {
-            class: "ge-textarea add-media details"
-        })
-            .append($("<div>", {
-                class: "add-media details image-container",
-                text: ""
-            })
-                .append($("<img>", {
-                    class: "add-media details image",
-                    src: ""
-                })))
-            .append($("<div>", {
-                class: "add-media details title",
-                text: ""
-            }))
-            .append($("<div>", {
-                class: "add-media details artist",
-                text: ""
-            }))
-            .append($("<div>", {
-                class: "add-media details length",
-                text: ""
-            }))
-            .append($("<div>", {
-                class: "add-media details videos-links",
-                text: "",
-                style: "display: none;"
-            }))
-            .appendTo(popupBox);
-
-        addMediaInput.on("input", async () => {
-            const url = addMediaInput.val();
-            if (url === "") {
-                addMediaInput.removeClass("error");
-                addMediaInput.attr("title", "");
-                const addMediaTitle = $(".add-media.details.title");
-                addMediaTitle.text("");
-                addMediaTitle.attr("title", "");
-                $(".add-media.details.image").attr("src", "");
-                $(".add-media.details.artist").text("");
-                $(".add-media.details.length").text("");
-                $(".add-media.details.videos-links").text("");
-                return;
-            }
-
-            const getPlaylistVideos = async (playlistLink) => {
-                const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
-                if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
-                    throw new Error("Invalid playlist link");
-                }
-                const playlistId = playlistLink.split("list=")[1];
-                const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
-
-                // Fetch the playlist metadata
-                const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
-                if (!metadataResponse.ok) {
-                    throw new Error("Failed to fetch playlist metadata");
-                }
-
-                // Extract the metadata
-                let metadataData = await metadataResponse.json();
-                metadataData = metadataData.items[0].snippet;
-                const playlistTitle = metadataData.title;
-                const artistName = metadataData.channelTitle;
-                const thumbnails = metadataData.thumbnails;
-                let playlistImage = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default;
-                playlistImage = playlistImage.url;
-
-                // Fetch the playlist videos
-                const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
-                if (!videosResponse.ok) {
-                    throw new Error("Failed to fetch playlist videos");
-                }
-
-                // Extract the videos data
-                const videosData = await videosResponse.json();
-                const videoTitles = videosData.items.map(item => item.snippet.title);
-                const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
-                const playlistLength = videoLinks.length;
-
-                // Return an object containing the metadata and the video links
-                return {
-                    artistName,
-                    playlistTitle,
-                    playlistImage,
-                    playlistLength,
-                    videoTitles,
-                    videoLinks
-                };
-            }
-
-            try {
-                const response = await getPlaylistVideos(url);
-                if (response === undefined) {
-                    throw new Error("Invalid Youtube Playlist URL");
-                }
-                else {
-                    const numOfSongs = Array.from(
-                        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
-                    ).length;
-
-                    addMediaInput.removeClass("error");
-                    addMediaInput.attr("title", "");
-                    $(".add-media.details.title").text(response.playlistTitle);
-                    $(".add-media.details.title").attr("title", response.playlistTitle);
-                    $(".add-media.details.image").attr("src", response.playlistImage);
-                    $(".add-media.details.artist").text(response.artistName);
-                    $(".add-media.details.length").text(response.playlistLength);
-                    $(".add-media.details.videos-links").text(response.videoLinks.join(" "));
-
-                    if (numOfSongs === response.playlistLength) {
-                        $(".add-media.details.length").css({ color: "#1cc674" });
-                        $(".add-media.details.length").attr("title", "The number of songs in the playlist matches the number of songs in the chart");
-                        addMediaInput.removeClass("error");
-
-                    } else {
-                        $(".add-media.details.length").css({ color: "#fc5753" });
-                        $(".add-media.details.length").attr("title", "The number of songs in the playlist does not match the number of songs in the chart")
-                        addMediaInput.addClass("error");
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-                // add the error class to the input
-                addMediaInput.addClass("error");
-                // add a tooltip to the input
-                addMediaInput.attr("title", "Invalid Youtube Playlist URL");
-                // clear the details
-                $(".add-media.details.title").text("");
-                $(".add-media.details.title").attr("title", "");
-                $(".add-media.details.image").attr("src", "");
-                $(".add-media.details.artist").text("");
-                $(".add-media.details.length").text("");
-                $(".add-media.details.videos-links").text("");
-            }
-        });
-
         const autolinkArtworkContainer = $('<div>', {
             class: 'autolink-artwork-icon-container rcorners'
-        });
+        }).appendTo(popupBox);
 
         const autolinkArtwork = $('<img>', {
             class: 'autolink-artwork-icon',
@@ -878,7 +682,205 @@ export async function appendIcon() {
             }
         });
 
-        popupBox.append(autolinkArtworkContainer);
+        $("<div>", {
+            class: "add-tags-title title",
+            text: "Tag Songs"
+        }).appendTo(leftColumn);
+
+        $("<input>", {
+            class: "add-tags rcorners ge-textarea",
+            id: "ge-add-tags",
+            type: "text",
+            placeholder: "Tag",
+            spellcheck: "false",
+            "data-gramm": "false",
+            on: {
+                keydown: function (e) {
+                    if (e.keyCode === 13) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            }
+        }).appendTo(leftColumn);
+
+        $("<div>", {
+            class: "add-credits-title title",
+            text: "Credit Artists",
+        }).appendTo(leftColumn);
+
+        const addCreditsContainer = $("<div>", {
+            class: "add-credits-inputs-container",
+        }).appendTo(leftColumn);
+
+        $("<div>", {
+            class: "add-credits add rcorners ge-textarea",
+            type: "text",
+            text: "Add",
+            spellcheck: "false",
+            "data-gramm": "false",
+            on: {
+                click: () => {
+                    addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
+
+                    const lastRoleInput = $(".add-credits-inputs-container .add-credits.role.tagify .tagify__input").last();
+                    lastRoleInput.focus();
+                }
+            },
+        }).appendTo(addCreditsContainer);
+
+        addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
+
+        $("<div>", {
+            class: "add-media-title title",
+            text: "Link Media",
+        }).appendTo(leftColumn);
+
+        const addMediaInput = $("<input>", {
+            class: "add-media rcorners ge-textarea",
+            id: "ge-add-media",
+            type: "text",
+            placeholder: "Youtube Playlist",
+            spellcheck: "false",
+            "data-gramm": "false"
+        }).appendTo(leftColumn);
+
+        $("<div>", {
+            class: "ge-textarea add-media details"
+        })
+            .append($("<div>", {
+                class: "add-media details image-container",
+                text: ""
+            })
+                .append($("<img>", {
+                    class: "add-media details image",
+                    src: ""
+                })))
+            .append($("<div>", {
+                class: "add-media details title",
+                text: ""
+            }))
+            .append($("<div>", {
+                class: "add-media details artist",
+                text: ""
+            }))
+            .append($("<div>", {
+                class: "add-media details length",
+                text: ""
+            }))
+            .append($("<div>", {
+                class: "add-media details videos-links",
+                text: "",
+                style: "display: none;"
+            }))
+            .appendTo(leftColumn);
+
+        addMediaInput.on("input", async () => {
+            const url = addMediaInput.val();
+            if (url === "") {
+                addMediaInput.removeClass("error");
+                addMediaInput.attr("title", "");
+                const addMediaTitle = $(".add-media.details.title");
+                addMediaTitle.text("");
+                addMediaTitle.attr("title", "");
+                $(".add-media.details.image").attr("src", "");
+                $(".add-media.details.artist").text("");
+                $(".add-media.details.length").text("");
+                $(".add-media.details.videos-links").text("");
+                return;
+            }
+
+            const getPlaylistVideos = async (playlistLink) => {
+                const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
+                if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
+                    throw new Error("Invalid playlist link");
+                }
+                const playlistId = playlistLink.split("list=")[1];
+                const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+
+                // Fetch the playlist metadata
+                const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
+                if (!metadataResponse.ok) {
+                    throw new Error("Failed to fetch playlist metadata");
+                }
+
+                // Extract the metadata
+                let metadataData = await metadataResponse.json();
+                metadataData = metadataData.items[0].snippet;
+                const playlistTitle = metadataData.title;
+                const artistName = metadataData.channelTitle;
+                const thumbnails = metadataData.thumbnails;
+                let playlistImage = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default;
+                playlistImage = playlistImage.url;
+
+                // Fetch the playlist videos
+                const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
+                if (!videosResponse.ok) {
+                    throw new Error("Failed to fetch playlist videos");
+                }
+
+                // Extract the videos data
+                const videosData = await videosResponse.json();
+                const videoTitles = videosData.items.map(item => item.snippet.title);
+                const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
+                const playlistLength = videoLinks.length;
+
+                // Return an object containing the metadata and the video links
+                return {
+                    artistName,
+                    playlistTitle,
+                    playlistImage,
+                    playlistLength,
+                    videoTitles,
+                    videoLinks
+                };
+            }
+
+            try {
+                const response = await getPlaylistVideos(url);
+                if (response === undefined) {
+                    throw new Error("Invalid Youtube Playlist URL");
+                }
+                else {
+                    const numOfSongs = Array.from(
+                        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
+                    ).length;
+
+                    addMediaInput.removeClass("error");
+                    addMediaInput.attr("title", "");
+                    $(".add-media.details.title").text(response.playlistTitle);
+                    $(".add-media.details.title").attr("title", response.playlistTitle);
+                    $(".add-media.details.image").attr("src", response.playlistImage);
+                    $(".add-media.details.artist").text(response.artistName);
+                    $(".add-media.details.length").text(response.playlistLength);
+                    $(".add-media.details.videos-links").text(response.videoLinks.join(" "));
+
+                    if (numOfSongs === response.playlistLength) {
+                        $(".add-media.details.length").css({ color: "#1cc674" });
+                        $(".add-media.details.length").attr("title", "The number of songs in the playlist matches the number of songs in the chart");
+                        addMediaInput.removeClass("error");
+
+                    } else {
+                        $(".add-media.details.length").css({ color: "#fc5753" });
+                        $(".add-media.details.length").attr("title", "The number of songs in the playlist does not match the number of songs in the chart")
+                        addMediaInput.addClass("error");
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                // add the error class to the input
+                addMediaInput.addClass("error");
+                // add a tooltip to the input
+                addMediaInput.attr("title", "Invalid Youtube Playlist URL");
+                // clear the details
+                $(".add-media.details.title").text("");
+                $(".add-media.details.title").attr("title", "");
+                $(".add-media.details.image").attr("src", "");
+                $(".add-media.details.artist").text("");
+                $(".add-media.details.length").text("");
+                $(".add-media.details.videos-links").text("");
+            }
+        });
 
         const saveButton = $('<input>')
             .addClass('ge-save-button rcorners')
