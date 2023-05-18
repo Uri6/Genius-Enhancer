@@ -732,6 +732,91 @@ export async function appendIcon() {
         addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
 
         $("<div>", {
+            class: "set-release-date-title title",
+            text: "Set Release Date",
+        }).appendTo(leftColumn);
+
+        const dateInputContainer = $("<div>", {
+            class: "input-container",
+        }).appendTo(leftColumn);
+
+        const datePickerInput = $("<input>", {
+            type: "text",
+            class: "set-release-date rcorners ge-textarea",
+            placeholder: "Date",
+            readonly: true
+        }).appendTo(dateInputContainer);
+
+        const datePicker = datepicker(datePickerInput[0], {
+            customDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            customMonths: [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ],
+            overlayButton: "Close",
+            overlayPlaceholder: "Year",
+            startDay: 0,
+            onShow: () => {
+                // add a class to the datepicker input
+                datePickerInput.addClass("calendar-open");
+            },
+            onHide: () => {
+                // remove the class from the datepicker input
+                datePickerInput.removeClass("calendar-open");
+            },
+            formatter: (input, date) => {
+                const value = date.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "numeric",
+                    year: "numeric"
+                });
+                input.value = value; // Set the input value to the selected date
+            },
+            maxDate: (() => {
+                const currentDate = new Date();
+                currentDate.setFullYear(currentDate.getFullYear() + 1);
+                return currentDate;
+            })() // Set the maximum selectable date to the current date plus 2 years
+        });
+
+        const clearDateButton = $("<x>", {
+            class: "tagify tagify__tag__removeBtn",
+            title: "Clear",
+        });
+
+        clearDateButton.on("click", () => {
+            datePicker.setDate(null); // Set the selected date to null
+        });
+
+        dateInputContainer.css({
+            position: "relative",
+            display: "inline-block",
+        });
+
+        datePickerInput.css({
+            paddingRight: "30px", // Adjust the padding to accommodate the clear button
+        });
+
+        clearDateButton.css({
+            position: "absolute",
+            top: "50%",
+            right: "5px",
+            transform: "translateY(-50%)",
+        });
+
+        clearDateButton.appendTo(dateInputContainer);
+
+        $("<div>", {
             class: "add-media-title title",
             text: "Link Media",
         }).appendTo(leftColumn);
@@ -1152,6 +1237,7 @@ export async function saveEverything() {
     const details = getDetails();
     const albumSongs = details.album_appearances;
     const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
+    const releaseDate = $(".set-release-date").val().split("/");
 
     const tags = $(".extension-box .add-tags tag")
         ?.toArray()
@@ -1190,13 +1276,18 @@ export async function saveEverything() {
         const params = {
             tags: [
                 ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
-                ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id })),
+                ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id }))
             ],
             youtube_url: song.youtube_url || songDetails.youtube_url,
             custom_performances: [
                 ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
-                ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists })),
+                ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists }))
             ],
+            release_date_components: {
+                day: releaseDate[0],
+                month: releaseDate[1],
+                year: releaseDate[2]
+            }
         };
 
         gapi.put(`https://genius.com/api${song.song.api_path}`, {
@@ -1205,7 +1296,8 @@ export async function saveEverything() {
                 tags: params.tags,
                 youtube_url: params.youtube_url,
                 custom_performances: params.custom_performances,
-            },
+                release_date_components: params.release_date_components
+            }
         });
     }
 }

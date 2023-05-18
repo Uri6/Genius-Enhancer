@@ -251,238 +251,240 @@
             }
         }
 
-        .title {
+        .left-column-container {
             position: relative;
-            left: 65px;
-            font-size: 30px;
-            font-weight: bold;
+            top: 40px;
+            left: 60px;
+            padding-left: 5px;
+            width: 570px;
+            height: 575px;
+            max-height: 575px;
+            overflow-y: auto;
+            overflow-x: visible;
+            border-radius: 10px;
 
-            &.add-tags-title {
-                top: 40px;
+            .title {
+                position: relative;
+                display: flex;
+                font-size: 30px;
+                font-weight: bold;
+                width: auto;
+                margin-bottom: 10px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                &:not(:first-child):not(.details) {
+                    margin-top: 20px;
+                }
             }
 
-            &.add-credits-title {
-                top: 75px;
+            .add-credits-inputs-container {
+                width: 553px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+
+                .add-credits-inputs {
+                    display: inline-flex;
+                    flex-direction: row;
+                }
+
+                .delete-button-container {
+                    border-radius: 10px;
+                    width: 43px;
+                    height: 43px;
+                    margin-left: 10px;
+                    justify-content: center;
+                    align-items: center;
+                    display: inline-flex;
+
+                    .delete-button {
+                        width: 33px;
+                        height: 33px;
+                    }
+
+                    &:hover {
+                        background-color: rgba(252, 87, 84, 0.4);
+                        cursor: pointer;
+                    }
+                }
             }
 
-            &.add-media-title {
-                top: 110px;
-            }
-        }
-
-        .add-credits-inputs-container {
-            top: 85px;
-            left: 65px;
-            width: 553px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-
-            .add-credits-inputs {
-                display: inline-flex;
-                flex-direction: row;
-            }
-
-            .delete-button-container {
-                border-radius: 10px;
-                width: 43px;
-                height: 43px;
-                margin-left: 10px;
+            .ge-textarea {
+                border: none;
+                min-width: 245px;
+                outline-style: solid;
+                outline-width: 0;
+                outline-color: #fc5753;
+                resize: none;
+                overflow: hidden;
+                font-family: "Programme";
+                font-size: 18px;
+                font-weight: 500px;
                 justify-content: center;
-                align-items: center;
-                display: inline-flex;
+                writing-mode: horizontal-tb !important;
+                column-count: initial !important;
+                text-align: start;
+                transition: all 0.2s !important;
+                position: relative;
+                color: #000 !important;
 
-                .delete-button {
-                    width: 33px;
-                    height: 33px;
-                }
-
-                &:hover {
-                    background-color: rgba(252, 87, 84, 0.4);
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .ge-textarea {
-            border: none;
-            outline-style: solid;
-            outline-width: 0;
-            outline-color: #fc5753;
-            resize: none;
-            overflow: hidden;
-            font-family: "Programme";
-            font-size: 18px;
-            font-weight: 500px;
-            justify-content: center;
-            writing-mode: horizontal-tb !important;
-            column-count: initial !important;
-            text-align: start;
-            transition: all 0.2s !important;
-            position: relative;
-            color: #000 !important;
-
-            &.tagify {
-
-                &[aria-expanded="true"] {
+                &.tagify[aria-expanded="true"],
+                &.calendar-open {
                     border-bottom-left-radius: 0;
                     border-bottom-right-radius: 0;
                 }
-            }
 
-            &.add-tags {
-                top: 50px;
-                left: 65px;
-                width: 500px;
-            }
-
-            &.add-credits {
-                width: 245px;
-
-                &.artist {
-                    margin-left: 10px;
+                &.add-tags {
+                    width: 500px;
                 }
 
-                &.artist,
-                &.role {
-                    margin-bottom: 10px;
-                }
+                &.add-credits {
+                    width: 245px;
 
-                &.add {
-                    background-color: rgba(203, 203, 203, 0);
-                    color: rgba(0, 0, 0, 0.4) !important;
-                    margin-top: 2px;
-                    height: 43px;
-                    border: none;
-                    outline: 2px solid #cbcbcb;
-                    transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
-
-                    &:hover {
-                        cursor: pointer;
-                        background-color: rgba(203, 203, 203, 0.4);
-                        outline-width: 0px;
-                    }
-                }
-            }
-
-            &.add-media {
-                top: 120px;
-                left: 65px;
-                width: 500px;
-                transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
-
-                &:not(.details) {
-                    z-index: 2
-                }
-
-                &.details {
-                    background-color: #f1f1f1;
-                    border-radius: 0 0 10px 10px;
-                    padding: 17.5px 5px 5px 5px;
-                    top: 110px;
-                    z-index: 1;
-                    cursor: default;
-
-                    &:not(.image-container):not(.image):not(.title):not(.artist) {
-                        height: 80px;
-                        width: 480px;
-                        left: 75px;
+                    &.artist {
+                        margin-left: 10px;
                     }
 
-                    &:has(> .title[title=""]),
-                    &:has(> .title:not([title])) {
-                        height: 0 !important;
+                    &.artist,
+                    &.role {
+                        margin-bottom: 10px;
                     }
 
-                    * {
-                        position: absolute;
-                    }
+                    &.add {
+                        background-color: rgba(203, 203, 203, 0);
+                        color: rgba(0, 0, 0, 0.4) !important;
+                        margin-top: 2px;
+                        height: 43px;
+                        border: none;
+                        outline: 2px solid #cbcbcb;
+                        transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
 
-                    .image-container {
-                        display: inline-flex;
-                        flex-direction: row;
-                        align-items: center;
-                        justify-content: flex-start;
-                        width: 100px !important;
-                        height: 56.25px !important;
-
-                        .image:not([src=""]) {
-                            border-radius: 4px;
-                            margin-right: 10px;
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
+                        &:hover {
+                            cursor: pointer;
+                            background-color: rgba(203, 203, 203, 0.4);
+                            outline-width: 0px;
                         }
                     }
+                }
 
-                    .title {
-                        display: inline-block;
-                        font-family: "Programme";
-                        font-size: 18px;
-                        font-weight: 500;
-                        color: #000;
-                        max-width: 330px;
-                        max-height: 22px;
-                        text-align: left;
-                        left: 120px;
-                        top: 22px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
+                &.add-media {
+                    width: 500px;
+                    transition: outline 0.05s ease-in-out, background-color 0.2s ease-in-out !important;
+
+                    &:not(.details) {
+                        z-index: 2
                     }
 
-                    .artist {
-                        display: inline-block;
-                        font-family: "Programme";
-                        font-size: 14px;
-                        font-weight: 500;
-                        color: rgba(0, 0, 0, 0.4);
-                        max-width: 340px;
-                        text-align: left;
-                        left: 120px;
-                        top: 47px;
-                    }
+                    &.details {
+                        background-color: #f1f1f1;
+                        border-radius: 0 0 10px 10px;
+                        padding: 17.5px 5px 5px 5px;
+                        margin-top: -10px;
+                        z-index: 1;
+                        cursor: default;
 
-                    .length {
-                        display: inline-block;
-                        font-family: "Programme";
-                        font-size: 16px;
-                        font-weight: 500;
-                        max-width: 360px;
-                        text-align: left;
-                        right: 5px;
-                        top: 33px;
+                        &:not(.image-container):not(.image):not(.title):not(.artist) {
+                            height: 80px;
+                            width: 500px;
+                        }
+
+                        &:has(> .title[title=""]),
+                        &:has(> .title:not([title])) {
+                            height: 0 !important;
+                        }
+
+                        * {
+                            position: absolute;
+                        }
+
+                        .image-container {
+                            display: inline-flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: flex-start;
+                            width: 100px !important;
+                            height: 56.25px !important;
+
+                            .image:not([src=""]) {
+                                border-radius: 4px;
+                                margin-right: 10px;
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                            }
+                        }
+
+                        .title {
+                            display: inline-block;
+                            font-family: "Programme";
+                            font-size: 18px;
+                            font-weight: 500;
+                            color: #000;
+                            max-width: 330px;
+                            max-height: 22px;
+                            text-align: left;
+                            left: 120px;
+                            top: 22px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+
+                        .artist {
+                            display: inline-block;
+                            font-family: "Programme";
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: rgba(0, 0, 0, 0.4);
+                            max-width: 340px;
+                            text-align: left;
+                            left: 120px;
+                            top: 47px;
+                        }
+
+                        .length {
+                            display: inline-block;
+                            font-family: "Programme";
+                            font-size: 16px;
+                            font-weight: 500;
+                            max-width: 360px;
+                            text-align: left;
+                            right: 5px;
+                            top: 33px;
+                        }
                     }
                 }
-            }
 
-            &.error {
-                outline-width: 2px !important;
-            }
+                &.error {
+                    outline-width: 2px !important;
+                }
 
-            &.error-animation {
-                background-color: #fc5753;
-            }
-
-            &::placeholder {
-                font-family: "Programme";
-                font-size: 18px;
-                color: rgba(0, 0, 0, 0.4) !important;
-                transition: all 0.2s;
-            }
-
-            &:hover {
-                cursor: pointer;
-                background-color: #979797;
-            }
-
-            &:focus,
-            &.tagify--focus {
-                cursor: text;
-                background-color: #cbcbcb;
+                &.error-animation {
+                    background-color: #fc5753;
+                }
 
                 &::placeholder {
-                    color: rgba(0, 0, 0, 0.25) !important;
+                    font-family: "Programme";
+                    font-size: 18px;
+                    color: rgba(0, 0, 0, 0.4) !important;
+                    transition: all 0.2s;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #979797;
+                }
+
+                &:focus,
+                &.tagify--focus {
+                    cursor: text;
+                    background-color: #cbcbcb;
+
+                    &::placeholder {
+                        color: rgba(0, 0, 0, 0.25) !important;
+                    }
                 }
             }
         }
@@ -492,9 +494,9 @@
 .tagify__dropdown {
     z-index: 1000;
 
-    //.tagify__dropdown__footer {
-    //    display: none;
-    //}
+    /*.tagify__dropdown__footer {
+        display: none;
+    }*/
 }
 
 .header_with_cover_art {

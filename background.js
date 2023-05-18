@@ -477,6 +477,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 file: "./lib/quilljs/quill.snow.css"
             },
             {
+                type: "css",
+                file: "./lib/js-datepicker/datepicker.min.css"
+            },
+            {
                 type: "js",
                 file: "./lib/jquery/jquery.min.js"
             },
@@ -499,6 +503,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             {
                 type: "js",
                 file: "./lib/axios/axios.min.js"
+            },
+            {
+                type: "js",
+                file: "./lib/js-datepicker/datepicker.min.js"
             }
         ];
 
