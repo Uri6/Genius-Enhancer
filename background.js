@@ -75,123 +75,140 @@ chrome.runtime.onInstalled.addListener((details) => {
     }
 });
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    const tabId = await getTabId();
-    let func, args;
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    getTabId().then((tabId) => {
+        let func, args;
 
-    switch (true) {
-        case "fixNonLatin" in message:
-            func = fixNonLatin;
-            args = message.fixNonLatin;
-            break;
-        case "getDetails" in message:
-            func = getDetails;
-            args = [""];
-            break;
-        case "getArtistsList" in message:
-            func = getArtistsList;
-            args = message.getArtistsList;
-            break;
-        case "getCreditsList" in message:
-            func = getCreditsList;
-            args = message.getCreditsList;
-            break;
-        case "identifyPageType" in message:
-            func = identifyPageType;
-            args = [""];
-            break;
-        case "replaceTextarea" in message:
-            func = replaceTextarea;
-            args = message.replaceTextarea;
-            break;
-        case "removeQuill" in message:
-            func = removeQuill;
-            args = [""];
-            break;
-        case "album_appendIcon" in message:
-            func = appendIcon;
-            args = message.album_appendIcon;
-            break;
-        case "album_addSongAsNext" in message:
-            func = addSongAsNext;
-            args = message.album_addSongAsNext;
-            break;
-        case "album_missingInfo" in message:
-            func = missingInfo;
-            args = message.album_missingInfo;
-            break;
-        case "album_missingInfo_remove" in message:
-            func = removeMissingInfo;
-            args = message.album_missingInfo_remove;
-            break;
-        case "album_missingInfo_restyle" in message:
-            func = restyleMissingInfo;
-            args = [""];
-            break;
-        case "album_autolinkArtwork" in message:
-            func = autolinkArtwork;
-            args = message.album_autolinkArtwork;
-            break;
-        case "album_getPlaylistVideos" in message:
-            func = getPlaylistVideos;
-            args = message.album_getPlaylistVideos;
-            break;
-        case "album_saveEverything" in message:
-            func = saveEverything;
-            args = message.album_saveEverything;
-            break;
-        case "song_appleMusicPopUp" in message:
-            func = appleMusicPopUp;
-            args = message.song_appleMusicPopUp;
-            break;
-        case "song_spotifyPopUp" in message:
-            func = spotifyPopUp;
-            args = message.song_spotifyPopUp;
-            break;
-        case "song_modernTextEditor" in message:
-            func = song_modernTextEditor;
-            args = message.song_modernTextEditor;
-            break;
-        case "song_appendFollowButton" in message:
-            func = appendFollowButton;
-            args = message.song_appendFollowButton;
-            break;
-        case "song_searchVideo" in message:
-            func = searchVideo;
-            args = message.song_searchVideo;
-            break;
-        case "forums_replaceButtons" in message:
-            func = replaceButtons;
-            args = message.forums_replaceButtons;
-            break;
-        case "forums_modernTextEditor" in message:
-            func = forums_modernTextEditor;
-            args = message.forums_modernTextEditor;
-            break;
-        default:
-            return;
-    }
+        switch (true) {
+            case "fixNonLatin" in message:
+                func = fixNonLatin;
+                args = message.fixNonLatin;
+                break;
+            case "getDetails" in message:
+                func = getDetails;
+                args = [""];
+                break;
+            case "getArtistsList" in message:
+                func = getArtistsList;
+                args = message.getArtistsList;
+                break;
+            case "getCreditsList" in message:
+                func = getCreditsList;
+                args = message.getCreditsList;
+                break;
+            case "identifyPageType" in message:
+                func = identifyPageType;
+                args = [""];
+                break;
+            case "replaceTextarea" in message:
+                func = replaceTextarea;
+                args = message.replaceTextarea;
+                break;
+            case "removeQuill" in message:
+                func = removeQuill;
+                args = [""];
+                break;
+            case "album_appendIcon" in message:
+                func = appendIcon;
+                args = message.album_appendIcon;
+                break;
+            case "album_addSongAsNext" in message:
+                func = addSongAsNext;
+                args = message.album_addSongAsNext;
+                break;
+            case "album_missingInfo" in message:
+                func = missingInfo;
+                args = message.album_missingInfo;
+                break;
+            case "album_missingInfo_remove" in message:
+                func = removeMissingInfo;
+                args = message.album_missingInfo_remove;
+                break;
+            case "album_missingInfo_restyle" in message:
+                func = restyleMissingInfo;
+                args = [""];
+                break;
+            case "album_autolinkArtwork" in message:
+                func = autolinkArtwork;
+                args = message.album_autolinkArtwork;
+                break;
+            case "album_getPlaylistVideos" in message:
+                func = getPlaylistVideos;
+                args = message.album_getPlaylistVideos;
+                break;
+            case "album_saveEverything" in message:
+                func = saveEverything;
+                args = message.album_saveEverything;
+                break;
+            case "song_appleMusicPopUp" in message:
+                func = appleMusicPopUp;
+                args = message.song_appleMusicPopUp;
+                break;
+            case "song_spotifyPopUp" in message:
+                func = spotifyPopUp;
+                args = message.song_spotifyPopUp;
+                break;
+            case "song_modernTextEditor" in message:
+                func = song_modernTextEditor;
+                args = message.song_modernTextEditor;
+                break;
+            case "song_appendFollowButton" in message:
+                func = appendFollowButton;
+                args = message.song_appendFollowButton;
+                break;
+            case "song_searchVideo" in message:
+                func = searchVideo;
+                args = message.song_searchVideo;
+                break;
+            case "forums_replaceButtons" in message:
+                func = replaceButtons;
+                args = message.forums_replaceButtons;
+                break;
+            case "forums_modernTextEditor" in message:
+                func = forums_modernTextEditor;
+                args = message.forums_modernTextEditor;
+                break;
+            default:
+                return;
+        }
 
-    const results = await chrome.scripting
-        .executeScript({
-            target: { tabId: tabId }, func: func, args: args
+        new Promise((resolve) => {
+            chrome.scripting
+                .executeScript({
+                    target: { tabId: tabId },
+                    func: func,
+                    args: args,
+                })
+                .then((results) => {
+                    if (
+                        func === autolinkArtwork ||
+                        func === identifyPageType ||
+                        func === getPlaylistVideos ||
+                        func === getDetails ||
+                        func === getArtistsList ||
+                        func === getCreditsList ||
+                        func === searchVideo ||
+                        func === fixNonLatin
+                    ) {
+                        resolve(results[0].result);
+                    } else {
+                        resolve();
+                    }
+                });
+        }).then((res) => {
+            console.info("----------------------------------------");
+            console.info(
+                "%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
+            )
+            console.info("time received: ", new Date().toLocaleTimeString('en-US', { hour12: false }));
+            console.info("message received: ", message);
+            console.info("function called: ", func.name);
+            console.info("arguments: ", args);
+            console.info("response: ", res);
+
+            sendResponse(res);
         });
-
-    let res;
-
-    if (func === autolinkArtwork || func === identifyPageType || func === getPlaylistVideos || func === getDetails || func === getArtistsList || func === getCreditsList || func === searchVideo || func === fixNonLatin) {
-        res = results[0].result;
-    }
-
-    console.info("----------------------------------------");
-    console.info("%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
-    console.info("time received: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
-    console.info("message received: ", message);
-    console.info("function called: ", func.name);
-    console.info("arguments: ", args);
-    console.info("response: ", res);
-
-    sendResponse(res);
+    });
 
     return true;
 });

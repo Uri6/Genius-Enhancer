@@ -22,7 +22,6 @@ const createCheckbox = (id, labelText) => {
         );
 };
 
-const GENIUS_PAGE_ELEMENT = createElement("info-box", "genius-page", "Genius Page");
 const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album Page");
 const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song Page");
 
@@ -90,6 +89,4 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     handleCheckboxClick("bios", "bios", "", [true, false, false]);
     handleCheckboxClick("people", "people", "", [false, true, false]);
     handleCheckboxClick("release-date", "releaseDate", "", [false, false, true]);
-
-    additions.append(GENIUS_PAGE_ELEMENT);
 });
