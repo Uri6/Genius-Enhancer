@@ -1273,6 +1273,12 @@ export async function saveEverything() {
     for (const song of albumSongs) {
         const { response: { song: songDetails } } = await fetch(`https://genius.com/api${song.song.api_path}`).then(res => res.json());
 
+        if (releaseDate.length !== 3) {
+            releaseDate[0] = songDetails.release_date_components.day;
+            releaseDate[1] = songDetails.release_date_components.month;
+            releaseDate[2] = songDetails.release_date_components.year;
+        }
+
         const params = {
             tags: [
                 ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
