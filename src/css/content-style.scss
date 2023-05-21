@@ -1123,9 +1123,12 @@ input {
       position: absolute;
       width: 50%;
       height: 50%;
+      background: linear-gradient(45deg, #F88F6F, #FFC6A3);
       transform: translate(-50%, -50%);
       border-radius: 20px;
       opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.35s ease;
       z-index: 0;
       overflow: hidden;
     }
@@ -1334,7 +1337,7 @@ input {
   }
 
   .SquareButton-sc-109lda7-0 {
-    background: white;
+    background: rgba(255, 255, 255, 0.4);
     border: solid black 2px !important;
     border-radius: 10px;
     color: black;

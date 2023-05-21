@@ -665,7 +665,7 @@ async function handleGeniusPage(tabId) {
         })
     });
 
-    console.log("page type", pageType);
+    console.info("page type", pageType);
 
     if (pageType == null || pageType === "unknown") {
         return;

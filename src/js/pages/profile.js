@@ -33,12 +33,10 @@ export async function handleProfile(tabId, url) {
                 if (window.location.pathname.includes("artists/")) {
                     // noinspection JSJQueryEfficiency
                     if ($(".copy_id_button").length) {
-                        console.log("Already added button");
                         return;
                     }
 
                     const id = $("meta[name='newrelic-resource-path']").attr("content")?.split("/artists/")?.[1];
-                    console.log("ID", id);
                     if (id) {
                         $("<div>", {
                             class: "copy_id_button text_label text_label--purple u-horizontal_margins u-top_margin u-half_bottom_margin cursor_pointer",
