@@ -244,16 +244,16 @@ async function handleGeniusPage(tabId) {
                             body.addClass("ge-theme-transition");
 
                             if ($(this).is(":checked")) {
-                                $("body").addClass("ge-dark-mode");
+                                body.addClass("ge-dark-mode");
                                 chrome.storage.local.set({ "darkMode": true });
                             }
                             else {
-                                $("body").removeClass("ge-dark-mode");
+                                body.removeClass("ge-dark-mode");
                                 chrome.storage.local.set({ "darkMode": false });
                             }
 
                             setTimeout(() => {
-                                $("body").removeClass("ge-theme-transition");
+                                body.removeClass("ge-theme-transition");
                             }, 200);
                         }
                     }

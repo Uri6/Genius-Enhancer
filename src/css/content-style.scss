@@ -1097,6 +1097,10 @@ input {
     }
   }
 
+  .kcEpRx {
+    grid-column: span 4 / auto;
+  }
+
   .qsIlk,
   .dUTFUv,
   .kcEpRx,
@@ -1105,15 +1109,18 @@ input {
     background: transparent;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
+    padding: 0.75rem;
     overflow: hidden;
     border-color: black;
     border-width: 0.10rem;
-    border-radius: 10px;
+    border-radius: 0px;
     width: 100%;
 
     &:hover {
+      border-radius: 10px;
+
       .styled-background {
-        border-radius: unset;
+        border-radius: 10px;
         opacity: 1;
         transform: scale(5);
       }
@@ -1238,20 +1245,22 @@ input {
 
     .kcEpRx {
       .ceGwj {
+        transform-origin: center center;
         border-radius: 10px;
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
 
       &:hover {
-        width: 105%;
+        width: 100%;
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
 
         .ceGwj {
           box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
 
           .SizedImage__Container-sc-1hyeaua-0 {
-            transform: scale(1.05);
+            transform: scale(1.10);
           }
         }
 
