@@ -61,6 +61,29 @@ export async function handleAlbum(tabId) {
                     }
                 }
 
+                if (!$(".copy_id_button").length) {
+                    const meta = $("meta[itemprop='page_data']").attr("content");
+                    let id;
+
+                    try {
+                        const pageData = JSON.parse(meta);
+                        id = pageData?.album?.id;
+                    } catch (err) {
+                        console.error("Failed to parse page data", err);
+                    }
+
+                    if (id) {
+                        $("<div>", {
+                            class: "copy_id_button text_label text_label--purple u-top_margin cursor_pointer",
+                            text: "Copy Album ID"
+                        }).insertAfter($(`div[ng-if="!$ctrl.hide_leaderboard"]`));
+
+                        $(".copy_id_button").on("click", () => {
+                            navigator.clipboard.writeText(id);
+                        });
+                    }
+                }
+
                 // Get the album title and artist name from the page DOM
                 const title = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
                 const artist = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerText;
