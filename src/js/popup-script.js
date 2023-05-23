@@ -24,12 +24,17 @@ const createCheckbox = (id, labelText) => {
 
 const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album Page");
 const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song Page");
+const FORUMS_ELEMENT = createElement("info-box", "genius-page", "Forums");
 
 const ALBUM_PAGE_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Metadata Indicators" }))
     .append(createCheckbox("people", " People (writers & producers)"))
     .append(createCheckbox("bios", " Bios"))
     .append(createCheckbox("release-date", " Release date"));
+
+const FORUMS_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
+    .append($("<legend>", { id: "features", text: "Features" }))
+    .append(createCheckbox("forums2", " Forums v2 (\"Gradient Edition\")"));
 
 const SONG_PAGE_FEATURES_ELEMENT = $("<div>")
     .append($("<fieldset>", { id: "features-box" })
@@ -63,8 +68,6 @@ const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = 
 chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     const additions = $("#optional-additions");
 
-    additions.append(SONG_PAGE_FEATURES_ELEMENT);
-
     additions
         .append(SONG_PAGE_ELEMENT)
         .append(SONG_PAGE_FEATURES_ELEMENT);
@@ -89,4 +92,15 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     handleCheckboxClick("bios", "bios", "", [true, false, false]);
     handleCheckboxClick("people", "people", "", [false, true, false]);
     handleCheckboxClick("release-date", "releaseDate", "", [false, false, true]);
+
+    additions.append(FORUMS_ELEMENT).append(FORUMS_FEATURES_ELEMENT);
+
+    chrome.storage.local.get(["forums2"], (res) => {
+        $("#forums2").prop("checked", res.forums2);
+    });
+
+    $("#forums2").click(() => {
+        const Forums2Checkbox = document.getElementById("forums2");
+        chrome.storage.local.set({ forums2: Forums2Checkbox.checked });
+    });
 });

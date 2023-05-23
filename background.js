@@ -66,6 +66,7 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "ModernTextEditor": true });
             chrome.storage.local.set({ "OldSongPage": false });
             chrome.storage.local.set({ "darkMode": false });
+            chrome.storage.local.set({ "forums2": false });
             break;
         case "update":
             // var newURL = "https://uri6.github.io/genius-bot/versions/";
@@ -169,6 +170,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 args = message.forums_modernTextEditor;
                 break;
             default:
+                console.info("ignore unknown message", message)
                 return;
         }
 
@@ -217,12 +219,15 @@ let pageType = "unknown";
 let isGeniusPage = false;
 let pageObject = {};
 let url = "";
+let forumsV2 = undefined;
 const geniusAddress = ["https://www.genius.com/", "https://genius.com/"];
 
 async function handleGeniusPage(tabId) {
     if (pageType !== undefined) {
         await chrome.storage.local.set({ "pageType": pageType });
     }
+
+    forumsV2 = (await chrome.storage.local.get("forums2"))?.forums2 || false;
 
     await chrome.scripting.executeScript({
         target: { tabId: tabId },
@@ -668,6 +673,14 @@ async function handleGeniusPage(tabId) {
     console.info("page type", pageType);
 
     if (pageType == null || pageType === "unknown") {
+        return;
+    }
+
+    const forumPages = ["forums (main)", "forum", "forum thread", "new post"];
+
+    console.log(forumsV2);
+
+    if (forumPages.includes(pageType) && !forumsV2) {
         return;
     }
 
