@@ -40,7 +40,7 @@ export async function handleProfile(tabId, url) {
                     if (id) {
                         $("<div>", {
                             class: "copy_id_button text_label text_label--purple u-horizontal_margins u-top_margin u-half_bottom_margin cursor_pointer",
-                            text: "Copy ID"
+                            text: "Copy Artist ID"
                         }).insertAfter($("profile-artist-pane"));
 
                         $(".copy_id_button").on("click", () => {
@@ -130,7 +130,7 @@ export async function handleProfile(tabId, url) {
                     if (id) {
                         $("<div>", {
                             class: "copy_id_button text_label text_label--purple u-horizontal_margins u-top_margin u-half_bottom_margin cursor_pointer",
-                            text: "Copy ID"
+                            text: "Copy User ID"
                         }).insertBefore($("profile-admin-pane"));
 
                         $(".copy_id_button").on("click", () => {

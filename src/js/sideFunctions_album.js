@@ -19,7 +19,7 @@ export async function missingInfo(bio, people, releaseDate) {
             exists: chrome.runtime.getURL("/src/images/releaseDate/Exists/48x48.png"),
             missing: chrome.runtime.getURL("/src/images/releaseDate/Missing/48x48.png")
         }
-    }
+    };
 
     let albumObject = await new Promise((resolve) => {
         chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
@@ -37,7 +37,7 @@ export async function missingInfo(bio, people, releaseDate) {
         let elem = tracklist[song_index];
 
         if (people) {
-            let img_elem = document.createElement('img');
+            let img_elem = document.createElement("img");
             const peopleAreMissing = song.writer_artists.length === 0 || song.producer_artists.length === 0;
             img_elem.classList.add("people-icon", "ge-fade-in");
             if (peopleAreMissing) {
@@ -54,7 +54,7 @@ export async function missingInfo(bio, people, releaseDate) {
         if (bio) {
             const img_elem = document.createElement("img");
             img_elem.classList.add("bio-icon", "ge-fade-in");
-            if (song.description_preview === '') {
+            if (song.description_preview === "") {
                 img_elem.src = imgs.bios.missing;
                 img_elem.setAttribute("alt", "missing bio");
                 img_elem.setAttribute("title", "No one wrote a bio for this song");
@@ -72,8 +72,7 @@ export async function missingInfo(bio, people, releaseDate) {
                 img_elem.src = imgs.releaseDate.missing;
                 img_elem.setAttribute("alt", "missing release date");
                 img_elem.setAttribute("title", "No one wrote a release date for this song");
-            }
-            else {
+            } else {
                 img_elem.src = imgs.releaseDate.exists;
                 img_elem.setAttribute("alt", "exists release date");
             }
@@ -81,7 +80,7 @@ export async function missingInfo(bio, people, releaseDate) {
         }
 
         song_index++;
-    })
+    });
 
     if (bio || people || releaseDate) {
         chrome.runtime.sendMessage({ "album_missingInfo_restyle": true });
@@ -97,24 +96,20 @@ export function removeMissingInfo(bio, people, releaseDate) {
         bioIcons.forEach((icon) => {
             icon.classList.remove("ge-fade-in");
             icon.classList.add("ge-fade-out");
-            icon.remove()
-        })
-    }
-
-    else if (people) {
+            icon.remove();
+        });
+    } else if (people) {
         peopleIcons.forEach((icon) => {
             icon.classList.remove("ge-fade-in");
             icon.classList.add("ge-fade-out");
-            icon.remove()
-        })
-    }
-
-    else if (releaseDate) {
+            icon.remove();
+        });
+    } else if (releaseDate) {
         releaseDateIcons.forEach((icon) => {
             icon.classList.remove("ge-fade-in");
             icon.classList.add("ge-fade-out");
-            icon.remove()
-        })
+            icon.remove();
+        });
     }
 
     chrome.runtime.sendMessage({ "album_missingInfo_restyle": true });
@@ -127,35 +122,30 @@ export function restyleMissingInfo() {
 
     // Wait until at least one of the icons is loaded
     do {
-        peopleIcons = document.querySelectorAll('.people-icon');
-        bioIcons = document.querySelectorAll('.bio-icon');
-        releaseDateIcons = document.querySelectorAll('.release-date-icon');
-    } while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0)
+        peopleIcons = document.querySelectorAll(".people-icon");
+        bioIcons = document.querySelectorAll(".bio-icon");
+        releaseDateIcons = document.querySelectorAll(".release-date-icon");
+    } while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0);
 
     const distances = ["-60px", "-105px", "-150px"];
     let bioLeftPosition, releaseDateLeftPosition;
 
     if (peopleIcons.length > 0) {
         bioLeftPosition = distances[1];
-    }
-
-    else {
+    } else {
         bioLeftPosition = distances[0];
     }
 
     if (peopleIcons.length > 0) {
         if (bioIcons.length > 0) {
             releaseDateLeftPosition = distances[2];
-        }
-        else {
+        } else {
             releaseDateLeftPosition = distances[1];
         }
-    }
-    else {
+    } else {
         if (bioIcons.length > 0) {
             releaseDateLeftPosition = distances[1];
-        }
-        else {
+        } else {
             releaseDateLeftPosition = distances[0];
         }
     }
@@ -166,7 +156,7 @@ export function restyleMissingInfo() {
 
 /**
  * Retrieves information about a YouTube playlist, including the artist name, playlist title, image, and a list of video titles and links
- * 
+ *
  * @param {string} playlistLink - The link to the YouTube playlist to retrieve information for
  * @throws {Error} - If the playlist link is not a valid YouTube playlist link, or if there is an error fetching the playlist metadata or videos
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the artist name, playlist title, image, and a list of video titles and links for the playlist
@@ -177,7 +167,7 @@ export async function getPlaylistVideos(playlistLink) {
         throw new Error("Invalid playlist link");
     }
 
-    const playlistId = new URL(playlistLink).searchParams.get('list');
+    const playlistId = new URL(playlistLink).searchParams.get("list");
     const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
 
     const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
@@ -226,7 +216,7 @@ export async function appendIcon() {
     const userValidation = () => {
         const disable_add_tag = (placeholderText) => {
             document.getElementById("ge-add-tags").placeholder = placeholderText;
-        }
+        };
 
         const user_picture = document.getElementsByClassName("header-user_avatar clipped_background_image")[0];
 
@@ -238,29 +228,27 @@ export async function appendIcon() {
             if (parseInt(user_picture_parent.children[1].innerHTML.replace(" IQ", "").replaceAll(",", "")) < 100) {
                 disable_add_tag("You need at least 100 IQ to tag songs");
             }
-        }
-
-        else {
+        } else {
             disable_add_tag("You need to be logged in to tag songs");
         }
-    }
+    };
 
     const getRandomColor = () => {
         const rand = (min, max) => {
             return min + Math.random() * (max - min);
-        }
+        };
 
         const h = rand(1, 360) | 0,
             s = rand(40, 70) | 0,
             l = rand(65, 72) | 0;
 
-        return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+        return "hsl(" + h + "," + s + "%," + l + "%)";
     };
 
     const transformTag = (tagData) => {
         tagData.color = getRandomColor();
         tagData.style = "--tag-bg:" + tagData.color;
-        tagData.value = tagData.value.trim().replace(/ +/g, ' ');
+        tagData.value = tagData.value.trim().replace(/ +/g, " ");
     };
 
     const tags_transformTag = (tagData) => {
@@ -308,7 +296,7 @@ export async function appendIcon() {
         let controller;
 
         const inputs = $("<div>", {
-            class: "add-credits-inputs",
+            class: "add-credits-inputs"
         }).insertBefore($(".add-credits.add"));
 
         const roleInput = $("<input>", {
@@ -316,7 +304,7 @@ export async function appendIcon() {
             type: "text",
             placeholder: "Role",
             spellcheck: "false",
-            "data-gramm": "false",
+            "data-gramm": "false"
         }).appendTo(inputs);
 
         const artistInput = $("<input>", {
@@ -324,20 +312,20 @@ export async function appendIcon() {
             type: "text",
             placeholder: "Artist",
             spellcheck: "false",
-            "data-gramm": "false",
+            "data-gramm": "false"
         }).appendTo(inputs);
 
         $("<div>", {
             class: "delete-button-container",
             on: {
-                click: function () {
+                click: function() {
                     inputs.remove();
                 }
             }
         })
             .append($("<img>", {
                 class: "delete-button",
-                src: chrome.runtime.getURL("src/images/other/delete.svg"),
+                src: chrome.runtime.getURL("src/images/other/delete.svg")
             }))
             .appendTo(inputs);
 
@@ -345,11 +333,11 @@ export async function appendIcon() {
             delimiters: null,
             mode: "select",
             templates: {
-                tag: function (tagData) {
+                tag: function(tagData) {
                     try {
-                        return `<tag title='${tagData.value}' tag-id='${tagData.id}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
+                        return `<tag title="${tagData.value}" tag-id="${tagData.id}" contenteditable="false" spellcheck="false" class="tagify__tag ${tagData.class ? tagData.class : ""}" ${this.getAttributes(tagData)}>
                                         <div>
-                                            <span class='tagify__tag-text'>${tagData.value}</span>
+                                            <span class="tagify__tag-text">${tagData.value}</span>
                                         </div>
                                     </tag>`;
                     } catch (err) {
@@ -357,9 +345,9 @@ export async function appendIcon() {
                     }
                 },
 
-                dropdownItem: function (tagData) {
+                dropdownItem: function(tagData) {
                     try {
-                        return `<div ${this.getAttributes(tagData)} class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
+                        return `<div ${this.getAttributes(tagData)} class="tagify__dropdown__item ${tagData.class ? tagData.class : ""}" >
                                             <span>${tagData.value}</span>
                                         </div>`;
                     } catch (err) {
@@ -386,22 +374,22 @@ export async function appendIcon() {
         const tagify_artist = new Tagify(artistInput[0], {
             delimiters: ",",
             templates: {
-                tag: function (tagData) {
+                tag: function(tagData) {
                     try {
                         return `<tag
-                                    title='${tagData.value}'
-                                    tag-id='${tagData.id}'
-                                    full-response='${JSON.stringify(tagData.full_response)}'
-                                    contenteditable='false'
+                                    title="${tagData.value}"
+                                    tag-id="${tagData.id}"
+                                    full-response="${JSON.stringify(tagData.full_response)}"
+                                    contenteditable="false"
                                     spellcheck="false"
-                                    class='tagify__tag ${tagData.class ? tagData.class : ""}'
+                                    class="tagify__tag ${tagData.class ? tagData.class : ""}"
                                     ${this.getAttributes(tagData)}>
-                                    <x title='remove tag' class='tagify__tag__removeBtn'></x>
+                                    <x title="remove tag" class="tagify__tag__removeBtn"></x>
                                     <div>
-                                        <div class='tagify__tag__avatar-wrap'>
+                                        <div class="tagify__tag__avatar-wrap">
                                             <img onerror="this.style.visibility='hidden'" src="${tagData.avatar}">
                                         </div>
-                                        <span class='tagify__tag-text'>${tagData.value}</span>
+                                        <span class="tagify__tag-text">${tagData.value}</span>
                                     </div>
                                 </tag>`;
                     } catch (err) {
@@ -409,16 +397,17 @@ export async function appendIcon() {
                     }
                 },
 
-                dropdownItem: function (tagData) {
+                dropdownItem: function(tagData) {
                     try {
                         return `<div
                                 ${this.getAttributes(tagData)}
-                                class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
-                                    ${tagData.avatar ? `
-                                    <div class='tagify__dropdown__item__avatar-wrap'>
-                                        <img onerror="this.style.visibility='hidden'" src="${tagData.avatar}">
-                                    </div>` : ''
-                            }
+                                class="tagify__dropdown__item ${tagData.class ? tagData.class : ""}" >
+                                    ${
+                            tagData.avatar ?
+`<div class="tagify__dropdown__item__avatar-wrap">
+    <img onerror="this.style.visibility='hidden'" src="${tagData.avatar}">
+</div>` : ""
+                        }
                                     <span>${tagData.value}</span>
                             </div>`;
                     } catch (err) {
@@ -439,11 +428,11 @@ export async function appendIcon() {
                 maxItems: 50,
                 closeOnSelect: true,
                 highlightFirst: true
-            },
+            }
         });
 
-        roleInput.addClass('has-tagify');
-        artistInput.addClass('has-tagify');
+        roleInput.addClass("has-tagify");
+        artistInput.addClass("has-tagify");
 
         const searchRole = (e) => {
             const roleValue = e.detail.value;
@@ -468,7 +457,7 @@ export async function appendIcon() {
                 .catch((err) => {
                     console.error(err);
                 });
-        }
+        };
 
         const searchArtist = (e) => {
             const artistValue = e.detail.value;
@@ -493,10 +482,10 @@ export async function appendIcon() {
                 .catch((err) => {
                     console.error(err);
                 });
-        }
+        };
 
-        tagify_role.on('input', searchRole);
-        tagify_artist.on('input', searchArtist);
+        tagify_role.on("input", searchRole);
+        tagify_artist.on("input", searchArtist);
     };
 
     const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
@@ -511,7 +500,7 @@ export async function appendIcon() {
     $(".extension-icon").eq(0).on("click", async () => {
 
         window.scrollTo(0, 0);
-        $('body').addClass('disable-scrolling');
+        $("body").addClass("disable-scrolling");
 
         const popupDiv = $("<dialog>", {
             class: "blured-background ge-fade-in",
@@ -527,108 +516,109 @@ export async function appendIcon() {
             class: "left-column-container"
         }).appendTo(popupBox);
 
-        $('<img>', {
-            class: 'close-icon',
-            src: chrome.runtime.getURL('/src/images/other/closeIcon.png'),
+        $("<img>", {
+            class: "close-icon",
+            src: chrome.runtime.getURL("/src/images/other/closeIcon.png"),
             on: {
-                mouseover: function () {
-                    this.src = chrome.runtime.getURL('/src/images/other/closeIconX.png');
+                mouseover: function() {
+                    this.src = chrome.runtime.getURL("/src/images/other/closeIconX.png");
                 },
-                mouseout: function () {
-                    this.src = chrome.runtime.getURL('/src/images/other/closeIcon.png');
+                mouseout: function() {
+                    this.src = chrome.runtime.getURL("/src/images/other/closeIcon.png");
                 },
-                click: function () {
-                    if (confirm('If you\'ve made changes, they won\'t save.\nAre you sure you want to close this window?')) {
-                        $('.extension-box').addClass('ge-zoom-out');
-                        $('.blured-background').addClass('ge-fade-out');
-                        $('body').removeClass('disable-scrolling');
-                        setTimeout(() => { $('.blured-background').remove(); }, 400);
+                click: function() {
+                    if (confirm("If you've made changes, they won't save.\nAre you sure you want to close this window?")) {
+                        $(".extension-box").addClass("ge-zoom-out");
+                        $(".blured-background").addClass("ge-fade-out");
+                        $("body").removeClass("disable-scrolling");
+                        setTimeout(() => {
+                            $(".blured-background").remove();
+                        }, 400);
                     }
                 }
             },
             attr: {
-                title: 'Esc'
+                title: "Esc"
             }
         }).appendTo(popupBox);
 
-        const autolinkArtworkContainer = $('<div>', {
-            class: 'autolink-artwork-icon-container rcorners'
+        const autolinkArtworkContainer = $("<div>", {
+            class: "autolink-artwork-icon-container rcorners"
         }).appendTo(popupBox);
 
-        const autolinkArtwork = $('<img>', {
-            class: 'autolink-artwork-icon',
-            src: chrome.runtime.getURL('/src/images/artwork/512x512.png')
+        const autolinkArtwork = $("<img>", {
+            class: "autolink-artwork-icon",
+            src: chrome.runtime.getURL("/src/images/artwork/512x512.png")
         }).appendTo(autolinkArtworkContainer);
 
-        const autolinkArtworkTitle = $('<div>', {
-            class: 'autolink-artwork-title',
+        const autolinkArtworkTitle = $("<div>", {
+            class: "autolink-artwork-title",
             text: "Autolink\nArtwork"
         }).appendTo(autolinkArtworkContainer);
 
         autolinkArtworkContainer.on("click", async () => {
-            if (!$('.artwork-images-stack').length) {
+            if (!$(".artwork-images-stack").length) {
 
-                const imagesStack = $('<div>', {
-                    class: 'artwork-images-stack ge-animate-right'
+                const imagesStack = $("<div>", {
+                    class: "artwork-images-stack ge-animate-right"
                 });
 
-                $('<div>', {
-                    class: 'error-container'
+                $("<div>", {
+                    class: "error-container"
                 })
-                    .append($('<div>', {
-                        class: 'error-text',
-                        html: 'No artwork<br>found'
+                    .append($("<div>", {
+                        class: "error-text",
+                        html: "No artwork<br>found"
                     }))
                     .appendTo(imagesStack);
 
                 // stringify the inner text of the element #albumArtworks
-                const album_artwork_results = JSON.parse($('#albumArtworks').text());
+                const album_artwork_results = JSON.parse($("#albumArtworks").text());
 
-                autolinkArtworkContainer.css('backgroundColor', '#333a3c');
-                autolinkArtworkContainer.css('cursor', 'default');
-                autolinkArtwork.css('transform', 'scale(1) rotate(0deg)');
-                autolinkArtworkTitle.css('transform', 'scale(1)');
+                autolinkArtworkContainer.css("backgroundColor", "#333a3c");
+                autolinkArtworkContainer.css("cursor", "default");
+                autolinkArtwork.css("transform", "scale(1) rotate(0deg)");
+                autolinkArtworkTitle.css("transform", "scale(1)");
 
                 if (!album_artwork_results.length) {
                     chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
                 } else {
                     album_artwork_results.slice().reverse().forEach(result => {
-
-                        const container = $('<div>', {
-                            class: 'artwork-image-container'
+                        const container = $("<div>", {
+                            class: "artwork-image-container"
                         });
 
-                        $('<img>', {
-                            class: 'artwork-image',
+                        $("<img>", {
+                            class: "artwork-image",
                             src: result
                         }).appendTo(container);
 
-                        const overlay = $('<div>', {
-                            class: 'overlay'
+                        const overlay = $("<div>", {
+                            class: "overlay"
                         });
 
-                        overlay.hover(function () {
-                            overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)");
+                        overlay.hover(function() {
+                            overlay.css("backgroundColor", $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)");
                         });
 
-                        overlay.mouseleave(function () {
-                            overlay.css('backgroundColor', $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)");
+                        overlay.mouseleave(function() {
+                            overlay.css("backgroundColor", $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)");
                         });
 
-                        const vButton = $('<img>', {
-                            class: 'v-button',
-                            src: chrome.runtime.getURL('/src/images/other/check.png')
+                        const vButton = $("<img>", {
+                            class: "v-button",
+                            src: chrome.runtime.getURL("/src/images/other/check.png")
                         });
 
-                        vButton.hover(function () {
-                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0.1)");
+                        vButton.hover(function() {
+                            overlay.css("backgroundColor", "rgb(33, 236, 138, 0.1)");
                         });
 
-                        vButton.mouseleave(function () {
-                            overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
+                        vButton.mouseleave(function() {
+                            overlay.css("backgroundColor", "rgb(0, 0, 0, 0.2)");
                         });
 
-                        vButton.click(function () {
+                        vButton.click(function() {
                             chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result } });
 
                             $(".v-button, .x-button").css("opacity", "0");
@@ -637,38 +627,49 @@ export async function appendIcon() {
                                 $(".v-button, .x-button").remove();
                             }, 400);
 
-                            overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
+                            overlay.css("backgroundColor", "rgb(33, 236, 138, 0.4)");
                             setTimeout(() => {
-                                overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
+                                overlay.css("backgroundColor", "rgb(33, 236, 138, 0)");
                             }, 400);
                             setTimeout(() => {
-                                overlay.css('backgroundColor', "rgb(33, 236, 138, 0.4)");
+                                overlay.css("backgroundColor", "rgb(33, 236, 138, 0.4)");
                             }, 400);
                             setTimeout(() => {
-                                overlay.css('backgroundColor', "rgb(33, 236, 138, 0)");
+                                overlay.css("backgroundColor", "rgb(33, 236, 138, 0)");
                             }, 400);
                         });
 
                         overlay.prepend(vButton);
 
-                        const xButton = $('<img>', {
-                            class: 'x-button',
-                            src: chrome.runtime.getURL('/src/images/other/cross.png')
+                        const xButton = $("<img>", {
+                            class: "x-button",
+                            src: chrome.runtime.getURL("/src/images/other/cross.png")
                         });
 
-                        xButton.hover(function () {
-                            overlay.css('backgroundColor', "rgb(252, 88, 84, 0.1)");
+                        xButton.hover(function() {
+                            overlay.css("backgroundColor", "rgb(252, 88, 84, 0.1)");
                         });
 
-                        xButton.mouseleave(function () {
-                            overlay.css('backgroundColor', "rgb(0, 0, 0, 0.2)");
+                        xButton.mouseleave(function() {
+                            overlay.css("backgroundColor", "rgb(0, 0, 0, 0.2)");
                         });
 
-                        xButton.click(function () {
-                            container.css({ 'opacity': '0', 'transform': 'translateY(25%)', 'backgroundColor': 'rgb(252, 88, 84, 0.3)' });
-                            setTimeout(() => { container.remove(); }, 400);
+                        xButton.click(function() {
+                            container.css({
+                                "opacity": "0",
+                                "transform": "translateY(25%)",
+                                "backgroundColor": "rgb(252, 88, 84, 0.3)"
+                            });
+                            setTimeout(() => {
+                                container.remove();
+                            }, 400);
                             if (imagesStack.children().length === 0) {
-                                chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
+                                chrome.storage.local.set({
+                                    "album_artwork": {
+                                        "type": "error",
+                                        "output": "No artwork found"
+                                    }
+                                });
                             }
                         });
 
@@ -695,7 +696,7 @@ export async function appendIcon() {
             spellcheck: "false",
             "data-gramm": "false",
             on: {
-                keydown: function (e) {
+                keydown: function(e) {
                     if (e.keyCode === 13) {
                         e.preventDefault();
                         return false;
@@ -706,11 +707,11 @@ export async function appendIcon() {
 
         $("<div>", {
             class: "add-credits-title title",
-            text: "Credit Artists",
+            text: "Credit Artists"
         }).appendTo(leftColumn);
 
         const addCreditsContainer = $("<div>", {
-            class: "add-credits-inputs-container",
+            class: "add-credits-inputs-container"
         }).appendTo(leftColumn);
 
         $("<div>", {
@@ -726,18 +727,18 @@ export async function appendIcon() {
                     const lastRoleInput = $(".add-credits-inputs-container .add-credits.role.tagify .tagify__input").last();
                     lastRoleInput.focus();
                 }
-            },
+            }
         }).appendTo(addCreditsContainer);
 
         addCreditsInputs(/*roleDefaultWhitelist, artistDefaultWhitelist*/);
 
         $("<div>", {
             class: "set-release-date-title title",
-            text: "Set Release Date",
+            text: "Set Release Date"
         }).appendTo(leftColumn);
 
         const dateInputContainer = $("<div>", {
-            class: "input-container",
+            class: "input-container"
         }).appendTo(leftColumn);
 
         const datePickerInput = $("<input>", {
@@ -775,12 +776,11 @@ export async function appendIcon() {
                 datePickerInput.removeClass("calendar-open");
             },
             formatter: (input, date) => {
-                const value = date.toLocaleDateString("en-GB", {
+                input.value = date.toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "numeric",
                     year: "numeric"
-                });
-                input.value = value; // Set the input value to the selected date
+                }); // Set the input value to the selected date
             },
             maxDate: (() => {
                 const currentDate = new Date();
@@ -791,7 +791,7 @@ export async function appendIcon() {
 
         const clearDateButton = $("<x>", {
             class: "tagify tagify__tag__removeBtn",
-            title: "Clear",
+            title: "Clear"
         });
 
         clearDateButton.on("click", () => {
@@ -800,25 +800,25 @@ export async function appendIcon() {
 
         dateInputContainer.css({
             position: "relative",
-            display: "inline-block",
+            display: "inline-block"
         });
 
         datePickerInput.css({
-            paddingRight: "30px", // Adjust the padding to accommodate the clear button
+            paddingRight: "30px" // Adjust the padding to accommodate the clear button
         });
 
         clearDateButton.css({
             position: "absolute",
             top: "50%",
             right: "5px",
-            transform: "translateY(-50%)",
+            transform: "translateY(-50%)"
         });
 
         clearDateButton.appendTo(dateInputContainer);
 
         $("<div>", {
             class: "add-media-title title",
-            text: "Link Media",
+            text: "Link Media"
         }).appendTo(leftColumn);
 
         const addMediaInput = $("<input>", {
@@ -919,37 +919,38 @@ export async function appendIcon() {
                     videoTitles,
                     videoLinks
                 };
-            }
+            };
 
             try {
                 const response = await getPlaylistVideos(url);
                 if (response === undefined) {
+                    // TODO: don't use an error for control flow here
+                    // (bad practice)
                     throw new Error("Invalid Youtube Playlist URL");
                 }
-                else {
-                    const numOfSongs = Array.from(
-                        document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
-                    ).length;
 
+                const numOfSongs = Array.from(
+                    document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
+                ).length;
+
+                addMediaInput.removeClass("error");
+                addMediaInput.attr("title", "");
+                $(".add-media.details.title").text(response.playlistTitle);
+                $(".add-media.details.title").attr("title", response.playlistTitle);
+                $(".add-media.details.image").attr("src", response.playlistImage);
+                $(".add-media.details.artist").text(response.artistName);
+                $(".add-media.details.length").text(response.playlistLength);
+                $(".add-media.details.videos-links").text(response.videoLinks.join(" "));
+
+                if (numOfSongs === response.playlistLength) {
+                    $(".add-media.details.length").css({ color: "#1cc674" });
+                    $(".add-media.details.length").attr("title", "The number of songs in the playlist matches the number of songs in the chart");
                     addMediaInput.removeClass("error");
-                    addMediaInput.attr("title", "");
-                    $(".add-media.details.title").text(response.playlistTitle);
-                    $(".add-media.details.title").attr("title", response.playlistTitle);
-                    $(".add-media.details.image").attr("src", response.playlistImage);
-                    $(".add-media.details.artist").text(response.artistName);
-                    $(".add-media.details.length").text(response.playlistLength);
-                    $(".add-media.details.videos-links").text(response.videoLinks.join(" "));
 
-                    if (numOfSongs === response.playlistLength) {
-                        $(".add-media.details.length").css({ color: "#1cc674" });
-                        $(".add-media.details.length").attr("title", "The number of songs in the playlist matches the number of songs in the chart");
-                        addMediaInput.removeClass("error");
-
-                    } else {
-                        $(".add-media.details.length").css({ color: "#fc5753" });
-                        $(".add-media.details.length").attr("title", "The number of songs in the playlist does not match the number of songs in the chart")
-                        addMediaInput.addClass("error");
-                    }
+                } else {
+                    $(".add-media.details.length").css({ color: "#fc5753" });
+                    $(".add-media.details.length").attr("title", "The number of songs in the playlist does not match the number of songs in the chart");
+                    addMediaInput.addClass("error");
                 }
             } catch (error) {
                 console.error(error);
@@ -967,58 +968,58 @@ export async function appendIcon() {
             }
         });
 
-        const saveButton = $('<input>')
-            .addClass('ge-save-button rcorners')
+        const saveButton = $("<input>")
+            .addClass("ge-save-button rcorners")
             .attr({
-                'value': 'Save',
-                'readonly': 'readonly',
-                'title': 'Alt + S'
+                "value": "Save",
+                "readonly": "readonly",
+                "title": "Alt + S"
             })
-            .on('mousedown', function (event) {
+            .on("mousedown", function(event) {
                 event.preventDefault();
             })
-            .on('click', function () {
+            .on("click", function() {
                 let error = false;
-                const addCreditsInputs = $('.extension-box .add-credits-inputs-container .add-credits-inputs');
+                const addCreditsInputs = $(".extension-box .add-credits-inputs-container .add-credits-inputs");
                 if (addCreditsInputs.length) {
                     // for each row of credits, there's two inputs - ".add-credits.role" and ".add-credits.artist"
                     // if one of them has a tag child and the other doesn't, we'll make error animation
-                    addCreditsInputs.each(function () {
-                        const role = $(this).find('tags.add-credits.role');
-                        const artist = $(this).find('tags.add-credits.artist');
-                        if (role.find('tag').length && !artist.find('tag').length) {
-                            artist.addClass('error-animation');
-                            setTimeout(function () {
-                                artist.removeClass('error-animation');
+                    addCreditsInputs.each(function() {
+                        const role = $(this).find("tags.add-credits.role");
+                        const artist = $(this).find("tags.add-credits.artist");
+                        if (role.find("tag").length && !artist.find("tag").length) {
+                            artist.addClass("error-animation");
+                            setTimeout(function() {
+                                artist.removeClass("error-animation");
                             }, 200);
                             error = true;
                         }
-                        if (artist.find('tag').length && !role.find('tag').length) {
-                            role.addClass('error-animation');
-                            setTimeout(function () {
-                                role.removeClass('error-animation');
+                        if (artist.find("tag").length && !role.find("tag").length) {
+                            role.addClass("error-animation");
+                            setTimeout(function() {
+                                role.removeClass("error-animation");
                             }, 200);
                             error = true;
                         }
                     });
                 }
-                if ($('.extension-box .error').length) {
+                if ($(".extension-box .error").length) {
                     // make a flashing animation on the error inputs
-                    $('.extension-box .error').addClass('error-animation');
-                    setTimeout(function () {
-                        $('.extension-box .error').removeClass('error-animation');
+                    $(".extension-box .error").addClass("error-animation");
+                    setTimeout(function() {
+                        $(".extension-box .error").removeClass("error-animation");
                     }, 200);
                     error = true;
                 }
                 if (error) {
                     return;
                 }
-                chrome.runtime.sendMessage({ 'album_saveEverything': [true] });
-                $('.extension-box').eq(0).addClass('ge-zoom-out');
-                $('.blured-background').eq(0).addClass('ge-fade-out');
-                $('body').removeClass('disable-scrolling');
+                chrome.runtime.sendMessage({ "album_saveEverything": [true] });
+                $(".extension-box").eq(0).addClass("ge-zoom-out");
+                $(".blured-background").eq(0).addClass("ge-fade-out");
+                $("body").removeClass("disable-scrolling");
                 setTimeout(() => {
-                    $('.blured-background').eq(0).remove();
+                    $(".blured-background").eq(0).remove();
                 }, 400);
             });
 
@@ -1037,7 +1038,7 @@ export async function appendIcon() {
             }
         });
 
-        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function (_, o) {
+        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function(_, o) {
             let searchByStr;
 
             switch (o.innerText) {
@@ -1055,12 +1056,12 @@ export async function appendIcon() {
         const tagify_tags = new Tagify(document.getElementById("ge-add-tags"), {
             delimiters: ",",
             templates: {
-                tag: function (tagData) {
+                tag: function(tagData) {
                     try {
-                        return `<tag title='${tagData.value}' tag-id='${tagData.id}' contenteditable='false' spellcheck="false" class='tagify__tag ${tagData.class ? tagData.class : ""}' ${this.getAttributes(tagData)}>
-                                <x title='remove tag' class='tagify__tag__removeBtn'></x>
+                        return `<tag title="${tagData.value}" tag-id="${tagData.id}" contenteditable="false" spellcheck="false" class="tagify__tag ${tagData.class ? tagData.class : ""}" ${this.getAttributes(tagData)}>
+                                <x title="remove tag" class="tagify__tag__removeBtn"></x>
                                 <div>
-                                    <span class='tagify__tag-text'>${tagData.value}</span>
+                                    <span class="tagify__tag-text">${tagData.value}</span>
                                 </div>
                             </tag>`;
                     } catch (err) {
@@ -1068,9 +1069,9 @@ export async function appendIcon() {
                     }
                 },
 
-                dropdownItem: function (tagData) {
+                dropdownItem: function(tagData) {
                     try {
-                        return `<div ${this.getAttributes(tagData)} class='tagify__dropdown__item ${tagData.class ? tagData.class : ""}' >
+                        return `<div ${this.getAttributes(tagData)} class="tagify__dropdown__item ${tagData.class ? tagData.class : ""}" >
                                     <span>${tagData.value}</span>
                                 </div>`;
                     } catch (err) {
@@ -1091,15 +1092,15 @@ export async function appendIcon() {
                 maxItems: 20,
                 closeOnSelect: false,
                 highlightFirst: true
-            },
+            }
         });
 
-        $('#tagify_tags').on('input', (e) => {
-            $('.blured-background').append($('.tagify__dropdown').eq(0));
+        $("#tagify_tags").on("input", (e) => {
+            $(".blured-background").append($(".tagify__dropdown").eq(0));
         });
 
-        if ($('#tagsList').length) {
-            hashmap = Array.prototype.reduce.call($('#tagsList option'), (obj, option) => {
+        if ($("#tagsList").length) {
+            hashmap = Array.prototype.reduce.call($("#tagsList option"), (obj, option) => {
                 if (!obj[option.value.toLowerCase()]) {
                     obj[option.value.toLowerCase()] = option.value;
                 }
@@ -1107,21 +1108,21 @@ export async function appendIcon() {
             }, {});
         }
 
-        $('input[type="tags"]').on('click', () => {
+        $("input[type=\"tags\"]").on("click", () => {
             setTimeout(() => {
-                $('.blured-background').append($('.tagify__dropdown:first'));
+                $(".blured-background").append($(".tagify__dropdown:first"));
             }, 0.1);
         });
 
-        const onDragEnd = (elm) => {
-            tagify_tags.updateValueByDOMTags()
-            tagify_tags.DOM.scope.querySelectorAll('tag').forEach(tagElm => {
-                tagElm.style.cssText = '--tag-bg:' + tagElm.__tagifyTagData.color
-            })
-        }
+        const onDragEnd = () => {
+            tagify_tags.updateValueByDOMTags();
+            tagify_tags.DOM.scope.querySelectorAll("tag").forEach(tagElm => {
+                tagElm.style.cssText = "--tag-bg:" + tagElm.__tagifyTagData.color;
+            });
+        };
 
         new DragSort(tagify_tags.DOM.scope, {
-            selector: '.' + tagify_tags.settings.classNames.tag,
+            selector: "." + tagify_tags.settings.classNames.tag,
             callbacks: {
                 dragEnd: onDragEnd
             }
@@ -1130,21 +1131,21 @@ export async function appendIcon() {
 
 
     // allow to open & close the popup with shortcuts
-    $(window).on('keyup', (event) => {
+    $(window).on("keyup", (event) => {
         switch (event.keyCode || event.which) {
             case 27: // Escape key
-                const closeIcon = $('.close-icon');
+                const closeIcon = $(".close-icon");
                 if (!!closeIcon.length) {
                     closeIcon[0].click();
                 }
                 break;
             case 71: // 'G' or 'g' key
-                if (event.altKey && !$('.blured-background').length) {
-                    $('.extension-icon')[0].click();
+                if (event.altKey && !$(".blured-background").length) {
+                    $(".extension-icon")[0].click();
                 }
                 break;
             case 83: // 'S' or 's' key
-                const saveButton = $('.ge-save-button');
+                const saveButton = $(".ge-save-button");
                 if (event.altKey && !!saveButton.length) {
                     saveButton[0].click();
                 }
@@ -1172,28 +1173,28 @@ export async function autolinkArtwork(query, type, minimize = false) {
 
     try {
         // Make a GET request to the iTunes Artwork API to get a URL for the album artwork
-        const data = await fetch('https://itunesartwork.bendodson.com/api.php?' + new URLSearchParams({
+        const data = await fetch("https://itunesartwork.bendodson.com/api.php?" + new URLSearchParams({
             query: modifiedQuery,
             entity: type,
-            country: 'us',
-            type: 'request'
+            country: "us",
+            type: "request"
         })).then(response => response.json());
 
         // Make a GET request to the URL returned by the previous request to get more information about the album artwork
         const data2 = await fetch(data.url).then(response => response.json());
 
         // Make a POST request to the iTunes Artwork API with the data returned by the previous request to get the actual image URLs for the artwork
-        const data3 = await fetch('https://itunesartwork.bendodson.com/api.php', {
-            method: 'POST',
+        const data3 = await fetch("https://itunesartwork.bendodson.com/api.php", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: new URLSearchParams({ json: JSON.stringify(data2), type: 'data', entity: 'album' })
+            body: new URLSearchParams({ json: JSON.stringify(data2), type: "data", entity: "album" })
         }).then(response => response.json());
 
         if (!data3.error && data3.length) {
             const imageSize = minimize ? "/115x115.jpg" : "/1000x1000-999.jpg";
-            return data3.map((url) => url.url.replace("/600x600bb.jpg", imageSize));
+            return data3.map((url) => url.url.replace("/600x600bb.jpg", imageSize).replace(".jpg", ".png"));
         }
 
         return [""];
@@ -1204,15 +1205,15 @@ export async function autolinkArtwork(query, type, minimize = false) {
 
 /**
  * Saves details about a set of songs, including YouTube links, tags, and credits, to the Genius API
- * 
+ *
  * @returns {void}
  */
 export async function saveEverything() {
 
     const parseCookies = () => {
         return Object.fromEntries(
-            document.cookie.split('; ').map(cookie => {
-                const [key, value] = cookie.split('=');
+            document.cookie.split("; ").map(cookie => {
+                const [key, value] = cookie.split("=");
                 return [key, decodeURIComponent(value)];
             })
         );
@@ -1221,11 +1222,11 @@ export async function saveEverything() {
     const getDetails = () => {
         const metaElem = document.documentElement.innerHTML.match(/<meta content="({[^"]+)/);
         const replaces = {
-            '&#039;': `'`,
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"'
+            "&#039;": `'`,
+            "&amp;": "&",
+            "&lt;": "<",
+            "&gt;": ">",
+            "&quot;": "\""
         };
 
         if (metaElem) {
@@ -1236,7 +1237,7 @@ export async function saveEverything() {
 
     const details = getDetails();
     const albumSongs = details.album_appearances;
-    const youtubeLinks = $('.add-media.details.videos-links').text().split(' ');
+    const youtubeLinks = $(".add-media.details.videos-links").text().split(" ");
     const releaseDate = $(".set-release-date").val().split("/");
 
     const tags = $(".extension-box .add-tags tag")
@@ -1266,18 +1267,12 @@ export async function saveEverything() {
         baseUrl: "https://genius.com/api",
         withCredentials: true,
         headers: {
-            "X-CSRF-Token": parseCookies()["_csrf_token"],
-        },
+            "X-CSRF-Token": parseCookies()["_csrf_token"]
+        }
     });
 
     for (const song of albumSongs) {
         const { response: { song: songDetails } } = await fetch(`https://genius.com/api${song.song.api_path}`).then(res => res.json());
-
-        if (releaseDate.length !== 3) {
-            releaseDate[0] = songDetails.release_date_components.day;
-            releaseDate[1] = songDetails.release_date_components.month;
-            releaseDate[2] = songDetails.release_date_components.year;
-        }
 
         const params = {
             tags: [
@@ -1289,11 +1284,11 @@ export async function saveEverything() {
                 ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
                 ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists }))
             ],
-            release_date_components: {
+            release_date_components: releaseDate.length === 3 ? {
                 day: releaseDate[0],
                 month: releaseDate[1],
                 year: releaseDate[2]
-            }
+            } : undefined
         };
 
         gapi.put(`https://genius.com/api${song.song.api_path}`, {
@@ -1311,7 +1306,7 @@ export async function saveEverything() {
 /**
  * Adds a "Add as next" checkbox to the add to queue modal and, when checked,
  * adds the selected song as the next song to play in the queue
- * 
+ *
  * @returns {void}
  */
 export function addSongAsNext() {
@@ -1335,68 +1330,68 @@ export function addSongAsNext() {
                 document.querySelectorAll(".button--unstyled")[buttons.length].click();
             }, 5);
         }, 5);
-    }
+    };
 
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length) {
-                const addedElem = mutation.addedNodes[0];
-                if (!addedElem || !addedElem.children) return;
-                const input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
+            if (!mutation.addedNodes.length) {
+                return;
+            }
 
-                if (input) {
-                    const container = $("<div>", {
-                        class: "add-song-as-next-container"
-                    });
+            const addedElem = mutation.addedNodes[0];
+            if (!addedElem || !addedElem.children) return;
+            const input = addedElem.querySelector("input.square_input.square_input--full_width.ac_input");
+            if (input) {
+                const container = $("<div>", {
+                    class: "add-song-as-next-container"
+                });
 
-                    const label = $("<label>", {
-                        class: "add-song-as-next-label",
-                        text: "Add as next",
-                        for: "add-song-as-next-checkbox"
-                    });
+                const label = $("<label>", {
+                    class: "add-song-as-next-label",
+                    text: "Add as next",
+                    for: "add-song-as-next-checkbox"
+                });
 
-                    $("<span>", {
-                        class: "add-song-as-next-span chkboxmspan"
-                    }).prependTo(label);
+                $("<span>", {
+                    class: "add-song-as-next-span chkboxmspan"
+                }).prependTo(label);
 
-                    const checkbox = $("<input>", {
-                        class: "add-song-as-next-checkbox chkboxm",
-                        type: "checkbox",
-                        id: "add-song-as-next-checkbox"
-                    }).appendTo(container);
+                const checkbox = $("<input>", {
+                    class: "add-song-as-next-checkbox chkboxm",
+                    type: "checkbox",
+                    id: "add-song-as-next-checkbox"
+                }).appendTo(container);
 
-                    label.appendTo(container);
-                    container.insertAfter(input.parentElement);
+                label.appendTo(container);
+                container.insertAfter(input.parentElement);
 
-                    chrome.storage.local.get("add_song_as_next", (result) => {
-                        if (result.add_song_as_next) {
-                            checkbox.prop("checked", true);
-                        }
-                    });
+                chrome.storage.local.get("add_song_as_next", (result) => {
+                    if (result.add_song_as_next) {
+                        checkbox.prop("checked", true);
+                    }
+                });
 
-                    checkbox.on("change", (e) => {
-                        chrome.storage.local.set({ add_song_as_next: e.target.checked });
-                    });
+                checkbox.on("change", (e) => {
+                    chrome.storage.local.set({ add_song_as_next: e.target.checked });
+                });
 
-                    $('input[on-select="$ctrl.add_song(data)"]').on("keydown", (e) => {
-                        if (e.keyCode === 13) {
-                            chrome.storage.local.get("add_song_as_next", (result) => {
-                                if (result.add_song_as_next) {
-                                    addSongAsNext_();
-                                }
-                            });
-                        }
-                    });
-                }
-
-                if (addedElem.classList.contains("ac_even") || addedElem.classList.contains("ac_odd")) {
-                    const addToQueueButton = addedElem;
-                    chrome.storage.local.get("add_song_as_next", (result) => {
-                        if (result.add_song_as_next) {
-                            addToQueueButton.addEventListener("click", addSongAsNext_);
-                        }
-                    });
-                }
+                $("input[on-select=\"$ctrl.add_song(data)\"]").on("keydown", (e) => {
+                    if (e.keyCode === 13) {
+                        chrome.storage.local.get("add_song_as_next", (result) => {
+                            if (result.add_song_as_next) {
+                                addSongAsNext_();
+                            }
+                        });
+                    }
+                });
+            }
+            if (addedElem.classList.contains("ac_even") || addedElem.classList.contains("ac_odd")) {
+                const addToQueueButton = addedElem;
+                chrome.storage.local.get("add_song_as_next", (result) => {
+                    if (result.add_song_as_next) {
+                        addToQueueButton.addEventListener("click", addSongAsNext_);
+                    }
+                });
             }
         });
     });
