@@ -18,7 +18,6 @@ export async function handleAlbum(tabId) {
             target: { tabId: tabId },
             func: (async () => {
                 const getTagsList = async function() {
-                    // Initialize variable for later use
                     let tagElem;
 
                     // Fetch the HTML content of the Genius New page

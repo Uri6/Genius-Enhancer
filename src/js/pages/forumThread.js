@@ -42,7 +42,7 @@ export async function handleForumThread(tabId) {
                     $(".forum_post-header").first().css("width", $(".group_title-subject").first().outerWidth(true));
                     $(".forum_post-header").first().css("height", $(".group_title-subject").first().outerHeight());
                     $(".body.embedly.embedly_pro.first_one").css("margin-top", $(".body.embedly.embedly_pro.first_one").css("padding-top"));
-
+                    //
                     $(".group_summary").hover(function() {
                         $(".header-primary").addClass("header-primary-hover");
                     }, function() {
@@ -57,18 +57,6 @@ export async function handleForumThread(tabId) {
                         }
                         if (sendButton.length) {
                             sendButton.val("Send");
-                        }
-                    });
-
-                    $(document).on("DOMNodeInserted", function(e) {
-                        if (e.target.classList.contains("error") && e.target.getAttribute("for") == "forum_post_body" && e.target.getAttribute("generated") == "true") {
-                            e.target.innerText = "Please enter a comment";
-
-                            setTimeout(() => {
-                                e.target.remove(e.target);
-                            }, 3000);
-                        } else if (e.target.classList.contains("forum_post_unit")) {
-                            addReplyButton(e.target);
                         }
                     });
 
@@ -126,8 +114,7 @@ export async function handleForumThread(tabId) {
                         mutations.forEach((mutation) => {
                             if (mutation.addedNodes) {
                                 const newNodes = mutation.addedNodes;
-                                for (let i = 0; i < newNodes.length; i++) {
-                                    const node = newNodes[i];
+                                for (const node of newNodes) {
                                     if (node.classList && node.classList.contains("pagination") && node.classList.contains("no_auto_more")) {
                                         $(node).find("a").text("Load older comments");
                                     }
