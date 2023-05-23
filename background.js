@@ -287,11 +287,8 @@ async function handleGeniusPage(tabId) {
             const $menuItems = $headerMenuItems.length ? $headerMenuItems : $headerNavMenu.find("a");
             const onHomePage = !$headerNavMenu.hasClass("header-nav_menu");
 
-            if ($menuItems.length > 0) {
+            if ($menuItems.length > 0 && $(".ge-inject").length < 1) {
                 $menuItems.remove();
-            }
-
-            if ($(".ge-inject").length < 1) {
                 const newItems = [{ title: "Forums", href: "https://genius.com/forums" }, { title: "Add Song", href: "https://genius.com/songs/new" }, { title: "Guides", href: "https://genius.com/albums/Genius/Guides" }, { title: "GeniusGraph", href: "https://larsbutnotleast.xyz/genius" }];
                 newItems.forEach((item) => {
                     const $item = $(`<a class="nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr" href="${item.href}">${item.title}</a>`);
