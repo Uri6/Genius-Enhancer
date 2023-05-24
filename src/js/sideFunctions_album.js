@@ -8,7 +8,7 @@
 export async function missingInfo(bio, people, releaseDate) {
     const imgs = {
         bios: {
-            exists: chrome.runtime.getURL("/src/images/bio/Missing/ge_biography_green64.png"),
+            exists: chrome.runtime.getURL("/src/images/bio/Exists/ge_biography_green64.png"),
             missing: chrome.runtime.getURL("/src/images/bio/Missing/ge_biography_red64.png")
         },
         people: {
