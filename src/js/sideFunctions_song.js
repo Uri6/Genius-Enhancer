@@ -36,6 +36,34 @@ export function spotifyPopUp(show) {
 export function song_modernTextEditor() {
     let flag = true;
 
+    document.addEventListener("DOMNodeRemoved", (e) => {
+        setTimeout(() => {
+            if (
+                document.querySelectorAll(
+                    ".LyricsEditdesktop__Controls-sc-19lxrhp-5.bwjuqY button"
+                ).length < 3
+            ) {
+                chrome.runtime.sendMessage({ removeQuill: true });
+            }
+        }, 100);
+
+        if (!flag) {
+            return;
+        }
+        setTimeout(() => {
+            const ngIfAttr = e.target.getAttribute("ng-if");
+            if (
+                ngIfAttr === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
+                ngIfAttr === "!lyrics_ctrl.saving"
+            ) {
+                chrome.runtime.sendMessage({
+                    removeQuill: true
+                });
+                flag = false;
+            }
+        }, 100);
+    });
+
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (
@@ -58,23 +86,6 @@ export function song_modernTextEditor() {
                     ]
                 });
                 flag = true;
-
-                document.addEventListener("DOMNodeRemoved", (e) => {
-                    if (flag) {
-                        setTimeout(() => {
-                            const ngIfAttr = e.target.getAttribute("ng-if");
-                            if (
-                                ngIfAttr === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
-                                ngIfAttr === "!lyrics_ctrl.saving"
-                            ) {
-                                chrome.runtime.sendMessage({
-                                    removeQuill: true
-                                });
-                                flag = false;
-                            }
-                        }, 100);
-                    }
-                });
             }
         });
     });
@@ -103,18 +114,6 @@ export function song_modernTextEditor() {
                 ],
             });
         }
-    });
-
-    document.addEventListener("DOMNodeRemoved", () => {
-        setTimeout(() => {
-            if (
-                document.querySelectorAll(
-                    ".LyricsEditdesktop__Controls-sc-19lxrhp-5.bwjuqY button"
-                ).length < 3
-            ) {
-                chrome.runtime.sendMessage({ removeQuill: true });
-            }
-        }, 100);
     });
 }
 
