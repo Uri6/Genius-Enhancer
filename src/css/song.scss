@@ -2,18 +2,18 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    
+
     .header-div {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       margin-right: 10px;
-      
+
       .header-buttons {
         margin-bottom: 10px;
       }
-      
+
       button {
         cursor: pointer;
         font-size: 0.75rem;
@@ -33,7 +33,7 @@
             color: white;
         }
       }
-      
+
       .header-option {
         margin: 0 10px 10px 0;
       }
@@ -82,12 +82,12 @@
 
     .css-qfdv9 {
       padding: 0;
-    
+
       &:hover,
       &:focus {
         padding: 0px;
       }
-    
+
       .css-osj7q0-placeholder {
         color: hsl(0deg 0% 86%);
       }
@@ -100,7 +100,7 @@
         }
       }
     }
-    
+
   }
 
   input {
@@ -114,4 +114,8 @@
   .css-14nse5q {
     border-radius: 0 0 10px 10px;
   }
+}
+
+.QuestionTemplate__Container-sc-1is5n1p-1 {
+  border-bottom: 1px solid !important;
 }
