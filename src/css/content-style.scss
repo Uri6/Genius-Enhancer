@@ -90,7 +90,8 @@ p,
   transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.TagInput__Container-sc-17py0eg-0 * {
+.TagInput__Container-sc-17py0eg-0 *,
+input.input.ng-valid {
   transition: all 0s !important;
 }
 
@@ -344,7 +345,9 @@ header-admin .feed_dropdown,
 }
 
 .square_button,
-textarea {
+textarea,
+tags-input,
+defer-compile>.u-top_margin {
   border-radius: 10px !important;
 }
 
@@ -859,6 +862,15 @@ input {
 
 .discussion_list_meta_user_link {
   max-width: 100% !important;
+}
+
+a.square_button.react_song_page_preview_link {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+      filter: brightness(1.1);
+      opacity: 0.8;
+  }
 }
 
 *:has(.ql-editor) {

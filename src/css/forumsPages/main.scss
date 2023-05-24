@@ -26,6 +26,7 @@
   background: transparent !important;
   color: #ffff65 !important;
   display: block !important;
+  box-sizing: border-box;
 }
 
 .small_label.toggle_target {
@@ -55,6 +56,7 @@
   font-weight: 600;
   margin-bottom: 10px;
   border-bottom: 0px !important;
+  box-sizing: border-box;
   float: right !important;
   margin-right: 2% !important;
   border-radius: 5px;
