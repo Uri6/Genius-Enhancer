@@ -34,7 +34,7 @@ export async function handleForum(tabId) {
                             e.preventDefault();
                             $(this).css("border-color", "red !important");
                             if (!document.getElementsByClassName("discussions_search_bar-text_input-error").length) {
-                                var span = document.createElement("span");
+                                const span = document.createElement("span");
                                 span.textContent = "The input is too short (min 3 characters)";
                                 span.setAttribute("class", "discussions_search_bar-text_input-error");
                                 $(span).hide().appendTo(this.parentElement).fadeIn(500);

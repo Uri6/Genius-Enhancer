@@ -54,7 +54,7 @@ export async function handleAlbum(tabId) {
                         $(".header_with_cover_art metadata .metadata_unit").text($(".header_with_cover_art .metadata_unit").text().replace("Released ", ""));
                         $(".header_with_cover_art metadata")
                             .prepend($("<img>", {
-                                src: chrome.runtime.getURL("/src/images/releaseDate/Simple/32x32.png"),
+                                src: chrome.runtime.getURL("/src/images/releaseDate/Simple/ge_releasedate_grey32.png"),
                                 class: "release_date_icon",
                                 title: "Release Date"
                             }));

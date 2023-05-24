@@ -106,7 +106,7 @@ export async function handleSongPage(tabId) {
                         })
                             .append($("<img>", {
                                 class: "magic-wand-button-icon",
-                                src: chrome.runtime.getURL("/src/images/magicWand/26x26.png")
+                                src: chrome.runtime.getURL("/src/images/magicWand/ge_magicwand_normal32.png")
                             }))
                             .appendTo(ytInputContainer);
 
@@ -154,7 +154,7 @@ export async function handleSongPage(tabId) {
                         })
                             .append($("<img>", {
                                 class: "magic-wand-button-icon",
-                                src: chrome.runtime.getURL("/src/images/magicWand/26x26.png")
+                                src: chrome.runtime.getURL("/src/images/magicWand/ge_magicwand_normal32.png")
                             }))
                             .appendTo(artworkInputContainer);
 

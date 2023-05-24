@@ -8,16 +8,16 @@
 export async function missingInfo(bio, people, releaseDate) {
     const imgs = {
         bios: {
-            exists: chrome.runtime.getURL("/src/images/bio/Exists/48x48.png"),
-            missing: chrome.runtime.getURL("/src/images/bio/Missing/48x48.png")
+            exists: chrome.runtime.getURL("/src/images/bio/Missing/ge_biography_green64.png"),
+            missing: chrome.runtime.getURL("/src/images/bio/Missing/ge_biography_red64.png")
         },
         people: {
-            exists: chrome.runtime.getURL("/src/images/people/Exists/48x48.png"),
-            missing: chrome.runtime.getURL("/src/images/people/Missing/48x48.png")
+            exists: chrome.runtime.getURL("/src/images/people/Exists/ge_people_green64.png"),
+            missing: chrome.runtime.getURL("/src/images/people/Missing/ge_people_red64.png")
         },
         releaseDate: {
-            exists: chrome.runtime.getURL("/src/images/releaseDate/Exists/48x48.png"),
-            missing: chrome.runtime.getURL("/src/images/releaseDate/Missing/48x48.png")
+            exists: chrome.runtime.getURL("/src/images/releaseDate/Exists/ge_releasedate_green64.png"),
+            missing: chrome.runtime.getURL("/src/images/releaseDate/Missing/ge_releasedate_red64.png")
         }
     };
 
@@ -127,31 +127,26 @@ export function restyleMissingInfo() {
         releaseDateIcons = document.querySelectorAll(".release-date-icon");
     } while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0);
 
-    const distances = ["-60px", "-105px", "-150px"];
-    let bioLeftPosition, releaseDateLeftPosition;
+    const distances = ["-60px", "-105px", "-155px"];
+    let bioLeftPosition = releaseDateLeftPosition = distances[0];
 
-    if (peopleIcons.length > 0) {
+    if (bioIcons.length > 0) {
         bioLeftPosition = distances[1];
-    } else {
-        bioLeftPosition = distances[0];
     }
 
-    if (peopleIcons.length > 0) {
-        if (bioIcons.length > 0) {
-            releaseDateLeftPosition = distances[2];
-        } else {
-            releaseDateLeftPosition = distances[1];
-        }
-    } else {
-        if (bioIcons.length > 0) {
-            releaseDateLeftPosition = distances[1];
-        } else {
-            releaseDateLeftPosition = distances[0];
-        }
+    if (peopleIcons.length > 0 && bioIcons.length > 0) {
+        releaseDateLeftPosition = distances[2];
+    } else if (peopleIcons.length > 0 || bioIcons.length > 0) {
+        releaseDateLeftPosition = distances[1];
     }
 
-    bioIcons.forEach((icon) => icon.style.left = bioLeftPosition);
-    releaseDateIcons.forEach((icon) => icon.style.left = releaseDateLeftPosition);
+    bioIcons.forEach(icon => {
+        icon.style.left = bioLeftPosition;
+    });
+    
+    releaseDateIcons.forEach(icon => {
+        icon.style.left = releaseDateLeftPosition;
+    });
 }
 
 /**
