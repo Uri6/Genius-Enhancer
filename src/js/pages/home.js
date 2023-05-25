@@ -15,6 +15,13 @@
  * @param {number} tabId - The ID of the tab to handle the home page redesign for
  */
 export async function handleHome(tabId) {
+    await chrome.scripting.insertCSS(
+        {
+            target: { tabId: tabId },
+            files: ["./src/css/home.css"]
+        }
+    );
+
     await chrome.scripting.executeScript(
         {
             target: { tabId: tabId },
