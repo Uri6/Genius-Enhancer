@@ -4,118 +4,120 @@
     align-items: flex-start;
 
     .header-div {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-right: 10px;
 
-      .header-buttons {
-        margin-bottom: 10px;
-      }
-
-      button {
-        cursor: pointer;
-        font-size: 0.75rem;
-        text-align: center;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        background: transparent;
-        border-width: 1px;
-        border-style: solid;
-        border-image: initial;
-        border-radius: 1.25rem;
-        padding: 0.25rem 0.75rem;
-        overflow: hidden;
-
-        &:hover {
-            background-color: black;
-            color: white;
+        .header-buttons {
+            margin-bottom: 10px;
         }
-      }
 
-      .header-option {
-        margin: 0 10px 10px 0;
-      }
+        button {
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-align: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            background: transparent;
+            border-width: 1px;
+            border-style: solid;
+            border-image: initial;
+            border-radius: 1.25rem;
+            padding: 0.25rem 0.75rem;
+            overflow: hidden;
+
+            &:hover {
+                background-color: black;
+                color: white;
+            }
+        }
+
+        .header-option {
+            margin: 0 10px 10px 0;
+        }
     }
-  }
+}
 
-    // Song Metadata
+// Song Metadata
 
 #edit-metadata-overlay.dSfHrp {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
+
 .ScrollableTabs__TabNavContainer-sc-179ldtd-1.hcTmMk {
-  display: none;
-  border-radius: 10px 10px 0 0;
+    display: none;
+    border-radius: 10px 10px 0 0;
 }
 
 .ScrollableTabs__ContentArea-sc-179ldtd-5.iYNXFF {
-  border-radius: 10px;
-
-  section:nth-child(even),
-  section:nth-child(odd) {
-    border-bottom: 1px dashed rgb(90, 90, 90);
-  }
-
-  h3 {
-    color: hsl(240, 68%, 6%);
-    text-align: start;
-  }
-
-  label {
-    margin-bottom: 0.5em;
-    font-size: .9rem;
-    color: hsl(232deg 14% 68%);
-  }
-
-  .bECqMC {
     border-radius: 10px;
-    background-color: #fafafa;
-  }
-  input,
-  .css-18ubn8j-control {
-  //  height: 38px;
-    border: 1px solid hsl(0deg 0% 86%);
-    border-radius: var(--radius);
 
-    .css-qfdv9 {
-      padding: 0;
+    section:nth-child(even),
+    section:nth-child(odd) {
+        border-bottom: 1px dashed rgb(90, 90, 90);
+    }
 
-      &:hover,
-      &:focus {
-        padding: 0px;
-      }
+    h3 {
+        color: hsl(240, 68%, 6%);
+        text-align: start;
+    }
 
-      .css-osj7q0-placeholder {
-        color: hsl(0deg 0% 86%);
-      }
+    label {
+        margin-bottom: 0.5em;
+        font-size: .9rem;
+        color: hsl(232deg 14% 68%);
+    }
 
-      .css-1o8rpk3-multiValue {
-        border-radius: var(--radius-large);
+    .bECqMC {
+        border-radius: 10px;
+        background-color: #fafafa;
+    }
 
-        &:hover {
-          border-radius: var(--radius-large);
+    input,
+    .css-18ubn8j-control {
+        //  height: 38px;
+        border: 1px solid hsl(0deg 0% 86%);
+        border-radius: var(--radius);
+
+        .css-qfdv9 {
+            padding: 0;
+
+            &:hover,
+            &:focus {
+                padding: 0px;
+            }
+
+            .css-osj7q0-placeholder {
+                color: hsl(0deg 0% 86%);
+            }
+
+            .css-1o8rpk3-multiValue {
+                border-radius: var(--radius-large);
+
+                &:hover {
+                    border-radius: var(--radius-large);
+                }
+            }
         }
-      }
+
     }
 
-  }
-
-  input {
-    &:focus {
-      border-color: yellow !important;
-      height: 38px;
+    input {
+        &:focus {
+            border-color: yellow !important;
+            height: 38px;
+        }
     }
-  }
 
-  .css-1lh6pps-menu,
-  .css-14nse5q {
-    border-radius: 0 0 10px 10px;
-  }
+    .css-1lh6pps-menu,
+    .css-14nse5q {
+        border-radius: 0 0 10px 10px;
+    }
 }
 
 .QuestionTemplate__Container-sc-1is5n1p-1 {
-  border-bottom: 1px solid !important;
+    border-bottom: 1px solid !important;
 }
