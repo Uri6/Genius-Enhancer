@@ -8,7 +8,7 @@
 export async function missingInfo(bio, people, releaseDate) {
     const imgs = {
         bios: {
-            exists: chrome.runtime.getURL("/src/images/bio/Missing/ge_biography_green64.png"),
+            exists: chrome.runtime.getURL("/src/images/bio/Exists/ge_biography_green64.png"),
             missing: chrome.runtime.getURL("/src/images/bio/Missing/ge_biography_red64.png")
         },
         people: {
@@ -35,6 +35,8 @@ export async function missingInfo(bio, people, releaseDate) {
 
     albumObject.album_appearances.forEach(({ song }) => {
         let elem = tracklist[song_index];
+        let iconContainer = document.createElement("div");
+        iconContainer.classList.add("icon-container");
 
         if (people) {
             let img_elem = document.createElement("img");
@@ -48,7 +50,7 @@ export async function missingInfo(bio, people, releaseDate) {
                 img_elem.src = imgs.people.exists;
                 img_elem.setAttribute("alt", "exists people");
             }
-            elem.appendChild(img_elem);
+            iconContainer.appendChild(img_elem);
         }
 
         if (bio) {
@@ -62,7 +64,7 @@ export async function missingInfo(bio, people, releaseDate) {
                 img_elem.src = imgs.bios.exists;
                 img_elem.setAttribute("alt", "exists bio");
             }
-            elem.appendChild(img_elem);
+            iconContainer.appendChild(img_elem);
         }
 
         if (releaseDate) {
@@ -76,16 +78,14 @@ export async function missingInfo(bio, people, releaseDate) {
                 img_elem.src = imgs.releaseDate.exists;
                 img_elem.setAttribute("alt", "exists release date");
             }
-            elem.appendChild(img_elem);
+            iconContainer.appendChild(img_elem);
         }
 
+        elem.appendChild(iconContainer);
         song_index++;
     });
-
-    if (bio || people || releaseDate) {
-        chrome.runtime.sendMessage({ "album_missingInfo_restyle": true });
-    }
 }
+
 
 export function removeMissingInfo(bio, people, releaseDate) {
     const peopleIcons = document.querySelectorAll(".people-icon");
@@ -111,42 +111,6 @@ export function removeMissingInfo(bio, people, releaseDate) {
             icon.remove();
         });
     }
-
-    chrome.runtime.sendMessage({ "album_missingInfo_restyle": true });
-}
-
-export function restyleMissingInfo() {
-    let peopleIcons = document.querySelectorAll(".people-icon");
-    let bioIcons = document.querySelectorAll(".bio-icon");
-    let releaseDateIcons = document.querySelectorAll(".release-date-icon");
-
-    // Wait until at least one of the icons is loaded
-    do {
-        peopleIcons = document.querySelectorAll(".people-icon");
-        bioIcons = document.querySelectorAll(".bio-icon");
-        releaseDateIcons = document.querySelectorAll(".release-date-icon");
-    } while (peopleIcons.length === 0 && bioIcons.length === 0 && releaseDateIcons.length === 0);
-
-    const distances = ["-60px", "-105px", "-155px"];
-    let bioLeftPosition = releaseDateLeftPosition = distances[0];
-
-    if (bioIcons.length > 0) {
-        bioLeftPosition = distances[1];
-    }
-
-    if (peopleIcons.length > 0 && bioIcons.length > 0) {
-        releaseDateLeftPosition = distances[2];
-    } else if (peopleIcons.length > 0 || bioIcons.length > 0) {
-        releaseDateLeftPosition = distances[1];
-    }
-
-    bioIcons.forEach(icon => {
-        icon.style.left = bioLeftPosition;
-    });
-    
-    releaseDateIcons.forEach(icon => {
-        icon.style.left = releaseDateLeftPosition;
-    });
 }
 
 /**

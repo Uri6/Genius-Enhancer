@@ -11,7 +11,6 @@ import {
 import {
     missingInfo,
     removeMissingInfo,
-    restyleMissingInfo,
     appendIcon,
     autolinkArtwork,
     getPlaylistVideos,
@@ -124,10 +123,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             case "album_missingInfo_remove" in message:
                 func = removeMissingInfo;
                 args = message.album_missingInfo_remove;
-                break;
-            case "album_missingInfo_restyle" in message:
-                func = restyleMissingInfo;
-                args = [""];
                 break;
             case "album_autolinkArtwork" in message:
                 func = autolinkArtwork;
