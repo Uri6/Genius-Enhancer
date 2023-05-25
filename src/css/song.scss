@@ -55,10 +55,10 @@
 .ScrollableTabs__ContentArea-sc-179ldtd-5.iYNXFF {
     border-radius: 10px;
 
-    section:nth-child(even),
-    section:nth-child(odd) {
-        border-bottom: 1px dashed rgb(90, 90, 90);
-    }
+    //section:nth-child(even),
+    //section:nth-child(odd) {
+    //    border-bottom: 1px dashed rgb(90, 90, 90);
+    //}
 
     h3 {
         color: hsl(240, 68%, 6%);
@@ -68,27 +68,28 @@
     label {
         margin-bottom: 0.5em;
         font-size: .9rem;
-        color: hsl(232deg 14% 68%);
+        //color: hsl(232deg 14% 68%);
     }
 
     .bECqMC {
         border-radius: 10px;
         background-color: #fafafa;
+        border: solid 1px black;
     }
 
     input,
     .css-18ubn8j-control {
         //  height: 38px;
-        border: 1px solid hsl(0deg 0% 86%);
+        //border: 1px solid hsl(0deg 0% 86%);
         border-radius: var(--radius);
 
         .css-qfdv9 {
-            padding: 0;
+            //padding: 0;
 
-            &:hover,
-            &:focus {
-                padding: 0px;
-            }
+            //&:hover,
+            //&:focus {
+            //    padding: 0px;
+            //}
 
             .css-osj7q0-placeholder {
                 color: hsl(0deg 0% 86%);
@@ -97,9 +98,9 @@
             .css-1o8rpk3-multiValue {
                 border-radius: var(--radius-large);
 
-                &:hover {
-                    border-radius: var(--radius-large);
-                }
+                //&:hover {
+                //    border-radius: var(--radius-large);
+                //}
             }
         }
 
@@ -108,7 +109,7 @@
     input {
         &:focus {
             border-color: yellow !important;
-            height: 38px;
+            //height: 38px;
         }
     }
 
