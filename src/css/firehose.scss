@@ -66,7 +66,7 @@ body {
             #selected_users .selected_user {
                 .user_badge {
                     padding: 5px !important;
-                    margin: 5px 0px !important;
+                    margin: 5px 0 !important;
                     background-color: rgba(128, 128, 128, 0.6) !important;
                     border-radius: 10px !important;
                     max-width: 154px !important;
@@ -74,8 +74,8 @@ body {
                     .login,
                     .iq_value {
                         &:hover {
-                            padding-top: 0px !important;
-                            padding-bottom: 0px !important;
+                            padding-top: 0 !important;
+                            padding-bottom: 0 !important;
                             color: white !important;
 
                             &.iq_value {
@@ -92,7 +92,7 @@ body {
                     .badge_avatar_wrapper {
                         &:hover {
                             background-color: none !important;
-                            padding: 0px !important;
+                            padding: 0 !important;
 
                             .avatar {
                                 background-color: none !important;
@@ -123,7 +123,7 @@ body {
 
                 &:focus {
                     background-color: rgba(128, 128, 128, 0.6) !important;
-                    border-width: 0px !important;
+                    border-width: 0 !important;
                 }
             }
 
@@ -133,8 +133,8 @@ body {
                 border-color: initial !important;
                 border-image: initial !important;
                 font-size: 15px !important;
-                padding: 0px !important;
-                margin: 0px !important;
+                padding: 0 !important;
+                margin: 0 !important;
                 float: unset !important;
                 line-height: unset !important;
                 width: unset !important;

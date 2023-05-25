@@ -17,6 +17,10 @@ export async function handleAlbum(tabId) {
         {
             target: { tabId: tabId },
             func: (async () => {
+                $("div[ng-bind-html='metadata_question.question']").each((index, e) => {
+                    e.parentElement.remove();
+                });
+
                 const getTagsList = async function() {
                     let tagElem;
 

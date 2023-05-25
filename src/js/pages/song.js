@@ -390,6 +390,10 @@ export async function handleSongPage(tabId) {
 
             $(explainer).hide();
 
+            const metadataQuestions = ".MetadataQuestionList__ItemContainer-vhwrm0-0"
+
+            $(metadataQuestions).remove();
+
             const buttonStyle = "Button__Container-rtu9rw-0 coQEbB LyricsEditdesktop__Button-sc-19lxrhp-4 kpOoZB";
 
             // Will fix the naming later
