@@ -18,7 +18,7 @@ const createCheckbox = (id, labelText) => {
         .append($("<input>", { type: "checkbox", id, name: id, class: "chkboxm" }))
         .append($("<label>", { for: id })
             .append($("<span>", { class: "chkboxmspan" }))
-            .append(labelText)
+            .append(" " + labelText)
         );
 };
 
@@ -28,25 +28,25 @@ const FORUMS_ELEMENT = createElement("info-box", "genius-page", "Forums");
 
 const ALBUM_PAGE_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Metadata Indicators" }))
-    .append(createCheckbox("people", " People (writers & producers)"))
-    .append(createCheckbox("bios", " Bios"))
-    .append(createCheckbox("release-date", " Release date"));
-
-const FORUMS_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
-    .append($("<legend>", { id: "features", text: "Features" }))
-    .append(createCheckbox("forums2", " Forums v2 (\"Gradient Edition\")"));
+    .append(createCheckbox("people", "People (writers & producers)"))
+    .append(createCheckbox("bios", "Bios"))
+    .append(createCheckbox("release-date", "Release date"));
 
 const SONG_PAGE_FEATURES_ELEMENT = $("<div>")
     .append($("<fieldset>", { id: "features-box" })
         .append($("<legend>", { id: "features", text: "Players" }))
-        .append(createCheckbox("apple-music-pop-up", " Apple Music"))
-        .append(createCheckbox("spotify-pop-up", " Spotify"))
+        .append(createCheckbox("apple-music-pop-up", "Apple Music"))
+        .append(createCheckbox("spotify-pop-up", "Spotify"))
     )
     .append($("<fieldset>", { id: "features-box" })
         .append($("<legend>", { id: "features", text: "Features" }))
-        .append(createCheckbox("modern-text-editor", " Modern text editor"))
-        .append(createCheckbox("old-song-page", " Use old song page by default"))
+        .append(createCheckbox("modern-text-editor", "Modern text editor"))
+        .append(createCheckbox("old-song-page", "Use old song page by default"))
     );
+
+const FORUMS_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
+    .append($("<legend>", { id: "features", text: "Features" }))
+    .append(createCheckbox("forums2", "Modern forums"));
 
 $("#version").text($("#version").text() + " " + chrome.runtime.getManifest().version);
 
@@ -75,15 +75,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     handleCheckboxClick("apple-music-pop-up", "appleMusicPopUp", "song_appleMusicPopUp");
     handleCheckboxClick("spotify-pop-up", "spotifyPopUp", "song_spotifyPopUp");
     handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
-
-    chrome.storage.local.get(["OldSongPage"], (res) => {
-        $("#old-song-page").prop("checked", res.OldSongPage);
-    });
-
-    $("#old-song-page").click(() => {
-        const OldSongPageCheckbox = document.getElementById("old-song-page");
-        chrome.storage.local.set({ OldSongPage: OldSongPageCheckbox.checked });
-    });
+    handleCheckboxClick("old-song-page", "OldSongPage", "");
 
     additions
         .append(ALBUM_PAGE_ELEMENT)
@@ -93,14 +85,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     handleCheckboxClick("people", "people", "", [false, true, false]);
     handleCheckboxClick("release-date", "releaseDate", "", [false, false, true]);
 
-    additions.append(FORUMS_ELEMENT).append(FORUMS_FEATURES_ELEMENT);
+    additions
+        .append(FORUMS_ELEMENT)
+        .append(FORUMS_FEATURES_ELEMENT);
 
-    chrome.storage.local.get(["forums2"], (res) => {
-        $("#forums2").prop("checked", res.forums2);
-    });
-
-    $("#forums2").click(() => {
-        const Forums2Checkbox = document.getElementById("forums2");
-        chrome.storage.local.set({ forums2: Forums2Checkbox.checked });
-    });
+    handleCheckboxClick("forums2", "forums2", "");
 });

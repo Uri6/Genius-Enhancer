@@ -25,15 +25,25 @@
     }
 }
 
-.bio-icon,
-.people-icon,
-.release-date-icon {
+.icon-container {
     position: absolute;
-    transform: scale(0.8);
-    transition: all 0.2s ease-in-out;
-    height: 48px;
     top: 5px;
-    left: -60px;
+    left: -105px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+
+    .bio-icon,
+    .people-icon,
+    .release-date-icon {
+        transform: scale(0.7);
+        transition: all 0.2s ease-in-out;
+        height: 100%;
+        margin-right: 5px;
+    }
 }
 
 .extension-icon {
@@ -366,12 +376,12 @@
             width: 100px;
             height: 100px;
             transition: all ease-in-out 0.2s !important;
-        
+
             .autolink-artwork-icon {
                 transform: scale(1.1);
                 transition: all 1s ease-in-out;
             }
-        
+
             .autolink-artwork-title {
                 position: absolute;
                 top: 108px;
@@ -382,7 +392,7 @@
                 text-align: center;
                 transition: all 0.4s ease-in-out;
             }
-        
+
             .artwork-images-stack {
                 position: absolute;
                 top: 50px;
@@ -393,19 +403,19 @@
                 justify-content: center;
                 align-items: center;
                 transition: all 0.3s ease-in-out;
-        
+
                 .artwork-image-container {
                     position: absolute;
                     display: flex;
                     width: 100%;
                     transition: all 0.3s ease-in-out;
-        
+
                     .artwork-image {
                         border-radius: 10px;
                         border: none;
                         transition: all 0.3s ease-in-out;
                     }
-        
+
                     .overlay {
                         position: absolute;
                         top: 0;
@@ -416,11 +426,11 @@
                         border-radius: 10px;
                         border: none;
                         transition: all 0.3s ease-in-out;
-        
+
                         &:hover {
                             background-color: rgba(0, 0, 0, 0.2);
                         }
-        
+
                         .x-button {
                             position: relative;
                             top: 115px;
@@ -431,12 +441,12 @@
                             transition: all 0.3s ease-in-out;
                             cursor: pointer;
                             display: border;
-        
+
                             &:hover {
                                 cursor: pointer;
                             }
                         }
-        
+
                         .v-button {
                             position: relative;
                             top: 115px;
@@ -447,14 +457,14 @@
                             transition: all 0.3s ease-in-out;
                             cursor: pointer;
                             display: border;
-        
+
                             &:hover {
                                 cursor: pointer;
                             }
                         }
                     }
                 }
-        
+
                 .error-container {
                     position: absolute;
                     display: flex;
@@ -467,7 +477,7 @@
                     height: 110px;
                     width: 110px;
                     transition: all 0.3s ease-in-out;
-        
+
                     .error-text {
                         color: #000 !important;
                         text-align: center;
@@ -475,15 +485,15 @@
                     }
                 }
             }
-        
+
             &:hover {
                 cursor: pointer;
                 background-color: #979797;
-        
+
                 .autolink-artwork-icon {
                     transform: scale(1.4) rotate(360deg);
                 }
-        
+
                 .autolink-artwork-title {
                     transform: scale(1.05);
                 }
@@ -613,6 +623,7 @@
                         margin-top: -5px !important;
                         margin-left: -7px !important;
                         vertical-align: middle !important;
+                        transform: scale(0.65) !important;
                     }
                 }
             }

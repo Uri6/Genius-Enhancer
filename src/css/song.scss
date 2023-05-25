@@ -1,3 +1,8 @@
+:root {
+    --input-radius: 10px;
+    --box-radius: 5px;
+}
+
 .LyricsEditdesktop__Editor-sc-19lxrhp-1 {
     display: flex;
     flex-direction: row;
@@ -78,10 +83,12 @@
     }
 
     input,
-    .css-18ubn8j-control {
+    .css-18ubn8j-control,
+    .iEuXAw>div, // song art preview
+    .diuQvC { //song gradient preview
         //  height: 38px;
         //border: 1px solid hsl(0deg 0% 86%);
-        border-radius: var(--radius);
+        border-radius: var(--input-radius);
 
         .css-qfdv9 {
             //padding: 0;
@@ -95,12 +102,9 @@
                 color: hsl(0deg 0% 86%);
             }
 
-            .css-1o8rpk3-multiValue {
-                border-radius: var(--radius-large);
-
-                //&:hover {
-                //    border-radius: var(--radius-large);
-                //}
+            .css-1o8rpk3-multiValue,
+            .css-1gktw6v-multiValue {
+                border-radius: var(--box-radius);
             }
         }
 
@@ -121,4 +125,9 @@
 
 .QuestionTemplate__Container-sc-1is5n1p-1 {
     border-bottom: 1px solid !important;
+
+    .css-1lh6pps-menu,
+    .css-14nse5q {
+        border-radius: 0 0 10px 10px;
+    }
 }

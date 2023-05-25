@@ -11,7 +11,6 @@ import {
 import {
     missingInfo,
     removeMissingInfo,
-    restyleMissingInfo,
     appendIcon,
     autolinkArtwork,
     getPlaylistVideos,
@@ -64,12 +63,12 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "spotifyPopUp": true });
             chrome.storage.local.set({ "add_song_as_next": true });
             chrome.storage.local.set({ "ModernTextEditor": true });
+            chrome.storage.local.set({ "forums2": true });
             chrome.storage.local.set({ "OldSongPage": false });
             chrome.storage.local.set({ "darkMode": false });
-            chrome.storage.local.set({ "forums2": false });
             break;
         case "update":
-            // var newURL = "https://uri6.github.io/genius-bot/versions/";
+            // var newURL = "https://uri6.github.io/genius-enhancer/versions/";
             // chrome.tabs.create({ url: newURL });
             // break;
             break;
@@ -78,130 +77,52 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     getTabId().then((tabId) => {
-        let func, args;
+        const functions = {
+            fixNonLatin: [fixNonLatin, message.fixNonLatin],
+            getDetails: [getDetails, [""]],
+            getArtistsList: [getArtistsList, message.getArtistsList],
+            getCreditsList: [getCreditsList, message.getCreditsList],
+            identifyPageType: [identifyPageType, [""]],
+            replaceTextarea: [replaceTextarea, message.replaceTextarea],
+            removeQuill: [removeQuill, [""]],
+            album_appendIcon: [appendIcon, message.album_appendIcon],
+            album_addSongAsNext: [addSongAsNext, message.album_addSongAsNext],
+            album_missingInfo: [missingInfo, message.album_missingInfo],
+            album_missingInfo_remove: [removeMissingInfo, message.album_missingInfo_remove],
+            album_autolinkArtwork: [autolinkArtwork, message.album_autolinkArtwork],
+            album_getPlaylistVideos: [getPlaylistVideos, message.album_getPlaylistVideos],
+            album_saveEverything: [saveEverything, message.album_saveEverything],
+            song_appleMusicPopUp: [appleMusicPopUp, message.song_appleMusicPopUp],
+            song_spotifyPopUp: [spotifyPopUp, message.song_spotifyPopUp],
+            song_modernTextEditor: [song_modernTextEditor, message.song_modernTextEditor],
+            song_appendFollowButton: [appendFollowButton, message.song_appendFollowButton],
+            song_searchVideo: [searchVideo, message.song_searchVideo],
+            forums_replaceButtons: [replaceButtons, message.forums_replaceButtons],
+            forums_modernTextEditor: [forums_modernTextEditor, message.forums_modernTextEditor]
+        };
 
-        switch (true) {
-            case "fixNonLatin" in message:
-                func = fixNonLatin;
-                args = message.fixNonLatin;
-                break;
-            case "getDetails" in message:
-                func = getDetails;
-                args = [""];
-                break;
-            case "getArtistsList" in message:
-                func = getArtistsList;
-                args = message.getArtistsList;
-                break;
-            case "getCreditsList" in message:
-                func = getCreditsList;
-                args = message.getCreditsList;
-                break;
-            case "identifyPageType" in message:
-                func = identifyPageType;
-                args = [""];
-                break;
-            case "replaceTextarea" in message:
-                func = replaceTextarea;
-                args = message.replaceTextarea;
-                break;
-            case "removeQuill" in message:
-                func = removeQuill;
-                args = [""];
-                break;
-            case "album_appendIcon" in message:
-                func = appendIcon;
-                args = message.album_appendIcon;
-                break;
-            case "album_addSongAsNext" in message:
-                func = addSongAsNext;
-                args = message.album_addSongAsNext;
-                break;
-            case "album_missingInfo" in message:
-                func = missingInfo;
-                args = message.album_missingInfo;
-                break;
-            case "album_missingInfo_remove" in message:
-                func = removeMissingInfo;
-                args = message.album_missingInfo_remove;
-                break;
-            case "album_missingInfo_restyle" in message:
-                func = restyleMissingInfo;
-                args = [""];
-                break;
-            case "album_autolinkArtwork" in message:
-                func = autolinkArtwork;
-                args = message.album_autolinkArtwork;
-                break;
-            case "album_getPlaylistVideos" in message:
-                func = getPlaylistVideos;
-                args = message.album_getPlaylistVideos;
-                break;
-            case "album_saveEverything" in message:
-                func = saveEverything;
-                args = message.album_saveEverything;
-                break;
-            case "song_appleMusicPopUp" in message:
-                func = appleMusicPopUp;
-                args = message.song_appleMusicPopUp;
-                break;
-            case "song_spotifyPopUp" in message:
-                func = spotifyPopUp;
-                args = message.song_spotifyPopUp;
-                break;
-            case "song_modernTextEditor" in message:
-                func = song_modernTextEditor;
-                args = message.song_modernTextEditor;
-                break;
-            case "song_appendFollowButton" in message:
-                func = appendFollowButton;
-                args = message.song_appendFollowButton;
-                break;
-            case "song_searchVideo" in message:
-                func = searchVideo;
-                args = message.song_searchVideo;
-                break;
-            case "forums_replaceButtons" in message:
-                func = replaceButtons;
-                args = message.forums_replaceButtons;
-                break;
-            case "forums_modernTextEditor" in message:
-                func = forums_modernTextEditor;
-                args = message.forums_modernTextEditor;
-                break;
-            default:
-                console.info("ignore unknown message", message)
-                return;
+        const [func, args] = functions[Object.keys(message)[0]] || [];
+
+        if (!func) {
+            return;
         }
 
-        new Promise((resolve) => {
-            chrome.scripting
-                .executeScript({
-                    target: { tabId: tabId },
-                    func: func,
-                    args: args,
-                })
-                .then((results) => {
-                    if (
-                        func === autolinkArtwork ||
-                        func === identifyPageType ||
-                        func === getPlaylistVideos ||
-                        func === getDetails ||
-                        func === getArtistsList ||
-                        func === getCreditsList ||
-                        func === searchVideo ||
-                        func === fixNonLatin
-                    ) {
-                        resolve(results[0].result);
-                    } else {
-                        resolve();
-                    }
-                });
-        }).then((res) => {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: func,
+            args: args,
+        }).then((results) => {
+            const res = (func === autolinkArtwork ||
+                func === identifyPageType ||
+                func === getPlaylistVideos ||
+                func === getDetails ||
+                func === getArtistsList ||
+                func === getCreditsList ||
+                func === searchVideo ||
+                func === fixNonLatin) ? results[0].result : undefined;
+
             console.info("----------------------------------------");
-            console.info(
-                "%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;"
-            )
+            console.info("%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;")
             console.info("time received: ", new Date().toLocaleTimeString('en-US', { hour12: false }));
             console.info("message received: ", message);
             console.info("function called: ", func.name);
@@ -219,7 +140,6 @@ let pageType = "unknown";
 let isGeniusPage = false;
 let pageObject = {};
 let url = "";
-let forumsV2 = undefined;
 const geniusAddress = ["https://www.genius.com/", "https://genius.com/"];
 
 async function handleGeniusPage(tabId) {
@@ -227,7 +147,7 @@ async function handleGeniusPage(tabId) {
         await chrome.storage.local.set({ "pageType": pageType });
     }
 
-    forumsV2 = (await chrome.storage.local.get("forums2"))?.forums2 || false;
+    const forumsV2 = (await chrome.storage.local.get("forums2"))?.forums2 || false;
 
     await chrome.scripting.executeScript({
         target: { tabId: tabId },
@@ -674,8 +594,6 @@ async function handleGeniusPage(tabId) {
     }
 
     const forumPages = ["forums (main)", "forum", "forum thread", "new post"];
-
-    console.log(forumsV2);
 
     if (forumPages.includes(pageType) && !forumsV2) {
         return;
