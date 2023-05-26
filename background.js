@@ -110,7 +110,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.scripting.executeScript({
             target: { tabId: tabId },
             func: func,
-            args: args,
+            args: args
         }).then((results) => {
             const res = (func === autolinkArtwork ||
                 func === identifyPageType ||
@@ -122,8 +122,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 func === fixNonLatin) ? results[0].result : undefined;
 
             console.info("----------------------------------------");
-            console.info("%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;")
-            console.info("time received: ", new Date().toLocaleTimeString('en-US', { hour12: false }));
+            console.info("%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
+            console.info("time received: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
             console.info("message received: ", message);
             console.info("function called: ", func.name);
             console.info("arguments: ", args);
@@ -154,20 +154,19 @@ async function handleGeniusPage(tabId) {
         func: (() => {
             const body = $("body");
 
-            if (!$('#ge-theme-toggle').length && $(".header-actions").length) {
+            if (!$("#ge-theme-toggle").length && $(".header-actions").length) {
                 const darkModeToogle = $("<input>", {
                     id: "ge-theme-toggle",
                     class: "ge-theme-toggle",
                     type: "checkbox",
                     on: {
-                        click: function () {
+                        click: function() {
                             body.addClass("ge-theme-transition");
 
                             if ($(this).is(":checked")) {
                                 body.addClass("ge-dark-mode");
                                 chrome.storage.local.set({ "darkMode": true });
-                            }
-                            else {
+                            } else {
                                 body.removeClass("ge-dark-mode");
                                 chrome.storage.local.set({ "darkMode": false });
                             }
@@ -209,13 +208,19 @@ async function handleGeniusPage(tabId) {
 
             if ($menuItems.length > 0 && $(".ge-inject").length < 1) {
                 $menuItems.remove();
-                const newItems = [{ title: "Forums", href: "https://genius.com/forums" }, { title: "Add Song", href: "https://genius.com/songs/new" }, { title: "Guides", href: "https://genius.com/albums/Genius/Guides" }, { title: "GeniusGraph", href: "https://larsbutnotleast.xyz/genius" }];
+                const newItems = [{ title: "Forums", href: "https://genius.com/forums" }, {
+                    title: "Add Song",
+                    href: "https://genius.com/songs/new"
+                }, { title: "Guides", href: "https://genius.com/albums/Genius/Guides" }, {
+                    title: "GeniusGraph",
+                    href: "https://larsbutnotleast.xyz/genius"
+                }];
                 newItems.forEach((item) => {
                     const $item = $(`<a class="nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr" href="${item.href}">${item.title}</a>`);
                     if (onHomePage) {
                         $headerNavMenu.append($item);
                     } else {
-                        $headerNavMenu.append(`<li class="nav_menu-item ng-scope ge-inject">${$item[0].outerHTML.replace('class="nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr"', 'class="nav_menu-link ng-binding"')}</li>`);
+                        $headerNavMenu.append(`<li class="nav_menu-item ng-scope ge-inject">${$item[0].outerHTML.replace("class=\"nav_menu-link ng-binding PageHeaderdesktop__Link-bhx5ui-4 jQULAr\"", "class=\"nav_menu-link ng-binding\"")}</li>`);
                     }
                 });
             }
@@ -362,7 +367,7 @@ async function handleGeniusPage(tabId) {
                                     "Impersonating an Artist"
                                 ]
                             }
-                        }
+                        };
 
                         const additionalOptions = {
                             "Offensive Profile Content": [
@@ -370,7 +375,7 @@ async function handleGeniusPage(tabId) {
                                 "Username",
                                 "Bio"
                             ]
-                        }
+                        };
 
                         const templeateChooser = $("<div>", {
                             class: "ge-message-template-chooser",
@@ -381,7 +386,7 @@ async function handleGeniusPage(tabId) {
 
                         magicButton.on("click", () => {
                             const $formContainer = $(".square_input.conversation-message_textarea").parent();
-                            $formContainer.find('#punishmentForm').remove();
+                            $formContainer.find("#punishmentForm").remove();
 
                             const $form = $("<form>", {
                                 id: "punishmentForm",
@@ -424,7 +429,7 @@ async function handleGeniusPage(tabId) {
 
                             const $submitBtn = $("<input>", {
                                 type: "submit",
-                                value: "Generate",
+                                value: "Generate"
                             }).appendTo($form);
 
                             $typeSelect.change(() => {
@@ -488,32 +493,32 @@ async function handleGeniusPage(tabId) {
                                 }
 
                                 const requestOptions = {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify(payload)
                                 };
 
-                                fetch('https://backend.rdil.rocks/genius/templates/generate', requestOptions)
+                                fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
                                     .then(response => response.text())
                                     .then(result => {
                                         const entities = {
-                                            '&amp;': '&',
-                                            '&lt;': '<',
-                                            '&gt;': '>',
-                                            '&quot;': '"',
-                                            '&#39;': "'",
-                                            '&#x2F;': '/',
-                                            '&#x60;': '`',
-                                            '&#x3D;': '='
+                                            "&amp;": "&",
+                                            "&lt;": "<",
+                                            "&gt;": ">",
+                                            "&quot;": "\"",
+                                            "&#39;": "'",
+                                            "&#x2F;": "/",
+                                            "&#x60;": "`",
+                                            "&#x3D;": "="
                                         };
 
-                                        return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function (match, entity) {
+                                        return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
                                             return entities[match];
                                         });
                                     })
                                     .then(cleanedResult => {
                                         $(".square_input.conversation-message_textarea").val(cleanedResult);
-                                        const event = new Event('change', { bubbles: true });
+                                        const event = new Event("change", { bubbles: true });
                                         $(".square_input.conversation-message_textarea")[0].dispatchEvent(event);
 
                                         $form.remove();
@@ -523,63 +528,63 @@ async function handleGeniusPage(tabId) {
 
                         // API Calls Examples
                         const requestOptions = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                type: 'Immediate Perma',
-                                offense: 'Pageview Boosting',
+                                type: "Immediate Perma",
+                                offense: "Pageview Boosting"
                             })
                         };
 
                         const requestOptions1 = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                type: 'Post-Warning Perma',
-                                offense: 'Uploading Harmful Content',
-                                postPermaStatus: 'Warning'
+                                type: "Post-Warning Perma",
+                                offense: "Uploading Harmful Content",
+                                postPermaStatus: "Warning"
                             })
                         };
 
                         const requestOptions2 = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                type: 'Post-Warning Perma',
-                                offense: 'Offensive Usernames & Avatars',
-                                postPermaStatus: 'Warning',
-                                inappropriateUC: 'Avatar'
+                                type: "Post-Warning Perma",
+                                offense: "Offensive Usernames & Avatars",
+                                postPermaStatus: "Warning",
+                                inappropriateUC: "Avatar"
                             })
                         };
 
                         const requestOptions3 = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                type: 'Strikes',
-                                offense: 'Mass-Downvoting',
-                                strikeStatus: 'Strike 1'
+                                type: "Strikes",
+                                offense: "Mass-Downvoting",
+                                strikeStatus: "Strike 1"
                             })
                         };
 
-                        fetch('https://backend.rdil.rocks/genius/templates/generate', requestOptions)
+                        fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
                             .then(response => response.text())
                             .then(result => {
                                 const entities = {
-                                    '&amp;': '&',
-                                    '&lt;': '<',
-                                    '&gt;': '>',
-                                    '&quot;': '"',
-                                    '&#39;': "'",
-                                    '&#x2F;': '/',
-                                    '&#x60;': '`',
-                                    '&#x3D;': '='
+                                    "&amp;": "&",
+                                    "&lt;": "<",
+                                    "&gt;": ">",
+                                    "&quot;": "\"",
+                                    "&#39;": "'",
+                                    "&#x2F;": "/",
+                                    "&#x60;": "`",
+                                    "&#x3D;": "="
                                 };
 
-                                return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function (match, entity) {
+                                return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
                                     return entities[match];
                                 });
-                            })
+                            });
                         // Insert your template into the textarea
                     }
                 }, 1);
@@ -652,7 +657,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     await chrome.storage.local.set({ "album_artwork_results": "" });
     pageType = "unknown";
 
-    const prohibitedDomains = ["promote.genius.com", "support.genius.com", "docs.genius.com", "homestudio.genius.com", "genius.com/developers", "genius.com/api-clients"];
+    const prohibitedDomains = ["promote.genius.com", "support.genius.com", "docs.genius.com", "homestudio.genius.com", "genius.com/developers", "genius.com/api-clients", "api.genius.com"];
 
     const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
     const protocolAndDomainMatch = tab.url.match(protocolAndDomainRegex);
@@ -748,64 +753,62 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
 
         await new Promise((resolve) => {
-            chrome.tabs.query({ active: true, currentWindow: true }, () => {
-                chrome.scripting.executeScript({
-                    target: { tabId: tabId }, func: getDetails
-                }, function (returnVal) {
-                    if (returnVal !== undefined && returnVal[0].result != null) {
-                        pageObject = returnVal[0].result;
-                        pageType = pageObject.page_type;
-                    }
+            chrome.scripting.executeScript({
+                target: { tabId: tabId }, func: getDetails
+            }, function(returnVal) {
+                if (returnVal !== undefined && returnVal[0].result != null) {
+                    pageObject = returnVal[0].result;
+                    pageType = pageObject.page_type;
+                }
 
-                    if (returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown") {
-                        const urlPart = tab.url.split("genius.com/")[1];
-                        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
-                            pageType = "song";
+                if (!(returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown")) {
+                    resolve();
+                } else {
+                    const urlPart = tab.url.split("genius.com/")[1];
+                    if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                        pageType = "song";
 
-                            chrome.storage.local.get("OldSongPage", (res) => {
-                                if (res.OldSongPage) {
-                                    let currentUrl = tab.url;
-                                    if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
-                                        currentUrl += "?bagon=1";
-                                        chrome.tabs.update(tabId, {
-                                            url: currentUrl
-                                        });
-                                    }
-                                } else if (res.OldSongPage === undefined) {
-                                    console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
+                        chrome.storage.local.get("OldSongPage", (res) => {
+                            if (res.OldSongPage) {
+                                let currentUrl = tab.url;
+                                if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
+                                    currentUrl += "?bagon=1";
+                                    chrome.tabs.update(tabId, {
+                                        url: currentUrl
+                                    });
                                 }
-                            });
-                        } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
-                            pageType = "home";
-                        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
-                            pageType = "firehose";
-                        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
-                            pageType = "new song";
-                        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
-                            pageType = "mecha.penalties";
-                        }
-                        chrome.scripting.executeScript({
-                            target: { tabId: tabId }, func: () => {
-                                return (document.getElementsByClassName("group_summary").length > 0);
+                            } else if (res.OldSongPage === undefined) {
+                                console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
                             }
-                        }, (isForumPage) => {
-                            if (isForumPage?.[0]?.result) {
-                                if (tab.url.endsWith("/forums")) {
-                                    pageType = "forums (main)";
-                                } else if (tab.url.endsWith("/new")) {
-                                    pageType = "new post";
-                                } else if (tab.url.includes("/discussions/")) {
-                                    pageType = "forum thread";
-                                } else {
-                                    pageType = "forum";
-                                }
-                            }
-                            resolve();
                         });
-                    } else {
-                        resolve();
+                    } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
+                        pageType = "home";
+                    } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
+                        pageType = "firehose";
+                    } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
+                        pageType = "new song";
+                    } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
+                        pageType = "mecha.penalties";
                     }
-                });
+                    chrome.scripting.executeScript({
+                        target: { tabId: tabId }, func: () => {
+                            return (document.getElementsByClassName("group_summary").length > 0);
+                        }
+                    }, (isForumPage) => {
+                        if (isForumPage?.[0]?.result) {
+                            if (tab.url.endsWith("/forums")) {
+                                pageType = "forums (main)";
+                            } else if (tab.url.endsWith("/new")) {
+                                pageType = "new post";
+                            } else if (tab.url.includes("/discussions/")) {
+                                pageType = "forum thread";
+                            } else {
+                                pageType = "forum";
+                            }
+                        }
+                        resolve();
+                    });
+                }
             });
         });
         await handleGeniusPage(tabId);
