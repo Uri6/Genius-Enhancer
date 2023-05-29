@@ -70,7 +70,6 @@ chrome.runtime.onInstalled.addListener((details) => {
         case "update":
             // var newURL = "https://uri6.github.io/genius-enhancer/versions/";
             // chrome.tabs.create({ url: newURL });
-            // break;
             break;
     }
 });
@@ -377,12 +376,11 @@ async function handleGeniusPage(tabId) {
                             ]
                         };
 
-                        const templeateChooser = $("<div>", {
+                        const templateChooser = $("<div>", {
                             class: "ge-message-template-chooser",
                             style: "display: none;"
                         })
                             .appendTo(magicButton);
-
 
                         magicButton.on("click", () => {
                             const $formContainer = $(".square_input.conversation-message_textarea").parent();
@@ -536,36 +534,36 @@ async function handleGeniusPage(tabId) {
                             })
                         };
 
-                        const requestOptions1 = {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                type: "Post-Warning Perma",
-                                offense: "Uploading Harmful Content",
-                                postPermaStatus: "Warning"
-                            })
-                        };
-
-                        const requestOptions2 = {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                type: "Post-Warning Perma",
-                                offense: "Offensive Usernames & Avatars",
-                                postPermaStatus: "Warning",
-                                inappropriateUC: "Avatar"
-                            })
-                        };
-
-                        const requestOptions3 = {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                type: "Strikes",
-                                offense: "Mass-Downvoting",
-                                strikeStatus: "Strike 1"
-                            })
-                        };
+                        // const requestOptions1 = {
+                        //     method: "POST",
+                        //     headers: { "Content-Type": "application/json" },
+                        //     body: JSON.stringify({
+                        //         type: "Post-Warning Perma",
+                        //         offense: "Uploading Harmful Content",
+                        //         postPermaStatus: "Warning"
+                        //     })
+                        // };
+                        //
+                        // const requestOptions2 = {
+                        //     method: "POST",
+                        //     headers: { "Content-Type": "application/json" },
+                        //     body: JSON.stringify({
+                        //         type: "Post-Warning Perma",
+                        //         offense: "Offensive Usernames & Avatars",
+                        //         postPermaStatus: "Warning",
+                        //         inappropriateUC: "Avatar"
+                        //     })
+                        // };
+                        //
+                        // const requestOptions3 = {
+                        //     method: "POST",
+                        //     headers: { "Content-Type": "application/json" },
+                        //     body: JSON.stringify({
+                        //         type: "Strikes",
+                        //         offense: "Mass-Downvoting",
+                        //         strikeStatus: "Strike 1"
+                        //     })
+                        // };
 
                         fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
                             .then(response => response.text())
@@ -581,7 +579,7 @@ async function handleGeniusPage(tabId) {
                                     "&#x3D;": "="
                                 };
 
-                                return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
+                                return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match) {
                                     return entities[match];
                                 });
                             });
@@ -641,6 +639,67 @@ async function handleGeniusPage(tabId) {
     }
 }
 
+const files = [
+    {
+        type: "css",
+        file: "./src/css/content-style.css"
+    },
+    {
+        type: "css",
+        file: "./src/css/darkmode.css"
+    },
+    {
+        type: "css",
+        file: "./lib/tagify/tagify.css",
+        only: ["album"]
+    },
+    {
+        type: "css",
+        file: "./lib/dragsort/dragsort.css",
+        only: ["album"]
+    },
+    {
+        type: "css",
+        file: "./lib/quilljs/quill.snow.css"
+    },
+    {
+        type: "css",
+        file: "./lib/js-datepicker/datepicker.min.css",
+        only: ["album"]
+    },
+    {
+        type: "js",
+        file: "./lib/jquery/jquery.min.js"
+    },
+    {
+        type: "js",
+        file: "./lib/jquery/jquery-ui.min.js"
+    },
+    {
+        type: "js",
+        file: "./lib/tagify/tagify.jq.min.js",
+        only: ["album"]
+    },
+    {
+        type: "js",
+        file: "./lib/dragsort/dragsort.js",
+        only: ["album"]
+    },
+    {
+        type: "js",
+        file: "./lib/quilljs/quill.min.js"
+    },
+    {
+        type: "js",
+        file: "./lib/axios/axios.min.js"
+    },
+    {
+        type: "js",
+        file: "./lib/js-datepicker/datepicker.min.js",
+        only: ["album"]
+    }
+];
+
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     isGeniusPage = geniusAddress.some((adress) => tab.url.startsWith(adress));
     await chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
@@ -666,151 +725,113 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         return;
     }
 
-    if (changeInfo.status === "complete" && tab.url.includes("genius.com")) {
-        const files = [
-            {
-                type: "css",
-                file: "./src/css/content-style.css"
-            },
-            {
-                type: "css",
-                file: "./src/css/darkmode.css"
-            },
-            {
-                type: "css",
-                file: "./lib/tagify/tagify.css"
-            },
-            {
-                type: "css",
-                file: "./lib/dragsort/dragsort.css"
-            },
-            {
-                type: "css",
-                file: "./lib/quilljs/quill.snow.css"
-            },
-            {
-                type: "css",
-                file: "./lib/js-datepicker/datepicker.min.css"
-            },
-            {
-                type: "js",
-                file: "./lib/jquery/jquery.min.js"
-            },
-            {
-                type: "js",
-                file: "./lib/jquery/jquery-ui.min.js"
-            },
-            {
-                type: "js",
-                file: "./lib/tagify/tagify.jq.min.js"
-            },
-            {
-                type: "js",
-                file: "./lib/dragsort/dragsort.js"
-            },
-            {
-                type: "js",
-                file: "./lib/quilljs/quill.min.js"
-            },
-            {
-                type: "js",
-                file: "./lib/axios/axios.min.js"
-            },
-            {
-                type: "js",
-                file: "./lib/js-datepicker/datepicker.min.js"
-            }
-        ];
-
-        const cssFiles = files
-            .filter((f) => f.type === "css")
-            .map((f) => f.file);
-
-        const jsFiles = files
-            .filter((f) => f.type === "js")
-            .map((f) => f.file);
-
-        if (cssFiles.length) {
-            await chrome.scripting.insertCSS({
-                target: { tabId: tabId }, files: cssFiles
-            });
-        }
-
-        if (jsFiles.length) {
-            await chrome.scripting.executeScript({
-                target: { tabId: tabId }, files: jsFiles
-            });
-        }
-
-        console.info("----------------------------------------");
-        console.info("%c loaded files ", "background-color: #ad2885; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
-        console.info("time loaded: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
-        console.info("css files: ", cssFiles);
-        console.info("js files: ", jsFiles);
-
-        if (!isGeniusPage) {
-            return;
-        }
-
-        await new Promise((resolve) => {
-            chrome.scripting.executeScript({
-                target: { tabId: tabId }, func: getDetails
-            }, function(returnVal) {
-                if (returnVal !== undefined && returnVal[0].result != null) {
-                    pageObject = returnVal[0].result;
-                    pageType = pageObject.page_type;
-                }
-
-                if (!(returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown")) {
-                    resolve();
-                } else {
-                    const urlPart = tab.url.split("genius.com/")[1];
-                    if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
-                        pageType = "song";
-
-                        chrome.storage.local.get("OldSongPage", (res) => {
-                            if (res.OldSongPage) {
-                                let currentUrl = tab.url;
-                                if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
-                                    currentUrl += "?bagon=1";
-                                    chrome.tabs.update(tabId, {
-                                        url: currentUrl
-                                    });
-                                }
-                            } else if (res.OldSongPage === undefined) {
-                                console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
-                            }
-                        });
-                    } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
-                        pageType = "home";
-                    } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
-                        pageType = "firehose";
-                    } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
-                        pageType = "new song";
-                    } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
-                        pageType = "mecha.penalties";
-                    }
-                    chrome.scripting.executeScript({
-                        target: { tabId: tabId }, func: () => {
-                            return (document.getElementsByClassName("group_summary").length > 0);
-                        }
-                    }, (isForumPage) => {
-                        if (isForumPage?.[0]?.result) {
-                            if (tab.url.endsWith("/forums")) {
-                                pageType = "forums (main)";
-                            } else if (tab.url.endsWith("/new")) {
-                                pageType = "new post";
-                            } else if (tab.url.includes("/discussions/")) {
-                                pageType = "forum thread";
-                            } else {
-                                pageType = "forum";
-                            }
-                        }
-                        resolve();
-                    });
-                }
-            });
-        });
-        await handleGeniusPage(tabId);
+    if (changeInfo.status !== "complete" || !tab.url.includes("genius.com")) {
+        return;
     }
+
+    console.info("----------------------------------------");
+    console.info("%c loaded files ", "background-color: #ad2885; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
+    console.info("time loaded: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
+
+    if (!isGeniusPage) {
+        return;
+    }
+
+    async function getPageType() {
+        const returnVal = await chrome.scripting.executeScript({
+            target: { tabId: tabId }, func: getDetails
+        });
+
+        if (returnVal !== undefined && returnVal[0].result != null) {
+            pageObject = returnVal[0].result;
+            return pageObject.page_type;
+        }
+
+        if (!(returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown")) {
+            return undefined;
+        }
+
+        const urlPart = tab.url.split("genius.com/")[1];
+
+        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+            // we may not reach the end of the function by the time chrome updates. just in case!
+            pageType = "song";
+
+            chrome.storage.local.get("OldSongPage", (res) => {
+                if (res.OldSongPage) {
+                    let currentUrl = tab.url;
+                    if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
+                        currentUrl += "?bagon=1";
+                        chrome.tabs.update(tabId, {
+                            url: currentUrl
+                        });
+                    }
+                } else if (res.OldSongPage === undefined) {
+                    console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
+                }
+            });
+
+            return "song";
+        } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
+            return "home";
+        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
+            return "firehose";
+        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
+            return "new song";
+        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
+            return "mecha.penalties";
+        }
+
+        const isForumPage = await chrome.scripting.executeScript({
+            target: { tabId: tabId }, func: () => (
+                (document.getElementsByClassName("group_summary").length > 0)
+            )
+        });
+
+        if (isForumPage?.[0]?.result) {
+            if (tab.url.endsWith("/forums")) {
+                return "forums (main)";
+            } else if (tab.url.endsWith("/new")) {
+                return "new post";
+            } else if (tab.url.includes("/discussions/")) {
+                return "forum thread";
+            } else {
+                return "forum";
+            }
+        }
+    }
+
+    pageType = await getPageType();
+
+    function applicable(file) {
+        const enabled = file.only?.includes(pageType) ?? true;
+        console.debug(file, enabled);
+        return enabled;
+    }
+
+    const cssFiles = files
+        .filter((f) => f.type === "css" && applicable(f))
+        .map((f) => f.file);
+
+    const baseJsFiles = files
+        .filter((f) => f.type === "js" && applicable(f))
+        .map((f) => f.file);
+
+    console.info("css files: ", cssFiles);
+    console.info("js files: ", baseJsFiles);
+
+    // inject relevant css/js files
+    if (cssFiles.length) {
+        await chrome.scripting.insertCSS({
+            target: { tabId: tabId }, files: cssFiles
+        });
+    }
+
+    if (baseJsFiles.length) {
+        await chrome.scripting.executeScript({
+            target: { tabId: tabId }, files: baseJsFiles
+        });
+    }
+
+    await handleGeniusPage(tabId);
 });
