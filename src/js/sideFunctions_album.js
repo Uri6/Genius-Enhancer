@@ -338,7 +338,7 @@ export async function appendIcon() {
                         return `<tag
                                     title="${tagData.value}"
                                     tag-id="${tagData.id}"
-                                    full-response="${JSON.stringify(tagData.full_response)}"
+                                    full-response='${JSON.stringify(tagData.full_response)}'
                                     contenteditable="false"
                                     spellcheck="false"
                                     class="tagify__tag ${tagData.class ? tagData.class : ""}"
