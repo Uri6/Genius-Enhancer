@@ -48,12 +48,27 @@ const FORUMS_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Features" }))
     .append(createCheckbox("forums2", "Modern forums"));
 
-$("#version").text($("#version").text() + " " + chrome.runtime.getManifest().version);
+const INFO_TOOLTIP = $("<div>", {
+    id: "info-tooltip",
+    text: "Version " + chrome.runtime.getManifest().version
+});
 
-const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = false) => {
+const $infoIcon = $("svg.info-icon");
+
+$infoIcon.hover(() => {
+    INFO_TOOLTIP.appendTo($infoIcon.parent());
+}, () => {
+    INFO_TOOLTIP.remove();
+});
+
+const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = false, additionalFunc = null) => {
     const $checkbox = $(`#${checkboxId}`);
     chrome.storage.local.get([storageKey], (res) => {
         $checkbox.prop("checked", res[storageKey]);
+
+        if (additionalFunc) {
+            additionalFunc(res[storageKey]);
+        }
     });
 
     $checkbox.click(() => {
@@ -62,8 +77,20 @@ const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = 
         let updateMessageKey = messageKey.length ? messageKey : altMessageKey;
         chrome.storage.local.set({ [storageKey]: isChecked });
         messageValue ? chrome.runtime.sendMessage({ [updateMessageKey]: messageValue }) : chrome.runtime.sendMessage({ [updateMessageKey]: [isChecked] });
+
+        if (additionalFunc) {
+            additionalFunc(isChecked);
+        }
     });
 };
+
+handleCheckboxClick("extensionStatus", "extensionStatus", "", false, (isChecked) => {
+    if (isChecked) {
+        $("body").removeClass("disabled");
+    } else {
+        $("body").addClass("disabled");
+    }
+});
 
 chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     const additions = $("#optional-additions");

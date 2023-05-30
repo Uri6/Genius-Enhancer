@@ -64,6 +64,7 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "add_song_as_next": true });
             chrome.storage.local.set({ "ModernTextEditor": true });
             chrome.storage.local.set({ "forums2": true });
+            chrome.storage.local.set({ "extensionStatus": true });
             chrome.storage.local.set({ "OldSongPage": false });
             chrome.storage.local.set({ "darkMode": false });
             break;
@@ -701,9 +702,11 @@ const files = [
 ];
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    isGeniusPage = geniusAddress.some((adress) => tab.url.startsWith(adress));
-    await chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
-    url = tab.url;
+    chrome.storage.local.get("extensionStatus", async (res) => {
+        if (res.extensionStatus) {
+            isGeniusPage = geniusAddress.some((adress) => tab.url.startsWith(adress));
+            await chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
+            url = tab.url;
 
     console.info("----------------------------------------");
     console.info("%c new tab loaded ", "background-color: #fffe65; color: #000; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
@@ -834,4 +837,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 
     await handleGeniusPage(tabId);
+        }
+    });
 });
