@@ -136,8 +136,8 @@
             left: 60px;
             padding-left: 5px;
             width: 570px;
-            height: 575px;
-            max-height: 575px;
+            height: 580px;
+            max-height: 580px;
             overflow-y: auto;
             overflow-x: visible;
             border-radius: 10px;
@@ -188,6 +188,22 @@
                         cursor: pointer;
                     }
                 }
+            }
+
+            .date-input-container {
+                position: relative;
+                display: inline-block;
+
+                .tagify__tag__removeBtn {
+                    position: absolute;
+                    top: 50%;
+                    right: 5px;
+                    transform: translateY(-50%);
+                }
+            }
+
+            .ge-overwrite-info-chkbox-container {
+                margin-top: 10px;
             }
 
             .ge-textarea {

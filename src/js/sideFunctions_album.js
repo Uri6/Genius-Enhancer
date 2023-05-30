@@ -292,7 +292,7 @@ export async function appendIcon() {
             delimiters: null,
             mode: "select",
             templates: {
-                tag: function(tagData) {
+                tag: function (tagData) {
                     try {
                         return `<tag title="${tagData.value}" tag-id="${tagData.id}" contenteditable="false" spellcheck="false" class="tagify__tag ${tagData.class ? tagData.class : ""}" ${this.getAttributes(tagData)}>
                                         <div>
@@ -304,7 +304,7 @@ export async function appendIcon() {
                     }
                 },
 
-                dropdownItem: function(tagData) {
+                dropdownItem: function (tagData) {
                     try {
                         return `<div ${this.getAttributes(tagData)} class="tagify__dropdown__item ${tagData.class ? tagData.class : ""}" >
                                             <span>${tagData.value}</span>
@@ -333,7 +333,7 @@ export async function appendIcon() {
         const tagify_artist = new Tagify(artistInput[0], {
             delimiters: ",",
             templates: {
-                tag: function(tagData) {
+                tag: function (tagData) {
                     try {
                         return `<tag
                                     title="${tagData.value}"
@@ -356,17 +356,16 @@ export async function appendIcon() {
                     }
                 },
 
-                dropdownItem: function(tagData) {
+                dropdownItem: function (tagData) {
                     try {
                         return `<div
                                 ${this.getAttributes(tagData)}
                                 class="tagify__dropdown__item ${tagData.class ? tagData.class : ""}" >
-                                    ${
-                            tagData.avatar ?
-`<div class="tagify__dropdown__item__avatar-wrap">
+                                    ${tagData.avatar ?
+                                `<div class="tagify__dropdown__item__avatar-wrap">
     <img onerror="this.style.visibility='hidden'" src="${tagData.avatar}">
 </div>` : ""
-                        }
+                            }
                                     <span>${tagData.value}</span>
                             </div>`;
                     } catch (err) {
@@ -655,7 +654,7 @@ export async function appendIcon() {
             spellcheck: "false",
             "data-gramm": "false",
             on: {
-                keydown: function(e) {
+                keydown: function (e) {
                     if (e.keyCode === 13) {
                         e.preventDefault();
                         return false;
@@ -697,7 +696,7 @@ export async function appendIcon() {
         }).appendTo(leftColumn);
 
         const dateInputContainer = $("<div>", {
-            class: "input-container"
+            class: "date-input-container"
         }).appendTo(leftColumn);
 
         const datePickerInput = $("<input>", {
@@ -751,29 +750,22 @@ export async function appendIcon() {
         const clearDateButton = $("<x>", {
             class: "tagify tagify__tag__removeBtn",
             title: "Clear"
-        });
+        })
+            .appendTo(dateInputContainer);
 
         clearDateButton.on("click", () => {
             datePicker.setDate(null); // Set the selected date to null
         });
 
-        dateInputContainer.css({
-            position: "relative",
-            display: "inline-block"
-        });
-
-        datePickerInput.css({
-            paddingRight: "30px" // Adjust the padding to accommodate the clear button
-        });
-
-        clearDateButton.css({
-            position: "absolute",
-            top: "50%",
-            right: "5px",
-            transform: "translateY(-50%)"
-        });
-
-        clearDateButton.appendTo(dateInputContainer);
+        $("<div>", { // Overwrite checkbox
+            class: "ge-overwrite-info-chkbox-container",
+        })
+            .append($("<input>", { type: "checkbox", id: "ge-overwrite-release-dates", name: "ge-overwrite-release-dates", class: "chkboxm" }))
+            .append($("<label>", { for: "ge-overwrite-release-dates" })
+                .append($("<span>", { class: "chkboxmspan" }))
+                .append(" " + "Overwrite existing release dates")
+            )
+            .appendTo(leftColumn);
 
         $("<div>", {
             class: "add-media-title title",
@@ -784,7 +776,7 @@ export async function appendIcon() {
             class: "add-media rcorners ge-textarea",
             id: "ge-add-media",
             type: "text",
-            placeholder: "Youtube Playlist",
+            placeholder: "YouTube Playlist",
             spellcheck: "false",
             "data-gramm": "false"
         }).appendTo(leftColumn);
@@ -885,7 +877,7 @@ export async function appendIcon() {
                 if (response === undefined) {
                     // TODO: don't use an error for control flow here
                     // (bad practice)
-                    throw new Error("Invalid Youtube Playlist URL");
+                    throw new Error("Invalid YouTube Playlist URL");
                 }
 
                 const numOfSongs = Array.from(
@@ -916,7 +908,7 @@ export async function appendIcon() {
                 // add the error class to the input
                 addMediaInput.addClass("error");
                 // add a tooltip to the input
-                addMediaInput.attr("title", "Invalid Youtube Playlist URL");
+                addMediaInput.attr("title", "Invalid YouTube Playlist URL");
                 // clear the details
                 $(".add-media.details.title").text("");
                 $(".add-media.details.title").attr("title", "");
@@ -927,6 +919,16 @@ export async function appendIcon() {
             }
         });
 
+        $("<div>", { // Overwrite checkbox
+            class: "ge-overwrite-info-chkbox-container",
+        })
+            .append($("<input>", { type: "checkbox", id: "ge-overwrite-yt-links", name: "ge-overwrite-yt-links", class: "chkboxm" }))
+            .append($("<label>", { for: "ge-overwrite-yt-links" })
+                .append($("<span>", { class: "chkboxmspan" }))
+                .append(" " + "Overwrite existing YouTube links")
+            )
+            .appendTo(leftColumn);
+
         const saveButton = $("<input>")
             .addClass("ge-save-button rcorners")
             .attr({
@@ -934,7 +936,7 @@ export async function appendIcon() {
                 "readonly": "readonly",
                 "title": "Alt + S"
             })
-            .on("mousedown", function(event) {
+            .on("mousedown", function (event) {
                 event.preventDefault();
             })
             .on("click", function() {
@@ -997,7 +999,7 @@ export async function appendIcon() {
             }
         });
 
-        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function(_, o) {
+        const tagify_tagsWhitelist = $("datalist#tagsList option").map(function (_, o) {
             let searchByStr;
 
             switch (o.innerText) {
@@ -1015,7 +1017,7 @@ export async function appendIcon() {
         const tagify_tags = new Tagify(document.getElementById("ge-add-tags"), {
             delimiters: ",",
             templates: {
-                tag: function(tagData) {
+                tag: function (tagData) {
                     try {
                         return `<tag title="${tagData.value}" tag-id="${tagData.id}" contenteditable="false" spellcheck="false" class="tagify__tag ${tagData.class ? tagData.class : ""}" ${this.getAttributes(tagData)}>
                                 <x title="remove tag" class="tagify__tag__removeBtn"></x>
@@ -1028,7 +1030,7 @@ export async function appendIcon() {
                     }
                 },
 
-                dropdownItem: function(tagData) {
+                dropdownItem: function (tagData) {
                     try {
                         return `<div ${this.getAttributes(tagData)} class="tagify__dropdown__item ${tagData.class ? tagData.class : ""}" >
                                     <span>${tagData.value}</span>
@@ -1199,6 +1201,9 @@ export async function saveEverything() {
     const youtubeLinks = $(".add-media.details.videos-links").text().split(" ");
     const releaseDate = $(".set-release-date").val().split("/");
 
+    const overwriteReleaseDates = $(".extension-box .ge-overwrite-info-chkbox-container input#ge-overwrite-release-dates").is(":checked");
+    const overwriteYoutubeVideos = $(".extension-box .ge-overwrite-info-chkbox-container input#ge-overwrite-yt-links").is(":checked");
+
     const tags = $(".extension-box .add-tags tag")
         ?.toArray()
         .map(tag => ({
@@ -1238,17 +1243,23 @@ export async function saveEverything() {
                 ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
                 ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id }))
             ],
-            youtube_url: song.youtube_url || songDetails.youtube_url,
             custom_performances: [
                 ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
                 ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists }))
-            ],
-            release_date_components: releaseDate.length === 3 ? {
+            ]
+        };
+
+        if ((!songDetails.release_date_components || overwriteReleaseDates) && releaseDate.length === 3) {
+            params.release_date_components = {
                 day: releaseDate[0],
                 month: releaseDate[1],
                 year: releaseDate[2]
-            } : undefined
-        };
+            };
+        }
+
+        if ((!songDetails.youtube_url || overwriteYoutubeVideos) && song.youtube_url) {
+            params.youtube_url = song.youtube_url;
+        }
 
         gapi.put(`https://genius.com/api${song.song.api_path}`, {
             text_format: "html,markdown",
