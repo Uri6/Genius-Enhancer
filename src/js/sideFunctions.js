@@ -44,7 +44,7 @@ export function insertAfter(newNode, existingNode) {
  * Extracts metadata from the current page's HTML and returns it as a parsed JSON object
  * Was originally written by @wnull (@wine in Genius.com)
  *
- * @returns {object} The parsed metadata object
+ * @returns The parsed metadata object
  */
 export function getDetails() {
     // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
@@ -177,7 +177,7 @@ export function identifyPageType() {
                                     // If the pageType is still "unknown", it has to be a forum page
                                     if (
                                         pageType === "unknown" ||
-                                        pageTpye === undefined
+                                        pageType === undefined
                                     ) {
                                         pageType = "forum";
                                     }

@@ -36,7 +36,7 @@ async function executeFirehoseScript(tabId) {
          * @inner
          */
         function updateCheckboxes() {
-            $("fieldset input[type='checkbox']").each(function () {
+            $("fieldset input[type='checkbox']").each(function() {
                 // If the checkbox is already a custom checkbox, skip it
                 if ($(this).hasClass("chkboxm")) {
                     return;
@@ -60,7 +60,7 @@ async function executeFirehoseScript(tabId) {
          * @inner
          */
         function removeEmptyLabels() {
-            $("fieldset label").each(function () {
+            $("fieldset label").each(function() {
                 if (!$(this).children().length) {
                     $(this).remove();
                 }

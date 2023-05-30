@@ -10,31 +10,16 @@ export async function handlePenalties(tabId) {
         {
             target: { tabId: tabId },
             func: () => {
-                const noManualPenalties = `<tr><td colspan="7" style="text-align: center;">No manual penalties on this page.</td></tr>`
-
                 function iterNodesBySelector(selector, cb) {
                     for (const node of document.querySelectorAll(selector)) {
                         cb(node);
                     }
                 }
 
-                const condense = document.createElement("button", {
-                    class: "button keep",
-                });
-
-                condense.onclick = () => {
-                    iterNodesBySelector(".is-empty", (table) => table.parentElement.remove());
-                };
-
-                condense.innerText = "Hide Empty Pages";
-
-                document.getElementById("container").appendChild(condense);
-
                 const noteEmptyTables = () =>
                     iterNodesBySelector("tbody", (table) => {
                         if (table.children.length === 0) {
-                            table.classList.add("is-empty");
-                            table.innerHTML = noManualPenalties;
+                            table.remove();
                         }
                     });
 

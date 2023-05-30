@@ -93,7 +93,7 @@ export async function handleHome(tabId) {
                 });
 
                 // Revert the image to the original position when the mouse leaves the thumbnail (.jHQizl .kMmimq)
-                $(".jHQizl .kMmimq").on("mouseleave", function () {
+                $(".jHQizl .kMmimq").on("mouseleave", function() {
                     $(this).find(".SizedImage__Container-sc-1hyeaua-0").css({
                         "transform": "translate(0px, 0px)"
                     });

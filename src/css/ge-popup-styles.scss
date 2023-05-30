@@ -12,8 +12,31 @@ $grey: #6e6e6e;
     src: url("https://assets.genius.com/fonts/programme_bold.woff2") format("woff2");
 }
 
+@keyframes jump {
+    0% {
+        transform: translate(0%, -90%);
+    }
+
+    65% {
+        transform: translate(0%, -110%);
+    }
+
+    87% {
+        transform: translate(0%, -90%);
+    }
+
+    100% {
+        transform: translate(0%, -70%);
+        background-color: green;
+    }
+}
+
+:root {
+    --button-size: 30px;
+}
+
 body {
-    background-color: #fffe65;
+    background: #fffe65;
     width: 250px;
     border-radius: 20px;
     font-family: "Programme";
@@ -22,6 +45,12 @@ body {
     -ms-user-select: none;
     user-select: none;
     -o-user-select: none;
+    transition: all 0.2s ease-in-out;
+
+    &.disabled {
+        background: #949494;
+        filter: grayscale(70%);
+    }
 }
 
 .center-text {
@@ -34,11 +63,138 @@ body {
     text-transform: uppercase;
 }
 
-.subhead {
-    color: #17a05e;
-    margin-bottom: -0.05em;
-    text-transform: uppercase;
-    display: block;
+.icons-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    padding-top: 10px;
+    gap: 10px;
+
+    input#extensionStatus {
+        display: none;
+    }
+
+    label[for="extensionStatus"] {
+        height: var(--button-size);
+        aspect-ratio: 1/1;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        svg {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: var(--button-size);
+            transform: translate(5%, 0);
+            transform: rotateZ(-56deg);
+            border-radius: 50%;
+        }
+    }
+
+    circle {
+        width: 80%;
+        transform: translate(15%, 15%);
+        fill: none;
+        stroke-width: 8%;
+        stroke-dasharray: 220%;
+        transition: 0.45s;
+    }
+
+    .disabled-svg>circle {
+        stroke-dashoffset: 40%;
+        stroke: red;
+    }
+
+    .enabled-svg>circle {
+        stroke-dashoffset: 220%;
+        stroke: green;
+    }
+
+    .rect {
+        position: absolute;
+        height: 40%;
+        width: 10%;
+        transform: translate(0%, -70%);
+        background-color: red;
+        z-index: 3;
+        border-radius: 70%;
+        box-shadow: none;
+    }
+
+    #extensionStatus:checked~* {
+        .disabled-svg>circle {
+            stroke-dashoffset: 40%;
+        }
+
+        .enabled-svg>circle {
+            stroke-dashoffset: 40%;
+            transition: filter 0.05s ease-in 0.15s, stroke-dashoffset 0.1s ease-in-out;
+        }
+
+        .rotate-svg {
+            transition: transform 0.1s ease-in-out;
+            transform: rotateZ(-56deg);
+        }
+
+        .rect {
+            animation: jump 0.3s ease-in-out forwards;
+        }
+    }
+
+    .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        vertical-align: middle;
+        height: var(--button-size);
+        aspect-ratio: 1/1;
+        transform: translate(0%, 0%);
+        transition: transform 0.1s ease-in-out;
+
+        circle {
+            stroke: #6e6e6e;
+        }
+
+        text {
+            fill: #6e6e6e;
+            font-size: 16px;
+        }
+
+        path {
+            height: var(--button-size);
+            aspect-ratio: 1/1;
+            transform: translate(10%, 10%);
+        }
+
+        g {
+            transform: translate(-5%, -5%) scale(0.9)
+        }
+
+        &.info-icon {
+            cursor: help;
+        }
+    }
+
+    #info-tooltip {
+        position: absolute;
+        top: 13%;
+        left: 42.5%;
+        transform: translate(-50%, 5px);
+        width: fit-content;
+        padding: 7.5px;
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #000;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+    }
 }
 
 #features {
@@ -67,16 +223,11 @@ body {
     font-size: 12px;
     display: block;
     float: right;
+    padding-bottom: 5px;
 }
 
-#report {
-    color: #d14140;
-    font-weight: bold;
-    font-size: 12px;
-    text-align: left;
-}
-
-#features-box, #no-features-box {
+#features-box,
+#no-features-box {
     outline-color: $blue;
 
     &#features-box {

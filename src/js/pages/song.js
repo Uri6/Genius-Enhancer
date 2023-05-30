@@ -158,7 +158,7 @@ export async function handleSongPage(tabId) {
                             }))
                             .appendTo(artworkInputContainer);
 
-                        /*magicWandContainer.on("click", async function () {
+                        /*magicWandContainer.on("click", async function() {
                             let artwork = await new Promise((resolve) => {
                                 chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "song", false] }, (response) => {
                                     resolve(response);
