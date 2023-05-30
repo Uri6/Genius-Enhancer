@@ -6,7 +6,13 @@
  */
 
 import {
-    fixNonLatin, getDetails, getArtistsList, getCreditsList, identifyPageType, replaceTextarea, removeQuill
+    fixNonLatin,
+    getDetails,
+    getArtistsList,
+    getCreditsList,
+    identifyPageType,
+    replaceTextarea,
+    removeQuill
 } from "./src/js/sideFunctions.js";
 import {
     missingInfo,
@@ -18,10 +24,15 @@ import {
     addSongAsNext
 } from "./src/js/sideFunctions_album.js";
 import {
-    appleMusicPopUp, spotifyPopUp, song_modernTextEditor, searchVideo, appendFollowButton
+    appleMusicPopUp,
+    spotifyPopUp,
+    song_modernTextEditor,
+    searchVideo,
+    appendFollowButton
 } from "./src/js/sideFunctions_song.js";
 import {
-    replaceButtons, forums_modernTextEditor
+    replaceButtons,
+    forums_modernTextEditor
 } from "./src/js/sideFunctions_forum.js";
 import { handleSongPage } from "./src/js/pages/song.js";
 import { handleFirehose } from "./src/js/pages/firehose.js";
@@ -309,282 +320,224 @@ async function handleGeniusPage(tabId) {
                         });
 
                         const $buttonsRow = $target.find("form>.u-bottom_margin:has(span)");
-                        const svgIcon = chrome.runtime.getURL("/src/images/magicWand/colorful.svg");
-                        const magicButton = $("<span>", {
-                            class: "text_label text_label--no_margin u-small_horizontal_margins text_label--purple text_label--button"
-                        })
-                            .append($("<img>", {
-                                src: svgIcon
-                            }))
-                            .appendTo($buttonsRow);
 
-                        const templates = {
-                            "Strikes": {
-                                "offense": [
-                                    "Mass-Downvoting",
-                                    "Harassment",
-                                    "Hate Speech",
-                                    "Trolling",
-                                    "Spamming",
-                                    "Derailing or Hijacking",
-                                    "Creating Alternate Accounts",
-                                    "Advertisements, Leaks, or Illegal Content",
-                                    "Improperly Sourcing Snippets",
-                                    "Shitposting"
-                                ],
-                                "strikeStatus": [
-                                    "Warning",
-                                    "Strike 1",
-                                    "Strike 2",
-                                    "Ban"
-                                ]
-                            },
-                            "Post-Warning Perma": {
-                                "offense": [
-                                    "Uploading Harmful Content",
-                                    "IQ Gaming",
-                                    "Inappropriate & Trolling Annotations",
-                                    "Plagiarism",
-                                    "Song Page Self-Promotion",
-                                    "Account Sharing",
-                                    "Offensive Usernames & Avatars",
-                                    "Uploading Leaks"
-                                ],
-                                "postPermaStatus": [
-                                    "Warning",
-                                    "Ban"
-                                ]
-                            },
-                            "Immediate Perma": {
-                                "offense": [
-                                    "Pageview Boosting",
-                                    "Song Page Tampering",
-                                    "Song Page Spamming",
-                                    "Sharing Private Information & Phishing",
-                                    "NSFW Content",
-                                    "Subversive Alternate Account Creation",
-                                    "Severe Harassment",
-                                    "Impersonating an Artist"
-                                ]
-                            }
-                        };
-
-                        const additionalOptions = {
-                            "Offensive Profile Content": [
-                                "Avatar",
-                                "Username",
-                                "Bio"
-                            ]
-                        };
-
-                        const templateChooser = $("<div>", {
-                            class: "ge-message-template-chooser",
-                            style: "display: none;"
-                        })
-                            .appendTo(magicButton);
-
-                        magicButton.on("click", () => {
-                            const $formContainer = $(".square_input.conversation-message_textarea").parent();
-                            $formContainer.find("#punishmentForm").remove();
-
-                            const $form = $("<form>", {
-                                id: "punishmentForm",
-                                style: "display: flex; flex-direction: column; gap: 10px;"
-                            }).insertBefore($(".square_input.conversation-message_textarea"));
-
-                            const $typeSelect = $("<select>", {
-                                id: "typeSelect",
-                                html: "<option selected hidden>Choose Punishment Type</option>"
-                            }).appendTo($form);
-
-                            Object.keys(templates).forEach(type => {
-                                $typeSelect.append(new Option(type, type));
-                            });
-
-                            const $offenseSelect = $("<select>", {
-                                id: "offenseSelect",
-                                style: "display: none;",
-                                html: "<option selected hidden>Choose Offense</option>"
-                            }).appendTo($form);
-
-                            const $statusSelect = $("<select>", {
-                                id: "statusSelect",
-                                style: "display: none;",
-                                html: "<option selected hidden>Choose Status</option>"
-                            }).appendTo($form);
-
-                            const $additionalSelect = $("<select>", {
-                                id: "additionalSelect",
-                                style: "display: none;",
-                                html: "<option selected hidden>Choose Offensive Content</option>"
-                            }).appendTo($form);
-
-                            const $plagiarismInput = $("<input>", {
-                                id: "plagiarismSource",
-                                type: "text",
-                                placeholder: "Enter Plagiarism Source",
-                                style: "display: none;"
-                            }).appendTo($form);
-
-                            const $submitBtn = $("<input>", {
-                                type: "submit",
-                                value: "Generate"
-                            }).appendTo($form);
-
-                            $typeSelect.change(() => {
-                                const selectedType = $typeSelect.val();
-                                $offenseSelect.empty().append("<option selected hidden>Choose Offense</option>");
-                                templates[selectedType].offense.forEach(offense => {
-                                    $offenseSelect.append(new Option(offense, offense));
-                                });
-                                $offenseSelect.show();
-                            });
-
-                            $offenseSelect.change(() => {
-                                const selectedType = $typeSelect.val();
-                                const selectedOffense = $offenseSelect.val();
-                                if (templates[selectedType].hasOwnProperty("strikeStatus") || templates[selectedType].hasOwnProperty("postPermaStatus")) {
-                                    const statusOptions = templates[selectedType].hasOwnProperty("strikeStatus") ? templates[selectedType].strikeStatus : templates[selectedType].postPermaStatus;
-                                    $statusSelect.empty().append("<option selected hidden>Choose Status</option>");
-                                    statusOptions.forEach(status => {
-                                        $statusSelect.append(new Option(status, status));
-                                    });
-                                    $statusSelect.show();
-                                }
-
-                                if (selectedType === "Post-Warning Perma" && selectedOffense === "Offensive Usernames & Avatars") {
-                                    $additionalSelect.empty().append("<option selected hidden>Choose Offensive Content</option>");
-                                    additionalOptions["Offensive Profile Content"].forEach(option => {
-                                        $additionalSelect.append(new Option(option, option));
-                                    });
-                                    $additionalSelect.show();
-                                } else {
-                                    $additionalSelect.hide();
-                                }
-
-                                if (selectedType === "Post-Warning Perma" && selectedOffense === "Plagiarism") {
-                                    $plagiarismInput.show();
-                                } else {
-                                    $plagiarismInput.hide();
-                                }
-                            });
-
-                            $form.submit((event) => {
-                                event.preventDefault();
-
-                                let payload = {
-                                    type: $typeSelect.val(),
-                                    offense: $offenseSelect.val()
-                                };
-
-                                const selectedType = $typeSelect.val();
-                                if (templates[selectedType].hasOwnProperty("strikeStatus")) {
-                                    payload["strikeStatus"] = $statusSelect.val();
-                                }
-                                if (templates[selectedType].hasOwnProperty("postPermaStatus")) {
-                                    payload["postPermaStatus"] = $statusSelect.val();
-                                }
-                                if (selectedType === "Post-Warning Perma" && payload.offense === "Offensive Usernames & Avatars") {
-                                    payload["inappropriateUC"] = $additionalSelect.val();
-                                }
-                                if (selectedType === "Post-Warning Perma" && payload.offense === "Plagiarism") {
-                                    payload["plagiarismSource"] = $plagiarismInput.val();
-                                }
-
-                                const requestOptions = {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify(payload)
-                                };
-
-                                fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
-                                    .then(response => response.text())
-                                    .then(result => {
-                                        const entities = {
-                                            "&amp;": "&",
-                                            "&lt;": "<",
-                                            "&gt;": ">",
-                                            "&quot;": "\"",
-                                            "&#39;": "'",
-                                            "&#x2F;": "/",
-                                            "&#x60;": "`",
-                                            "&#x3D;": "="
-                                        };
-
-                                        return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
-                                            return entities[match];
-                                        });
-                                    })
-                                    .then(cleanedResult => {
-                                        $(".square_input.conversation-message_textarea").val(cleanedResult);
-                                        const event = new Event("change", { bubbles: true });
-                                        $(".square_input.conversation-message_textarea")[0].dispatchEvent(event);
-
-                                        $form.remove();
-                                    });
-                            });
-                        });
-
-                        // API Calls Examples
-                        const requestOptions = {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                type: "Immediate Perma",
-                                offense: "Pageview Boosting"
+                        if ($buttonsRow.length > 0 && $buttonsRow.find(".ge-magic-button").length === 0) {
+                            const svgIcon = chrome.runtime.getURL("/src/images/magicWand/colorful.svg");
+                            const magicButton = $("<span>", {
+                                class: "text_label text_label--no_margin u-small_horizontal_margins text_label--purple text_label--button ge-magic-button"
                             })
-                        };
+                                .append($("<img>", {
+                                    src: svgIcon
+                                }))
+                                .appendTo($buttonsRow);
 
-                        // const requestOptions1 = {
-                        //     method: "POST",
-                        //     headers: { "Content-Type": "application/json" },
-                        //     body: JSON.stringify({
-                        //         type: "Post-Warning Perma",
-                        //         offense: "Uploading Harmful Content",
-                        //         postPermaStatus: "Warning"
-                        //     })
-                        // };
-                        //
-                        // const requestOptions2 = {
-                        //     method: "POST",
-                        //     headers: { "Content-Type": "application/json" },
-                        //     body: JSON.stringify({
-                        //         type: "Post-Warning Perma",
-                        //         offense: "Offensive Usernames & Avatars",
-                        //         postPermaStatus: "Warning",
-                        //         inappropriateUC: "Avatar"
-                        //     })
-                        // };
-                        //
-                        // const requestOptions3 = {
-                        //     method: "POST",
-                        //     headers: { "Content-Type": "application/json" },
-                        //     body: JSON.stringify({
-                        //         type: "Strikes",
-                        //         offense: "Mass-Downvoting",
-                        //         strikeStatus: "Strike 1"
-                        //     })
-                        // };
+                            const templates = {
+                                "Strikes": {
+                                    "offense": [
+                                        "Mass-Downvoting",
+                                        "Harassment",
+                                        "Hate Speech",
+                                        "Trolling",
+                                        "Spamming",
+                                        "Derailing or Hijacking",
+                                        "Creating Alternate Accounts",
+                                        "Advertisements, Leaks, or Illegal Content",
+                                        "Improperly Sourcing Snippets",
+                                        "Shitposting"
+                                    ],
+                                    "strikeStatus": [
+                                        "Warning",
+                                        "Strike 1",
+                                        "Strike 2",
+                                        "Ban"
+                                    ]
+                                },
+                                "Post-Warning Perma": {
+                                    "offense": [
+                                        "Uploading Harmful Content",
+                                        "IQ Gaming",
+                                        "Inappropriate & Trolling Annotations",
+                                        "Plagiarism",
+                                        "Song Page Self-Promotion",
+                                        "Account Sharing",
+                                        "Offensive Usernames & Avatars",
+                                        "Uploading Leaks"
+                                    ],
+                                    "postPermaStatus": [
+                                        "Warning",
+                                        "Ban"
+                                    ]
+                                },
+                                "Immediate Perma": {
+                                    "offense": [
+                                        "Pageview Boosting",
+                                        "Song Page Tampering",
+                                        "Song Page Spamming",
+                                        "Sharing Private Information & Phishing",
+                                        "NSFW Content",
+                                        "Subversive Alternate Account Creation",
+                                        "Severe Harassment",
+                                        "Impersonating an Artist"
+                                    ]
+                                }
+                            };
 
-                        fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
-                            .then(response => response.text())
-                            .then(result => {
-                                const entities = {
-                                    "&amp;": "&",
-                                    "&lt;": "<",
-                                    "&gt;": ">",
-                                    "&quot;": "\"",
-                                    "&#39;": "'",
-                                    "&#x2F;": "/",
-                                    "&#x60;": "`",
-                                    "&#x3D;": "="
-                                };
+                            const additionalOptions = {
+                                "Offensive Profile Content": [
+                                    "Avatar",
+                                    "Username",
+                                    "Bio"
+                                ]
+                            };
 
-                                return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match) {
-                                    return entities[match];
+                            const templateChooser = $("<div>", {
+                                class: "ge-message-template-chooser",
+                                style: "display: none;"
+                            })
+                                .appendTo(magicButton);
+
+
+                            magicButton.on("click", () => {
+                                const $formContainer = $(".square_input.conversation-message_textarea").parent();
+                                $formContainer.find("#punishmentForm").remove();
+
+                                const $form = $("<form>", {
+                                    id: "punishmentForm",
+                                }).insertBefore($(".square_input.conversation-message_textarea"));
+
+                                const $typeSelect = $("<select>", {
+                                    id: "typeSelect",
+                                    html: "<option selected hidden>Choose Punishment Type</option>"
+                                }).appendTo($form);
+
+                                Object.keys(templates).forEach(type => {
+                                    $typeSelect.append(new Option(type, type));
+                                });
+
+                                const $offenseSelect = $("<select>", {
+                                    id: "offenseSelect",
+                                    style: "display: none;",
+                                    html: "<option selected hidden>Choose Offense</option>"
+                                }).appendTo($form);
+
+                                const $statusSelect = $("<select>", {
+                                    id: "statusSelect",
+                                    style: "display: none;",
+                                    html: "<option selected hidden>Choose Status</option>"
+                                }).appendTo($form);
+
+                                const $additionalSelect = $("<select>", {
+                                    id: "additionalSelect",
+                                    style: "display: none;",
+                                    html: "<option selected hidden>Choose Offensive Content</option>"
+                                }).appendTo($form);
+
+                                const $plagiarismInput = $("<input>", {
+                                    id: "plagiarismSource",
+                                    type: "text",
+                                    placeholder: "Enter Plagiarism Source",
+                                    style: "display: none;"
+                                }).appendTo($form);
+
+                                $("<input>", {
+                                    type: "submit",
+                                    value: "Generate"
+                                }).appendTo($form);
+
+                                $typeSelect.change(() => {
+                                    const selectedType = $typeSelect.val();
+                                    $offenseSelect.empty().append("<option selected hidden>Choose Offense</option>");
+                                    templates[selectedType].offense.forEach(offense => {
+                                        $offenseSelect.append(new Option(offense, offense));
+                                    });
+                                    $offenseSelect.show();
+                                });
+
+                                $offenseSelect.change(() => {
+                                    const selectedType = $typeSelect.val();
+                                    const selectedOffense = $offenseSelect.val();
+                                    if (templates[selectedType].hasOwnProperty("strikeStatus") || templates[selectedType].hasOwnProperty("postPermaStatus")) {
+                                        const statusOptions = templates[selectedType].hasOwnProperty("strikeStatus") ? templates[selectedType].strikeStatus : templates[selectedType].postPermaStatus;
+                                        $statusSelect.empty().append("<option selected hidden>Choose Status</option>");
+                                        statusOptions.forEach(status => {
+                                            $statusSelect.append(new Option(status, status));
+                                        });
+                                        $statusSelect.show();
+                                    }
+
+                                    if (selectedType === "Post-Warning Perma" && selectedOffense === "Offensive Usernames & Avatars") {
+                                        $additionalSelect.empty().append("<option selected hidden>Choose Offensive Content</option>");
+                                        additionalOptions["Offensive Profile Content"].forEach(option => {
+                                            $additionalSelect.append(new Option(option, option));
+                                        });
+                                        $additionalSelect.show();
+                                    } else {
+                                        $additionalSelect.hide();
+                                    }
+
+                                    if (selectedType === "Post-Warning Perma" && selectedOffense === "Plagiarism") {
+                                        $plagiarismInput.show();
+                                    } else {
+                                        $plagiarismInput.hide();
+                                    }
+                                });
+
+                                $form.submit((event) => {
+                                    event.preventDefault();
+
+                                    let payload = {
+                                        type: $typeSelect.val(),
+                                        offense: $offenseSelect.val()
+                                    };
+
+                                    const selectedType = $typeSelect.val();
+                                    if (templates[selectedType].hasOwnProperty("strikeStatus")) {
+                                        payload["strikeStatus"] = $statusSelect.val();
+                                    }
+                                    if (templates[selectedType].hasOwnProperty("postPermaStatus")) {
+                                        payload["postPermaStatus"] = $statusSelect.val();
+                                    }
+                                    if (selectedType === "Post-Warning Perma" && payload.offense === "Offensive Usernames & Avatars") {
+                                        payload["inappropriateUC"] = $additionalSelect.val();
+                                    }
+                                    if (selectedType === "Post-Warning Perma" && payload.offense === "Plagiarism") {
+                                        payload["plagiarismSource"] = $plagiarismInput.val();
+                                    }
+
+                                    const requestOptions = {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify(payload)
+                                    };
+
+                                    fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            const entities = {
+                                                "&amp;": "&",
+                                                "&lt;": "<",
+                                                "&gt;": ">",
+                                                "&quot;": "\"",
+                                                "&#39;": "'",
+                                                "&#x2F;": "/",
+                                                "&#x60;": "`",
+                                                "&#x3D;": "="
+                                            };
+
+                                            return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function (match, entity) {
+                                                return entities[match];
+                                            });
+                                        })
+                                        .then(cleanedResult => {
+                                            $(".square_input.conversation-message_textarea").val(cleanedResult);
+                                            const event = new Event("change", { bubbles: true });
+                                            $(".square_input.conversation-message_textarea")[0].dispatchEvent(event);
+
+                                            $form.remove();
+                                        });
                                 });
                             });
-                        // Insert your template into the textarea
+                        }
                     }
                 }, 1);
             });
@@ -708,135 +661,136 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             await chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
             url = tab.url;
 
-    console.info("----------------------------------------");
-    console.info("%c new tab loaded ", "background-color: #fffe65; color: #000; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
-    console.info("time loaded: " + new Date().toLocaleTimeString("en-US", { hour12: false }));
-    console.info("tab id: " + tabId);
-    console.info("changeInfo: " + changeInfo.status);
-    console.info("tab: " + tab.title + ", " + tab.url);
-    console.info("isGeniusPage: " + isGeniusPage);
+            console.info("----------------------------------------");
+            console.info("%c new tab loaded ", "background-color: #fffe65; color: #000; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
+            console.info("time loaded: " + new Date().toLocaleTimeString("en-US", { hour12: false }));
+            console.info("tab id: " + tabId);
+            console.info("changeInfo: " + changeInfo.status);
+            console.info("tab: " + tab.title + ", " + tab.url);
+            console.info("isGeniusPage: " + isGeniusPage);
 
-    await chrome.storage.local.set({ "album_artwork_results": "" });
-    pageType = "unknown";
+            await chrome.storage.local.set({ "album_artwork_results": "" });
+            pageType = "unknown";
 
-    const prohibitedDomains = ["promote.genius.com", "support.genius.com", "docs.genius.com", "homestudio.genius.com", "genius.com/developers", "genius.com/api-clients", "api.genius.com"];
+            const prohibitedDomains = ["promote.genius.com", "support.genius.com", "docs.genius.com", "homestudio.genius.com", "genius.com/developers", "genius.com/api-clients", "api.genius.com"];
 
-    const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
-    const protocolAndDomainMatch = tab.url.match(protocolAndDomainRegex);
+            const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
+            const protocolAndDomainMatch = tab.url.match(protocolAndDomainRegex);
 
-    if (protocolAndDomainMatch !== null && prohibitedDomains.includes(protocolAndDomainMatch[1])) {
-        return;
-    }
-
-    if (changeInfo.status !== "complete" || !tab.url.includes("genius.com")) {
-        return;
-    }
-
-    console.info("----------------------------------------");
-    console.info("%c loaded files ", "background-color: #ad2885; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
-    console.info("time loaded: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
-
-    if (!isGeniusPage) {
-        return;
-    }
-
-    async function getPageType() {
-        const returnVal = await chrome.scripting.executeScript({
-            target: { tabId: tabId }, func: getDetails
-        });
-
-        if (returnVal !== undefined && returnVal[0].result != null) {
-            pageObject = returnVal[0].result;
-            return pageObject.page_type;
-        }
-
-        if (!(returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown")) {
-            return undefined;
-        }
-
-        const urlPart = tab.url.split("genius.com/")[1];
-
-        if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
-            // we may not reach the end of the function by the time chrome updates. just in case!
-            pageType = "song";
-
-            chrome.storage.local.get("OldSongPage", (res) => {
-                if (res.OldSongPage) {
-                    let currentUrl = tab.url;
-                    if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
-                        currentUrl += "?bagon=1";
-                        chrome.tabs.update(tabId, {
-                            url: currentUrl
-                        });
-                    }
-                } else if (res.OldSongPage === undefined) {
-                    console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
-                }
-            });
-
-            return "song";
-        } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
-            return "home";
-        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
-            return "firehose";
-        } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
-            return "new song";
-        } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
-            return "mecha.penalties";
-        }
-
-        const isForumPage = await chrome.scripting.executeScript({
-            target: { tabId: tabId }, func: () => (
-                (document.getElementsByClassName("group_summary").length > 0)
-            )
-        });
-
-        if (isForumPage?.[0]?.result) {
-            if (tab.url.endsWith("/forums")) {
-                return "forums (main)";
-            } else if (tab.url.endsWith("/new")) {
-                return "new post";
-            } else if (tab.url.includes("/discussions/")) {
-                return "forum thread";
-            } else {
-                return "forum";
+            if (protocolAndDomainMatch !== null && prohibitedDomains.includes(protocolAndDomainMatch[1])) {
+                return;
             }
-        }
-    }
 
-    pageType = await getPageType();
+            if (changeInfo.status !== "complete" || !tab.url.includes("genius.com")) {
+                return;
+            }
 
-    function applicable(file) {
-        const enabled = file.only?.includes(pageType) ?? true;
-        console.debug(file, enabled);
-        return enabled;
-    }
+            console.info("----------------------------------------");
+            console.info("%c loaded files ", "background-color: #ad2885; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
+            console.info("time loaded: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
 
-    const cssFiles = files
-        .filter((f) => f.type === "css" && applicable(f))
-        .map((f) => f.file);
+            if (!isGeniusPage) {
+                return;
+            }
 
-    const baseJsFiles = files
-        .filter((f) => f.type === "js" && applicable(f))
-        .map((f) => f.file);
+            async function getPageType() {
+                const returnVal = await chrome.scripting.executeScript({
+                    target: { tabId: tabId }, func: getDetails
+                });
 
-    console.info("css files: ", cssFiles);
-    console.info("js files: ", baseJsFiles);
+                if (returnVal !== undefined && returnVal[0].result != null) {
+                    pageObject = returnVal[0].result;
+                    return pageObject.page_type;
+                }
 
-    // inject relevant css/js files
-    if (cssFiles.length) {
-        await chrome.scripting.insertCSS({
-            target: { tabId: tabId }, files: cssFiles
-        });
-    }
+                if (!(returnVal === undefined || returnVal[0].result == null || pageType === undefined || pageType === "unknown")) {
+                    return undefined;
+                }
 
-    if (baseJsFiles.length) {
-        await chrome.scripting.executeScript({
-            target: { tabId: tabId }, files: baseJsFiles
-        });
-    }
+                const urlPart = tab.url.split("genius.com/")[1];
 
-    await handleGeniusPage(tabId);
+                if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                    // we may not reach the end of the function by the time chrome updates. just in case!
+                    pageType = "song";
+
+                    chrome.storage.local.get("OldSongPage", (res) => {
+                        if (res.OldSongPage) {
+                            let currentUrl = tab.url;
+                            if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
+                                currentUrl += "?bagon=1";
+                                chrome.tabs.update(tabId, {
+                                    url: currentUrl
+                                });
+                            }
+                        } else if (res.OldSongPage === undefined) {
+                            console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
+                        }
+                    });
+
+                    return "song";
+                } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
+                    return "home";
+                } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
+                    return "firehose";
+                } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
+                    return "new song";
+                } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
+                    return "mecha.penalties";
+                }
+
+                const isForumPage = await chrome.scripting.executeScript({
+                    target: { tabId: tabId }, func: () => (
+                        (document.getElementsByClassName("group_summary").length > 0)
+                    )
+                });
+
+                if (isForumPage?.[0]?.result) {
+                    if (tab.url.endsWith("/forums")) {
+                        return "forums (main)";
+                    } else if (tab.url.endsWith("/new")) {
+                        return "new post";
+                    } else if (tab.url.includes("/discussions/")) {
+                        return "forum thread";
+                    } else {
+                        return "forum";
+                    }
+                }
+            }
+
+            pageType = await getPageType();
+
+            function applicable(file) {
+                const enabled = file.only?.includes(pageType) ?? true;
+                console.debug(file, enabled);
+                return enabled;
+            }
+
+            const cssFiles = files
+                .filter((f) => f.type === "css" && applicable(f))
+                .map((f) => f.file);
+
+            const baseJsFiles = files
+                .filter((f) => f.type === "js" && applicable(f))
+                .map((f) => f.file);
+
+            console.info("css files: ", cssFiles);
+            console.info("js files: ", baseJsFiles);
+
+            // inject relevant css/js files
+            if (cssFiles.length) {
+                await chrome.scripting.insertCSS({
+                    target: { tabId: tabId }, files: cssFiles
+                });
+            }
+
+            if (baseJsFiles.length) {
+                await chrome.scripting.executeScript({
+                    target: { tabId: tabId }, files: baseJsFiles
+                });
+            }
+
+            await handleGeniusPage(tabId);
+
         }
     });
 });
