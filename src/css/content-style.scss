@@ -1082,3 +1082,43 @@ a.square_button.react_song_page_preview_link {
     }
   }
 }
+
+// DMs template generator
+form:has(>.square_input.conversation-message_textarea) {
+
+  #punishmentForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 10px;
+
+    #typeSelect,
+    #offenseSelect,
+    #statusSelect,
+    #additionalSelect,
+    #plagiarismSource {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      outline: none;
+      width: 100%;
+    }
+
+    input[type="submit"] {
+      background-color: #007acc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #005fa3;
+      }
+    }
+  }
+}
