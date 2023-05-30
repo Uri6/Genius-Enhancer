@@ -6,6 +6,19 @@
  */
 
 export async function missingInfo(bio, people, releaseDate) {
+    if ($(".icon-container").length > 0) {
+        if (bio) {
+            $(".bio-icon").removeClass("ge-hidden ge-fade-out").addClass("ge-fade-in");
+        }
+        if (people) {
+            $(".people-icon").removeClass("ge-hidden ge-fade-out").addClass("ge-fade-in");
+        }
+        if (releaseDate) {
+            $(".release-date-icon").removeClass("ge-hidden ge-fade-out").addClass("ge-fade-in");
+        }
+        return;
+    }
+
     const imgs = {
         bios: {
             exists: chrome.runtime.getURL("/src/images/bio/Exists/ge_biography_green64.png"),
@@ -21,7 +34,10 @@ export async function missingInfo(bio, people, releaseDate) {
         }
     };
 
-    let albumObject = await new Promise((resolve) => {
+    const bioClasses = "bio-icon" + (bio ? " ge-fade-in" : " ge-hidden");
+    const peopleClasses = "people-icon" + (people ? " ge-fade-in" : " ge-hidden");
+    const releaseDateClasses = "release-date-icon" + (releaseDate ? " ge-fade-in" : " ge-hidden");
+    const albumObject = await new Promise((resolve) => {
         chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
             resolve(response);
         });
@@ -35,82 +51,40 @@ export async function missingInfo(bio, people, releaseDate) {
 
     albumObject.album_appearances.forEach(({ song }) => {
         let elem = tracklist[song_index];
-        let iconContainer = document.createElement("div");
-        iconContainer.classList.add("icon-container");
 
-        if (people) {
-            let img_elem = document.createElement("img");
-            const peopleAreMissing = song.writer_artists.length === 0 || song.producer_artists.length === 0;
-            img_elem.classList.add("people-icon", "ge-fade-in");
-            if (peopleAreMissing) {
-                img_elem.src = imgs.people.missing;
-                img_elem.setAttribute("alt", "missing people");
-                img_elem.setAttribute("title", "There's missing information about the creators of this song");
-            } else {
-                img_elem.src = imgs.people.exists;
-                img_elem.setAttribute("alt", "exists people");
+        const iconContainer = $("<div>", {
+            class: "icon-container"
+        });
+
+        const createIcon = (imgSrc, imgAlt, imgTitle, imgClasses) => {
+            const imgElem = $("<img>").attr("src", imgSrc).attr("alt", imgAlt).addClass(imgClasses);
+            if (imgTitle) {
+                imgElem.attr("title", imgTitle);
             }
-            iconContainer.appendChild(img_elem);
-        }
+            iconContainer.append(imgElem);
+        };
 
-        if (bio) {
-            const img_elem = document.createElement("img");
-            img_elem.classList.add("bio-icon", "ge-fade-in");
-            if (song.description_preview === "") {
-                img_elem.src = imgs.bios.missing;
-                img_elem.setAttribute("alt", "missing bio");
-                img_elem.setAttribute("title", "No one wrote a bio for this song");
-            } else {
-                img_elem.src = imgs.bios.exists;
-                img_elem.setAttribute("alt", "exists bio");
-            }
-            iconContainer.appendChild(img_elem);
-        }
+        const peopleAreMissing = song.writer_artists.length === 0 || song.producer_artists.length === 0;
+        createIcon(imgs.people[peopleAreMissing ? "missing" : "exists"], peopleAreMissing ? "missing people" : "exists people", peopleAreMissing ? "There's missing information about the creators of this song" : "", peopleClasses);
+        createIcon(imgs.bios[song.description_preview === "" ? "missing" : "exists"], song.description_preview === "" ? "missing bio" : "exists bio", song.description_preview === "" ? "No one has written a bio for this song yet" : "", bioClasses);
+        createIcon(imgs.releaseDate[song.release_date_for_display ? "exists" : "missing"], song.release_date_for_display ? "exists release date" : "missing release date", !song.release_date_for_display ? "The release date for this song is unknown" : "", releaseDateClasses);
 
-        if (releaseDate) {
-            const img_elem = document.createElement("img");
-            img_elem.classList.add("release-date-icon", "ge-fade-in");
-            if (!song.release_date_for_display) {
-                img_elem.src = imgs.releaseDate.missing;
-                img_elem.setAttribute("alt", "missing release date");
-                img_elem.setAttribute("title", "No one wrote a release date for this song");
-            } else {
-                img_elem.src = imgs.releaseDate.exists;
-                img_elem.setAttribute("alt", "exists release date");
-            }
-            iconContainer.appendChild(img_elem);
-        }
-
-        elem.appendChild(iconContainer);
+        elem.appendChild(iconContainer[0]);
         song_index++;
     });
 }
 
 
 export function removeMissingInfo(bio, people, releaseDate) {
-    const peopleIcons = document.querySelectorAll(".people-icon");
-    const bioIcons = document.querySelectorAll(".bio-icon");
-    const releaseDateIcons = document.querySelectorAll(".release-date-icon");
+    const peopleIcons = $(".people-icon");
+    const bioIcons = $(".bio-icon");
+    const releaseDateIcons = $(".release-date-icon");
 
-    if (bio) {
-        bioIcons.forEach((icon) => {
-            icon.classList.remove("ge-fade-in");
-            icon.classList.add("ge-fade-out");
-            icon.remove();
-        });
-    } else if (people) {
-        peopleIcons.forEach((icon) => {
-            icon.classList.remove("ge-fade-in");
-            icon.classList.add("ge-fade-out");
-            icon.remove();
-        });
-    } else if (releaseDate) {
-        releaseDateIcons.forEach((icon) => {
-            icon.classList.remove("ge-fade-in");
-            icon.classList.add("ge-fade-out");
-            icon.remove();
-        });
-    }
+    const icons = bio ? bioIcons : people ? peopleIcons : releaseDateIcons;
+    icons.removeClass("ge-fade-in").addClass("ge-fade-out");
+    setTimeout(() => {
+        icons.addClass("ge-hidden");
+    }, 200);
 }
 
 /**

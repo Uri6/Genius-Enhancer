@@ -206,7 +206,6 @@ strong {
 
   100% {
     opacity: 0;
-    display: none;
   }
 }
 
@@ -245,11 +244,11 @@ strong {
 }
 
 .ge-fade-in {
-  animation: ge-opacity-in 0.5s ease;
+  animation: ge-opacity-in 0.2s ease;
 }
 
 .ge-fade-out {
-  animation: ge-opacity-out 0.4s ease;
+  animation: ge-opacity-out 0.2s ease forwards;
 }
 
 .ge-zoom-in {
@@ -257,12 +256,15 @@ strong {
 }
 
 .ge-zoom-out {
-  animation: ge-zoom-out 0.3 ease;
+  animation: ge-zoom-out 0.3s ease;
 }
 
 .ge-animate-right {
-  position: relative;
   animation: ge-slide-rtl 0.4s
+}
+
+.ge-hidden {
+  display: none !important;
 }
 
 .disable-scrolling {

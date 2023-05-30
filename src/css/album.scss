@@ -28,17 +28,15 @@
 .icon-container {
     position: absolute;
     top: 5px;
-    left: -105px;
+    left: -50px;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    align-items: right;
+    justify-content: right;
     width: 48px;
     height: 48px;
 
-    .bio-icon,
-    .people-icon,
-    .release-date-icon {
+    img {
         transform: scale(0.7);
         transition: all 0.2s ease-in-out;
         height: 100%;
