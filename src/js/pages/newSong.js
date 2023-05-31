@@ -9,7 +9,7 @@ export async function handleNewSong(tabId) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/newSong.css"]
+            files: ["./src/css/pages/newSong.css"]
         }
     );
 

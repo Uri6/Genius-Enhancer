@@ -17,7 +17,7 @@
 async function insertFirehoseCSS(tabId) {
     await chrome.scripting.insertCSS({
         target: { tabId },
-        files: ["./src/css/firehose.css"],
+        files: ["./src/css/pages/firehose.css"],
     });
 }
 

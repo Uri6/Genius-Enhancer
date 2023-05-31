@@ -56,7 +56,7 @@ def copytree(src, dst):
                        "Builds", "vision", "header",
                        "gifs", "screenshots", ".idea",
                        ".yarn", ".venv"]
-        if folder in bad_folders or src.endswith(sep + "icons") and (folder == "1" or folder == "2"):
+        if folder in bad_folders or src.endswith(sep + "icons") and (folder == "1" or folder == "2") or (src.endswith(sep + "bio") or src.endswith(sep + "people") or src.endswith(sep + "releaseDate") or src.endswith(sep + "magicWand")) and folder == "1":
             continue
         if os.path.isdir(src + sep + folder):
             os.mkdir(dst + sep + folder)
@@ -71,7 +71,7 @@ def copytree(src, dst):
             for bad_file in bad_files:
                 if file.endswith(bad_file):
                     skip = True
-            nedded_dimensions = {"artwork": "512x512.png", "Exists": "48x48.png", "Missing": "48x48.png", "icons"+sep+"3": [
+            nedded_dimensions = {"artwork": "512x512.png", "Exists": "64x64.png", "Missing": "64x64.png", "icons"+sep+"3": [
                 "16x16.png", "32x32.png", "48x48.png", "128x128.png"]}
             for key in nedded_dimensions:
                 if src.endswith(sep + key):
@@ -83,7 +83,7 @@ def copytree(src, dst):
                             skip = True
             if not skip:
                 shutil.copy(src + sep + file, dst + sep + file)
-                # if its css file, compress it
+                # Compress CSS files
                 if file.endswith('.css'):
                     with open(dst + sep + file, 'r', encoding='utf-8') as f:
                         print('Compresing {}'.format(dst + sep + file))

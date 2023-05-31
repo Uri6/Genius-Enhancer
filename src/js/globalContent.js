@@ -140,9 +140,9 @@ export function geniusGlobalContentScript() {
 
                 const closeButton = document.createElement("img");
                 closeButton.className = "modal_window-close_button";
-                closeButton.src = chrome.runtime.getURL("/src/images/other/closeIcon.png");
-                closeButton.setAttribute("onmouseover", `this.src='${chrome.runtime.getURL("/src/images/other/closeIconX.png")}'`);
-                closeButton.setAttribute("onmouseout", `this.src='${chrome.runtime.getURL("/src/images/other/closeIcon.png")}'`);
+                closeButton.src = chrome.runtime.getURL("/src/imgs/other/closeIcon.png");
+                closeButton.setAttribute("onmouseover", `this.src='${chrome.runtime.getURL("/src/imgs/other/closeIconX.png")}'`);
+                closeButton.setAttribute("onmouseout", `this.src='${chrome.runtime.getURL("/src/imgs/other/closeIcon.png")}'`);
                 closeButton.setAttribute("title", "Esc");
 
                 closeButton.addEventListener("click", () => {
@@ -158,7 +158,7 @@ export function geniusGlobalContentScript() {
                 const $buttonsRow = $target.find("form>.u-bottom_margin:has(span)");
 
                 if ($buttonsRow.length > 0 && $buttonsRow.find(".ge-magic-button").length === 0) {
-                    const svgIcon = chrome.runtime.getURL("/src/images/magicWand/colorful.svg");
+                    const svgIcon = chrome.runtime.getURL("/src/imgs/magicWand/colorful.svg");
                     const magicButton = $("<span>", {
                         class: "text_label text_label--no_margin u-small_horizontal_margins text_label--purple text_label--button ge-magic-button"
                     })
@@ -360,7 +360,7 @@ export function geniusGlobalContentScript() {
                                         "&#x3D;": "="
                                     };
 
-                                    return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function (match, entity) {
+                                    return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
                                         return entities[match];
                                     });
                                 })

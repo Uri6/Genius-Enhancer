@@ -9,7 +9,7 @@ export async function handleProfile(tabId, url) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/profile.css"]
+            files: ["./src/css/pages/profile.css"]
         }
     );
 
@@ -57,9 +57,9 @@ export async function handleProfile(tabId, url) {
                     };
 
                     const socialMediaIcons = {
-                        "Facebook": chrome.runtime.getURL("src/images/socialMediaIcons/facebook.svg"),
-                        "Twitter": chrome.runtime.getURL("src/images/socialMediaIcons/twitter.svg"),
-                        "Instagram": chrome.runtime.getURL("src/images/socialMediaIcons/instagram.svg")
+                        "Facebook": chrome.runtime.getURL("src/imgs/socialMediaIcons/facebook.svg"),
+                        "Twitter": chrome.runtime.getURL("src/imgs/socialMediaIcons/twitter.svg"),
+                        "Instagram": chrome.runtime.getURL("src/imgs/socialMediaIcons/instagram.svg")
                     };
 
                     const socialMediaIconsArray = Object.entries(socialMediaIcons);

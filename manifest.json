@@ -4,10 +4,10 @@
     "version": "0.9.4",
     "manifest_version": 3,
     "icons": {
-        "16": "/src/images/icons/3/16x16.png",
-        "32": "/src/images/icons/3/32x32.png",
-        "48": "/src/images/icons/3/48x48.png",
-        "128": "/src/images/icons/3/128x128.png"
+        "16": "/src/imgs/icons/3/16x16.png",
+        "32": "/src/imgs/icons/3/32x32.png",
+        "48": "/src/imgs/icons/3/48x48.png",
+        "128": "/src/imgs/icons/3/128x128.png"
     },
     "background": {
         "service_worker": "background.js",
@@ -16,17 +16,17 @@
     "author": "Uri Sivani",
     "web_accessible_resources": [
         {
-            "resources": ["lib/*", "src/images/*"],
+            "resources": ["lib/*", "src/imgs/*"],
             "matches": ["*://*.genius.com/*", "*://genius.com/*"]
         }
     ],
     "action": {
         "default_popup": "/src/html/popup.html",
         "default_icon": {
-            "16": "/src/images/icons/3/16x16.png",
-            "32": "/src/images/icons/3/32x32.png",
-            "48": "/src/images/icons/3/48x48.png",
-            "128": "/src/images/icons/3/128x128.png"
+            "16": "/src/imgs/icons/3/16x16.png",
+            "32": "/src/imgs/icons/3/32x32.png",
+            "48": "/src/imgs/icons/3/48x48.png",
+            "128": "/src/imgs/icons/3/128x128.png"
         }
     },
     "requirements": {

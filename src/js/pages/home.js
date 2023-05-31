@@ -18,7 +18,7 @@ export async function handleHome(tabId) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/home.css"]
+            files: ["./src/css/pages/home.css"]
         }
     );
 
@@ -56,7 +56,7 @@ export async function handleHome(tabId) {
                     .append(children[7]);
 
                 // Add a background for certain elements
-                document.querySelectorAll(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf").forEach(function (e) {
+                document.querySelectorAll(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf").forEach(function(e) {
                     $(e).append("<div class='styled-background'></div>");
                 });
 
@@ -67,8 +67,8 @@ export async function handleHome(tabId) {
                 });
 
                 // When hovering certain elements, change the position of their child ".styled-background" according to the position of the mouse
-                document.querySelectorAll(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf").forEach(function (e) {
-                    $(e).on("mousemove", function (ee) {
+                document.querySelectorAll(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf").forEach(function(e) {
+                    $(e).on("mousemove", function(ee) {
                         const parentOffset = $(this).offset();
                         $(this).find(".styled-background").css({
                             "top": ee.pageY - parentOffset.top,
@@ -81,12 +81,12 @@ export async function handleHome(tabId) {
                 $(".SquareButton-sc-109lda7-0.hlrLfQ").last().click();
 
                 // When hovering the main video thumbnail, change a bit the position of the image (.SizedImage__Container-sc-1hyeaua-0) according to the position of the mouse
-                $(".jHQizl .kMmimq").on("mousemove", function (e) {
+                $(".jHQizl .kMmimq").on("mousemove", function(e) {
                     const parentOffset = $(this).offset();
                     const relX = e.pageX - parentOffset.left;
                     const relY = e.pageY - parentOffset.top;
                     const propotion = 1 - Math.sqrt(Math.pow(relX - $(this).width() / 2, 2) + Math.pow(relY - $(this).height() / 2, 2)) / Math.sqrt(Math.pow($(this).width() / 2, 2) + Math.pow($(this).height() / 2, 2));
-                    
+
                     $(this).find(".SizedImage__Container-sc-1hyeaua-0").css({
                         "transform": "translate(" + (relX - $(this).width() / 2) * propotion / 10 + "px, " + (relY - $(this).height() / 2) * propotion / 10 + "px)"
                     });

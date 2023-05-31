@@ -5,13 +5,13 @@
  * https://github.com/Uri6/Genius-Enhancer-Beta/blob/main/LICENSE.md
  */
 
-import { replaceButtons } from "../sideFunctions_forum.js";
+import { replaceButtons } from "../sideFunctions/forum.js";
 
 export async function handleForum(tabId) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/forumsPages/forum.css"]
+            files: ["./src/css/pages/forums/forum.css"]
         }
     );
 

@@ -9,7 +9,7 @@ export async function handleForumThread(tabId) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/forumsPages/thread.css"]
+            files: ["./src/css/pages/forums/thread.css"]
         }
     );
     await chrome.scripting.executeScript(

@@ -7,7 +7,7 @@
 
 export async function handleNewPost(tabId) {
     await chrome.scripting.insertCSS({
-        target: { tabId: tabId }, files: ["./src/css/forumsPages/newPost.css"]
+        target: { tabId: tabId }, files: ["./src/css/pages/forums/newPost.css"]
     });
 
     await chrome.scripting.executeScript({

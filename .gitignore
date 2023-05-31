@@ -16,13 +16,15 @@ Builds/
 build
 
 # Images files
-src/images/header/
-src/images/gifs/
-src/images/screenshots/
-src/images/icons/1/
-src/images/icons/2/
-src/images/magicWand/48x48.png
-src/images/magicWand/512x512.png
+src/imgs/header/
+src/imgs/gifs/
+src/imgs/screenshots/
+src/imgs/icons/1/
+src/imgs/icons/2/
+src/imgs/bio/1/
+src/imgs/people/1/
+src/imgs/releaseDate/1/
+src/imgs/magicWand/1/
 
 # Adobe Photoshop files
 *.psd

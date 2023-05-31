@@ -9,7 +9,7 @@ export async function handleAlbum(tabId) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/album.css"]
+            files: ["./src/css/pages/album.css"]
         }
     );
 
@@ -49,7 +49,7 @@ export async function handleAlbum(tabId) {
 
                     $(".header_with_cover_art-primary_info h2 .drop-target")
                         .prepend($("<img>", {
-                            src: chrome.runtime.getURL("/src/images/artist/Simple/32x32.png"),
+                            src: chrome.runtime.getURL("/src/imgs/artist/Simple/32x32.png"),
                             class: "artist_icon",
                             title: "Artist"
                         }));
@@ -58,7 +58,7 @@ export async function handleAlbum(tabId) {
                         $(".header_with_cover_art metadata .metadata_unit").text($(".header_with_cover_art .metadata_unit").text().replace("Released ", ""));
                         $(".header_with_cover_art metadata")
                             .prepend($("<img>", {
-                                src: chrome.runtime.getURL("/src/images/releaseDate/Simple/ge_releasedate_grey32.png"),
+                                src: chrome.runtime.getURL("/src/imgs/releaseDate/2/Simple/32x32.png"),
                                 class: "release_date_icon",
                                 title: "Release Date"
                             }));
@@ -153,7 +153,7 @@ export async function handleAlbum(tabId) {
                 if (isExplicit && !$(".ge-explicit-icon").length) {
                     $(".header_with_cover_art-primary_info-title").append($("<img>", {
                         class: "ge-explicit-icon",
-                        src: chrome.runtime.getURL("/src/images/explicit/explicit.svg")
+                        src: chrome.runtime.getURL("/src/imgs/explicit/explicit.svg")
                     }));
                 }
             })

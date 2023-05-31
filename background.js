@@ -13,7 +13,7 @@ import {
     identifyPageType,
     replaceTextarea,
     removeQuill
-} from "./src/js/sideFunctions.js";
+} from "./src/js/global.js";
 import {
     missingInfo,
     removeMissingInfo,
@@ -22,18 +22,18 @@ import {
     getPlaylistVideos,
     saveEverything,
     addSongAsNext
-} from "./src/js/sideFunctions_album.js";
+} from "./src/js/sideFunctions/album.js";
 import {
     appleMusicPopUp,
     spotifyPopUp,
     song_modernTextEditor,
     searchVideo,
     appendFollowButton
-} from "./src/js/sideFunctions_song.js";
+} from "./src/js/sideFunctions/song.js";
 import {
     replaceButtons,
     forums_modernTextEditor
-} from "./src/js/sideFunctions_forum.js";
+} from "./src/js/sideFunctions/forum.js";
 import { handleSongPage } from "./src/js/pages/song.js";
 import { handleFirehose } from "./src/js/pages/firehose.js";
 import { handleNewSong } from "./src/js/pages/newSong.js";
@@ -218,11 +218,11 @@ async function handleGeniusPage(tabId) {
 const files = [
     {
         type: "css",
-        file: "./src/css/content-style.css"
+        file: "./src/css/pages/main.css"
     },
     {
         type: "css",
-        file: "./src/css/darkmode.css"
+        file: "./src/css/pages/darkmode.css"
     },
     {
         type: "css",
