@@ -13,7 +13,7 @@ import {
     identifyPageType,
     replaceTextarea,
     removeQuill
-} from "./src/js/global.js";
+} from "./src/js/sideFunctions/global.js";
 import {
     missingInfo,
     removeMissingInfo,
