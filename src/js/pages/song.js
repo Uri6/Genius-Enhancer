@@ -435,7 +435,7 @@ export async function handleSongPage(tabId) {
 			// Create header option buttons
             headerOptionButtonNames.forEach((name) => {
                 const button = createButton(name, buttonStyle, () =>
-                  addTextToTextArea(`[${name}]`)
+                  addTextToTextArea(`\n[${name}]`)
                 );
                 headerOptionButtons.push(button);
               });
@@ -483,7 +483,7 @@ export async function handleSongPage(tabId) {
 				}
 
 				// Insert the modified text into the textarea
-				const newText = `${value.substring(0, selectionStart)}\n${modifiedText}${value.substring(selectionEnd)}`;
+				const newText = `${value.substring(0, selectionStart)}${modifiedText}${value.substring(selectionEnd)}`;
 				lyricsTextarea.value = newText;
 			};
 
