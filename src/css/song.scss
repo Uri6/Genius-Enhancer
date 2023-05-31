@@ -16,6 +16,7 @@
         margin-right: 10px;
 
         .header-buttons {
+            display: flex;
             margin-bottom: 10px;
         }
 
@@ -31,6 +32,7 @@
             border-image: initial;
             border-radius: 1.25rem;
             padding: 0.25rem 0.75rem;
+            margin-right: 15px;
             overflow: hidden;
 
             &:hover {
