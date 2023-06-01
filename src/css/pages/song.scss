@@ -110,6 +110,9 @@
             }
         }
 
+        >img {
+            border-radius: var(--input-radius);
+        }
     }
 
     input {
