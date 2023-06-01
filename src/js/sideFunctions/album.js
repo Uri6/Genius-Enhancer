@@ -97,7 +97,7 @@ export function removeMissingInfo(bio, people, releaseDate) {
 export async function getPlaylistVideos(playlistLink) {
     const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
     if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
-        throw new Error("Invalid playlist link");
+        return ("getPlaylistVideos: Invalid playlist link");
     }
 
     const playlistId = new URL(playlistLink).searchParams.get("list");
@@ -105,7 +105,7 @@ export async function getPlaylistVideos(playlistLink) {
 
     const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
     if (!metadataResponse.ok) {
-        throw new Error("Failed to fetch playlist metadata");
+        return ("getPlaylistVideos: Failed to fetch playlist metadata");
     }
 
     const metadataData = (await metadataResponse.json()).items[0].snippet;
@@ -114,7 +114,7 @@ export async function getPlaylistVideos(playlistLink) {
 
     const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
     if (!videosResponse.ok) {
-        throw new Error("Failed to fetch playlist videos");
+        return ("getPlaylistVideos: Failed to fetch playlist videos");
     }
 
     const videosData = await videosResponse.json();
@@ -800,74 +800,27 @@ export async function appendIcon() {
                 return;
             }
 
-            const getPlaylistVideos = async (playlistLink) => {
-                const possibleLinks = ["https://www.youtube.com/playlist", "https://youtube.com/playlist", "https://music.youtube.com/playlist"];
-                if (!possibleLinks.some((link) => playlistLink.startsWith(link))) {
-                    throw new Error("Invalid playlist link");
-                }
-                const playlistId = playlistLink.split("list=")[1];
-                const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+            const playlistVideos = await new Promise((resolve) => {
+                chrome.runtime.sendMessage({ "album_getPlaylistVideos": [url] }, (response) => {
+                    resolve(response);
+                });
+            });
 
-                // Fetch the playlist metadata
-                const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
-                if (!metadataResponse.ok) {
-                    throw new Error("Failed to fetch playlist metadata");
-                }
-
-                // Extract the metadata
-                let metadataData = await metadataResponse.json();
-                metadataData = metadataData.items[0].snippet;
-                const playlistTitle = metadataData.title;
-                const artistName = metadataData.channelTitle;
-                const thumbnails = metadataData.thumbnails;
-                let playlistImage = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default;
-                playlistImage = playlistImage.url;
-
-                // Fetch the playlist videos
-                const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
-                if (!videosResponse.ok) {
-                    throw new Error("Failed to fetch playlist videos");
-                }
-
-                // Extract the videos data
-                const videosData = await videosResponse.json();
-                const videoTitles = videosData.items.map(item => item.snippet.title);
-                const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
-                const playlistLength = videoLinks.length;
-
-                // Return an object containing the metadata and the video links
-                return {
-                    artistName,
-                    playlistTitle,
-                    playlistImage,
-                    playlistLength,
-                    videoTitles,
-                    videoLinks
-                };
-            };
-
-            try {
-                const response = await getPlaylistVideos(url);
-                if (response === undefined) {
-                    // TODO: don't use an error for control flow here
-                    // (bad practice)
-                    throw new Error("Invalid YouTube Playlist URL");
-                }
-
+            if (typeof playlistVideos !== "string") {
                 const numOfSongs = Array.from(
                     document.getElementsByClassName("chart_row-number_container-number chart_row-number_container-number--gray")
                 ).length;
 
                 addMediaInput.removeClass("error");
                 addMediaInput.attr("title", "");
-                $(".add-media.details.title").text(response.playlistTitle);
-                $(".add-media.details.title").attr("title", response.playlistTitle);
-                $(".add-media.details.image").attr("src", response.playlistImage);
-                $(".add-media.details.artist").text(response.artistName);
-                $(".add-media.details.length").text(response.playlistLength);
-                $(".add-media.details.videos-links").text(response.videoLinks.join(" "));
+                $(".add-media.details.title").text(playlistVideos.playlistTitle);
+                $(".add-media.details.title").attr("title", playlistVideos.playlistTitle);
+                $(".add-media.details.image").attr("src", playlistVideos.playlistImage);
+                $(".add-media.details.artist").text(playlistVideos.artistName);
+                $(".add-media.details.length").text(playlistVideos.playlistLength);
+                $(".add-media.details.videos-links").text(playlistVideos.videoLinks.join(" "));
 
-                if (numOfSongs === response.playlistLength) {
+                if (numOfSongs === playlistVideos.playlistLength) {
                     $(".add-media.details.length").css({ color: "#1cc674" });
                     $(".add-media.details.length").attr("title", "The number of songs in the playlist matches the number of songs in the chart");
                     addMediaInput.removeClass("error");
@@ -877,8 +830,8 @@ export async function appendIcon() {
                     $(".add-media.details.length").attr("title", "The number of songs in the playlist does not match the number of songs in the chart");
                     addMediaInput.addClass("error");
                 }
-            } catch (error) {
-                console.error(error);
+            } else {
+                console.error(playlistVideos);
                 // add the error class to the input
                 addMediaInput.addClass("error");
                 // add a tooltip to the input
