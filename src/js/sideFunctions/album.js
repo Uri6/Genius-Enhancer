@@ -443,10 +443,28 @@ export async function appendIcon() {
             class: "extension-box ge-zoom-in"
         }).appendTo(popupDiv);
 
+        const headerBox = $("<div>", {
+            class: "header-box-container"
+        }).appendTo(popupBox);
+
+        const mainBox = $("<div>", {
+            class: "main-box-container"
+        }).appendTo(popupBox);
+
         // Create a container for the left column
         const leftColumn = $("<div>", {
             class: "left-column-container"
-        }).appendTo(popupBox);
+        }).appendTo(mainBox);
+
+        // Create a container for the right column
+        const rightColumn = $("<div>", {
+            class: "right-column-container"
+        }).appendTo(mainBox);
+
+        $("<div>", {
+            class: "extension-header-title",
+            text: "GE Metadata Editor"
+          }).appendTo(headerBox);
 
         $("<img>", {
             class: "close-icon",
@@ -472,27 +490,27 @@ export async function appendIcon() {
             attr: {
                 title: "Esc"
             }
-        }).appendTo(popupBox);
+        }).appendTo(headerBox);
 
         const autolinkArtworkContainer = $("<div>", {
-            class: "autolink-artwork-icon-container rcorners"
-        }).appendTo(popupBox);
+            class: "autolink-artwork-icon-container"
+        }).appendTo(rightColumn);
 
         const autolinkArtwork = $("<img>", {
             class: "autolink-artwork-icon",
-            src: chrome.runtime.getURL("/src/imgs/artwork/512x512.png")
+            src: chrome.runtime.getURL("/src/imgs/artwork/artwork-generator.png")
         }).appendTo(autolinkArtworkContainer);
 
         const autolinkArtworkTitle = $("<div>", {
             class: "autolink-artwork-title",
-            text: "Autolink\nArtwork"
+            text: ""
         }).appendTo(autolinkArtworkContainer);
 
         autolinkArtworkContainer.on("click", async () => {
             if (!$(".artwork-images-stack").length) {
 
                 const imagesStack = $("<div>", {
-                    class: "artwork-images-stack ge-animate-right"
+                    class: "artwork-images-stack"
                 });
 
                 $("<div>", {
@@ -507,7 +525,6 @@ export async function appendIcon() {
                 // stringify the inner text of the element #albumArtworks
                 const album_artwork_results = JSON.parse($("#albumArtworks").text());
 
-                autolinkArtworkContainer.css("backgroundColor", "#333a3c");
                 autolinkArtworkContainer.css("cursor", "default");
                 autolinkArtwork.css("transform", "scale(1) rotate(0deg)");
                 autolinkArtworkTitle.css("transform", "scale(1)");
