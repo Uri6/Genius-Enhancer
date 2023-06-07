@@ -27,6 +27,20 @@
     }
 }
 
+// Top right menu
+
+div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
+    border-radius: 10px;
+
+    >a, >div {
+        border-top: none;
+
+        &:hover {
+            padding-left: 15px;
+        }
+    }
+}
+
 // Song Metadata
 
 #edit-metadata-overlay.dSfHrp {
