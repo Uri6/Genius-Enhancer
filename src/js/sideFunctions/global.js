@@ -421,3 +421,75 @@ export function removeQuill() {
         $(".ql-snow").remove();
     }
 }
+
+/**
+ * Uploads an image to Genius using Filestack APIs.
+ *
+ * This function performs the following steps:
+ * 1. Retrieves metadata for the specified image from the Filestack metadata API.
+ * 2. Sends a request to the Filestack process API to store the image.
+ * 3. Constructs the final URL of the uploaded image.
+ *
+ * @param {string} imageUrl The URL of the image to upload.
+ * @returns {Promise<string>} A promise that resolves to the URL of the uploaded image.
+ * @throws {Error} If any network error occurs or if any of the APIs return an error response.
+ */
+export async function uploadImageToGenius(imageUrl) {
+    const geniusSecrets = {
+        api: "Ar03MDs73TQm241ZgLwfjz",
+        policy: "eyJleHBpcnkiOjIzNTEwOTE1NTgsImNhbGwiOlsicGljayIsInJlYWQiLCJzdG9yZSIsInN0YXQiLCJjb252ZXJ0Il19",
+        signature: "68597b455e6c09bce0bfd73f758e299c95d49a5d5c8e808aaf4877da7801c4da"
+    };
+
+    try {
+        let metadata = await fetch("https://cloud.filestackapi.com/metadata", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                apikey: geniusSecrets.api,
+                url: imageUrl,
+                policy: geniusSecrets.policy,
+                signature: geniusSecrets.signature
+            })
+        }).then(res => {
+            if (!res.ok) {
+                throw new Error("Failed to fetch metadata");
+            }
+            return res.json();
+        });
+
+        const key = await fetch("https://process.filestackapi.com/process", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                apikey: geniusSecrets.api,
+                sources: [metadata.link_path],
+                tasks: [{
+                    name: "store"
+                }, {
+                    name: "security",
+                    params: {
+                        policy: geniusSecrets.policy,
+                        signature: geniusSecrets.signature
+                    }
+                }]
+            })
+        }).then(res => {
+            if (!res.ok) {
+                throw new Error("Failed to process the image");
+            }
+            return res.json();
+        }).then(res => res.key);
+
+        const coverArtUrl = `https://filepicker-images-rapgenius.s3.amazonaws.com/${key}`;
+
+        return coverArtUrl;
+    } catch (error) {
+        // Rethrow the error to be handled by the calling code
+        throw error;
+    }
+};
