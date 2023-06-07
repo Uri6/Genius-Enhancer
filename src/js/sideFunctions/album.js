@@ -296,7 +296,7 @@ export async function appendIcon() {
                 closeOnSelect: true,
                 highlightFirst: true
             },
-            enforceWhitelist: true,
+            enforceWhitelist: false,
             maxTags: 1,
             autoComplete: {
                 enabled: true
@@ -348,7 +348,7 @@ export async function appendIcon() {
                 }
             },
             whitelist: /*artistDefaultWhitelist*/[],
-            enforceWhitelist: true,
+            enforceWhitelist: false,
             autoComplete: {
                 enabled: true
             },
@@ -367,7 +367,7 @@ export async function appendIcon() {
         artistInput.addClass("has-tagify");
 
         const searchRole = (e) => {
-            const roleValue = e.detail.value;
+            const roleValue = e.detail.value || e.detail.target.innerText;
             tagify_role.whitelist = /*roleDefaultWhitelist*/[];
 
             controller?.abort();
@@ -418,6 +418,10 @@ export async function appendIcon() {
 
         tagify_role.on("input", searchRole);
         tagify_artist.on("input", searchArtist);
+
+        tagify_role.DOM.input.addEventListener("paste", (e) => {
+            tagify_role.trigger("input", e);
+        });
     };
 
     const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
