@@ -99,13 +99,18 @@ export async function handleAlbum(tabId) {
                     });
                 });
 
-                // Set the result as the inner text of the "albumArtworks" element
-                $("<div>", {
+                const albumArtworksContainer = $("<datalist>", {
                     id: "albumArtworks",
-                    style: "display: none;",
-                    text: JSON.stringify(albumArtworks)
+                    style: "display: none;"
                 })
                     .appendTo("body");
+
+                for (const artwork of albumArtworks) {
+                    $("<option>", {
+                        value: artwork
+                    })
+                        .appendTo(albumArtworksContainer);
+                }
 
                 getTagsList().then(res => {
                     const replaces = {

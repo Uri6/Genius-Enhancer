@@ -291,7 +291,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             console.info("tab: " + tab.title + ", " + tab.url);
             console.info("isGeniusPage: " + isGeniusPage);
 
-            await chrome.storage.local.set({ "album_artwork_results": "" });
             pageType = "unknown";
 
             const prohibitedDomains = ["promote.genius.com", "support.genius.com", "docs.genius.com", "homestudio.genius.com", "genius.com/developers", "genius.com/api-clients", "api.genius.com"];

@@ -464,7 +464,7 @@ export async function appendIcon() {
         $("<div>", {
             class: "extension-header-title",
             text: "GE Metadata Editor"
-          }).appendTo(headerBox);
+        }).appendTo(headerBox);
 
         $("<img>", {
             class: "close-icon",
@@ -501,11 +501,6 @@ export async function appendIcon() {
             src: chrome.runtime.getURL("/src/imgs/artwork/artwork-generator.png")
         }).appendTo(autolinkArtworkContainer);
 
-        const autolinkArtworkTitle = $("<div>", {
-            class: "autolink-artwork-title",
-            text: ""
-        }).appendTo(autolinkArtworkContainer);
-
         autolinkArtworkContainer.on("click", async () => {
             if (!$(".artwork-images-stack").length) {
 
@@ -518,114 +513,87 @@ export async function appendIcon() {
                 })
                     .append($("<div>", {
                         class: "error-text",
-                        html: "No artwork<br>found"
+                        html: "There's no<br>match :("
                     }))
                     .appendTo(imagesStack);
 
-                // stringify the inner text of the element #albumArtworks
-                const album_artwork_results = JSON.parse($("#albumArtworks").text());
+                const album_artwork_results = $("#albumArtworks").children().map(function() {
+                    return $(this).val();
+                }).get();
 
-                autolinkArtworkContainer.css("cursor", "default");
-                autolinkArtwork.css("transform", "scale(1) rotate(0deg)");
-                autolinkArtworkTitle.css("transform", "scale(1)");
+                autolinkArtwork.attr('disabled', 'disabled');
 
-                if (!album_artwork_results.length) {
-                    chrome.storage.local.set({ "album_artwork": { "type": "error", "output": "No artwork found" } });
-                } else {
+                if (JSON.stringify(album_artwork_results) !== JSON.stringify([''])) {
                     album_artwork_results.slice().reverse().forEach(result => {
-                        const container = $("<div>", {
-                            class: "artwork-image-container"
-                        });
-
                         $("<img>", {
                             class: "artwork-image",
                             src: result
-                        }).appendTo(container);
-
-                        const overlay = $("<div>", {
-                            class: "overlay"
-                        });
-
-                        overlay.hover(function() {
-                            overlay.css("backgroundColor", $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0.2)" : "rgb(33, 236, 138, 0.4)");
-                        });
-
-                        overlay.mouseleave(function() {
-                            overlay.css("backgroundColor", $(".v-button").length === $(".artwork-image").length ? "rgb(0, 0, 0, 0)" : "rgb(33, 236, 138, 0)");
-                        });
-
-                        const vButton = $("<img>", {
-                            class: "v-button",
-                            src: chrome.runtime.getURL("/src/imgs/other/check.png")
-                        });
-
-                        vButton.hover(function() {
-                            overlay.css("backgroundColor", "rgb(33, 236, 138, 0.1)");
-                        });
-
-                        vButton.mouseleave(function() {
-                            overlay.css("backgroundColor", "rgb(0, 0, 0, 0.2)");
-                        });
-
-                        vButton.click(function() {
-                            chrome.storage.local.set({ "album_artwork": { "type": "success", "output": result } });
-
-                            $(".v-button, .x-button").css("opacity", "0");
-
-                            setTimeout(() => {
-                                $(".v-button, .x-button").remove();
-                            }, 400);
-
-                            overlay.css("backgroundColor", "rgb(33, 236, 138, 0.4)");
-                            setTimeout(() => {
-                                overlay.css("backgroundColor", "rgb(33, 236, 138, 0)");
-                            }, 400);
-                            setTimeout(() => {
-                                overlay.css("backgroundColor", "rgb(33, 236, 138, 0.4)");
-                            }, 400);
-                            setTimeout(() => {
-                                overlay.css("backgroundColor", "rgb(33, 236, 138, 0)");
-                            }, 400);
-                        });
-
-                        overlay.prepend(vButton);
-
-                        const xButton = $("<img>", {
-                            class: "x-button",
-                            src: chrome.runtime.getURL("/src/imgs/other/cross.png")
-                        });
-
-                        xButton.hover(function() {
-                            overlay.css("backgroundColor", "rgb(252, 88, 84, 0.1)");
-                        });
-
-                        xButton.mouseleave(function() {
-                            overlay.css("backgroundColor", "rgb(0, 0, 0, 0.2)");
-                        });
-
-                        xButton.click(function() {
-                            container.css({
-                                "opacity": "0",
-                                "transform": "translateY(25%)",
-                                "backgroundColor": "rgb(252, 88, 84, 0.3)"
-                            });
-                            setTimeout(() => {
-                                container.remove();
-                            }, 400);
-                            if (imagesStack.children().length === 0) {
-                                chrome.storage.local.set({
-                                    "album_artwork": {
-                                        "type": "error",
-                                        "output": "No artwork found"
-                                    }
-                                });
-                            }
-                        });
-
-                        overlay.prepend(xButton);
-                        container.prepend(overlay);
-                        imagesStack.append(container);
+                        }).appendTo(imagesStack);
                     });
+
+                    $("<div>", {
+                        class: "overlay"
+                    }).appendTo(imagesStack);
+
+                    $("<div>", {
+                        class: "confirmation-box"
+                    })
+                        .append($("<button>", {
+                            class: 'button decline',
+                            text: 'Decline',
+                            on: {
+                                click: function() {
+                                    $(".artwork-images-stack .artwork-image:last").remove();
+
+                                    if ($(".artwork-images-stack .artwork-image").length === 0) {
+                                        $('.confirmation-box').remove();
+                                    }
+                                }
+                            }
+                        }))
+                        .append($("<button>", {
+                            class: 'button accept',
+                            text: 'Accept',
+                            on: {
+                                click: function() {
+                                    $(".artwork-images-stack .artwork-image:not(:last)").remove();
+                                    $('.confirmation-box').remove();
+
+                                    $("<div>", {
+                                        class: "confirmation-text",
+                                        text: "Swap the first artwork or add a new one?"
+                                    }).appendTo(imagesStack);
+
+                                    $("<div>", {
+                                        class: "confirmation-box"
+                                    })
+                                        .append($("<button>", {
+                                            class: 'button swap',
+                                            text: 'Swap',
+                                            on: {
+                                                click: function() {
+                                                    $(".artwork-images-stack .artwork-image:last").attr("data-swap", "true");
+                                                    $('.confirmation-text').remove();
+                                                    $('.confirmation-box').remove();
+                                                }
+                                            }
+                                        }))
+                                        .append($("<button>", {
+                                            class: 'button add',
+                                            text: 'Add',
+                                            on: {
+                                                click: function() {
+                                                    $(".artwork-images-stack .artwork-image:last").attr("data-swap", "false");
+                                                    $('.confirmation-text').remove();
+                                                    $('.confirmation-box').remove();
+                                                }
+                                            }
+                                        }))
+                                        .appendTo(imagesStack);
+                                }
+                            }
+                        }))
+                        .appendTo(imagesStack);
                 }
 
                 autolinkArtworkContainer.prepend(imagesStack);
@@ -1076,30 +1044,14 @@ export async function autolinkArtwork(query, type, minimize = false) {
         });
     });
 
+    console.log(modifiedQuery);
+
     try {
-        // Make a GET request to the iTunes Artwork API to get a URL for the album artwork
-        const data = await fetch("https://itunesartwork.bendodson.com/api.php?" + new URLSearchParams({
-            query: modifiedQuery,
-            entity: type,
-            country: "us",
-            type: "request"
-        })).then(response => response.json());
+        const data = await fetch("https://larsbutnotleast.xyz/genius/assets/js/itunes.php?query=" + encodeURIComponent(modifiedQuery) + "&entity=" + type).then((response) => response.json());
 
-        // Make a GET request to the URL returned by the previous request to get more information about the album artwork
-        const data2 = await fetch(data.url).then(response => response.json());
-
-        // Make a POST request to the iTunes Artwork API with the data returned by the previous request to get the actual image URLs for the artwork
-        const data3 = await fetch("https://itunesartwork.bendodson.com/api.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({ json: JSON.stringify(data2), type: "data", entity: "album" })
-        }).then(response => response.json());
-
-        if (!data3.error && data3.length) {
-            const imageSize = minimize ? "/115x115.jpg" : "/1000x1000-999.jpg";
-            return data3.map((url) => url.url.replace("/600x600bb.jpg", imageSize).replace(".jpg", ".png"));
+        if (!data.error && data.length) {
+            const imageSize = minimize ? "/200x200.png" : "/1000x1000-999.png";
+            return data.map((url) => url.url.replace("/600x600bb.jpg", imageSize));
         }
 
         return [""];
@@ -1142,8 +1094,8 @@ export async function saveEverything() {
 
     const details = getDetails();
     const albumSongs = details.album_appearances;
-    const youtubeLinks = $(".add-media.details.videos-links").text().split(" ");
-    const releaseDate = $(".set-release-date").val().split("/");
+    const youtubeLinks = $(".extension-box .add-media.details.videos-links").text().split(" ");
+    const releaseDate = $(".extension-box .set-release-date").val().split("/");
 
     const overwriteReleaseDates = $(".extension-box .ge-overwrite-info-chkbox-container input#ge-overwrite-release-dates").is(":checked");
     const overwriteYoutubeVideos = $(".extension-box .ge-overwrite-info-chkbox-container input#ge-overwrite-yt-links").is(":checked");
@@ -1171,6 +1123,10 @@ export async function saveEverything() {
         });
     }
 
+    const addArtwork = $(".extension-box .artwork-images-stack:has(>.artwork-image):not(:has(>.confirmation-box))").length;
+    const addMetadata = JSON.stringify(youtubeLinks) !== JSON.stringify(['']) || JSON.stringify(releaseDate) !== JSON.stringify(['']) || tags?.length || credits?.length;
+
+    // Create an instance of Axios with the Genius API's base URL and a CSRF token
     const gapi = axios.create({
         baseUrl: "https://genius.com/api",
         withCredentials: true,
@@ -1179,41 +1135,70 @@ export async function saveEverything() {
         }
     });
 
-    for (const song of albumSongs) {
-        const { response: { song: songDetails } } = await fetch(`https://genius.com/api${song.song.api_path}`).then(res => res.json());
+    if (addArtwork) {
+        // Retrieve the URL of the artwork from the page
+        const artwork = $(".extension-box .artwork-images-stack img");
+        let artworkUrl = artwork.attr("src").replace("/200x200.png", "/1000x1000-999.png");
+        const swap = details.album.cover_arts.length && artwork.attr("data-swap");
 
-        const params = {
-            tags: [
-                ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
-                ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id }))
-            ],
-            custom_performances: [
-                ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
-                ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists }))
-            ]
-        };
+        console.log(artworkUrl);
 
-        if ((!songDetails.release_date_components || overwriteReleaseDates) && releaseDate.length === 3) {
-            params.release_date_components = {
-                day: releaseDate[0],
-                month: releaseDate[1],
-                year: releaseDate[2]
+        // If there's no cover art or if the user has chosen to swap the existing cover art, update the first cover art
+        if (swap) {
+            await gapi.put(`/api/cover_arts/${details.album.cover_arts[0].id}`, {
+                cover_art: {
+                    image_url: artworkUrl
+                }
+            });
+        }
+        // Otherwise, create a new cover art
+        else {
+            await gapi.post("/api/cover_arts", {
+                cover_art: {
+                    image_url: artworkUrl
+                },
+                album_id: details.album.id
+            });
+        }
+    }
+
+    if (addMetadata) {
+        for (const song of albumSongs) {
+            const { response: { song: songDetails } } = await fetch(`https://genius.com/api${song.song.api_path}`).then(res => res.json());
+
+            const params = {
+                tags: [
+                    ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
+                    ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id }))
+                ],
+                custom_performances: [
+                    ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
+                    ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists }))
+                ]
             };
-        }
 
-        if ((!songDetails.youtube_url || overwriteYoutubeVideos) && song.youtube_url) {
-            params.youtube_url = song.youtube_url;
-        }
-
-        gapi.put(`https://genius.com/api${song.song.api_path}`, {
-            text_format: "html,markdown",
-            song: {
-                tags: params.tags,
-                youtube_url: params.youtube_url,
-                custom_performances: params.custom_performances,
-                release_date_components: params.release_date_components
+            if ((!songDetails.release_date_components || overwriteReleaseDates) && releaseDate.length === 3) {
+                params.release_date_components = {
+                    day: releaseDate[0],
+                    month: releaseDate[1],
+                    year: releaseDate[2]
+                };
             }
-        });
+
+            if ((!songDetails.youtube_url || overwriteYoutubeVideos) && song.youtube_url) {
+                params.youtube_url = song.youtube_url;
+            }
+
+            gapi.put(`https://genius.com/api${song.song.api_path}`, {
+                text_format: "html,markdown",
+                song: {
+                    tags: params.tags,
+                    youtube_url: params.youtube_url,
+                    custom_performances: params.custom_performances,
+                    release_date_components: params.release_date_components
+                }
+            });
+        }
     }
 }
 
