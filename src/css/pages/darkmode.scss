@@ -21,55 +21,57 @@ body.ge-dark-mode {
         background: #202124;
         color: #ebebeb !important;
 
-        .left-column-container {
-            .ge-textarea {
-                color: #b5bab6 !important;
-                background: #303134 !important;
+        .main-box-container {
+            .left-column-container {
+                .ge-textarea {
+                    color: #b5bab6 !important;
+                    background: #303134 !important;
 
-                &.add-credits.add {
-                    color: rgba(197, 197, 197, 0.4) !important;
-                    background: rgba(0, 0, 0, 0) !important;
+                    &.add-credits.add {
+                        color: rgba(197, 197, 197, 0.4) !important;
+                        background: rgba(0, 0, 0, 0) !important;
+
+                        &:hover {
+                            color: rgba(197, 197, 197, 0.8) !important;
+                            background: rgba(48, 49, 52, 0.6) !important;
+                        }
+                    }
+
+                    &.add-media.details {
+                        background-color: #444549 !important;
+
+                        .artist {
+                            color: rgba(0, 0, 0, 0.75) !important;
+                        }
+                    }
+
+                    .tagify__tag {
+                        --tag-bg: #444549 !important;
+                    }
+
+                    &:not(:has(.tagify__tag:hover)),
+                    &.tagify--focus {
+
+                        .tagify__tag__removeBtn,
+                        .tagify__tag-text,
+                        span.tagify__input {
+                            color: #ebebeb !important;
+                        }
+                    }
+
+                    &::placeholder,
+                    >.tagify__input::before {
+                        color: rgba(181, 186, 182, 0.4) !important;
+                    }
 
                     &:hover {
-                        color: rgba(197, 197, 197, 0.8) !important;
-                        background: rgba(48, 49, 52, 0.6) !important;
+                        background-color: #494b4e !important;
                     }
-                }
 
-                &.add-media.details {
-                    background-color: #444549 !important;
-
-                    .artist {
-                        color: rgba(0, 0, 0, 0.75) !important;
+                    &:focus,
+                    &.tagify--focus {
+                        background-color: #555658;
                     }
-                }
-
-                .tagify__tag  {
-                    --tag-bg: #444549 !important;
-                }
-
-                &:not(:has(.tagify__tag:hover)),
-                &.tagify--focus {
-                    .tagify__tag__removeBtn,
-                    .tagify__tag-text,
-                    span.tagify__input {
-                        color: #ebebeb !important;
-                    }
-                }
-
-                &::placeholder,
-                >.tagify__input::before {
-                    color: rgba(181, 186, 182, 0.4) !important;
-                }
-
-                &:hover {
-                    background-color: #494b4e !important;
-                }
-
-                &:focus,
-                &.tagify--focus {
-                    background-color: #555658;
-                    color: #000 !important;
                 }
             }
         }
