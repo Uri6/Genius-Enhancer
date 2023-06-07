@@ -3,41 +3,21 @@
     --box-radius: 5px;
 }
 
-.LyricsEditdesktop__Editor-sc-19lxrhp-1 {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+// Right buttons panel on the new song page
 
+.LyricsEditdesktop__ControlsContainer-sc-19lxrhp-2 {
     .header-div {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        margin-right: 10px;
-
         .header-buttons {
             display: flex;
-            margin-bottom: 10px;
-        }
+            flex-wrap: wrap;
+            width: 80%;
 
-        button {
-            cursor: pointer;
-            font-size: 0.75rem;
-            text-align: center;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            background: transparent;
-            border-width: 1px;
-            border-style: solid;
-            border-image: initial;
-            border-radius: 1.25rem;
-            padding: 0.25rem 0.75rem;
-            margin-right: 15px;
-            overflow: hidden;
+            button {
+                margin-right: 15px;
 
-            &:hover {
-                background-color: black;
-                color: white;
+                &:last-child {
+                    margin-right: 0;
+                }
             }
         }
 
