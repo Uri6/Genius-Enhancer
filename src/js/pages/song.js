@@ -146,11 +146,9 @@ export async function handleSongPage(tabId) {
 					}
 
 					if (artworkInputContainer.length > 0 && !artworkInputContainer.find(".magic-wand-button-container").length) {
-						/*const magicWandContainer = */
-						$("<div>", {
+						const magicWandContainer = $("<div>", {
 							class: "magic-wand-button-container",
-							disabled: true,
-							style: "cursor: not-allowed;"
+							disabled: true
 						})
 							.append($("<img>", {
 								class: "magic-wand-button-icon",
@@ -158,7 +156,7 @@ export async function handleSongPage(tabId) {
 							}))
 							.appendTo(artworkInputContainer);
 
-						/*magicWandContainer.on("click", async function() {
+						magicWandContainer.on("click", async function() {
 							let artwork = await new Promise((resolve) => {
 								chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "song", false] }, (response) => {
 									resolve(response);
@@ -179,7 +177,7 @@ export async function handleSongPage(tabId) {
 								});
 								artworkInput.dispatchEvent(event);
 							}
-						});*/
+						});
 					}
 				}, 1000);
 			});
