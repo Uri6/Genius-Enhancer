@@ -22,14 +22,14 @@ body {
 }
 
 #container {
-  margin: 0px !important;
+  margin: 0 !important;
   height: 100% !important;
   width: 100% !important;
   padding-top: 10px !important;
   position: static !important;
 
   #main {
-    margin: 0px !important;
+    margin: 0 !important;
 
     #group_container {
       height: 100% !important;
@@ -152,7 +152,6 @@ body {
             margin-left: 5px !important;
 
             &:hover {
-              // change the color to royal blue
               color: #1f53ee !important;
             }
           }
@@ -226,8 +225,8 @@ body {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 10px;
-  border-bottom: 0px !important;
-  box-shadow: 0 0 0px #000;
+  border-bottom: 0 !important;
+  box-shadow: 0 0 0 #000;
   border-radius: 5px !important;
   padding: 5px 10px;
 

@@ -310,8 +310,8 @@ header-admin .feed_dropdown,
     height: 100%;
     display: block;
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     background-color: rgba(228, 228, 72, 0.5) !important;
     backdrop-filter: saturate(70%) blur(12px) !important;
   }
@@ -379,7 +379,7 @@ input {
   word-spacing: normal;
   line-height: normal;
   text-transform: none;
-  text-indent: 0px;
+  text-indent: 0;
   text-shadow: none;
   display: inline-block;
   text-align: start;

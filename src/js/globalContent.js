@@ -38,10 +38,6 @@ export function geniusGlobalContentScript() {
         });
     }
 
-    // move the div with the classes "PageHeaderdesktop__Subnavigation-bhx5ui-6 koeYQd"
-    // (or the element with the class "header-nav_menu" if there's no element with the classes above)
-    // to after the element with the classes "PageHeaderLogo__Link-sc-175tsd3-0 jNXEyt"
-    // (or to after the element with the class "logo_container" if there's no element with the classes above)
     const subNav = $(".header-nav_menu, .PageHeaderdesktop__Subnavigation-bhx5ui-6");
 
     const logo = $(".logo_container, .PageHeaderLogo__Link-sc-175tsd3-0");
@@ -100,14 +96,11 @@ export function geniusGlobalContentScript() {
         $(".search_results_autocomplete_container").addClass("ng-hide");
     });
 
-    // const adminHeader = $("div[ng-show='$ctrl.open_header_menus.admin_menu']");
     const feedbackButton = $("a[href='/feedback/new']");
     const iosChartbeat = $("a[href='/chartbeat?ios=1']");
 
     feedbackButton?.remove();
     iosChartbeat?.remove();
-
-    // adminHeader?.append('<a href="/users/recent_signups" class="feed_dropdown-item feed_dropdown-item--link">Recent Signups</a>');
 
     const $modalWindow = $(".modal_window");
 

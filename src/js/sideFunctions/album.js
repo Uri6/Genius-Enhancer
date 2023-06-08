@@ -455,12 +455,10 @@ export async function appendIcon() {
             class: "main-box-container"
         }).appendTo(popupBox);
 
-        // Create a container for the left column
         const leftColumn = $("<div>", {
             class: "left-column-container"
         }).appendTo(mainBox);
 
-        // Create a container for the right column
         const rightColumn = $("<div>", {
             class: "right-column-container"
         }).appendTo(mainBox);
@@ -689,11 +687,9 @@ export async function appendIcon() {
             overlayPlaceholder: "Year",
             startDay: 0,
             onShow: () => {
-                // add a class to the datepicker input
                 datePickerInput.addClass("calendar-open");
             },
             onHide: () => {
-                // remove the class from the datepicker input
                 datePickerInput.removeClass("calendar-open");
             },
             formatter: (input, date) => {
@@ -821,9 +817,7 @@ export async function appendIcon() {
                 }
             } else {
                 console.error(playlistVideos);
-                // add the error class to the input
                 addMediaInput.addClass("error");
-                // add a tooltip to the input
                 addMediaInput.attr("title", "Invalid YouTube Playlist URL");
                 // clear the details
                 $(".add-media.details.title").text("");
@@ -1048,15 +1042,20 @@ export async function autolinkArtwork(query, type, minimize = false) {
         });
     });
 
-    console.log(modifiedQuery);
+    console.info("Searching for artwork for " + modifiedQuery + "...");
 
     try {
         const data = await fetch("https://larsbutnotleast.xyz/genius/assets/js/itunes.php?query=" + encodeURIComponent(modifiedQuery) + "&entity=" + type).then((response) => response.json());
 
         if (!data.error && data.length) {
             const imageSize = minimize ? "/200x200.png" : "/1000x1000-999.png";
+
+            console.info("Found " + data.length + " artwork(s) for " + modifiedQuery);
+
             return data.map((url) => url.url.replace("/600x600bb.jpg", imageSize));
         }
+
+        console.info("No artwork found for " + modifiedQuery);
 
         return [""];
     } catch (error) {
@@ -1143,9 +1142,7 @@ export async function saveEverything() {
         // Retrieve the URL of the artwork from the page
         const artwork = $(".extension-box .artwork-images-stack img");
         let artworkUrl = artwork.attr("src").replace("/200x200.png", "/1000x1000-999.png");
-        const swap = details.album.cover_arts.length && artwork.attr("data-swap");
-
-        console.log(artworkUrl);
+        const swap = details.album.cover_arts.length && artwork.attr("data-swap") === "true";
 
         // If there's no cover art or if the user has chosen to swap the existing cover art, update the first cover art
         if (swap) {

@@ -41,11 +41,11 @@ body {
   font-size: 20px;
   color: white;
   text-align: center;
-  margin-top: 0px !important;
+  margin-top: 0 !important;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.6) !important;
 
   position: sticky;
-  top: 0px !important;
+  top: 0 !important;
   z-index: 2;
 
   .group_icon {
@@ -53,13 +53,13 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    margin-right: 0px;
+    margin-right: 0;
   }
 
   .group_name {
     border: none !important;
     color: #444939 !important;
-    padding: 0px !important;
+    padding: 0 !important;
   }
 
   &:hover {
@@ -317,7 +317,7 @@ body {
 
         .login {
           font-weight: 600;
-          box-shadow: 0 0 0px #000;
+          box-shadow: 0 0 0 #000;
           border: none !important;
           border-radius: 5px !important;
 

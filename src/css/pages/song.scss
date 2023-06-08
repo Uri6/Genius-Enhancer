@@ -56,11 +56,6 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
 .ScrollableTabs__ContentArea-sc-179ldtd-5.iYNXFF {
     border-radius: 10px;
 
-    //section:nth-child(even),
-    //section:nth-child(odd) {
-    //    border-bottom: 1px dashed rgb(90, 90, 90);
-    //}
-
     h3 {
         color: hsl(240, 68%, 6%);
         text-align: start;
@@ -69,7 +64,6 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     label {
         margin-bottom: 0.5em;
         font-size: .9rem;
-        //color: hsl(232deg 14% 68%);
     }
 
     .bECqMC {
@@ -82,17 +76,9 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     .css-18ubn8j-control,
     .iEuXAw>div, // song art preview
     .diuQvC { //song gradient preview
-        //  height: 38px;
-        //border: 1px solid hsl(0deg 0% 86%);
         border-radius: var(--input-radius);
 
         .css-qfdv9 {
-            //padding: 0;
-
-            //&:hover,
-            //&:focus {
-            //    padding: 0px;
-            //}
 
             .css-osj7q0-placeholder {
                 color: hsl(0deg 0% 86%);
@@ -112,7 +98,6 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     input {
         &:focus {
             border-color: yellow !important;
-            //height: 38px;
         }
     }
 

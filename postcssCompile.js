@@ -21,10 +21,10 @@ postcss([autoprefixer()])
         // write the result to the target file
         fs.writeFile(targetFile, result.css, (error) => {
             if (error) {
-                console.log(error)
+                console.error(error)
             }
         })
     })
     .catch((error) => {
-        console.log(error)
+        console.error(error)
     })

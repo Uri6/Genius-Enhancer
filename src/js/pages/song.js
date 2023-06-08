@@ -110,7 +110,7 @@ export async function handleSongPage(tabId) {
 							}))
 							.appendTo(ytInputContainer);
 
-						magicWandContainer.on("click", async function () {
+						magicWandContainer.on("click", async function() {
 							const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
 
 							const modifiedQuery = query.map(part => {
@@ -355,7 +355,6 @@ export async function handleSongPage(tabId) {
 				} else {
 					restoreButton.title = `No ${type} input to restore`;
 					restoreButton.disabled = true;
-					// add the class disabled to the button
 					restoreButton.classList.add("disabled");
 				}
 			};
@@ -392,21 +391,21 @@ export async function handleSongPage(tabId) {
 			const metadataQuestionsSelector = ".MetadataQuestionList__ItemContainer-vhwrm0-0";
 			$(explainerSelector).hide();
 			$(metadataQuestionsSelector).remove();
-			
+
 			const buttonStyle = "Button__Container-rtu9rw-0 coQEbB LyricsEditdesktop__Button-sc-19lxrhp-4 kpOoZB";
-			
+
 			const lyricsEditorSelector = document.querySelector(".LyricsEditdesktop__Controls-sc-19lxrhp-3");
-			
+
 			const createButton = (text, className, onClick, accessKey) => {
-			  const button = document.createElement("button");
-			  button.innerText = text;
-			  button.value = text;
-			  button.classList.add(...className.split(" "));
-			  button.addEventListener("click", onClick);
-			  if (accessKey) {
-				button.accessKey = accessKey;
-			  }
-			  return button;
+				const button = document.createElement("button");
+				button.innerText = text;
+				button.value = text;
+				button.classList.add(...className.split(" "));
+				button.addEventListener("click", onClick);
+				if (accessKey) {
+					button.accessKey = accessKey;
+				}
+				return button;
 			};
 
 			// Define toolbar buttons
@@ -427,38 +426,38 @@ export async function handleSongPage(tabId) {
 
 			// Add event listener for hotkeys
 			document.addEventListener("keydown", event => {
-			  const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
-			  const { ctrlKey, key } = event;
-			
-			  if (ctrlKey && (key === "b" || key === "i") && document.activeElement === lyricsTextarea) {
-				const text = key === "b" ? "Bold" : "Italic";
-				addTextToTextArea(text);
-				event.preventDefault();
-			  }
+				const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
+				const { ctrlKey, key } = event;
+
+				if (ctrlKey && (key === "b" || key === "i") && document.activeElement === lyricsTextarea) {
+					const text = key === "b" ? "Bold" : "Italic";
+					addTextToTextArea(text);
+					event.preventDefault();
+				}
 			});
 
 			// Define header option buttons
 			const headerOptionButtonNames = ["Intro", "Verse", "Chorus", "Bridge", "Outro"];
 			const headerOptionButtons = headerOptionButtonNames.map(name =>
-			  createButton(name, buttonStyle, () => addTextToTextArea(`\n[${name}]`))
+				createButton(name, buttonStyle, () => addTextToTextArea(`\n[${name}]`))
 			);
-			
+
 			const toolbarButtonDiv = $("<div>", {
-			  class: "header-buttons"
+				class: "header-buttons"
 			}).append(...toolbarButtons);
-			
+
 			const headerOptionsDiv = $("<div>", {
-			  class: "header-buttons"
+				class: "header-buttons"
 			}).append(...headerOptionButtons);
-			
+
 			const headerLyrics = $("<div>", {
-			  class: "header-div tEQJY"
+				class: "header-div tEQJY"
 			}).append(toolbarButtonDiv, headerOptionsDiv);
-			
+
 			const existingheaderLyrics = $(lyricsEditorSelector).find(".header-div");
-			
+
 			if (!existingheaderLyrics.length) {
-			  $(lyricsEditorSelector).append(headerLyrics);
+				$(lyricsEditorSelector).append(headerLyrics);
 			}
 
 			// Add text to text area
@@ -466,17 +465,17 @@ export async function handleSongPage(tabId) {
 				const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
 				const { selectionStart, selectionEnd, value } = lyricsTextarea;
 				const selectedText = value.substring(selectionStart, selectionEnd);
-			  
+
 				// Modify the text based on the selected button (bold or italic)
 				const modifiedText = text === 'Bold'
 					? `<b>${selectedText}</b>`
 					: text === 'Italic'
-					? `<i>${selectedText}</i>`
-					: text;
-			  
+						? `<i>${selectedText}</i>`
+						: text;
+
 				// Insert the modified text into the textarea
 				lyricsTextarea.setRangeText(modifiedText, selectionStart, selectionEnd, 'end');
-			  };
+			};
 
 
 			// document.addEventListener('DOMNodeInserted', (event) => {
