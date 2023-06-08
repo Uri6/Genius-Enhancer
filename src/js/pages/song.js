@@ -86,8 +86,8 @@ export async function handleSongPage(tabId) {
 
 					if (tagInputContainer.length && !tagInputContainer.find(".clear-tags-rdil").length) {
 						const clearTagsContainer = $("<div>", {
-								class: "clear-tags-rdil"
-							})
+							class: "clear-tags-rdil"
+						})
 							.append($("<span>✖ Clear Tags</span>"))
 							.appendTo(tagInputContainer);
 
@@ -102,15 +102,15 @@ export async function handleSongPage(tabId) {
 
 					if (ytInputContainer.length && !ytInputContainer.find(".magic-wand-button-container").length) {
 						const magicWandContainer = $("<div>", {
-								class: "magic-wand-button-container"
-							})
+							class: "magic-wand-button-container"
+						})
 							.append($("<img>", {
 								class: "magic-wand-button-icon",
 								src: chrome.runtime.getURL("/src/imgs/magicWand/2/32x32.png")
 							}))
 							.appendTo(ytInputContainer);
 
-						magicWandContainer.on("click", async function() {
+						magicWandContainer.on("click", async function () {
 							const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
 
 							const modifiedQuery = query.map(part => {
@@ -148,10 +148,10 @@ export async function handleSongPage(tabId) {
 					if (artworkInputContainer.length > 0 && !artworkInputContainer.find(".magic-wand-button-container").length) {
 						/*const magicWandContainer = */
 						$("<div>", {
-								class: "magic-wand-button-container",
-								disabled: true,
-								style: "cursor: not-allowed;"
-							})
+							class: "magic-wand-button-container",
+							disabled: true,
+							style: "cursor: not-allowed;"
+						})
 							.append($("<img>", {
 								class: "magic-wand-button-icon",
 								src: chrome.runtime.getURL("/src/imgs/magicWand/2/32x32.png")
@@ -159,26 +159,26 @@ export async function handleSongPage(tabId) {
 							.appendTo(artworkInputContainer);
 
 						/*magicWandContainer.on("click", async function() {
-						    let artwork = await new Promise((resolve) => {
-						        chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "song", false] }, (response) => {
-						            resolve(response);
-						        });
-						    });
+							let artwork = await new Promise((resolve) => {
+								chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "song", false] }, (response) => {
+									resolve(response);
+								});
+							});
 
-						    if (artwork.length) {
-						        artwork = artwork[0];
+							if (artwork.length) {
+								artwork = artwork[0];
 
-						        const artworkInput = document.querySelectorAll("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0")[2];
-						        artworkInput.value = "";
+								const artworkInput = document.querySelectorAll("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0")[2];
+								artworkInput.value = "";
 
-						        artworkInput.click();
-						        artworkInput.value = artwork;
-						        const event = new InputEvent("input", {
-						            bubbles: true,
-						            data: artwork,
-						        });
-						        artworkInput.dispatchEvent(event);
-						    }
+								artworkInput.click();
+								artworkInput.value = artwork;
+								const event = new InputEvent("input", {
+									bubbles: true,
+									data: artwork,
+								});
+								artworkInput.dispatchEvent(event);
+							}
 						});*/
 					}
 				}, 1000);
@@ -386,117 +386,97 @@ export async function handleSongPage(tabId) {
 				}
 			};
 
-			const explainer = ".LyricsEditExplainer__Container-sc-1aeph76-0";
-			$(explainer).hide();
 
-			const metadataQuestions = ".MetadataQuestionList__ItemContainer-vhwrm0-0"
-			$(metadataQuestions).remove();
-
+			// TOOLBAR
+			const explainerSelector = ".LyricsEditExplainer__Container-sc-1aeph76-0";
+			const metadataQuestionsSelector = ".MetadataQuestionList__ItemContainer-vhwrm0-0";
+			$(explainerSelector).hide();
+			$(metadataQuestionsSelector).remove();
+			
 			const buttonStyle = "Button__Container-rtu9rw-0 coQEbB LyricsEditdesktop__Button-sc-19lxrhp-4 kpOoZB";
-
-			// Will fix the naming later
-			const lyricsEditorContainer = document.querySelector(".LyricsEditdesktop__Controls-sc-19lxrhp-3");
-
-			// Create buttons
+			
+			const lyricsEditorSelector = document.querySelector(".LyricsEditdesktop__Controls-sc-19lxrhp-3");
+			
 			const createButton = (text, className, onClick, accessKey) => {
-				const button = document.createElement("button");
-				button.innerText = text;
-				button.value = text;
-				for (const clazz of className.split(" ")) {
-					button.classList.add(clazz);
-				}
-				button.addEventListener("click", onClick);
-				if (accessKey) {
-					button.accessKey = accessKey;
-				}
-				return button;
+			  const button = document.createElement("button");
+			  button.innerText = text;
+			  button.value = text;
+			  button.classList.add(...className.split(" "));
+			  button.addEventListener("click", onClick);
+			  if (accessKey) {
+				button.accessKey = accessKey;
+			  }
+			  return button;
 			};
 
 			// Define toolbar buttons
 			const toolbarButtonNames = ["Bold", "Italic"];
-			const toolbarButtons = [];
-
-			// Create toolbar buttons
-			toolbarButtonNames.forEach((name) => {
+			const toolbarButtons = toolbarButtonNames.map(name => {
 				const accessKey = name === "Bold" ? "b" : "i";
-				const button = createButton(name, buttonStyle, () =>
-					addTextToTextArea(name), accessKey);
+				const button = createButton(name, buttonStyle, () => addTextToTextArea(name), accessKey);
+
 				if (name === "Bold") {
 					button.style.fontWeight = "bold";
 				} else if (name === "Italic") {
 					button.style.fontStyle = "italic";
+					button.style.fontWeight = "bold";
 				}
-				toolbarButtons.push(button);
+
+				return button;
 			});
 
 			// Add event listener for hotkeys
-			document.addEventListener("keydown", (event) => {
-				const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
-				if (event.ctrlKey && (event.key === "b" || event.key === "i") && document.activeElement === lyricsTextarea) {
-					const text = event.key === "b" ? "Bold" : "Italic";
-					addTextToTextArea(text);
-					event.preventDefault();
-				}
+			document.addEventListener("keydown", event => {
+			  const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
+			  const { ctrlKey, key } = event;
+			
+			  if (ctrlKey && (key === "b" || key === "i") && document.activeElement === lyricsTextarea) {
+				const text = key === "b" ? "Bold" : "Italic";
+				addTextToTextArea(text);
+				event.preventDefault();
+			  }
 			});
 
 			// Define header option buttons
 			const headerOptionButtonNames = ["Intro", "Verse", "Chorus", "Bridge", "Outro"];
-			const headerOptionButtons = [];
-
-			// Create header option buttons
-			headerOptionButtonNames.forEach((name) => {
-				const button = createButton(name, buttonStyle, () =>
-					addTextToTextArea(`\n[${name}]`)
-				);
-				headerOptionButtons.push(button);
-			});
-
-			// Create toolbar button div
-			const toolbarButtonDiv = document.createElement("div");
-			toolbarButtonDiv.classList.add("header-buttons");
-			toolbarButtonDiv.append(...toolbarButtons);
-
-			// Create header options div
-			const headerOptionsDiv = document.createElement("div");
-			headerOptionsDiv.classList.add("header-buttons");
-			headerOptionsDiv.append(...headerOptionButtons);
-
-			// Create header lyrics div
-			const headerLyrics = document.createElement("div");
-			headerLyrics.classList.add("header-div", "tEQJY");
-			headerLyrics.append(toolbarButtonDiv, headerOptionsDiv);
-
-			// Get existing header lyrics div
-			const existingheaderLyrics = lyricsEditorContainer.querySelector(".header-div");
-
-			// Add header lyrics div if it doesn't exist
-			if (!existingheaderLyrics) {
-				lyricsEditorContainer.appendChild(headerLyrics);
+			const headerOptionButtons = headerOptionButtonNames.map(name =>
+			  createButton(name, buttonStyle, () => addTextToTextArea(`\n[${name}]`))
+			);
+			
+			const toolbarButtonDiv = $("<div>", {
+			  class: "header-buttons"
+			}).append(...toolbarButtons);
+			
+			const headerOptionsDiv = $("<div>", {
+			  class: "header-buttons"
+			}).append(...headerOptionButtons);
+			
+			const headerLyrics = $("<div>", {
+			  class: "header-div tEQJY"
+			}).append(toolbarButtonDiv, headerOptionsDiv);
+			
+			const existingheaderLyrics = $(lyricsEditorSelector).find(".header-div");
+			
+			if (!existingheaderLyrics.length) {
+			  $(lyricsEditorSelector).append(headerLyrics);
 			}
 
 			// Add text to text area
 			const addTextToTextArea = (text) => {
 				const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
-				const {
-					selectionStart,
-					selectionEnd,
-					value
-				} = lyricsTextarea;
+				const { selectionStart, selectionEnd, value } = lyricsTextarea;
 				const selectedText = value.substring(selectionStart, selectionEnd);
-
+			  
 				// Modify the text based on the selected button (bold or italic)
-				let modifiedText = text;
-
-				if (text === "Bold") {
-					modifiedText = `<b>${selectedText}</b>`;
-				} else if (text === "Italic") {
-					modifiedText = `<i>${selectedText}</i>`;
-				}
-
+				const modifiedText = text === 'Bold'
+					? `<b>${selectedText}</b>`
+					: text === 'Italic'
+					? `<i>${selectedText}</i>`
+					: text;
+			  
 				// Insert the modified text into the textarea
-				const newText = `${value.substring(0, selectionStart)}${modifiedText}${value.substring(selectionEnd)}`;
-				lyricsTextarea.value = newText;
-			};
+				lyricsTextarea.setRangeText(modifiedText, selectionStart, selectionEnd, 'end');
+			  };
 
 
 			// document.addEventListener('DOMNodeInserted', (event) => {
@@ -553,10 +533,10 @@ export async function handleSongPage(tabId) {
 			/*let isAnnotation = false;
 
 			if (document.getElementsByClassName("annotation_sidebar_unit").length == 2) {
-			    isAnnotation = true;
+				isAnnotation = true;
 			}
 			else if (!!document.getElementsByClassName("Annotation__Container-l76qjh-0 cNCMgo").length) {
-			    isAnnotation = true;
+				isAnnotation = true;
 			}
 
 			const lyricsContainer = $('.Lyrics__Container-sc-1ynbvzw-6')[0] || $(".lyrics section")[0];
@@ -566,71 +546,71 @@ export async function handleSongPage(tabId) {
 
 			var languageCounts = {};
 			for (var i = 0; i < words.length; i++) {
-			    var word = words[i];
-			    var language = getLanguage(word);
-			    if (!languageCounts[language]) {
-			        languageCounts[language] = 0;
-			    }
-			    languageCounts[language]++;
+				var word = words[i];
+				var language = getLanguage(word);
+				if (!languageCounts[language]) {
+					languageCounts[language] = 0;
+				}
+				languageCounts[language]++;
 			}
 
 			var mostUsedLanguage = null;
 			var highestCount = 0;
 			for (var language in languageCounts) {
-			    if (languageCounts[language] > highestCount) {
-			        mostUsedLanguage = language;
-			        highestCount = languageCounts[language];
-			    }
+				if (languageCounts[language] > highestCount) {
+					mostUsedLanguage = language;
+					highestCount = languageCounts[language];
+				}
 			}
 
 			if (mostUsedLanguage === null) {
-			    console.log("No language detected");
+				console.log("No language detected");
 			} else {
-			    var direction = isRTL(mostUsedLanguage) ? "RTL" : "LTR";
-			    console.log("Most used language: " + mostUsedLanguage + " (" + direction + ")");
+				var direction = isRTL(mostUsedLanguage) ? "RTL" : "LTR";
+				console.log("Most used language: " + mostUsedLanguage + " (" + direction + ")");
 			}
 
 			function getLanguage(word) {
-			    switch (true) {
-			        case /^[a-zA-Z]+$/.test(word):
-			            return "English";
-			        case /^[\u0600-\u06FF]+$/.test(word):
-			            return "Arabic";
-			        case /^[\u0590-\u05FF]+$/.test(word):
-			            return "Hebrew";
-			        case /^[\u0400-\u04FF]+$/.test(word):
-			            return "Russian";
-			        case /^[\u3040-\u309F]+$/.test(word):
-			            return "Japanese";
-			        case /^[\u4E00-\u9FFF]+$/.test(word):
-			            return "Chinese Simplified";
-			        case /^[\u00E4-\u00FC]+$/.test(word):
-			            return "German";
-			        case /^[\u00C0-\u00FF]+$/.test(word):
-			            return "French";
-			        case /^[\u00E0-\u00FF]+$/.test(word):
-			            return "Spanish";
-			        case /^[\u00C6-\u00E6]+$/.test(word):
-			            return "Danish";
-			        case /^[\u0104-\u0134]+$/.test(word):
-			            return "Polish";
-			        case /^[\u0103-\u0103]+$/.test(word):
-			            return "Romanian";
-			        case /^[\u00E6-\u00E6]+$/.test(word):
-			            return "Ukrainian";
-			        case /^[\u0131-\u0131]+$/.test(word):
-			            return "Turkish";
-			        case /^[\u0050-\u00FF]+$/.test(word):
-			            return "Italian";
-			        case /^[\u01C5-\u0218]+$/.test(word):
-			            return "Dutch";
-			        default:
-			            return "Other";
-			    }
+				switch (true) {
+					case /^[a-zA-Z]+$/.test(word):
+						return "English";
+					case /^[\u0600-\u06FF]+$/.test(word):
+						return "Arabic";
+					case /^[\u0590-\u05FF]+$/.test(word):
+						return "Hebrew";
+					case /^[\u0400-\u04FF]+$/.test(word):
+						return "Russian";
+					case /^[\u3040-\u309F]+$/.test(word):
+						return "Japanese";
+					case /^[\u4E00-\u9FFF]+$/.test(word):
+						return "Chinese Simplified";
+					case /^[\u00E4-\u00FC]+$/.test(word):
+						return "German";
+					case /^[\u00C0-\u00FF]+$/.test(word):
+						return "French";
+					case /^[\u00E0-\u00FF]+$/.test(word):
+						return "Spanish";
+					case /^[\u00C6-\u00E6]+$/.test(word):
+						return "Danish";
+					case /^[\u0104-\u0134]+$/.test(word):
+						return "Polish";
+					case /^[\u0103-\u0103]+$/.test(word):
+						return "Romanian";
+					case /^[\u00E6-\u00E6]+$/.test(word):
+						return "Ukrainian";
+					case /^[\u0131-\u0131]+$/.test(word):
+						return "Turkish";
+					case /^[\u0050-\u00FF]+$/.test(word):
+						return "Italian";
+					case /^[\u01C5-\u0218]+$/.test(word):
+						return "Dutch";
+					default:
+						return "Other";
+				}
 			}
 
 			function isRTL(language) {
-			    return (language === "Arabic" || language === "Hebrew");
+				return (language === "Arabic" || language === "Hebrew");
 			}*/
 		}
 	});
