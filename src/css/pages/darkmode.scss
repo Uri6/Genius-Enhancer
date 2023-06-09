@@ -9,8 +9,8 @@ body.ge-theme-transition *:not(#ge-theme-toggle) {
 }
 
 body.ge-dark-mode {
-    background: #141414;
-    color: #f2e6fe;
+    background: #1d1d1f;
+    color: #f5f5f7;
 
     &:has(song-page),
     &.act-index.cont-groups {
@@ -1001,7 +1001,7 @@ body.ge-dark-mode {
         fill: #ff1414;
     }
 
-    input:not(.ge-theme-toggle):not(.ge-save-button) {
+    input:not(.ge-theme-toggle):not(.ge-save-button):not(#ge-follow-button):not([placeholder="Search lyrics & more"]) {
         color: #fff;
 
         &:not(.input.ng-valid) {
@@ -1515,6 +1515,46 @@ body.ge-dark-mode {
 
         &:before {
             box-shadow: 0 0 4px 4px #242627 inset;
+        }
+    }
+
+    // New song page
+
+    .SongPage__Container-sc-19xhmoi-0 {
+
+        // Header
+        .icHeGe {
+            background: #2f2f31;
+            color: #f5f5f7;
+            border-bottom-color: #4c5355;
+
+            button,
+            span,
+            div,
+            a {
+                color: #f5f5f7;
+                border-color: #f5f5f7;
+
+                svg {
+                    fill: #f5f5f7;
+                }
+            }
+        }
+
+        // Comments
+        .lgbAKX {
+            * {
+                color: #f5f5f7;
+                border-color: #f5f5f7;
+
+                &::placeholder {
+                    color: #f5f5f7;
+                }
+            }
+
+            svg {
+                fill: #f5f5f7;
+            }
         }
     }
 }
