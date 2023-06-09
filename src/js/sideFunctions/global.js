@@ -105,7 +105,7 @@ export function identifyPageType() {
                     target: { tabId: tab.id },
                     func: getDetails,
                 },
-                function (returnVal) {
+                function(returnVal) {
                     if (returnVal && returnVal[0].result != null) {
                         pageObject = returnVal[0].result;
                         pageType = pageObject.page_type;
@@ -161,7 +161,7 @@ export function identifyPageType() {
                                     );
                                 },
                             },
-                            function (isForumPage) {
+                            function(isForumPage) {
                                 if (isForumPage[0].result) {
                                     // Loop through the keys of the urlToPageType object and check if the URL includes any of them
                                     for (const url of Object.keys(
@@ -298,6 +298,25 @@ export function replaceTextarea(textareaClasses) {
     const editor = document.createElement("div");
     textarea.parentNode.appendChild(editor);
 
+    const songParts = [
+        "Intro",
+        "Verse",
+        "Chorus",
+        "Bridge",
+        "Outro"
+    ];
+
+    const songPartButtonsContainer = document.createElement("div");
+    songPartButtonsContainer.classList = "ql-song-part-buttons-container ge-hidden";
+    textarea.parentNode.appendChild(songPartButtonsContainer);
+
+    songParts.map((part) => {
+        const button = document.createElement("button");
+        button.textContent = part;
+        button.classList = "insert-song-part " + part.toLowerCase();
+        songPartButtonsContainer.appendChild(button);
+    });
+
     const quill = new Quill(editor, {
         modules: {
             toolbar: [
@@ -324,6 +343,14 @@ export function replaceTextarea(textareaClasses) {
     );
     content = content.replace(/\n/g, "<br>");
 
+    // Add event listeners to the buttons to insert text at the current cursor position
+    document.querySelector(".ql-song-part-buttons-container").childNodes.forEach((button) => {
+        button.addEventListener("click", function() {
+            const cursorPosition = quill.getSelection()?.index || quill.getLength();
+            quill.insertText(cursorPosition, "\n\n[" + button.textContent + "]\n");
+        });
+    });
+
     // if editing lyrics, it's making the header sticky
     if (textareaClasses !== "required markdown_preview_setup_complete") {
         const toolbar = $(".ql-toolbar");
@@ -338,7 +365,7 @@ export function replaceTextarea(textareaClasses) {
 
     quill.clipboard.dangerouslyPasteHTML(content);
 
-    quill.on('text-change', function (delta, oldDelta, source) {
+    quill.on('text-change', function(delta, oldDelta, source) {
         let markdownFormat = quill.root.innerHTML
             .replace(/<strong>/g, "<b>")
             .replace(/<\/strong>/g, "</b>")
