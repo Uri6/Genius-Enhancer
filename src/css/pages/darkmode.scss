@@ -739,6 +739,18 @@ body.ge-dark-mode {
         background: #141414;
     }
 
+    messages-inbox {
+        .feed_dropdown-header {
+            background: transparent;
+
+            .feed_dropdown-header_action {
+                color: #f5f5f7 !important;
+                border-color: #f5f5f7 !important;
+            }
+        }
+    }
+
+
     .feed_dropdown-item {
         background: #141414;
         color: #fff;

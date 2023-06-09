@@ -349,6 +349,7 @@ header-admin .feed_dropdown,
 }
 
 .square_button,
+.square_input,
 textarea,
 tags-input,
 defer-compile>.u-top_margin {
@@ -401,10 +402,6 @@ input {
 
 .bracket {
   color: red;
-}
-
-.modal_window {
-  z-index: 991 !important;
 }
 
 .drop-element {
@@ -732,7 +729,7 @@ input {
       border-radius: 10px !important;
 
       &:not(:has(>[href="/feedback/new"])) {
-        min-width: 500px !important;
+        width: 500px !important;
       }
 
       .feed_dropdown-item--unread:not(.details_loaded):before {
@@ -750,6 +747,41 @@ input {
         border-width: 0 !important;
       }
 
+      messages-inbox {
+        .feed_dropdown-header {
+          display: flex !important;
+          position: fixed;
+          width: 500px !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          padding: 0;
+          z-index: 10;
+
+          .text_label {
+            display: none !important;
+            margin: 0 !important;
+          }
+
+          .feed_dropdown-header_action {
+            color: #1d1d1f;
+            font-size: .675em;
+            line-height: 30px;
+
+            border-top: 0;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border: 1px solid #1d1d1f;
+            padding: 0 10px;
+            backdrop-filter: blur(5px);
+          }
+        }
+
+        .feed_dropdown-item:first-child {
+          border-top: 0 !important;
+        }
+      }
+
       &:not(.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0) {
         z-index: 100 !important;
         position: fixed !important;
@@ -758,7 +790,7 @@ input {
 
         &:not(.PageHeadershared__Dropdown-sc-1cjax99-1:has(.PageHeaderMenu__Title-sc-13myo8l-2.PageHeaderMenu__Item-sc-13myo8l-3)) {
           height: 90% !important;
-          width: 29% !important;
+          width: 500px !important;
           right: 20px !important;
         }
 
@@ -860,6 +892,21 @@ input {
   }
 }
 
+.modal_window {
+  z-index: 1000 !important;
+  backdrop-filter: brightness(0.8) saturate(70%) blur(12px) !important;
+
+  .modal_window-close_button {
+    display: none !important;
+  }
+
+  .modal_window-content {
+    margin-top: 10px !important;
+    border-radius: 10px !important;
+  }
+}
+
+// In case of a modal window without container
 .modal_window-content {
   margin-top: 50px !important;
 }
