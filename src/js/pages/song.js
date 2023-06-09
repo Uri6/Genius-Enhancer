@@ -368,9 +368,7 @@ export async function handleSongPage(tabId) {
 
 			// TOOLBAR
 			const explainerSelector = ".LyricsEditExplainer__Container-sc-1aeph76-0";
-			const metadataQuestionsSelector = ".MetadataQuestionList__ItemContainer-vhwrm0-0";
 			$(explainerSelector).hide();
-			$(metadataQuestionsSelector).remove();
 
 			const buttonStyle = "Button__Container-rtu9rw-0 coQEbB LyricsEditdesktop__Button-sc-19lxrhp-4 kpOoZB";
 
