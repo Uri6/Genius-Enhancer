@@ -34,80 +34,18 @@ export function spotifyPopUp(show) {
  * @returns {void}
  */
 export function song_modernTextEditor() {
-    let flag = true;
-
-    document.addEventListener("DOMNodeRemoved", (e) => {
-        setTimeout(() => {
-            if (
-                document.querySelectorAll(
-                    ".LyricsEditdesktop__Controls-sc-19lxrhp-5.bwjuqY button"
-                ).length < 3
-            ) {
-                chrome.runtime.sendMessage({ removeQuill: true });
-            }
-        }, 100);
-
-        if (!flag) {
-            return;
-        }
-        setTimeout(() => {
-            const ngIfAttr = e.target.getAttribute("ng-if");
-            if (
-                ngIfAttr === "lyrics_ctrl.should_show_full_lyrics_save_cancel_buttons()" ||
-                ngIfAttr === "!lyrics_ctrl.saving"
-            ) {
-                chrome.runtime.sendMessage({
-                    removeQuill: true
-                });
-                flag = false;
-            }
-        }, 100);
-    });
-
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (
-                !(mutation.type === "attributes" &&
-                    mutation.attributeName === "class" &&
-                    !$(".ql-toolbar-container").length)
-            ) {
-                return;
-            }
-
-            const target = mutation.target;
-            if (
-                !target.classList.contains("ng-hide") &&
-                target.classList.contains("wysiwyg_input") &&
-                target.classList.contains("wysiwyg_input--full_width")
-            ) {
-                chrome.runtime.sendMessage({
-                    replaceTextarea: [
-                        "wysiwyg_input wysiwyg_input--full_width"
-                    ]
-                });
-                flag = true;
-            }
-        });
-    });
-
-    const targetNode = document.querySelector(
-        ".wysiwyg_input.wysiwyg_input--full_width"
-    );
-
-    if (targetNode) {
-        observer.observe(targetNode, {
-            attributes: true,
-            childList: false,
-            characterData: false,
-        });
-    }
-
     document.addEventListener("DOMNodeInserted", (e) => {
-        if (
-            e.target.className ===
-            "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo" &&
-            e.target.parentNode.childNodes.length < 3
-        ) {
+        if (e.target.className === "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo") {
+            // Remove the Quill toolbar container from the DOM
+            if ($(".ql-toolbar-container").length) {
+                $(".ql-toolbar-container").remove();
+            }
+
+            // Loop through all elements with class "ql-snow" and remove them from the DOM
+            while ($(".ql-snow").length) {
+                $(".ql-snow").remove();
+            }
+
             chrome.runtime.sendMessage({
                 replaceTextarea: [
                     "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo",

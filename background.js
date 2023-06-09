@@ -11,8 +11,7 @@ import {
     getArtistsList,
     getCreditsList,
     identifyPageType,
-    replaceTextarea,
-    removeQuill
+    replaceTextarea
 } from "./src/js/sideFunctions/global.js";
 import {
     missingInfo,
@@ -96,7 +95,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             getCreditsList: [getCreditsList, message.getCreditsList],
             identifyPageType: [identifyPageType, [""]],
             replaceTextarea: [replaceTextarea, message.replaceTextarea],
-            removeQuill: [removeQuill, [""]],
             album_appendIcon: [appendIcon, message.album_appendIcon],
             album_addSongAsNext: [addSongAsNext, message.album_addSongAsNext],
             album_missingInfo: [missingInfo, message.album_missingInfo],

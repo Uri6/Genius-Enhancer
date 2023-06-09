@@ -105,7 +105,7 @@ export function identifyPageType() {
                     target: { tabId: tab.id },
                     func: getDetails,
                 },
-                function(returnVal) {
+                function (returnVal) {
                     if (returnVal && returnVal[0].result != null) {
                         pageObject = returnVal[0].result;
                         pageType = pageObject.page_type;
@@ -161,7 +161,7 @@ export function identifyPageType() {
                                     );
                                 },
                             },
-                            function(isForumPage) {
+                            function (isForumPage) {
                                 if (isForumPage[0].result) {
                                     // Loop through the keys of the urlToPageType object and check if the URL includes any of them
                                     for (const url of Object.keys(
@@ -338,8 +338,8 @@ export function replaceTextarea(textareaClasses) {
 
     quill.clipboard.dangerouslyPasteHTML(content);
 
-    quill.on("text-change", function(delta, oldDelta, source) {
-        let htmlContent = quill.root.innerHTML
+    quill.on('text-change', function (delta, oldDelta, source) {
+        let markdownFormat = quill.root.innerHTML
             .replace(/<strong>/g, "<b>")
             .replace(/<\/strong>/g, "</b>")
 
@@ -358,40 +358,34 @@ export function replaceTextarea(textareaClasses) {
             .replace(/&lt;/g, "<")
             .replace(/&gt;/g, ">");
 
-        // still working on the while loop below
-        // the bug is that it's separating linked lines into two separate elements
-        // for now, I solved it only for the case of two lines
-        while (
-            htmlContent.match(
-                /<a [^>]*href="([^"\r\n]+)"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>\n<a [^>]*href="\1"[^>]*>(?:(?!<\/a>)[\s\S])+<\/a>/g
-            )
-        ) {
-            htmlContent = htmlContent.replace(
-                /<a [^>]*href="([^"\r\n]+)"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>\n<a [^>]*href="\1"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g,
-                function(match, url, text1, text2) {
-                    return (
-                        "[" +
-                        text1.replace(/<br[^>]*>/g, "\n") +
-                        text2.replace(/<br[^>]*>/g, "\n") +
-                        "](" +
-                        url +
-                        ")"
-                    );
+        // Creating a temporary HTMLDocument
+        let tempDoc = new DOMParser().parseFromString(markdownFormat, 'text/html');
+        let walker = tempDoc.createTreeWalker(tempDoc.body, NodeFilter.SHOW_ELEMENT);
+        let node, nextNode, tempNode;
+
+        // Walk through each element node in the document
+        while (node = walker.nextNode()) {
+            if (node.tagName.toLowerCase() === 'a') {
+                nextNode = walker.nextNode();
+
+                // Check if next node is also an <a> element with the same href
+                while (nextNode && nextNode.tagName.toLowerCase() === 'a' && node.href === nextNode.href) {
+                    // If so, merge the content of these <a> elements
+                    node.textContent += '\n' + nextNode.textContent;
+                    tempNode = nextNode;
+                    nextNode = walker.nextNode();
+                    tempNode.previousSibling.remove();
+                    tempNode.remove();
                 }
-            );
+            }
         }
 
-        htmlContent = htmlContent
-            .replace(
-                /<a href="([^"\r\n]+)" target="[^"\r\n]+">([^<\r\n]+)<\/a>/g,
-                "[$2]($1)"
-            )
-            .replace(
-                /<a href="([^"\r\n]+)"[^<\r\n]+>([^<\r\n]+)<\/a>/g,
-                "[$2]($1)"
-            );
+        markdownFormat = tempDoc.body.innerHTML
+            .replace(/<a href="([^"]*)">([^<]*)<\/a>/g, "[$2]($1)")
+            .replace(/<\/b>\n<b>/g, "\n")
+            .replace(/<\/i>\n<i>/g, "\n");
 
-        textarea.value = htmlContent;
+        textarea.value = markdownFormat;
 
         const event = new Event("input", {
             bubbles: true,
@@ -402,23 +396,6 @@ export function replaceTextarea(textareaClasses) {
 
     if (textareaClasses === "required markdown_preview_setup_complete") {
         window.scrollTo(0, 0);
-    }
-}
-
-/**
- * Removes the Quill rich text editor from the DOM
- *
- * @returns {void}
- */
-export function removeQuill() {
-    // Remove the Quill toolbar container from the DOM
-    if ($(".ql-toolbar-container").length) {
-        $(".ql-toolbar-container").remove();
-    }
-
-    // Loop through all elements with class "ql-snow" and remove them from the DOM
-    while ($(".ql-snow").length) {
-        $(".ql-snow").remove();
     }
 }
 
