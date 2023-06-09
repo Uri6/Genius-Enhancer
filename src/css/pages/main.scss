@@ -892,7 +892,7 @@ input {
   }
 }
 
-.modal_window {
+.modal_window:not(:has(conversation-messages)):not(:has(conversation-with-user)) {
   z-index: 1000 !important;
   backdrop-filter: brightness(0.8) saturate(70%) blur(12px) !important;
 
