@@ -346,8 +346,9 @@ export function replaceTextarea(textareaClasses) {
     // Add event listeners to the buttons to insert text at the current cursor position
     document.querySelector(".ql-song-part-buttons-container").childNodes.forEach((button) => {
         button.addEventListener("click", function() {
-            const cursorPosition = quill.getSelection()?.index || quill.getLength();
-            quill.insertText(cursorPosition, "\n\n[" + button.textContent + "]\n");
+            const cursorPosition = quill.getSelection()?.index >= 0 ? quill.getSelection().index : quill.getLength();
+            const lines = cursorPosition > 0 ? "\n\n" : "";
+            quill.insertText(cursorPosition, lines + "[" + button.textContent + "]\n");
         });
     });
 
