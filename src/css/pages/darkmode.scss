@@ -918,10 +918,6 @@ body.ge-dark-mode {
         }
     }
 
-    #group_container {
-        background: #000;
-    }
-
     .gsoAZX {
         color: #fff;
         border-color: #fff;
@@ -1001,7 +997,7 @@ body.ge-dark-mode {
         fill: #ff1414;
     }
 
-    input:not(.ge-theme-toggle):not(.ge-save-button):not(#ge-follow-button):not([placeholder="Search lyrics & more"]) {
+    input:not(.ge-theme-toggle):not(.ge-save-button):not(#ge-follow-button):not(#discussion_submit):not(#forum_post_submit):not([placeholder="Search lyrics & more"]) {
         color: #fff;
 
         &:not(.input.ng-valid) {

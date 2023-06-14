@@ -6,6 +6,10 @@
 
 @import "fonts.css";
 
+.act-index.cont-groups {
+  background: #f6f2cb !important;
+}
+
 #main {
   padding-bottom: 30px !important;
 }
@@ -16,10 +20,6 @@
   align-items: center;
   margin-bottom: 20px;
   color: #000;
-}
-
-.act-index.cont-groups {
-  background: linear-gradient(180deg, #0083BE, #009994, #009994, #009994) !important;
 }
 
 .group_list {
