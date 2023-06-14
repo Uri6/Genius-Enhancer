@@ -1160,31 +1160,36 @@ body.ge-dark-mode {
         color: #ccc;
     }
 
-    .mini_card {
-        background: #171717;
+    artist-songs-and-albums {
+        .mini_card_grid {
+            .mini_card {
+                background-color: #171717 !important;
 
-        &:not(.mini_card--transparent) {
-            &:hover {
-                background: #303030;
+                &:not(.mini_card--transparent) {
+                    &:hover {
+                        background-color: #303030 !important;
+                    }
+                }
+            }
+        }
+
+        album-grid .thumbnail_grid .thumbnail_grid-grid_element {
+            vertical-album-card {
+
+                a,
+                a.vertical_album_card {
+                    background-color: #171717 !important;
+
+                    &:hover {
+                        background-color: #303030 !important;
+                    }
+                }
             }
         }
     }
 
     .mini_article_card-title {
         color: #000;
-    }
-
-    mini-song-card,
-    vertical-album-card {
-
-        a,
-        a.vertical_album_card {
-            background: #171717 !important;
-
-            &:hover {
-                background: #303030 !important;
-            }
-        }
     }
 
     .modal_window-content {
@@ -1286,22 +1291,25 @@ body.ge-dark-mode {
         }
     }
 
-    .social_media_button {
-        background: #141414;
-        outline-color: #fff;
-
-        &_username {
+    .social_media_buttons_container {
+        .social_media_button {
             background: #141414;
-        }
+            outline-color: #fff;
 
-        &_icon {
-            img {
-                filter: invert(100%);
+            &_username {
+                background: #141414;
+                color: #fff;
             }
-        }
 
-        &:hover {
-            background: #303030;
+            &_icon {
+                img {
+                    filter: invert(100%);
+                }
+            }
+
+            &:hover {
+                background: #303030;
+            }
         }
     }
 
