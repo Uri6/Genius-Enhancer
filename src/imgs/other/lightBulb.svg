@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:svgjs="http://svgjs.com/svgjs" width="512" height="512" x="0" y="0" viewBox="0 0 50 50"
+    style="enable-background: new 0 0 512 512;" xml:space="preserve">
+    <linearGradient id="a" x1="42.907" x2="7.097" y1="40.98" y2="9.016" gradientUnits="userSpaceOnUse">
+        <stop stop-opacity="1" stop-color="#94f25d" offset="0"></stop>
+        <stop stop-opacity="1" stop-color="#18a307" offset="1"></stop>
+    </linearGradient>
+    <path fill="url(#a)"
+        d="M25 1C11.75 1 1 11.74 1 25c0 13.25 10.75 24 24 24 13.26 0 24-10.75 24-24C49 11.74 38.26 1 25 1z"
+        data-original="url(#a)" class=""></path>
+    <g style="transform: translate(25px, 25px) scale(1.2) translate(-25px, -25px);">
+        <path fill="#ffdb63"
+            d="M26.117 11.284c-8.288-.934-13.65 8.28-9.047 14.98 1.249 1.818 2.185 3.82 2.71 5.926.09.362.405.62.778.62h8.877a.806.806 0 0 0 .783-.636c.466-2.03 1.288-3.965 2.531-5.655 4.394-5.97.57-14.423-6.632-15.235z"
+            data-original="#f3cd4c" class=""></path>
+        <path fill="#33383d"
+            d="M21.093 32.81v4.718c0 .871.706 1.577 1.576 1.577h4.662c.87 0 1.576-.706 1.576-1.577V32.81z"
+            data-original="#33383d" class=""></path>
+        <g fill="#464c56">
+            <path
+                d="M21.125 35.103h7.75a.735.735 0 0 0 0-1.468h-7.75a.734.734 0 1 0 0 1.468zM28.875 36.228h-7.75a.734.734 0 1 0 0 1.47h7.75a.735.735 0 0 0 0-1.47zM22.64 39.105c.348.69 1.268 1.186 2.36 1.186s2.012-.496 2.36-1.186z"
+                fill="#464c56" data-original="#464c56" class=""></path>
+        </g>
+        <path fill="#eaa736"
+            d="m23.206 32.81-2.1-10.024 2 1.213a.5.5 0 0 0 .649-.115l1.197-1.49 1.384 1.458c.161.17.418.205.62.085l1.94-1.16-2.102 10.033h1.021l2.294-10.946a.5.5 0 0 0-.747-.532l-2.577 1.54-1.502-1.582a.482.482 0 0 0-.383-.155.498.498 0 0 0-.369.186l-1.281 1.595-2.61-1.583a.5.5 0 0 0-.748.53l2.293 10.947z"
+            data-original="#eaa736" class=""></path>
+    </g>
+</svg>

@@ -22,8 +22,8 @@ const createCheckbox = (id, labelText) => {
         );
 };
 
-const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album Page");
-const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song Page");
+const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album");
+const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song");
 const FORUMS_ELEMENT = createElement("info-box", "genius-page", "Forums");
 
 const ALBUM_PAGE_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
@@ -46,12 +46,21 @@ const SONG_PAGE_FEATURES_ELEMENT = $("<div>")
 
 const FORUMS_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Features" }))
-    .append(createCheckbox("forums2", "Modern forums"));
+    .append(createCheckbox("forums2", "Modern forums"))
+    .append(createCheckbox("modern-text-editor", "Modern text editor"));
 
 const INFO_TOOLTIP = $("<div>", {
     id: "info-tooltip",
     text: "Version " + chrome.runtime.getManifest().version
 });
+
+const SONG_PAGE_CONTAINER = $("<div>", { id: "song-container" });
+const ALBUM_PAGE_CONTAINER = $("<div>", { id: "album-container" });
+const FORUMS_CONTAINER = $("<div>", { id: "forum-container" });
+
+// Initialize hidden state for all pages except the first
+ALBUM_PAGE_CONTAINER.hide();
+FORUMS_CONTAINER.hide();
 
 const $infoIcon = $("svg.info-icon");
 
@@ -60,6 +69,11 @@ $infoIcon.hover(() => {
 }, () => {
     INFO_TOOLTIP.remove();
 });
+
+const $suggestFeature = $("a.suggest");
+const suggestIcon = chrome.runtime.getURL("/src/imgs/other/lightBulb.svg");
+
+$suggestFeature.append($("<img>", { src: suggestIcon, class: "icon" }));
 
 const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = false, additionalFunc = null) => {
     const $checkbox = $(`#${checkboxId}`);
@@ -92,29 +106,73 @@ handleCheckboxClick("extensionStatus", "extensionStatus", "", false, (isChecked)
     }
 });
 
+const pages = [SONG_PAGE_CONTAINER, ALBUM_PAGE_CONTAINER, FORUMS_CONTAINER];
+let currentPageIndex = 0;
+
+const loadPage = () => {
+    $("#optional-additions > div:not(.arrow)").hide(); // hide all pages
+    pages[currentPageIndex].show(); // show current page
+};
+
+loadPage(); // initially load the first page
+
 chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     const additions = $("#optional-additions");
 
-    additions
+    const $arrowLeft = $("<div>", {
+        class: "arrow",
+        id: "arrow-left",
+        text: "‹",
+        on: {
+            click: () => {
+                currentPageIndex--;
+                if (currentPageIndex < 0) {
+                    currentPageIndex = pages.length - 1; // loop back to last page
+                }
+                loadPage();
+            }
+        }
+    });
+
+    const $arrowRight = $("<div>", {
+        class: "arrow",
+        id: "arrow-right",
+        text: "›",
+        on: {
+            click: () => {
+                currentPageIndex++;
+                if (currentPageIndex >= pages.length) {
+                    currentPageIndex = 0; // loop back to first page
+                }
+                loadPage();
+            }
+        }
+    });
+
+    // add all pages to the additions container
+    additions.append($arrowLeft, SONG_PAGE_CONTAINER, ALBUM_PAGE_CONTAINER, FORUMS_CONTAINER, $arrowRight);
+
+    // create and add song elements
+    SONG_PAGE_CONTAINER
         .append(SONG_PAGE_ELEMENT)
         .append(SONG_PAGE_FEATURES_ELEMENT);
-
     handleCheckboxClick("apple-music-pop-up", "appleMusicPopUp", "song_appleMusicPopUp");
     handleCheckboxClick("spotify-pop-up", "spotifyPopUp", "song_spotifyPopUp");
     handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
     handleCheckboxClick("old-song-page", "OldSongPage", "");
 
-    additions
+    // create and add album elements
+    ALBUM_PAGE_CONTAINER
         .append(ALBUM_PAGE_ELEMENT)
         .append(ALBUM_PAGE_FEATURES_ELEMENT);
-
     handleCheckboxClick("bios", "bios", "", [true, false, false]);
     handleCheckboxClick("people", "people", "", [false, true, false]);
     handleCheckboxClick("release-date", "releaseDate", "", [false, false, true]);
 
-    additions
+    // create and add forum elements
+    FORUMS_CONTAINER
         .append(FORUMS_ELEMENT)
         .append(FORUMS_FEATURES_ELEMENT);
-
     handleCheckboxClick("forums2", "forums2", "");
+    handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
 });
