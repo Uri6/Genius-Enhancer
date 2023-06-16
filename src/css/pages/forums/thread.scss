@@ -28,7 +28,7 @@ body {
     box-shadow: none !important;
   }
 
-  .group_summary {
+  .group_summary[onclick="window.location.href=$('.group_summary a').attr('href')"] {
     width: fit-content;
     display: flex;
     align-items: center;
