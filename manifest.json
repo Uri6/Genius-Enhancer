@@ -1,7 +1,7 @@
 {
     "name": "Genius Enhancer",
     "description": "Automation tools and productivity enhancements to streamline workflow and modernize Genius's style.",
-    "version": "0.9.4",
+    "version": "1.0",
     "manifest_version": 3,
     "icons": {
         "16": "/src/imgs/icons/3/16x16.png",
@@ -30,10 +30,10 @@
         }
     },
     "requirements": {
-        "minimum_chrome_version": "75"
+        "minimum_chrome_version": "86"
     },
     "options_page": "/src/html/options.html",
-    "permissions": ["storage", "activeTab", "scripting", "tabs"],
+    "permissions": ["storage", "activeTab", "scripting"],
     "host_permissions": ["*://*/*"],
     "content_security_policy": {
         "extension_pages": "script-src 'self' ; object-src 'self' ; img-src 'self' ; style-src 'self' ;"

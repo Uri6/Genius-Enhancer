@@ -2,10 +2,10 @@
 
   <hr>
 
-  <p><img src="https://i.ibb.co/4TwJTVf/transp-Github.png" style="transform: scale(0.8);"></p>
+  <p><img src="https://i.ibb.co/qmK7XS2/transp-Github.png" style="transform: scale(0.8);"></p>
   <img src="https://img.shields.io/chrome-web-store/v/hnkhjljomklfcnfnbbikoddbolmpaifl?color=ffff65&label=Released%20Version&logo=Google%20Chrome&logoColor=white" alt="Released Version" style="max-width: 100%;">
   <img src="https://img.shields.io/chrome-web-store/rating/hnkhjljomklfcnfnbbikoddbolmpaifl?label=Chrome%20Web%20Store%20Rating" alt="Chrome Web Store Rating" style="max-width: 100%;">
-  <a href="https://chrome.google.com/webstore/detail/genius-enhancer-beta/hnkhjljomklfcnfnbbikoddbolmpaifl"><img src="https://badgen.net/badge/Download/%F0%9F%91%80/" alt="Download" style="max-width: 100%;"></a>
+  <a href="https://chrome.google.com/webstore/detail/hnkhjljomklfcnfnbbikoddbolmpaifl"><img src="https://badgen.net/badge/Download/%F0%9F%91%80/" alt="Download" style="max-width: 100%;"></a>
 
 </div>
 
@@ -27,20 +27,20 @@ A Chrome extension featuring automation tools, productivity enhancements, and a 
 - A fresh, modern look and feel for Genius.com
 
 ## Installation
-1. Download the extension from the [chrome web store](https://chrome.google.com/webstore/detail/genius-enhancer-beta/hnkhjljomklfcnfnbbikoddbolmpaifl)
+1. Download the extension from the [chrome web store](https://chrome.google.com/webstore/detail/hnkhjljomklfcnfnbbikoddbolmpaifl)
 
 or
 
 1. Clone the repository
 ```
-git clone https://github.com/Uri6/Genius-Enhancer-Beta.git
+git clone https://github.com/Uri6/Genius-Enhancer.git
 ```
 
 2. Compile the scss files
 3. Add your own API keys to the secrets.example.js file and rename it to secrets.js
 4. Load the extension in Chrome
     - Open up `chrome://extensions/` in your browser and click `Developer mode` in the top right
-    - Click `Load unpacked` and select the `Genius-Enhancer-Beta` directory
+    - Click `Load unpacked` and select the `Genius-Enhancer` directory
 
 ## Usage
 1. Go to Genius.com

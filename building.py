@@ -36,7 +36,6 @@ def should_skip_file(file):
     if any(file.endswith(bad_file) for bad_file in bad_files):
         return True
     nedded_dimensions = {"artwork": "512x512.png", "Exists": "64x64.png", "Missing": "64x64.png", "Simple": "32x32.png", "magicWand"+os.sep+"2": "32x32.png", "icons"+os.sep+"3": ("16x16.png", "32x32.png", "48x48.png", "128x128.png")}
-    print(os.path.dirname(file))
     for folder, dimensions in nedded_dimensions.items():
         if folder in os.path.dirname(file):
             if isinstance(dimensions, str):

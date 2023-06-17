@@ -2,7 +2,7 @@
  * @license
  * This code is licensed under the terms specified in the "LICENSE.md" file
  * located in the root directory of the project. The license file can also be found at
- * https://github.com/Uri6/Genius-Enhancer-Beta/blob/main/LICENSE.md
+ * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
 export async function handleProfile(tabId, url) {
@@ -140,7 +140,7 @@ export async function handleProfile(tabId, url) {
                 }
 
                 if (window.location.href.toLowerCase().endsWith("/uri6")) {
-                    const geDeveloper = $(".profile_identity_and_description").find("img[src='https://s3.amazonaws.com/filepicker-images-rapgenius/vf7FK21SAmZZGeRc3hAu_transpGenius.png']");
+                    const geDeveloper = $(".profile_identity_and_description").find("img").first();
 
                     if (geDeveloper.length) {
                         geDeveloper.wrap("<div class='ge-developer-image' id='ge-developer-image'></div>");

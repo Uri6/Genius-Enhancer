@@ -2,7 +2,7 @@
  * @license
  * This code is licensed under the terms specified in the "LICENSE.md" file
  * located in the root directory of the project. The license file can also be found at
- * https://github.com/Uri6/Genius-Enhancer-Beta/blob/main/LICENSE.md
+ * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
 export async function missingInfo(bio, people, releaseDate) {

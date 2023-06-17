@@ -2,7 +2,7 @@
  * @license
  * This code is licensed under the terms specified in the "LICENSE.md" file
  * located in the root directory of the project. The license file can also be found at
- * https://github.com/Uri6/Genius-Enhancer-Beta/blob/main/LICENSE.md
+ * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
 import {
@@ -346,7 +346,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                                 });
                             }
                         } else if (res.OldSongPage === undefined) {
-                            console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-and-suggest/");
+                            console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-a-bug/");
                         }
                     });
 
