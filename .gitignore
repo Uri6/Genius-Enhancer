@@ -9,6 +9,7 @@
 
 # API keys
 .env
+secrets.js
 
 # Build artifacts and vision files
 vision/

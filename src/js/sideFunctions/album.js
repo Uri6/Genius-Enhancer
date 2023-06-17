@@ -101,9 +101,10 @@ export async function getPlaylistVideos(playlistLink) {
     }
 
     const playlistId = new URL(playlistLink).searchParams.get("list");
-    const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+    const key = secrets.GOOGLE_API_KEY;
+    console.log(key);
 
-    const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`);
+    const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${key}`);
     if (!metadataResponse.ok) {
         return ("getPlaylistVideos: Failed to fetch playlist metadata");
     }
@@ -112,7 +113,7 @@ export async function getPlaylistVideos(playlistLink) {
     const thumbnails = metadataData.thumbnails;
     const playlistImage = (thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default).url;
 
-    const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`);
+    const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${key}`);
     if (!videosResponse.ok) {
         return ("getPlaylistVideos: Failed to fetch playlist videos");
     }

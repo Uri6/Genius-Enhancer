@@ -63,11 +63,11 @@ export function song_modernTextEditor() {
  */
 export async function searchVideo(query) {
     // TODO: don't hardcode the API key
-    const apiKey = "AIzaSyBgyAo8T6yTDCbLHauokuqHBkVHkjs6NjM";
+    const key = secrets.GOOGLE_API_KEY;
 
     try {
         const response = await fetch(
-            `https://www.googleapis.com/youtube/v3/search?part=id&q=${encodeURIComponent(query)}&type=video&order=relevance&key=${apiKey}`
+            `https://www.googleapis.com/youtube/v3/search?part=id&q=${encodeURIComponent(query)}&type=video&order=relevance&key=${key}`
         );
         const data = await response.json();
         const [{ id: { videoId } }] = data.items;

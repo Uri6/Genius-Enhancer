@@ -251,6 +251,10 @@ const files = [
     },
     {
         type: "js",
+        file: "./secrets.js"
+    },
+    {
+        type: "js",
         file: "./lib/tagify/tagify.jq.min.js",
         only: ["album"]
     },

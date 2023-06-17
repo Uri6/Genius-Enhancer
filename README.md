@@ -23,7 +23,7 @@ A Chrome extension featuring automation tools, productivity enhancements, and a 
 - Edit with ease using productivity enhancements like:
   - Color-coded brackets in the lyrics edit page
   - One-click reply button for suggestions
-  - Alerts for missing bios & important metadata for eachsong on an album page
+  - Alerts for missing bios & important metadata for each song on an album page
 - A fresh, modern look and feel for Genius.com
 
 ## Installation
@@ -37,8 +37,10 @@ git clone https://github.com/Uri6/Genius-Enhancer-Beta.git
 ```
 
 2. Compile the scss files
-3. Go to `chrome://extensions/` in your chrome browser and turn on "developer mode"
-4. Click on "Load Unpacked" and select the cloned repository
+3. Add your own API keys to the secrets.example.js file and rename it to secrets.js
+4. Load the extension in Chrome
+    - Open up `chrome://extensions/` in your browser and click `Developer mode` in the top right
+    - Click `Load unpacked` and select the `Genius-Enhancer-Beta` directory
 
 ## Usage
 1. Go to Genius.com
