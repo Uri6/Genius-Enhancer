@@ -26,6 +26,20 @@ export async function handleProfile(tabId, url) {
         {
             target: { tabId: tabId },
             func: () => {
+                if (window.location.pathname.includes("yessirre")) {
+                    const parentElement = Array.from(document.querySelectorAll(".drop-target.u-clickable"))
+                        .find(element => element.textContent.includes("Staff"));
+
+                    if (parentElement) {
+                        const svgElements = document.querySelectorAll('role-icon');
+                        svgElements[0].remove();
+                        parentElement.classList.add("custom-staff");
+                        const style = document.createElement("style");
+                        style.innerHTML = `.custom-staff::before { content: "🌊"; margin-right: 2px; }`;
+                        document.head.appendChild(style);
+                    }
+                }
+
                 // if exists, remove the inner text (without removing the svg child) of the elements that have the class "u-quarter_vertical_margins" and at least one of the following classes: square_button--facebook, square_button--twitter, square_button--instagram
                 // the inner text is the username in the social media
                 const socialMediaButtons = $(".square_button--facebook, .square_button--twitter, .square_button--instagram").filter((i, el) => $(el).hasClass("u-quarter_vertical_margins"));
@@ -99,11 +113,11 @@ export async function handleProfile(tabId, url) {
                             title: socialMediaName
                         })
                             .append($("<div>", {
-                                class: "social_media_button_icon"
-                            })
-                                .append($("<img>", {
-                                    src: socialMediaIconsArray.find(icon => icon[0] === socialMediaName)[1]
-                                }))
+                                    class: "social_media_button_icon"
+                                })
+                                    .append($("<img>", {
+                                        src: socialMediaIconsArray.find(icon => icon[0] === socialMediaName)[1]
+                                    }))
                             )
                             .append($("<div>", {
                                 class: "social_media_button_username",
@@ -150,8 +164,8 @@ export async function handleProfile(tabId, url) {
                             particlesJS("ge-developer-image", {});
                         });
 
-                        $('#ge-developer-image').on('mouseleave', () => {
-                            $('#ge-developer-image canvas').remove();
+                        $("#ge-developer-image").on("mouseleave", () => {
+                            $("#ge-developer-image canvas").remove();
                         });
                     }
                 }
