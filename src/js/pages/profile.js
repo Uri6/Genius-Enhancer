@@ -150,9 +150,21 @@ export async function handleProfile(tabId, url) {
                             particlesJS("ge-developer-image", {});
                         });
 
-                        $('#ge-developer-image').on('mouseleave', () => {
-                            $('#ge-developer-image canvas').remove();
+                        $("#ge-developer-image").on("mouseleave", () => {
+                            $("#ge-developer-image canvas").remove();
                         });
+                    }
+                } else if (window.location.href.toLowerCase().endsWith("/yessirre")) {
+                    const parentElement = Array.from(document.querySelectorAll(".drop-target.u-clickable"))
+                        .find(element => element.textContent.includes("Staff"));
+
+                    if (parentElement) {
+                        const svgElements = document.querySelectorAll('role-icon');
+                        svgElements[0].remove();
+                        parentElement.classList.add("custom-staff");
+                        const style = document.createElement("style");
+                        style.insertAdjacentHTML('beforeend', `.custom-staff::before { content: "🌊"; margin-right: 2px; }`);
+                        document.head.appendChild(style);
                     }
                 }
             }
