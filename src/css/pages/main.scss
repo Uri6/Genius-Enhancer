@@ -671,14 +671,6 @@ input {
 .feed_dropdown--left_align:has(search-results) {
   left: unset !important;
   right: 1rem !important;
-
-  search-results {
-    search-result-items {
-      .mini_card {
-        background-color: unset !important;
-      }
-    }
-  }
 }
 
 .PageHeaderLoggedIn__Container-on81eb-1.cuLMgZ,

@@ -195,15 +195,10 @@ body.ge-dark-mode {
         color: #fff;
     }
 
-    .annotation_sidebar_arrow {
-        svg {
-            background: #141414;
-        }
-    }
-
     .annotation_sidebar_unit,
-    .annotation_stat-pill {
-        background: #141414;
+    .annotation_stat-pill,
+    .annotation_sidebar_arrow::before {
+        background: #2c3032;
     }
 
     .annotation_stat-pill--green {
@@ -1479,6 +1474,7 @@ body.ge-dark-mode {
     }
 
     .mini_card {
+        background-color: rgba(255, 255, 255, 0.2);
 
         &-title,
         &-subtitle,
@@ -1522,6 +1518,29 @@ body.ge-dark-mode {
         }
     }
 
+    search-results {
+        .global_search-search_results-back {
+            color: #f5f5f7;
+
+            svg {
+                fill: #f5f5f7;
+            }
+        }
+
+        search-result-paginated-section {
+            >.text_label {
+                color: #f5f5f5;
+            }
+        }
+    }
+
+    mini-artist-card,
+    mini-user-card {
+        a:hover {
+            background-color: #ff1464 !important;
+        }
+    }
+
     // New song page
 
     .SongPage__Container-sc-19xhmoi-0 {
@@ -1560,5 +1579,9 @@ body.ge-dark-mode {
                 fill: #f5f5f7;
             }
         }
+    }
+
+    svg[ng-hide="lyrics_ctrl.correction"] {
+        fill: #1d1d1f;
     }
 }
