@@ -159,7 +159,7 @@ export async function appendIcon() {
             // access user_picture's parent element
             const user_picture_parent = user_picture.parentElement;
             // make sure the user's iq is high enough to add a tag
-            if (parseInt(user_picture_parent.children[1].innerHTML.replace(" IQ", "").replaceAll(",", "")) < 100) {
+            if (parseInt(user_picture_parent.children[1].innerText.replace(" IQ", "").replaceAll(",", "")) < 100) {
                 disable_add_tag("You need at least 100 IQ to tag songs");
             }
         } else {

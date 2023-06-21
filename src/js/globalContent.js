@@ -219,7 +219,7 @@ export function geniusGlobalContentScript() {
                         ]
                     };
 
-                    const templateChooser = $("<div>", {
+                    $("<div>", {
                         class: "ge-message-template-chooser",
                         style: "display: none;"
                     })

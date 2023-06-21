@@ -35,7 +35,7 @@ export async function handleNewSong(tabId) {
 
                 genres.forEach((genre) => {
                     const genreButton = document.createElement("button");
-                    genreButton.innerHTML = `${genre.emoji} ${genre.name}`;
+                    genreButton.innerText = `${genre.emoji} ${genre.name}`;
                     genreButton.classList.add("modern-chooser-button");
                     genreButton.addEventListener("click", (e) => {
                         e.preventDefault();

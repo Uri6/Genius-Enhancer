@@ -191,9 +191,6 @@ export function identifyPageType() {
                             }
                         );
                     } else {
-                        if (pageType !== undefined) {
-                            chrome.storage.local.set({ pageType: pageType });
-                        }
                         resolve(pageType);
                     }
                 }
@@ -310,7 +307,7 @@ export function replaceTextarea(textareaClasses) {
     songPartButtonsContainer.classList = "ql-song-part-buttons-container ge-hidden";
     textarea.parentNode.appendChild(songPartButtonsContainer);
 
-    songParts.map((part) => {
+    songParts.forEach((part) => {
         const button = document.createElement("button");
         button.textContent = part;
         button.classList = "insert-song-part " + part.toLowerCase();

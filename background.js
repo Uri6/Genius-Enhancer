@@ -362,9 +362,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 }
 
                 const isForumPage = await chrome.scripting.executeScript({
-                    target: { tabId: tabId }, func: () => (
-                        (document.getElementsByClassName("group_summary").length > 0)
-                    )
+                    target: { tabId: tabId }, func: () => (document.getElementsByClassName("group_summary").length > 0)
                 });
 
                 if (isForumPage?.[0]?.result) {
