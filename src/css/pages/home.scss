@@ -14,6 +14,10 @@
         .PageHeaderdesktop__Subnavigation-bhx5ui-6 {
             z-index: 1;
         }
+
+        div:has(>iframe) {
+            max-width: 500px;
+        }
     }
 
     .PageHeaderAuthLinksdesktop__Container-sc-10sr9hk-1.cDEgGV {
