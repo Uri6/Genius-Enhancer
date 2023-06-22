@@ -32,10 +32,10 @@ def should_skip_folder(src, folder):
     return False
 
 def should_skip_file(file):
-    bad_files = [".py", ".ts", ".scss", ".psd", ".gitignore", ".gitattributes", "todo", "changelog.md", "compileAllSass.js", "postcssCompile.js", "tsconfig.json", "package.json", "yarn.lock", ".yarnrc.yml", ".prettierignore", ".env.example", ".env"]
+    bad_files = [".py", ".ts", ".scss", ".psd", ".gitignore", ".gitattributes", "todo", "changelog.md", "compileAllSass.js", "postcssCompile.js", "tsconfig.json", "package.json", "yarn.lock", ".yarnrc.yml", ".prettierignore", ".env.example", ".env", "secrets.example.js"]
     if any(file.endswith(bad_file) for bad_file in bad_files):
         return True
-    nedded_dimensions = {"artwork": "512x512.png", "Exists": "64x64.png", "Missing": "64x64.png", "Simple": "32x32.png", "magicWand"+os.sep+"2": "32x32.png", "icons"+os.sep+"3": ("16x16.png", "32x32.png", "48x48.png", "128x128.png")}
+    nedded_dimensions = {"Exists": "64x64.png", "Missing": "64x64.png", "Simple": "32x32.png", "magicWand"+os.sep+"2": "32x32.png", "icons"+os.sep+"3": ("16x16.png", "32x32.png", "48x48.png", "128x128.png")}
     for folder, dimensions in nedded_dimensions.items():
         if folder in os.path.dirname(file):
             if isinstance(dimensions, str):

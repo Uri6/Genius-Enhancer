@@ -80,8 +80,8 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "darkMode": false });
             break;
         case "update":
-            // var newURL = "https://uri6.github.io/genius-enhancer/versions/";
-            // chrome.tabs.create({ url: newURL });
+            const changelog = "https://github.com/Uri6/Genius-Enhancer/releases";
+            chrome.tabs.create({ url: changelog });
             break;
     }
 });
