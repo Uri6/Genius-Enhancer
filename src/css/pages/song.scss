@@ -32,7 +32,8 @@
 div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     border-radius: 10px;
 
-    >a, >div {
+    >a,
+    >div {
         border-top: none;
 
         &:hover {
@@ -76,7 +77,9 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     .css-18ubn8j-control,
     .iEuXAw>div, // song art preview
     .diuQvC { //song gradient preview
-        border-radius: var(--input-radius);
+        &:not(input:not(.iweFBO)) {
+            border-radius: var(--input-radius);
+        }
 
         .css-qfdv9 {
 
