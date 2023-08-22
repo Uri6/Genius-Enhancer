@@ -113,14 +113,22 @@ export async function getPlaylistVideos(playlistLink) {
     const thumbnails = metadataData.thumbnails;
     const playlistImage = (thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default).url;
 
-    const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${key}`);
-    if (!videosResponse.ok) {
-        return ("getPlaylistVideos: Failed to fetch playlist videos");
-    }
+    let videosData;
+    let videoTitles = [];
+    let videoLinks = [];
+    let nextPageToken = '';
 
-    const videosData = await videosResponse.json();
-    const videoTitles = videosData.items.map(item => item.snippet.title);
-    const videoLinks = videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`);
+    do {
+        const videosResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&pageToken=${nextPageToken}&playlistId=${playlistId}&key=${key}`);
+        if (!videosResponse.ok) {
+            return ("getPlaylistVideos: Failed to fetch playlist videos");
+        }
+
+        videosData = await videosResponse.json();
+        videoTitles.push(...videosData.items.map(item => item.snippet.title));
+        videoLinks.push(...videosData.items.map(item => `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`));
+        nextPageToken = videosData.nextPageToken;
+    } while (nextPageToken);
 
     return {
         artistName: metadataData.channelTitle,
