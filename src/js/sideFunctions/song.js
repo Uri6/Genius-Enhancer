@@ -111,7 +111,10 @@ export async function appendFollowButton() {
             gapi.post(`https://genius.com/api/songs/${id}/${action}`);
         });
 
-        container.appendChild(button);
+        // sometimes it runs simultaneously so we need to check again
+        if (!document.querySelector("#ge-follow-button")) {
+            container.appendChild(button);
+        }
     } else {
         console.error("Could not find container for follow button");
     }
