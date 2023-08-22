@@ -155,6 +155,31 @@ export async function appendIcon() {
             });
         });
     */
+
+    const handleKeyboardEvents = (event) => {
+        switch (event.keyCode || event.which) {
+            case 27: // Escape key
+                const closeIcon = $(".close-icon");
+                if (!!closeIcon.length) {
+                    closeIcon[0].click();
+                }
+                break;
+            case 71: // 'G'/'g' key
+                if (event.altKey && !$(".blured-background").length) {
+                    $(".extension-icon")[0].click();
+                }
+                break;
+            case 83: // 'S'/'s' key
+                const saveButton = $(".ge-save-button");
+                if (event.altKey && !!saveButton.length) {
+                    saveButton[0].click();
+                }
+                break;
+            default:
+                break;
+        }
+    };
+
     const userValidation = () => {
         const disable_add_tag = (placeholderText) => {
             document.getElementById("ge-add-tags").placeholder = placeholderText;
@@ -173,6 +198,16 @@ export async function appendIcon() {
         } else {
             disable_add_tag("You need to be logged in to tag songs");
         }
+    };
+
+    const createInput = (classes, type, placeholder) => {
+        return $("<input>", {
+            class: classes,
+            type: type,
+            placeholder: placeholder,
+            spellcheck: "false",
+            "data-gramm": "false"
+        });
     };
 
     const getRandomColor = () => {
@@ -241,21 +276,8 @@ export async function appendIcon() {
             class: "add-credits-inputs"
         }).insertBefore($(".add-credits.add"));
 
-        const roleInput = $("<input>", {
-            class: "add-credits role rcorners ge-textarea",
-            type: "text",
-            placeholder: "Role",
-            spellcheck: "false",
-            "data-gramm": "false"
-        }).appendTo(inputs);
-
-        const artistInput = $("<input>", {
-            class: "add-credits artist rcorners ge-textarea",
-            type: "text",
-            placeholder: "Artist",
-            spellcheck: "false",
-            "data-gramm": "false"
-        }).appendTo(inputs);
+        const roleInput = createInput("add-credits role rcorners ge-textarea", "text", "Role").appendTo(inputs);
+        const artistInput = createInput("add-credits artist rcorners ge-textarea", "text", "Artist").appendTo(inputs);
 
         $("<div>", {
             class: "delete-button-container",
@@ -433,17 +455,15 @@ export async function appendIcon() {
         });
     };
 
-    const buttonBackground = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
-    const icon_elem = $("<img>", {
+    const buttonContainer = $(".column_layout-column_span.column_layout-column_span--three_quarter.column_layout-column_span--force_padding").eq(0);
+    const extensionButton = $("<img>", {
         class: "extension-icon",
         alt: "genius enhancer extension icon",
         title: "Alt + G",
         src: chrome.runtime.getURL("src/imgs/icons/3/128x128.png")
-    });
-    buttonBackground.append(icon_elem);
+    }).appendTo(buttonContainer);
 
-    $(".extension-icon").eq(0).on("click", async () => {
-
+    extensionButton.on("click", () => {
         window.scrollTo(0, 0);
         $("body").addClass("disable-scrolling");
 
@@ -477,15 +497,20 @@ export async function appendIcon() {
             text: "GE Metadata Editor"
         }).appendTo(headerBox);
 
+        const closeIcons = {
+            "close": chrome.runtime.getURL("/src/imgs/other/closeIcon.png"),
+            "closeX": chrome.runtime.getURL("/src/imgs/other/closeIconX.png")
+        };
+
         $("<img>", {
             class: "close-icon",
             src: chrome.runtime.getURL("/src/imgs/other/closeIcon.png"),
             on: {
                 mouseover: function() {
-                    this.src = chrome.runtime.getURL("/src/imgs/other/closeIconX.png");
+                    this.src = closeIcons.closeX;
                 },
                 mouseout: function() {
-                    this.src = chrome.runtime.getURL("/src/imgs/other/closeIcon.png");
+                    this.src = closeIcons.close;
                 },
                 click: function() {
                     if (confirm("If you've made changes, they won't save.\nAre you sure you want to close this window?")) {
@@ -1009,31 +1034,8 @@ export async function appendIcon() {
         });
     });
 
-
     // allow to open & close the popup with shortcuts
-    $(window).on("keyup", (event) => {
-        switch (event.keyCode || event.which) {
-            case 27: // Escape key
-                const closeIcon = $(".close-icon");
-                if (!!closeIcon.length) {
-                    closeIcon[0].click();
-                }
-                break;
-            case 71: // 'G' or 'g' key
-                if (event.altKey && !$(".blured-background").length) {
-                    $(".extension-icon")[0].click();
-                }
-                break;
-            case 83: // 'S' or 's' key
-                const saveButton = $(".ge-save-button");
-                if (event.altKey && !!saveButton.length) {
-                    saveButton[0].click();
-                }
-                break;
-            default:
-                break;
-        }
-    });
+    $(window).on("keyup", handleKeyboardEvents);
 }
 
 /**
