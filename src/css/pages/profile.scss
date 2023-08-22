@@ -37,6 +37,7 @@ artist-songs-and-albums {
             .mini_card-thumbnail {
                 border-radius: 10px;
                 background-size: 100%;
+                overflow: hidden;
 
                 &::after {
                     content: "";
