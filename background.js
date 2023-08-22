@@ -308,6 +308,22 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 return;
             }
 
+            const runningFlag = await chrome.scripting.executeScript({
+                target: { tabId: tabId },
+                func: () => {
+                    if (document.body.dataset.geniusEnhancerRunning === "true") {
+                        return false;
+                    } else {
+                        document.body.dataset.geniusEnhancerRunning = "true";
+                        return true;
+                    }
+                }
+            });
+
+            if (!runningFlag[0].result) {
+                return;
+            }
+
             console.info("----------------------------------------");
             console.info("%c loaded files ", "background-color: #ad2885; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
             console.info("time loaded: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
