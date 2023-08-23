@@ -182,7 +182,7 @@ export async function handleSongPage(tabId) {
 				}, 1000);
 			});
 
-			/*$(document).on("DOMNodeInserted", ".Modalshared__ModalSharedContainer-knew3e-0.Modaldesktop__Container-sc-1e03w42-0.cJpfVu", (e) => {
+			$(document).on("DOMNodeInserted", ".ReactModalPortal>div:has(.RecentActivity__Title-d62qa5-1.ilJdac)", (e) => {
 				if (!$(".RecentActivity__FilteringContainer").length) {
 					const filterContainer = $('<div>', {
 						class: 'RecentActivity__FilteringContainer'
@@ -199,6 +199,7 @@ export async function handleSongPage(tabId) {
 						{ id: '', text: 'Geniusbot' },
 						{ id: 'edited_the_lyrics_of|recognized|marked_complete|verified_the_lyrics_of|unverified_the_lyrics_of', text: 'Lyrics Edits' },
 						{ id: 'edited_the_metadata_of|locked|unlocked', text: 'Metadata' },
+						{ id: 'pinned|unpinned', text: 'Pins' },
 						{ id: 'pyonged', text: 'Pyongs' },
 						{ id: 'downvoted|upvoted', text: 'Voting' }
 					];
@@ -209,7 +210,7 @@ export async function handleSongPage(tabId) {
 					});
 					// Create an option element for each option and add it to the dropdown
 					options.forEach((option) => {
-						$('<div>', {
+						const element = $('<div>', {
 							class: 'RecentActivity__FilteringDropdownItem'
 						})
 							.append($('<input>', {
@@ -232,6 +233,13 @@ export async function handleSongPage(tabId) {
 								}))
 							)
 							.appendTo(filterDropdown);
+
+						// Make sure that even if the user clicks on the label, the checkbox will be checked/unchecked
+						$(element).click((e) => {
+							if ($(e.target).is('div')) {
+								$(element).find('.chkboxm').click();
+							}
+						});
 					});
 					// Add the dropdown to the page
 					$(e.target).find('.RecentActivity__Title-d62qa5-1.ilJdac').after(filterContainer);
@@ -250,7 +258,7 @@ export async function handleSongPage(tabId) {
 						$(this).find('.chkboxm').prop('checked', !$(this).find('.chkboxm').prop('checked'));
 					});
 					// When the user clicks on an option, show/hide the activity items
-					$(filterDropdown).find('.chkboxm').click(() => {
+					$(filterDropdown).find('.chkboxm').click(function() {
 						const filterIds = $(this).attr('filter-id').split('|');
 						const isChecked = $(this).prop('checked');
 						// the activity items are in the .PlaceholderSpinnerIframe__Iframe-sc-1vue620-0 iframe, so we need to get the iframe's document
@@ -263,54 +271,55 @@ export async function handleSongPage(tabId) {
 							if (actionType) {
 								actionType = actionType.getAttribute('ng-switch-when');
 								if (filterIds.includes(actionType)) {
-									$(activityItem).toggle(!isChecked);
+									$(activityItem).toggle(isChecked);
 								}
 							} else {
 								actionType = activityItem.querySelector('inbox-line-item-action-icon div');
-								if (actionType && !actionType.querySelector('svg') && filterIds === ['']) {
-									$(activityItem).toggle(!isChecked);
+								if (actionType && !actionType.querySelector('svg') && filterIds.length === 1 && filterIds[0] === '') {
+									$(activityItem).toggle(isChecked);
 								}
 							}
 						});
+
 						// insert to the iframe a .checked-filters div element with all the checked filters ids (if there's already a .checked-filters div element, remove it)
 						const checkedFilters = document.querySelectorAll('.RecentActivity__FilteringDropdownItem input:checked');
-						const checkedFiltersIds = Array.from(checkedFilters).map(checkedFilter => checkedFilter.getAttribute('filter-id')).join('|');
-						const checkedFiltersDiv = iframe.contentWindow.document.querySelector('.checked-filters');
-						if (checkedFiltersDiv) {
-							checkedFiltersDiv.remove();
-						}
-						$('<div>', {
-							class: 'checked-filters',
-							style: 'display: none;',
-							text: checkedFiltersIds
-						}).prependTo(iframe.contentWindow.document);
+						const checkedFiltersIds = Array.from(checkedFilters).map(checkedFilter => checkedFilter.getAttribute('filter-id')).join('|').split('|');
+
+						clearInterval(activityItemsFilterTracker);
+						activityItemsFilterTracker(checkedFiltersIds);
 					});
 				}
-				const activityIfame = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
-				if (activityIfame) {
-					activityIfame.contentWindow.document.querySelector('song-activity-stream div').addEventListener('DOMNodeInserted', (e) => {
-						if (e.target.tagName === 'DIV') {
-							let filterIds = activityIfame.contentWindow.document.querySelector('.checked-filters');
-							if (filterIds) {
-								filterIds = filterIds.innerText.split('|');
-								// the action type is in the ng-switch-when attribute of the svg element inside the element with the tag name inbox-line-item-action-icon
-								let actionType = e.target.querySelector('inbox-line-item-action-icon div svg');
-								if (actionType) {
-									actionType = actionType.getAttribute('ng-switch-when');
-									if (filterIds.includes(actionType)) {
-										$(e.target).toggle(false);
-									}
-								} else {
-									actionType = e.target.querySelector('inbox-line-item-action-icon div');
-									if (actionType && !actionType.querySelector('svg') && JSON.stringify(filterIds) === JSON.stringify([''])) {
-										$(e.target).toggle(false);
+
+				const activityItemsFilterTracker = (checkedFiltersIds) => {
+					const activityIframe = document.querySelector('.PlaceholderSpinnerIframe__Iframe-sc-1vue620-0');
+					if (activityIframe) {
+						const activityStream = activityIframe.contentWindow.document.querySelector('song-activity-stream div');
+						const observer = new MutationObserver((mutationsList) => {
+							for (const mutation of mutationsList) {
+								if (mutation.type === 'childList') {
+									for (const addedNode of mutation.addedNodes) {
+										if (addedNode.tagName === 'DIV') {
+											let actionType = addedNode.querySelector('inbox-line-item-action-icon div svg');
+											if (actionType) {
+												actionType = actionType.getAttribute('ng-switch-when');
+												if (!checkedFiltersIds.includes(actionType)) {
+													$(addedNode).toggle(false);
+												}
+											} else {
+												actionType = addedNode.querySelector('inbox-line-item-action-icon div');
+												if (actionType && !actionType.querySelector('svg') && JSON.stringify(checkedFiltersIds) === JSON.stringify([''])) {
+													$(addedNode).toggle(false);
+												}
+											}
+										}
 									}
 								}
 							}
-						}
-					});
-				}
-			});*/
+						});
+						observer.observe(activityStream, { childList: true });
+					}
+				};
+			});
 
 			const ANNOTATION_FORM_CLASS = "AnnotationEditFormdesktop__Form-sc-15key0q-0";
 			const LYRICS_TEXTAREA_CLASS = "ExpandingTextarea__Textarea-sc-4cgivl-0";
