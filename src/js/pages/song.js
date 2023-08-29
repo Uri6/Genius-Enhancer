@@ -68,6 +68,29 @@ export async function handleSongPage(tabId) {
 				"song_appendFollowButton": [true]
 			});
 
+			// Function to update YT iframes and add allowfullscreen attribute
+			function updateIframe(iframe) {
+				if (iframe.src.includes('youtube.com/embed') && !iframe.hasAttribute('allowfullscreen')) {
+					const newIframe = document.createElement('iframe');
+					for (const attribute of iframe.attributes) {
+						newIframe.setAttribute(attribute.name, attribute.value);
+					}
+					newIframe.setAttribute('allowfullscreen', true);
+					iframe.parentNode.replaceChild(newIframe, iframe);
+				}
+			}
+
+			// Update existing YT iframes
+			document.querySelectorAll('iframe').forEach(updateIframe);
+
+			// Listen for new YT iframes being added to the DOM
+			$(document).on("DOMNodeInserted", ":has(iframe)", (e) => {
+				const iframe = e.target.querySelector('iframe');
+				if (iframe) {
+					updateIframe(iframe);
+				}
+			});
+
 			$(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", () => {
 
 				setTimeout(() => {
