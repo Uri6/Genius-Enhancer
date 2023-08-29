@@ -175,4 +175,13 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
         .append(FORUMS_FEATURES_ELEMENT);
     handleCheckboxClick("forums2", "forums2", "");
     handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
+
+    // allow navigation through pages using arrow keys
+    $(document).keydown((e) => {
+        if (e.key === "ArrowLeft") {
+            $arrowLeft.click();
+        } else if (e.key === "ArrowRight") {
+            $arrowRight.click();
+        }
+    });
 });

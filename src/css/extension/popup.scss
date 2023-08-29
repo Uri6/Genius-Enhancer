@@ -180,8 +180,9 @@ body {
 
         #info-tooltip {
             position: absolute;
-            top: 22.5%;
+            top: 20%;
             left: 35%;
+            z-index: 2;
             transform: translate(-50%, 5px);
             width: fit-content;
             padding: 7.5px;
@@ -237,6 +238,7 @@ body {
         flex-direction: row;
         margin-top: 20px;
         margin-bottom: 20px;
+        min-height: 220px;
         gap: 10px;
 
         >div {
