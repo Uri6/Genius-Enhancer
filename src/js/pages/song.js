@@ -506,55 +506,47 @@ export async function handleSongPage(tabId) {
 			};
 
 
-			// document.addEventListener('DOMNodeInserted', (event) => {
-			//     const insertedNode = event.target;
-			//     if (insertedNode.nodeType !== Node.ELEMENT_NODE || insertedNode.classList?.contains('ge-text-tracking')) return;
-			//
-			//     const isAnnotationEdit = isAnnotationEditForm(insertedNode);
-			//     const isLyricsEdit = isLyricsEditTextarea(insertedNode);
-			//
-			//     if (!isAnnotationEdit && !isLyricsEdit) return;
-			//
-			//     const type = isAnnotationEdit
-			//         ? 'annotation'
-			//         : 'lyrics';
-			//     const toolbarQuery = isAnnotationEdit
-			//         ? 'div.Fieldshared__FieldControlWithLabel-dxskot-1>div.TextEditor__Toolbar-sc-128gj0x-0'
-			//         : 'div.LyricsEditdesktop__ControlsContainer-sc-19lxrhp-2>div.LyricsEditdesktop__Controls-sc-19lxrhp-3';
-			//     const buttonClass = isAnnotationEdit
-			//         ? 'kviCal'
-			//         : 'kpOoZB coQEbB';
-			//     const buttonTag = isAnnotationEdit
-			//         ? 'div'
-			//         : 'button';
-			//
-			//     insertedNode.classList.add('ge-text-tracking');
-			//     const textarea = insertedNode.nodeName === 'TEXTAREA'
-			//         ? insertedNode
-			//         : insertedNode.querySelector('textarea');
-			//
-			//     if (textarea) {
-			//         console.info(`Tracking ${type} input (textarea:`, textarea, `)`);
-			//         textarea.addEventListener('input', () => handleInput(textarea, type));
-			//     }
-			//
-			//     const toolbar = document.querySelector(toolbarQuery);
-			//     if (toolbar && !toolbar.querySelector('.ge-restore-button')) {
-			//         const restoreButton = document.createElement(buttonTag);
-			//         restoreButton.className = `ge-restore-button ${type} ${buttonClass}`;
-			//         restoreButton.innerText = 'Restore';
-			//         restoreButton.addEventListener('click', () => handleRestore(textarea, type));
-			//         updateRestoreButtonState(restoreButton, type);
-			//         toolbar.insertBefore(restoreButton, toolbar.children[1]);
-			//     }
-			// });
+			document.addEventListener('DOMNodeInserted', (event) => {
+				const insertedNode = event.target;
+				if (insertedNode.nodeType !== Node.ELEMENT_NODE || insertedNode.classList?.contains('ge-text-tracking')) return;
 
-			window.addEventListener("beforeunload", () => {
-				Object.keys(sessionStorage).forEach((key) => {
-					if (key.startsWith("ge-input-tracker-")) {
-						sessionStorage.removeItem(key);
-					}
-				});
+				const isAnnotationEdit = isAnnotationEditForm(insertedNode);
+				const isLyricsEdit = isLyricsEditTextarea(insertedNode);
+
+				if (!isAnnotationEdit && !isLyricsEdit) return;
+
+				const type = isAnnotationEdit
+					? 'annotation'
+					: 'lyrics';
+				const toolbarQuery = isAnnotationEdit
+					? 'div.Fieldshared__FieldControlWithLabel-dxskot-1>div.TextEditor__Toolbar-sc-128gj0x-0'
+					: 'div.LyricsEditdesktop__ControlsContainer-sc-19lxrhp-2>div.LyricsEditdesktop__Controls-sc-19lxrhp-3';
+				const buttonClass = isAnnotationEdit
+					? 'kviCal'
+					: 'kpOoZB coQEbB';
+				const buttonTag = isAnnotationEdit
+					? 'div'
+					: 'button';
+
+				insertedNode.classList.add('ge-text-tracking');
+				const textarea = insertedNode.nodeName === 'TEXTAREA'
+					? insertedNode
+					: insertedNode.querySelector('textarea');
+
+				if (textarea) {
+					console.info(`Tracking ${type} input (textarea:`, textarea, `)`);
+					textarea.addEventListener('input', () => handleInput(textarea, type));
+				}
+
+				const toolbar = document.querySelector(toolbarQuery);
+				if (toolbar && !toolbar.querySelector('.ge-restore-button')) {
+					const restoreButton = document.createElement(buttonTag);
+					restoreButton.className = `ge-restore-button ${type} ${buttonClass}`;
+					restoreButton.innerText = 'Restore';
+					restoreButton.addEventListener('click', () => handleRestore(textarea, type));
+					updateRestoreButtonState(restoreButton, type);
+					toolbar.insertBefore(restoreButton, toolbar.children[1]);
+				}
 			});
 
 			/*let isAnnotation = false;
