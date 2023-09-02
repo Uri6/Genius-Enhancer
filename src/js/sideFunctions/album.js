@@ -463,7 +463,7 @@ export async function appendIcon() {
         src: chrome.runtime.getURL("src/imgs/icons/3/128x128.png")
     }).appendTo(buttonContainer);
 
-    extensionButton.on("click", () => {
+    extensionButton.on("click", async () => {
         window.scrollTo(0, 0);
         $("body").addClass("disable-scrolling");
 
@@ -942,6 +942,29 @@ export async function appendIcon() {
                 }, {});
             }
         });
+
+        async function waitForTagsList() {
+            const tagsList = $("datalist#tagsList");
+            if (tagsList.children("option").length > 0) {
+                $("input.add-tags.rcorners.ge-textarea").attr("placeholder", "Tag");
+                $("input.add-tags.rcorners.ge-textarea").removeAttr("disabled");
+                $("input.add-tags.rcorners.ge-textarea").css("cursor", "default");
+                return;
+            }
+            const inputElem = $("input.add-tags.rcorners.ge-textarea");
+            inputElem.attr("placeholder", "Loading.");
+            inputElem.attr("disabled", true);
+            inputElem.css("cursor", "not-allowed");
+            await new Promise(resolve => setTimeout(resolve, 500));
+            inputElem.attr("placeholder", "Loading..");
+            await new Promise(resolve => setTimeout(resolve, 500));
+            inputElem.attr("placeholder", "Loading...");
+            await new Promise(resolve => setTimeout(resolve, 500));
+            inputElem.attr("placeholder", "Loading.");
+            await waitForTagsList();
+        }
+
+        await waitForTagsList();
 
         const tagify_tagsWhitelist = $("datalist#tagsList option").map(function(_, o) {
             let searchByStr;
