@@ -107,9 +107,9 @@ export async function handleSongPage(tabId) {
 					const tagInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('Tags')");
 					const artworkInputContainer = $(".Fieldshared__FieldLabel-dxskot-2.eIbATv:contains('Song Art')");
 
-					if (tagInputContainer.length && !tagInputContainer.find(".clear-tags-rdil").length) {
+					if (tagInputContainer.length && !tagInputContainer.find(".clear-tags-btn").length) {
 						const clearTagsContainer = $("<div>", {
-							class: "clear-tags-rdil"
+							class: "clear-tags-btn"
 						})
 							.append($("<span>✖ Clear Tags</span>"))
 							.appendTo(tagInputContainer);
