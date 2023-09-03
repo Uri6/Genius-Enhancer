@@ -34,7 +34,7 @@
     },
     "options_page": "/src/html/options.html",
     "permissions": ["storage", "activeTab", "scripting"],
-    "host_permissions": ["*://*/*"],
+    "host_permissions": ["*://*.genius.com/*", "*://genius.com/*"],
     "content_security_policy": {
         "extension_pages": "script-src 'self' ; object-src 'self' ; img-src 'self' ; style-src 'self' ;"
     }
