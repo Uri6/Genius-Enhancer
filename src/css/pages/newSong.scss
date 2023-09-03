@@ -7,7 +7,7 @@
 body {
 
     &:not(.ge-dark-mode) {
-        background: linear-gradient(45deg, #65ffa0, #a7dbdd) !important;
+        background: #F6F2CB !important;
 
         h1,
         h2,
@@ -40,7 +40,7 @@ body {
 
             .chzn-choices {
                 li:not(.search-field) {
-                    background-color: #009994 !important;
+                    background-color: rgba(255, 255, 255, 0.2) !important;
                     color: black !important;
                 }
             }
