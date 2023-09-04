@@ -349,6 +349,23 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 const urlPart = tab.url.split("genius.com/")[1];
 
                 if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                    // we may not reach the end of the function by the time chrome updates. just in case!
+                    pageType = "song";
+
+                    chrome.storage.local.get("OldSongPage", (res) => {
+                        if (res.OldSongPage) {
+                            let currentUrl = tab.url;
+                            if (currentUrl.indexOf("?bagon=1") === -1 && currentUrl.indexOf("?react=1") === -1) {
+                                currentUrl += "?bagon=1";
+                                chrome.tabs.update(tabId, {
+                                    url: currentUrl
+                                });
+                            }
+                        } else if (res.OldSongPage === undefined) {
+                            console.error("OldSongPage is undefined\nPlease report this error here: https://uri6.github.io/genius-enhancer/report-a-bug/");
+                        }
+                    });
+
                     return "song";
                 } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
                     return "home";
