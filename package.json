@@ -19,6 +19,6 @@
         "autoprefixer": "^10.4.15",
         "postcss": "^8.4.25",
         "postcss-cli": "^10.1.0",
-        "sass": "^1.64.0"
+        "sass": "^1.66.0"
     }
 }
