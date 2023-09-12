@@ -3,7 +3,7 @@
  * This code is licensed under the terms specified in the "LICENSE.md" file
  * located in the root directory of the project. The license file can also be found at
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
- * 
+ *
  * @fileoverview
  * Handles the Firehose page redesign
  */
@@ -31,9 +31,6 @@ async function executeFirehoseScript(tabId) {
     function firehoseScript() {
         /**
          * Updates checkboxes in the page by replacing them with custom checkboxes
-         *
-         * @function
-         * @inner
          */
         function updateCheckboxes() {
             $("fieldset input[type='checkbox']").each(function() {
@@ -55,9 +52,6 @@ async function executeFirehoseScript(tabId) {
 
         /**
          * Removes empty labels from the page
-         * 
-         * @function
-         * @inner
          */
         function removeEmptyLabels() {
             $("fieldset label").each(function() {
