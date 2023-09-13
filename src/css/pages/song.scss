@@ -118,3 +118,20 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
         border-radius: 0 0 10px 10px;
     }
 }
+
+// complete the song
+.ge-verified-by {
+    gap: 0.5rem;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+.ge-verified-link {
+    margin: 0;
+}
+
+.ge-checky {
+    border-radius: 50%;
+}
