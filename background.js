@@ -152,6 +152,8 @@ let pageObject = {};
 let url = "";
 const geniusAddress = ["https://www.genius.com/", "https://genius.com/"];
 
+const forumPages = ["forums (main)", "forum", "forum thread", "new post"];
+
 async function handleGeniusPage(tabId) {
     if (pageType !== undefined) {
         await chrome.storage.local.set({ "pageType": pageType });
@@ -161,7 +163,7 @@ async function handleGeniusPage(tabId) {
 
     await chrome.scripting.executeScript({
         target: { tabId: tabId },
-        func: geniusGlobalContentScript,
+        func: geniusGlobalContentScript
     });
 
     console.info("page type", pageType);
@@ -169,8 +171,6 @@ async function handleGeniusPage(tabId) {
     if (pageType == null || pageType === "unknown") {
         return;
     }
-
-    const forumPages = ["forums (main)", "forum", "forum thread", "new post"];
 
     if (forumPages.includes(pageType) && !forumsV2) {
         return;
@@ -234,7 +234,8 @@ const files = [
     },
     {
         type: "css",
-        file: "./lib/quilljs/quill.snow.css"
+        file: "./lib/quilljs/quill.snow.css",
+        only: ["song", ...forumPages]
     },
     {
         type: "css",
@@ -265,7 +266,8 @@ const files = [
     },
     {
         type: "js",
-        file: "./lib/quilljs/quill.min.js"
+        file: "./lib/quilljs/quill.min.js",
+        only: ["song", ...forumPages]
     },
     {
         type: "js",

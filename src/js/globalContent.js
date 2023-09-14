@@ -1,6 +1,65 @@
 export function geniusGlobalContentScript() {
     const body = $("body");
 
+    const templates = {
+        "Strikes": {
+            "offense": [
+                "Mass-Downvoting",
+                "Harassment",
+                "Hate Speech",
+                "Trolling",
+                "Spamming",
+                "Derailing or Hijacking",
+                "Creating Alternate Accounts",
+                "Advertisements, Leaks, or Illegal Content",
+                "Improperly Sourcing Snippets",
+                "Shitposting"
+            ],
+            "strikeStatus": [
+                "Warning",
+                "Strike 1",
+                "Strike 2",
+                "Ban"
+            ]
+        },
+        "Post-Warning Perma": {
+            "offense": [
+                "Uploading Harmful Content",
+                "IQ Gaming",
+                "Inappropriate & Trolling Annotations",
+                "Plagiarism",
+                "Song Page Self-Promotion",
+                "Account Sharing",
+                "Offensive Usernames & Avatars",
+                "Uploading Leaks"
+            ],
+            "postPermaStatus": [
+                "Warning",
+                "Ban"
+            ]
+        },
+        "Immediate Perma": {
+            "offense": [
+                "Pageview Boosting",
+                "Song Page Tampering",
+                "Song Page Spamming",
+                "Sharing Private Information & Phishing",
+                "NSFW Content",
+                "Subversive Alternate Account Creation",
+                "Severe Harassment",
+                "Impersonating an Artist"
+            ]
+        }
+    };
+
+    const additionalOptions = {
+        "Offensive Profile Content": [
+            "Avatar",
+            "Username",
+            "Bio"
+        ]
+    };
+
     if (!$("#ge-theme-toggle").length && $(".header-actions").length) {
         const darkModeToogle = $("<input>", {
             id: "ge-theme-toggle",
@@ -104,7 +163,7 @@ export function geniusGlobalContentScript() {
 
     const $modalWindow = $(".modal_window");
 
-    $(document).on("DOMNodeInserted", (e) => {
+    function onDocModified(e) {
         const $target = $(e.target);
 
         if ($target.hasClass("feed_dropdown--left_align")) {
@@ -117,257 +176,198 @@ export function geniusGlobalContentScript() {
         }
 
         setTimeout(() => {
-            if ($target.hasClass("modal_window") && $target.find(".modal_window-content").length > 0 && ($target.find(".modal_window-content").find("conversation-with-user").length > 0 || $target.find(".modal_window-content").find("conversation-messages").length > 0)) {
-                body.removeClass("u-noscroll u-dark_overlay");
-                $target.css("pointer-events", "none");
-                $target.find(".modal_window-content").css("pointer-events", "auto");
+            if (!($target.hasClass("modal_window") && $target.find(".modal_window-content").length > 0 && ($target.find(".modal_window-content").find("conversation-with-user").length > 0 || $target.find(".modal_window-content").find("conversation-messages").length > 0))) {
+                return;
+            }
 
-                if ($modalWindow.length > 1) {
-                    $modalWindow.first().remove();
-                }
+            body.removeClass("u-noscroll u-dark_overlay");
+            $target.css("pointer-events", "none");
+            $target.find(".modal_window-content").css("pointer-events", "auto");
+            if ($modalWindow.length > 1) {
+                $modalWindow.first().remove();
+            }
+            const oldCloseButton = $target.find(".modal_window-close_button");
+            if (oldCloseButton.length > 0) {
+                oldCloseButton.hide();
+            }
+            const closeButton = document.createElement("img");
+            closeButton.className = "modal_window-close_button";
+            closeButton.src = chrome.runtime.getURL("/src/imgs/other/closeIcon.png");
+            closeButton.setAttribute("onmouseover", `this.src='${chrome.runtime.getURL("/src/imgs/other/closeIconX.png")}'`);
+            closeButton.setAttribute("onmouseout", `this.src='${chrome.runtime.getURL("/src/imgs/other/closeIcon.png")}'`);
+            closeButton.setAttribute("title", "Esc");
+            closeButton.addEventListener("click", () => {
+                oldCloseButton.trigger("click");
+            });
+            $target.find(".modal_window-content").prepend(closeButton);
+            $target.find(".modal_window-content").draggable({
+                handle: ".modal_window-header", containment: "window", scroll: false
+            });
+            const $buttonsRow = $target.find("form>.u-bottom_margin:has(span)");
+            if ($buttonsRow.length > 0 && $buttonsRow.find(".ge-magic-button").length === 0) {
+                const svgIcon = chrome.runtime.getURL("/src/imgs/magicWand/colorful.svg");
+                const magicButton = $("<span>", {
+                    class: "text_label text_label--no_margin u-small_horizontal_margins text_label--purple text_label--button ge-magic-button"
+                })
+                    .append($("<img>", {
+                        src: svgIcon
+                    }))
+                    .appendTo($buttonsRow);
 
-                const oldCloseButton = $target.find(".modal_window-close_button");
-                if (oldCloseButton.length > 0) {
-                    oldCloseButton.hide();
-                }
+                $("<div>", {
+                    class: "ge-message-template-chooser",
+                    style: "display: none;"
+                })
+                    .appendTo(magicButton);
 
-                const closeButton = document.createElement("img");
-                closeButton.className = "modal_window-close_button";
-                closeButton.src = chrome.runtime.getURL("/src/imgs/other/closeIcon.png");
-                closeButton.setAttribute("onmouseover", `this.src='${chrome.runtime.getURL("/src/imgs/other/closeIconX.png")}'`);
-                closeButton.setAttribute("onmouseout", `this.src='${chrome.runtime.getURL("/src/imgs/other/closeIcon.png")}'`);
-                closeButton.setAttribute("title", "Esc");
+                magicButton.on("click", () => {
+                    const $formContainer = $(".square_input.conversation-message_textarea").parent();
+                    $formContainer.find("#punishmentForm").remove();
 
-                closeButton.addEventListener("click", () => {
-                    oldCloseButton.trigger("click");
-                });
+                    const $form = $("<form>", {
+                        id: "punishmentForm"
+                    }).insertBefore($(".square_input.conversation-message_textarea"));
 
-                $target.find(".modal_window-content").prepend(closeButton);
+                    const $typeSelect = $("<select>", {
+                        id: "typeSelect",
+                        html: "<option selected hidden>Choose Punishment Type</option>"
+                    }).appendTo($form);
 
-                $target.find(".modal_window-content").draggable({
-                    handle: ".modal_window-header", containment: "window", scroll: false
-                });
-
-                const $buttonsRow = $target.find("form>.u-bottom_margin:has(span)");
-
-                if ($buttonsRow.length > 0 && $buttonsRow.find(".ge-magic-button").length === 0) {
-                    const svgIcon = chrome.runtime.getURL("/src/imgs/magicWand/colorful.svg");
-                    const magicButton = $("<span>", {
-                        class: "text_label text_label--no_margin u-small_horizontal_margins text_label--purple text_label--button ge-magic-button"
-                    })
-                        .append($("<img>", {
-                            src: svgIcon
-                        }))
-                        .appendTo($buttonsRow);
-
-                    const templates = {
-                        "Strikes": {
-                            "offense": [
-                                "Mass-Downvoting",
-                                "Harassment",
-                                "Hate Speech",
-                                "Trolling",
-                                "Spamming",
-                                "Derailing or Hijacking",
-                                "Creating Alternate Accounts",
-                                "Advertisements, Leaks, or Illegal Content",
-                                "Improperly Sourcing Snippets",
-                                "Shitposting"
-                            ],
-                            "strikeStatus": [
-                                "Warning",
-                                "Strike 1",
-                                "Strike 2",
-                                "Ban"
-                            ]
-                        },
-                        "Post-Warning Perma": {
-                            "offense": [
-                                "Uploading Harmful Content",
-                                "IQ Gaming",
-                                "Inappropriate & Trolling Annotations",
-                                "Plagiarism",
-                                "Song Page Self-Promotion",
-                                "Account Sharing",
-                                "Offensive Usernames & Avatars",
-                                "Uploading Leaks"
-                            ],
-                            "postPermaStatus": [
-                                "Warning",
-                                "Ban"
-                            ]
-                        },
-                        "Immediate Perma": {
-                            "offense": [
-                                "Pageview Boosting",
-                                "Song Page Tampering",
-                                "Song Page Spamming",
-                                "Sharing Private Information & Phishing",
-                                "NSFW Content",
-                                "Subversive Alternate Account Creation",
-                                "Severe Harassment",
-                                "Impersonating an Artist"
-                            ]
-                        }
-                    };
-
-                    const additionalOptions = {
-                        "Offensive Profile Content": [
-                            "Avatar",
-                            "Username",
-                            "Bio"
-                        ]
-                    };
-
-                    $("<div>", {
-                        class: "ge-message-template-chooser",
-                        style: "display: none;"
-                    })
-                        .appendTo(magicButton);
-
-
-                    magicButton.on("click", () => {
-                        const $formContainer = $(".square_input.conversation-message_textarea").parent();
-                        $formContainer.find("#punishmentForm").remove();
-
-                        const $form = $("<form>", {
-                            id: "punishmentForm",
-                        }).insertBefore($(".square_input.conversation-message_textarea"));
-
-                        const $typeSelect = $("<select>", {
-                            id: "typeSelect",
-                            html: "<option selected hidden>Choose Punishment Type</option>"
-                        }).appendTo($form);
-
-                        Object.keys(templates).forEach(type => {
-                            $typeSelect.append(new Option(type, type));
-                        });
-
-                        const $offenseSelect = $("<select>", {
-                            id: "offenseSelect",
-                            style: "display: none;",
-                            html: "<option selected hidden>Choose Offense</option>"
-                        }).appendTo($form);
-
-                        const $statusSelect = $("<select>", {
-                            id: "statusSelect",
-                            style: "display: none;",
-                            html: "<option selected hidden>Choose Status</option>"
-                        }).appendTo($form);
-
-                        const $additionalSelect = $("<select>", {
-                            id: "additionalSelect",
-                            style: "display: none;",
-                            html: "<option selected hidden>Choose Offensive Content</option>"
-                        }).appendTo($form);
-
-                        const $plagiarismInput = $("<input>", {
-                            id: "plagiarismSource",
-                            type: "text",
-                            placeholder: "Enter Plagiarism Source",
-                            style: "display: none;"
-                        }).appendTo($form);
-
-                        $("<input>", {
-                            type: "submit",
-                            value: "Generate"
-                        }).appendTo($form);
-
-                        $typeSelect.change(() => {
-                            const selectedType = $typeSelect.val();
-                            $offenseSelect.empty().append("<option selected hidden>Choose Offense</option>");
-                            templates[selectedType].offense.forEach(offense => {
-                                $offenseSelect.append(new Option(offense, offense));
-                            });
-                            $offenseSelect.show();
-                        });
-
-                        $offenseSelect.change(() => {
-                            const selectedType = $typeSelect.val();
-                            const selectedOffense = $offenseSelect.val();
-                            if (templates[selectedType].hasOwnProperty("strikeStatus") || templates[selectedType].hasOwnProperty("postPermaStatus")) {
-                                const statusOptions = templates[selectedType].hasOwnProperty("strikeStatus") ? templates[selectedType].strikeStatus : templates[selectedType].postPermaStatus;
-                                $statusSelect.empty().append("<option selected hidden>Choose Status</option>");
-                                statusOptions.forEach(status => {
-                                    $statusSelect.append(new Option(status, status));
-                                });
-                                $statusSelect.show();
-                            }
-
-                            if (selectedType === "Post-Warning Perma" && selectedOffense === "Offensive Usernames & Avatars") {
-                                $additionalSelect.empty().append("<option selected hidden>Choose Offensive Content</option>");
-                                additionalOptions["Offensive Profile Content"].forEach(option => {
-                                    $additionalSelect.append(new Option(option, option));
-                                });
-                                $additionalSelect.show();
-                            } else {
-                                $additionalSelect.hide();
-                            }
-
-                            if (selectedType === "Post-Warning Perma" && selectedOffense === "Plagiarism") {
-                                $plagiarismInput.show();
-                            } else {
-                                $plagiarismInput.hide();
-                            }
-                        });
-
-                        $form.submit((event) => {
-                            event.preventDefault();
-
-                            let payload = {
-                                type: $typeSelect.val(),
-                                offense: $offenseSelect.val()
-                            };
-
-                            const selectedType = $typeSelect.val();
-                            if (templates[selectedType].hasOwnProperty("strikeStatus")) {
-                                payload["strikeStatus"] = $statusSelect.val();
-                            }
-                            if (templates[selectedType].hasOwnProperty("postPermaStatus")) {
-                                payload["postPermaStatus"] = $statusSelect.val();
-                            }
-                            if (selectedType === "Post-Warning Perma" && payload.offense === "Offensive Usernames & Avatars") {
-                                payload["inappropriateUC"] = $additionalSelect.val();
-                            }
-                            if (selectedType === "Post-Warning Perma" && payload.offense === "Plagiarism") {
-                                payload["plagiarismSource"] = $plagiarismInput.val();
-                            }
-
-                            const requestOptions = {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(payload)
-                            };
-
-                            fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
-                                .then(response => response.text())
-                                .then(result => {
-                                    const entities = {
-                                        "&amp;": "&",
-                                        "&lt;": "<",
-                                        "&gt;": ">",
-                                        "&quot;": "\"",
-                                        "&#39;": "'",
-                                        "&#x2F;": "/",
-                                        "&#x60;": "`",
-                                        "&#x3D;": "="
-                                    };
-
-                                    return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
-                                        return entities[match];
-                                    });
-                                })
-                                .then(cleanedResult => {
-                                    $(".square_input.conversation-message_textarea").val(cleanedResult);
-                                    const event = new Event("change", { bubbles: true });
-                                    $(".square_input.conversation-message_textarea")[0].dispatchEvent(event);
-
-                                    $form.remove();
-                                });
-                        });
+                    Object.keys(templates).forEach(type => {
+                        $typeSelect.append(new Option(type, type));
                     });
-                }
+
+                    const $offenseSelect = $("<select>", {
+                        id: "offenseSelect",
+                        style: "display: none;",
+                        html: "<option selected hidden>Choose Offense</option>"
+                    }).appendTo($form);
+
+                    const $statusSelect = $("<select>", {
+                        id: "statusSelect",
+                        style: "display: none;",
+                        html: "<option selected hidden>Choose Status</option>"
+                    }).appendTo($form);
+
+                    const $additionalSelect = $("<select>", {
+                        id: "additionalSelect",
+                        style: "display: none;",
+                        html: "<option selected hidden>Choose Offensive Content</option>"
+                    }).appendTo($form);
+
+                    const $plagiarismInput = $("<input>", {
+                        id: "plagiarismSource",
+                        type: "text",
+                        placeholder: "Enter Plagiarism Source",
+                        style: "display: none;"
+                    }).appendTo($form);
+
+                    $("<input>", {
+                        type: "submit",
+                        value: "Generate"
+                    }).appendTo($form);
+
+                    $typeSelect.change(() => {
+                        const selectedType = $typeSelect.val();
+                        $offenseSelect.empty().append("<option selected hidden>Choose Offense</option>");
+                        templates[selectedType].offense.forEach(offense => {
+                            $offenseSelect.append(new Option(offense, offense));
+                        });
+                        $offenseSelect.show();
+                    });
+
+                    $offenseSelect.change(() => {
+                        const selectedType = $typeSelect.val();
+                        const selectedOffense = $offenseSelect.val();
+                        if (templates[selectedType].hasOwnProperty("strikeStatus") || templates[selectedType].hasOwnProperty("postPermaStatus")) {
+                            const statusOptions = templates[selectedType].hasOwnProperty("strikeStatus") ? templates[selectedType].strikeStatus : templates[selectedType].postPermaStatus;
+                            $statusSelect.empty().append("<option selected hidden>Choose Status</option>");
+                            statusOptions.forEach(status => {
+                                $statusSelect.append(new Option(status, status));
+                            });
+                            $statusSelect.show();
+                        }
+
+                        if (selectedType === "Post-Warning Perma" && selectedOffense === "Offensive Usernames & Avatars") {
+                            $additionalSelect.empty().append("<option selected hidden>Choose Offensive Content</option>");
+                            additionalOptions["Offensive Profile Content"].forEach(option => {
+                                $additionalSelect.append(new Option(option, option));
+                            });
+                            $additionalSelect.show();
+                        } else {
+                            $additionalSelect.hide();
+                        }
+
+                        if (selectedType === "Post-Warning Perma" && selectedOffense === "Plagiarism") {
+                            $plagiarismInput.show();
+                        } else {
+                            $plagiarismInput.hide();
+                        }
+                    });
+
+                    $form.submit((event) => {
+                        event.preventDefault();
+
+                        let payload = {
+                            type: $typeSelect.val(),
+                            offense: $offenseSelect.val()
+                        };
+
+                        const selectedType = $typeSelect.val();
+                        if (templates[selectedType].hasOwnProperty("strikeStatus")) {
+                            payload["strikeStatus"] = $statusSelect.val();
+                        }
+                        if (templates[selectedType].hasOwnProperty("postPermaStatus")) {
+                            payload["postPermaStatus"] = $statusSelect.val();
+                        }
+                        if (selectedType === "Post-Warning Perma" && payload.offense === "Offensive Usernames & Avatars") {
+                            payload["inappropriateUC"] = $additionalSelect.val();
+                        }
+                        if (selectedType === "Post-Warning Perma" && payload.offense === "Plagiarism") {
+                            payload["plagiarismSource"] = $plagiarismInput.val();
+                        }
+
+                        const requestOptions = {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        };
+
+                        fetch("https://backend.rdil.rocks/genius/templates/generate", requestOptions)
+                            .then(response => response.text())
+                            .then(result => {
+                                const entities = {
+                                    "&amp;": "&",
+                                    "&lt;": "<",
+                                    "&gt;": ">",
+                                    "&quot;": "\"",
+                                    "&#39;": "'",
+                                    "&#x2F;": "/",
+                                    "&#x60;": "`",
+                                    "&#x3D;": "="
+                                };
+
+                                return result.replace(/&(amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g, function(match, entity) {
+                                    return entities[match];
+                                });
+                            })
+                            .then(cleanedResult => {
+                                $(".square_input.conversation-message_textarea").val(cleanedResult);
+                                const event = new Event("change", { bubbles: true });
+                                $(".square_input.conversation-message_textarea")[0].dispatchEvent(event);
+
+                                $form.remove();
+                            });
+                    });
+                });
             }
         }, 1);
-    });
+    }
+
+    new MutationObserver((mutations) => mutations.map((e) => {
+        onDocModified(e);
+    })).observe(document.body, {
+        childList: true,
+        subtree: true
+    })
 }

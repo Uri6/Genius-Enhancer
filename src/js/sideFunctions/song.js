@@ -30,29 +30,20 @@ export function spotifyPopUp(show) {
 
 /**
  * Initializes the modern text editor for a song, and monitoring for changes in the DOM to remove the editor when necessary
- *
- * @returns {void}
  */
 export function song_modernTextEditor() {
-    document.addEventListener("DOMNodeInserted", (e) => {
-        if (e.target.className === "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo") {
-            // Remove the Quill toolbar container from the DOM
-            if ($(".ql-toolbar-container").length) {
-                $(".ql-toolbar-container").remove();
-            }
+    const observer = new MutationObserver(mutations =>
+        mutations.flatMap(mutation => Array.from(mutation.addedNodes))
+            .filter(node => node.nodeType === Node.ELEMENT_NODE && node.classList?.contains("ExpandingTextarea__Textarea-sc-4cgivl-0", "kYxCOo"))
+            .forEach(() => {
+                document.querySelector(".ql-toolbar-container")?.remove();
+                document.querySelectorAll(".ql-snow").forEach(elem => elem.remove());
+                chrome.runtime.sendMessage({ replaceTextarea: ["ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo"] });
+            })
+    );
 
-            // Loop through all elements with class "ql-snow" and remove them from the DOM
-            while ($(".ql-snow").length) {
-                $(".ql-snow").remove();
-            }
-
-            chrome.runtime.sendMessage({
-                replaceTextarea: [
-                    "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo",
-                ],
-            });
-        }
-    });
+    // Start observing the body
+    observer.observe(document.body, { childList: true, subtree: true });
 }
 
 /**
@@ -62,7 +53,6 @@ export function song_modernTextEditor() {
  * @returns {Promise<string>} - A Promise that resolves to the URL of the most relevant video for the given search query
  */
 export async function searchVideo(query) {
-    // TODO: don't hardcode the API key
     const key = secrets.GOOGLE_API_KEY;
 
     try {

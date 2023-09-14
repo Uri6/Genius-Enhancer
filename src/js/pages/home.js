@@ -25,7 +25,7 @@ export async function handleHome(tabId) {
     await chrome.scripting.executeScript(
         {
             target: { tabId: tabId },
-            func: (() => {
+            func: () => {
                 // Change the background color of the page
                 $("body").css("background-color", "#99E47A");
 
@@ -60,10 +60,36 @@ export async function handleHome(tabId) {
                     $(e).append("<div class='styled-background'></div>");
                 });
 
-                $(document).on("DOMNodeInserted", (e) => {
-                    if ($(e.target).is(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf")) {
-                        $(e.target).append("<div class='styled-background'></div>");
-                    }
+                const observer = new MutationObserver(mutations => {
+                    // Disconnect observer before making DOM changes
+                    // DO NOT REMOVE, WILL CAUSE INFINITE LOOP
+                    observer.disconnect();
+
+                    mutations.forEach(mutation => {
+                        if (mutation.addedNodes.length) {
+                            mutation.addedNodes.forEach(node => {
+                                if (node.nodeType === Node.ELEMENT_NODE) { // Filter out non-element nodes
+                                    const target = node.matches ? node : node.querySelector(".qsIlk, .dUTFUv, .kcEpRx, .jdaOmt, .klrmXf");
+                                    if (target) {
+                                        const div = document.createElement("div");
+                                        div.className = "styled-background";
+                                        target.appendChild(div);
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    // Reconnect observer after mutations are processed
+                    observer.observe(document, {
+                        childList: true,
+                        subtree: true
+                    });
+                });
+
+                observer.observe(document, {
+                    childList: true,
+                    subtree: true
                 });
 
                 // When hovering certain elements, change the position of their child ".styled-background" according to the position of the mouse
@@ -98,7 +124,7 @@ export async function handleHome(tabId) {
                         "transform": "translate(0px, 0px)"
                     });
                 });
-            })
+            }
         }
     );
 }
