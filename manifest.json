@@ -1,7 +1,7 @@
 {
     "name": "Genius Enhancer",
     "description": "Automation tools and productivity enhancements to streamline workflow and modernize Genius's style.",
-    "version": "1.2",
+    "version": "1.2.1",
     "manifest_version": 3,
     "icons": {
         "16": "/src/imgs/icons/3/16x16.png",
