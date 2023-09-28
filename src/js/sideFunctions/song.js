@@ -48,8 +48,8 @@ export function song_modernTextEditor() {
 
             chrome.runtime.sendMessage({
                 replaceTextarea: [
-                    "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo",
-                ],
+                    "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo"
+                ]
             });
         }
     });
@@ -77,29 +77,54 @@ export async function searchVideo(query) {
     }
 }
 
-export async function appendFollowButton() {
-    const container = document.querySelector(".StickyContributorToolbar__Left-sc-1s6k5oy-1.lhAIsa");
+export async function reactSongAdditions() {
+    const toolbarContainer = document.querySelector(".StickyContributorToolbar__Left-sc-1s6k5oy-1.lhAIsa");
 
-    if (container && !document.querySelector("#ge-follow-button")) {
-        const id = document.querySelector('[property="twitter:app:url:iphone"]').content.split("/")[3];
-        const parseCookies = () => {
-            return Object.fromEntries(
-                document.cookie.split('; ').map(cookie => {
-                    const [key, value] = cookie.split('=');
-                    return [key, decodeURIComponent(value)];
-                })
-            );
-        };
-        const gapi = axios.create({
-            baseUrl: "https://genius.com/api",
-            withCredentials: true,
-            headers: {
-                "X-CSRF-Token": parseCookies()["_csrf_token"],
-            },
-        });
+    const classBase = "ContributorSidebarSection__Container-";
+    const completeTheSongLyrics = document.querySelectorAll("[class^=\"" + classBase + "\"], [class*=\" " + classBase + "\"]")[0];
 
-        const songData = await gapi.get(`https://genius.com/api/songs/${id}`);
-        const currentStatus = songData.data.response.song.current_user_metadata.interactions.following;
+    const id = document.querySelector("[property=\"twitter:app:url:iphone\"]").content.split("/")[3];
+    const parseCookies = () => {
+        return Object.fromEntries(
+            document.cookie.split("; ").map(cookie => {
+                const [key, value] = cookie.split("=");
+                return [key, decodeURIComponent(value)];
+            })
+        );
+    };
+    const gapi = axios.create({
+        baseUrl: "https://genius.com/api",
+        withCredentials: true,
+        headers: {
+            "X-CSRF-Token": parseCookies()["_csrf_token"]
+        }
+    });
+
+    const { song } = (await gapi.get(`https://genius.com/api/songs/${id}`)).data.response;
+
+    const checky = `<svg class="ge-checky" width="16" height="16" viewBox="0 0 11 11" xmlns="http://www.w3.org/2000/svg"><path fill="#27F145" d="M0 0h11v11H0z"></path><path fill="#FFF" d="M4.764 5.9l-2-2L1.35 5.314l3.414 3.414 4.914-4.914L8.264 2.4"></path></svg>`;
+
+    if (song.verified_contributors.length > 0) {
+        const lyricVerifiers = song.verified_contributors.filter(contrib => (
+            contrib.contributions.includes("lyrics")
+        ));
+
+        if (lyricVerifiers.length > 0) {
+            const verifiedBy = document.createElement("div")
+
+            verifiedBy.className = "ge-verified-by";
+
+            verifiedBy.innerHTML = `<div style="display: inline-block">${checky}</div> <span>Lyrics verified by ${lyricVerifiers.map(verifier => (
+                `<a href="${verifier.artist.url}" class="ge-verified-link">${verifier.artist.name}</a>`
+            )).join(", ")}</span>`
+
+            completeTheSongLyrics.insertBefore(verifiedBy, completeTheSongLyrics.children[1]);
+        }
+    }
+
+    if (toolbarContainer && !document.querySelector("#ge-follow-button")) {
+        const id = document.querySelector("[property=\"twitter:app:url:iphone\"]").content.split("/")[3];
+        const currentStatus = song.current_user_metadata.interactions.following;
 
         const button = document.createElement("input");
         button.type = "checkbox";
@@ -113,7 +138,7 @@ export async function appendFollowButton() {
 
         // sometimes it runs simultaneously so we need to check again
         if (!document.querySelector("#ge-follow-button")) {
-            container.appendChild(button);
+            toolbarContainer.appendChild(button);
         }
     } else {
         console.error("Could not find container for follow button");

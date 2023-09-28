@@ -36,7 +36,11 @@ export async function handleProfile(tabId, url) {
                         return;
                     }
 
-                    const id = $("meta[name='newrelic-resource-path']").attr("content")?.split("/artists/")?.[1];
+                    // query for <link href="ios-app://709482991/genius/artists/X" rel="alternate" />
+                    // get the href attribute, split it by "/" and get the 5th element
+                    // the 5th element is the artist id
+                    const id = $("link[rel='alternate']").attr("href")?.split("/")?.[5];
+
                     if (id) {
                         $("<div>", {
                             class: "copy_id_button text_label text_label--purple u-horizontal_margins u-top_margin u-half_bottom_margin cursor_pointer",
@@ -95,7 +99,7 @@ export async function handleProfile(tabId, url) {
 
                     socialMediaNames.forEach(socialMediaName => {
                         $("<div>", {
-                            class: "social_media_button ",
+                            class: "social_media_button",
                             title: socialMediaName
                         })
                             .append($("<div>", {

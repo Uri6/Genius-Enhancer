@@ -65,7 +65,7 @@ export async function handleSongPage(tabId) {
 			}
 
 			await chrome.runtime.sendMessage({
-				"song_appendFollowButton": [true]
+				"song_reactSongAdditions": [true]
 			});
 
 			// Function to update YT iframes and add allowfullscreen attribute

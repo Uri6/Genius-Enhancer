@@ -132,7 +132,7 @@ export async function handleForumThread(tabId) {
                         forumPostUnit.appendChild(replyButton);
                     }
 
-                    observer = new MutationObserver((mutations) => {
+                    const observer = new MutationObserver((mutations) => {
                         mutations.forEach((mutation) => {
                             if (mutation.addedNodes) {
                                 const newNodes = mutation.addedNodes;

@@ -27,7 +27,7 @@ import {
     spotifyPopUp,
     song_modernTextEditor,
     searchVideo,
-    appendFollowButton
+    reactSongAdditions
 } from "./src/js/sideFunctions/song.js";
 import {
     replaceButtons,
@@ -105,7 +105,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             song_appleMusicPopUp: [appleMusicPopUp, message.song_appleMusicPopUp],
             song_spotifyPopUp: [spotifyPopUp, message.song_spotifyPopUp],
             song_modernTextEditor: [song_modernTextEditor, message.song_modernTextEditor],
-            song_appendFollowButton: [appendFollowButton, message.song_appendFollowButton],
+            song_reactSongAdditions: [reactSongAdditions, message.song_reactSongAdditions],
             song_searchVideo: [searchVideo, message.song_searchVideo],
             forums_replaceButtons: [replaceButtons, message.forums_replaceButtons],
             forums_modernTextEditor: [forums_modernTextEditor, message.forums_modernTextEditor]
@@ -281,8 +281,14 @@ const files = [
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     chrome.storage.local.get("extensionStatus", async (res) => {
         if (res.extensionStatus) {
-            isGeniusPage = geniusAddress.some((adress) => tab.url.startsWith(adress));
+            // we might not have access to this page
+            isGeniusPage = geniusAddress.some((adress) => tab?.url?.startsWith(adress));
             await chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
+
+            if (!tab.url) {
+                return;
+            }
+
             url = tab.url;
 
             console.info("----------------------------------------");
