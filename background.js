@@ -220,6 +220,10 @@ const files = [
     },
     {
         type: "css",
+        file: "./src/css/powerbar.css"
+    },
+    {
+        type: "css",
         file: "./src/css/pages/darkmode.css"
     },
     {
@@ -252,6 +256,10 @@ const files = [
     {
         type: "js",
         file: "./secrets.js"
+    },
+    {
+        type: "js",
+        file: "./src/js/powerbar.js"
     },
     {
         type: "js",

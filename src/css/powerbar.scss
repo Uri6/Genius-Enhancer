@@ -1,0 +1,145 @@
+#ge-powerbar {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    filter: drop-shadow(0mm 4mm 4mm rgba(160, 0, 210, 0.3));
+
+    >#powerbar-input {
+        border-radius: 20px;
+
+        display: flex;
+        align-items: center;
+        background: #302d4a;
+        color: #f3f3f3;
+        width: 500px;
+        height: 65px;
+        padding: 0 20px;
+        font-family: 'Nunito';
+        font-size: 20px;
+        font-weight: 400;
+        border: none;
+        outline: none;
+
+        &:active {
+            transform: scale(0.95);
+        }
+
+        &.powerbar-input-warning {
+            background: #d14140;
+        }
+    }
+
+    >#powerbar-results {
+        border-radius: 20px;
+        position: absolute;
+        margin-top: 85px;
+        border: none;
+        outline: none;
+        overflow: hidden;
+
+        >.scroll-container {
+            display: flex;
+            flex-direction: column;
+            background: #48446d;
+            color: #f3f3f3;
+            width: 500px;
+            padding: 0 20px;
+            gap: 5px;
+            font-family: 'Nunito';
+            font-size: 20px;
+            font-weight: 400;
+            overflow-y: auto;
+            max-height: 520px;
+
+            /* Style the scrollbar */
+            &::-webkit-scrollbar {
+                width: 10px;
+
+                &-track {
+                    background-color: transparent;
+                }
+
+                &-thumb {
+                    border-radius: 100px;
+                    background-color: #888;
+                }
+            }
+
+            >.powerbar-result-card {
+                display: flex;
+                flex-direction: row;
+                align-items: left;
+                justify-content: left;
+                max-width: 460px;
+                max-height: 60px;
+                padding: 10px 20px;
+                font-size: 20px;
+                font-weight: 400;
+                border: none;
+                border-radius: 10px;
+                outline: none;
+                margin-bottom: 10px;
+                transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.15s ease, background 0.15s ease;
+
+                &:first-child {
+                    margin-top: 10px;
+                }
+
+                &:hover {
+                    filter: brightness(1.1);
+                    transform: scale(1.05);
+                    background: #6e699c;
+
+                    >.powerbar-result-img {
+                        border-radius: 10px;
+                    }
+                }
+
+                >.powerbar-result-img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 20px;
+                    cursor: pointer;
+                }
+
+                >.powerbar-result-text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: left;
+                    justify-content: center;
+                    max-width: 350px;
+                    padding: 0 20px;
+
+                    >.powerbar-result-name {
+                        font-size: 20px;
+                        font-weight: 400;
+                        margin-bottom: 5px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 350px;
+                        cursor: pointer;
+                    }
+
+                    >.powerbar-result-artist {
+                        font-size: 15px;
+                        font-weight: 400;
+                        color: #a0a0a0;
+                        width: fit-content;
+                        max-width: 300px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}
