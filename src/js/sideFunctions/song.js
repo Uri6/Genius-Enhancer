@@ -103,7 +103,7 @@ export async function reactSongAdditions() {
 
     const { song } = (await gapi.get(`https://genius.com/api/songs/${id}`)).data.response;
 
-    const checky = `<svg class="ge-checky" width="16" height="16" viewBox="0 0 11 11" xmlns="http://www.w3.org/2000/svg"><path fill="#27F145" d="M0 0h11v11H0z"></path><path fill="#FFF" d="M4.764 5.9l-2-2L1.35 5.314l3.414 3.414 4.914-4.914L8.264 2.4"></path></svg>`;
+    const checky = `<svg class="ge-checky" fill="currentColor" width="16" height="16" viewBox="0 0 18 19" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 2.017a9 9 0 1 1 10 14.966A9 9 0 0 1 4 2.017Zm.714 13.897a7.715 7.715 0 1 0 8.572-12.829 7.715 7.715 0 0 0-8.572 12.83ZM4.5 9.765l3.214 3.215L13.5 7.195l-.91-.91-4.876 4.877-2.306-2.305-.908.909Z" clip-rule="evenodd"></path></svg>`;
 
     if (song.verified_contributors.length > 0) {
         const lyricVerifiers = song.verified_contributors.filter(contrib => (
@@ -115,7 +115,7 @@ export async function reactSongAdditions() {
 
             verifiedBy.className = "ge-verified-by";
 
-            verifiedBy.innerHTML = `<div style="display: inline-block">${checky}</div> <span>Lyrics verified by ${lyricVerifiers.map(verifier => (
+            verifiedBy.innerHTML = `<div class="ge-checky-container">${checky}</div> <span>Lyrics verified by ${lyricVerifiers.map(verifier => (
                 `<a href="${verifier.artist.url}" class="ge-verified-link">${verifier.artist.name}</a>`
             )).join(", ")}</span>`
 

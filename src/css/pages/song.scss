@@ -119,19 +119,22 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     }
 }
 
-// complete the song
+// Verified lyrics indicator
 .ge-verified-by {
     gap: 0.5rem;
     display: flex;
     -webkit-box-align: center;
     align-items: center;
-    font-size: 0.75rem;
-}
+    font-size: 16px;
+    color: rgb(36, 198, 9);
 
-.ge-verified-link {
-    margin: 0;
-}
+    .ge-verified-link {
+        margin: 0;
+    }
 
-.ge-checky {
-    border-radius: 50%;
+    .ge-checky-container {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+    }
 }
