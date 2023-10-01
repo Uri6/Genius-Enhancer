@@ -11,7 +11,8 @@
  * @param {boolean} show - Whether to show (true) or hide (false) the iframe
  */
 export function appleMusicPopUp(show) {
-    const appleMusicParent = $(".apple_music_player_iframe_wrapper, .AppleMusicPlayer__IframeWrapper-uavgzr-1").first();
+    const classBase = "AppleMusicPlayerdesktop__IframeWrapper-";
+    const appleMusicParent = $(`[class^="${classBase}"], [class*=" ${classBase}"], .apple_music_player_iframe_wrapper`).first();
     if (!appleMusicParent.length) return;
     const appleMusicIframe = appleMusicParent.find("iframe").first();
     appleMusicIframe.toggle(show);
