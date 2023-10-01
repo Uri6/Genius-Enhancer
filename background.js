@@ -354,7 +354,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
                 const urlPart = tab.url.split("genius.com/")[1];
 
-                if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-lyrics/") || urlPart.endsWith("-annotated") || urlPart.endsWith("-annotated/") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1") || urlPart.endsWith("?bagon=1/"))) {
+                if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-annotated") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1"))) {
                     // we may not reach the end of the function by the time chrome updates. just in case!
                     pageType = "song";
 
