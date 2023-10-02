@@ -5,11 +5,15 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-export function replaceButtons(createDiscussion, follow) {
+import $ from "jquery";
+import { replaceTextarea } from "./global";
+
+export function replaceButtons(createDiscussion: boolean, follow: boolean) {
     if (createDiscussion) {
         const createDiscussionElement = document.getElementsByClassName("create_discussion");
-        for (var i = 0; i < createDiscussionElement.length; i++) {
-            createDiscussionElement[i].innerHTML = `<svg class="ge-new-button" version="1.0" 
+
+        for (let i = 0; i < createDiscussionElement.length; i++) {
+            createDiscussionElement[i].innerHTML = `<svg class="ge-new-button" 
                                                     width="18pt" height="18pt" viewBox="0 0 512 512"
                                                     preserveAspectRatio="xMidYMid meet">
                                                     <g transform="translate(0,512) scale(0.1,-0.1)"
@@ -38,8 +42,8 @@ export function replaceButtons(createDiscussion, follow) {
 
     if (follow) {
         const unfollowElement = document.getElementsByClassName("new_status_unfollow");
-        for (var i = 0; i < unfollowElement.length; i++) {
-            unfollowElement[i].innerHTML = `<svg class="ge-new-button" version="1.0" 
+        for (let i = 0; i < unfollowElement.length; i++) {
+            unfollowElement[i].innerHTML = `<svg class="ge-new-button" 
                                             width="18pt" height="18pt" viewBox="0 0 512 512"
                                             preserveAspectRatio="xMidYMid meet">
                                             <g transform="translate(0,512) scale(0.024,-0.024)"
@@ -80,8 +84,8 @@ export function replaceButtons(createDiscussion, follow) {
         }
 
         const followElement = document.getElementsByClassName("new_status_follow");
-        for (var i = 0; i < followElement.length; i++) {
-            followElement[i].innerHTML = `<svg class="ge-new-button" version="1.0" 
+        for (let i = 0; i < followElement.length; i++) {
+            followElement[i].innerHTML = `<svg class="ge-new-button" 
                                             width="18pt" height="18pt" viewBox="0 0 512 512"
                                             preserveAspectRatio="xMidYMid meet">
                                             <g transform="translate(0,512) scale(0.1,-0.1)"
@@ -123,16 +127,18 @@ export function forums_modernTextEditor() {
             .length ||
         $("#new_discussion .required.markdown_preview_setup_complete").length
     ) {
-        chrome.runtime.sendMessage({
-            replaceTextarea: ["required markdown_preview_setup_complete"],
-        });
+        replaceTextarea("required markdown_preview_setup_complete");
 
-        if ($(".reply_container .formatting_help").length) {
-            $(".reply_container .formatting_help").css("display", "none");
+        const fh = $(".reply_container .formatting_help");
+
+        if (fh.length) {
+            fh.css("display", "none");
         }
 
-        if ($(".reply_container .markdown_preview_container").length) {
-            $(".reply_container .markdown_preview_container").css(
+        const mpc = $(".reply_container .markdown_preview_container");
+
+        if (mpc.length) {
+            mpc.css(
                 "display",
                 "none"
             );

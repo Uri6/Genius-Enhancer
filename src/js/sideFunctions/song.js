@@ -5,6 +5,9 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
+import axios from "axios";
+import { replaceTextarea } from "./global";
+
 /**
  * Toggles the visibility of the Apple Music player iframe
  *
@@ -46,11 +49,7 @@ export function song_modernTextEditor() {
                 $(".ql-snow").remove();
             }
 
-            chrome.runtime.sendMessage({
-                replaceTextarea: [
-                    "ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo"
-                ]
-            });
+            replaceTextarea("ExpandingTextarea__Textarea-sc-4cgivl-0 kYxCOo");
         }
     });
 }
@@ -77,6 +76,15 @@ export async function searchVideo(query) {
     }
 }
 
+const parseCookies = () => {
+    return Object.fromEntries(
+        document.cookie.split("; ").map(cookie => {
+            const [key, value] = cookie.split("=");
+            return [key, decodeURIComponent(value)];
+        })
+    );
+};
+
 export async function reactSongAdditions() {
     const toolbarContainer = document.querySelector(".StickyContributorToolbar__Left-sc-1s6k5oy-1.lhAIsa");
 
@@ -84,14 +92,6 @@ export async function reactSongAdditions() {
     const completeTheSongLyrics = document.querySelectorAll("[class^=\"" + classBase + "\"], [class*=\" " + classBase + "\"]")[0];
 
     const id = document.querySelector("[property=\"twitter:app:url:iphone\"]").content.split("/")[3];
-    const parseCookies = () => {
-        return Object.fromEntries(
-            document.cookie.split("; ").map(cookie => {
-                const [key, value] = cookie.split("=");
-                return [key, decodeURIComponent(value)];
-            })
-        );
-    };
     const gapi = axios.create({
         baseUrl: "https://genius.com/api",
         withCredentials: true,
@@ -110,13 +110,13 @@ export async function reactSongAdditions() {
         ));
 
         if (lyricVerifiers.length > 0) {
-            const verifiedBy = document.createElement("div")
+            const verifiedBy = document.createElement("div");
 
             verifiedBy.className = "ge-verified-by";
 
             verifiedBy.innerHTML = `<div style="display: inline-block">${checky}</div> <span>Lyrics verified by ${lyricVerifiers.map(verifier => (
                 `<a href="${verifier.artist.url}" class="ge-verified-link">${verifier.artist.name}</a>`
-            )).join(", ")}</span>`
+            )).join(", ")}</span>`;
 
             completeTheSongLyrics.insertBefore(verifiedBy, completeTheSongLyrics.children[1]);
         }

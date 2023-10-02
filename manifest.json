@@ -9,15 +9,18 @@
         "48": "/src/imgs/icons/3/48x48.png",
         "128": "/src/imgs/icons/3/128x128.png"
     },
-    "background": {
-        "service_worker": "background.js",
-        "type": "module"
-    },
     "author": "Uri Sivani",
     "web_accessible_resources": [
         {
             "resources": ["lib/*", "src/imgs/*"],
             "matches": ["*://*.genius.com/*", "*://genius.com/*"]
+        }
+    ],
+    "content_scripts": [
+        {
+            "matches": ["*://genius.com/firehose"],
+            "js": ["dist/firehose.js"],
+            "css": ["src/","src/css/firehose.css"]
         }
     ],
     "action": {

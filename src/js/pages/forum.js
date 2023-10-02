@@ -5,49 +5,21 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-import { replaceButtons } from "../sideFunctions/forum.js";
+import { replaceButtons } from "../sideFunctions/forum.ts";
+import $ from "jquery";
+import { addTooSmallLabel } from "../common/forums";
 
-export async function handleForum(tabId) {
-    await chrome.scripting.insertCSS(
-        {
-            target: { tabId: tabId },
-            files: ["./src/css/pages/forums/forum.css"]
-        }
-    );
+replaceButtons(true, true);
 
-    await chrome.scripting.executeScript(
-        {
-            target: { tabId: tabId },
-            func: replaceButtons,
-            args: [true, true]
-        }
-    );
-
-    await chrome.scripting.executeScript(
-        {
-            target: { tabId: tabId },
-            func: () => {
-                // disable sending the forums search input (.discussions_search_bar-text_input) if there's less than 3 characters
-                $(document).on("keypress", ".discussions_search_bar-text_input", function(e) {
-                    if (e.which === 13) {
-                        if (this.value.length < 3) {
-                            e.preventDefault();
-                            $(this).css("border-color", "red !important");
-                            if (!document.getElementsByClassName("discussions_search_bar-text_input-error").length) {
-                                const span = document.createElement("span");
-                                span.textContent = "The input is too short (min 3 characters)";
-                                span.setAttribute("class", "discussions_search_bar-text_input-error");
-                                $(span).hide().appendTo(this.parentElement).fadeIn(500);
-                                setTimeout(() => {
-                                    $(span).fadeOut(500, () => {
-                                        span.remove();
-                                    });
-                                }, 2500);
-                            }
-                        }
-                    }
-                });
+// disable sending the forums search input (.discussions_search_bar-text_input) if there's less than 3 characters
+$(document).on("keypress", ".discussions_search_bar-text_input", function(e) {
+    if (e.which === 13) {
+        if (this.value.length < 3) {
+            e.preventDefault();
+            $(this).css("border-color", "red !important");
+            if (!document.getElementsByClassName("discussions_search_bar-text_input-error").length) {
+                addTooSmallLabel(this);
             }
         }
-    );
-}
+    }
+});

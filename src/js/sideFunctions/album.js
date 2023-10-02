@@ -5,6 +5,10 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
+import $ from "jquery";
+import axios from "axios";
+import { getDetails } from "./global";
+
 export async function missingInfo(bio, people, releaseDate) {
     if ($(".icon-container").length > 0) {
         if (bio) {
@@ -21,27 +25,23 @@ export async function missingInfo(bio, people, releaseDate) {
 
     const imgs = {
         bios: {
-            exists: chrome.runtime.getURL("/src/imgs/bio/2/Exists/64x64.png"),
-            missing: chrome.runtime.getURL("/src/imgs/bio/2/Missing/64x64.png")
+            exists: global.browser.runtime.getURL("/src/imgs/bio/2/Exists/64x64.png"),
+            missing: global.browser.runtime.getURL("/src/imgs/bio/2/Missing/64x64.png")
         },
         people: {
-            exists: chrome.runtime.getURL("/src/imgs/people/2/Exists/64x64.png"),
-            missing: chrome.runtime.getURL("/src/imgs/people/2/Missing/64x64.png")
+            exists: global.browser.runtime.getURL("/src/imgs/people/2/Exists/64x64.png"),
+            missing: global.browser.runtime.getURL("/src/imgs/people/2/Missing/64x64.png")
         },
         releaseDate: {
-            exists: chrome.runtime.getURL("/src/imgs/releaseDate/2/Exists/64x64.png"),
-            missing: chrome.runtime.getURL("/src/imgs/releaseDate/2/Missing/64x64.png")
+            exists: global.browser.runtime.getURL("/src/imgs/releaseDate/2/Exists/64x64.png"),
+            missing: global.browser.runtime.getURL("/src/imgs/releaseDate/2/Missing/64x64.png")
         }
     };
 
     const bioClasses = "bio-icon" + (bio ? " ge-fade-in" : " ge-hidden");
     const peopleClasses = "people-icon" + (people ? " ge-fade-in" : " ge-hidden");
     const releaseDateClasses = "release-date-icon" + (releaseDate ? " ge-fade-in" : " ge-hidden");
-    const albumObject = await new Promise((resolve) => {
-        chrome.runtime.sendMessage({ "getDetails": [true] }, (response) => {
-            resolve(response);
-        });
-    });
+    const albumObject = getDetails();
     const tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
     let song_index = 0;
 
@@ -73,7 +73,6 @@ export async function missingInfo(bio, people, releaseDate) {
         song_index++;
     });
 }
-
 
 export function removeMissingInfo(bio, people, releaseDate) {
     const peopleIcons = $(".people-icon");
@@ -1299,14 +1298,14 @@ export function addSongAsNext() {
                 label.appendTo(container);
                 container.insertAfter(input.parentElement);
 
-                chrome.storage.local.get("add_song_as_next", (result) => {
+                global.browser.storage.local.get("add_song_as_next", (result) => {
                     if (result.add_song_as_next) {
                         checkbox.prop("checked", true);
                     }
                 });
 
                 checkbox.on("change", (e) => {
-                    chrome.storage.local.set({ add_song_as_next: e.target.checked });
+                    global.browser.storage.local.set({ add_song_as_next: e.target.checked });
                 });
 
                 $("input[on-select=\"$ctrl.add_song(data)\"]").on("keydown", (e) => {

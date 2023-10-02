@@ -5,7 +5,9 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-const createElement = (type, id, text) => {
+import $ from "jquery";
+
+const createElement = (id, text) => {
     return $("<fieldset>", { id }).append(
         $("<div>", { class: "center-text" }).append(
             $("<legend>", { id, text })
@@ -22,9 +24,9 @@ const createCheckbox = (id, labelText) => {
         );
 };
 
-const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album");
-const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song");
-const FORUMS_ELEMENT = createElement("info-box", "genius-page", "Forums");
+const ALBUM_PAGE_ELEMENT = createElement("genius-page", "Album");
+const SONG_PAGE_ELEMENT = createElement("genius-page", "Song");
+const FORUMS_ELEMENT = createElement("genius-page", "Forums");
 
 const ALBUM_PAGE_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Metadata Indicators" }))
@@ -116,7 +118,7 @@ const loadPage = () => {
 
 loadPage(); // initially load the first page
 
-chrome.tabs.query({ active: true, currentWindow: true }, async () => {
+global.browser.tabs.query({ active: true, currentWindow: true }, async () => {
     const additions = $("#optional-additions");
 
     const $arrowLeft = $("<div>", {

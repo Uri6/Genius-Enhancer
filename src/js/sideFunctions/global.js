@@ -9,19 +9,13 @@
  * Checks if the given text contains any non Latin characters
  *
  * @param {string} text - The text to check for non Latin characters
- * @returns {string} - The fixed text
+ * @returns {string|string[]} - The fixed text
  */
-export async function fixNonLatin(text) {
+export function fixNonLatin(text) {
     // Check if the input is an array of strings
     if (Array.isArray(text)) {
         // Map over each string in the array and apply the fixNonLatin function recursively
-        return await Promise.all(text.map(async (str) => {
-            return await new Promise((resolve) => {
-                chrome.runtime.sendMessage({ "fixNonLatin": [str] }, (response) => {
-                    resolve(response);
-                });
-            });
-        }));
+        return text.map((str) => fixNonLatin(str));
     }
 
     const nonLatinRegex = /[\u011E-\u011F\u0130-\u0131\u015E-\u015F\u00C7-\u00E7\u0590-\u05FF\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]/;
@@ -43,8 +37,6 @@ export function insertAfter(newNode, existingNode) {
 /**
  * Extracts metadata from the current page's HTML and returns it as a parsed JSON object
  * Was originally written by @wnull (@wine in Genius.com)
- *
- * @returns The parsed metadata object
  */
 export function getDetails() {
     // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
@@ -87,7 +79,6 @@ export function identifyPageType() {
 
     // An array of possible Genius.com URLs
     const geniusAdress = [
-        "https://www.genius.com/",
         "https://genius.com/",
     ];
 
@@ -98,7 +89,7 @@ export function identifyPageType() {
     };
 
     return new Promise((resolve) => {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        global.browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const tab = tabs[0];
             chrome.scripting.executeScript(
                 {
@@ -281,6 +272,9 @@ export async function getCreditsList(query) {
  * @returns {void}
  */
 export function replaceTextarea(textareaClasses) {
+    // TEMP
+    return;
+
     if ($(".ql-editor").length) {
         console.info("Quill already exists");
         return;
@@ -335,7 +329,7 @@ export function replaceTextarea(textareaClasses) {
     });
 
     content = content.replace(
-        /\[([^\]]+)\]\(([^)]+)\)/g,
+        /\[([^\]]+)]\(([^)]+)\)/g,
         '<a href="$2">$1</a>'
     );
     content = content.replace(/\n/g, "<br>");
@@ -363,7 +357,7 @@ export function replaceTextarea(textareaClasses) {
 
     quill.clipboard.dangerouslyPasteHTML(content);
 
-    quill.on('text-change', function(delta, oldDelta, source) {
+    quill.on('text-change', (delta, oldDelta, source) => {
         let markdownFormat = quill.root.innerHTML
             .replace(/<strong>/g, "<b>")
             .replace(/<\/strong>/g, "</b>")
@@ -487,11 +481,9 @@ export async function uploadImageToGenius(imageUrl) {
             return res.json();
         }).then(res => res.key);
 
-        const coverArtUrl = `https://filepicker-images-rapgenius.s3.amazonaws.com/${key}`;
-
-        return coverArtUrl;
+        return `https://filepicker-images-rapgenius.s3.amazonaws.com/${key}`;
     } catch (error) {
         // Rethrow the error to be handled by the calling code
         throw error;
     }
-};
+}

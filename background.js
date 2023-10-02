@@ -32,7 +32,7 @@ import {
 import {
     replaceButtons,
     forums_modernTextEditor
-} from "./src/js/sideFunctions/forum.js";
+} from "./src/js/sideFunctions/forum.ts";
 import { handleSongPage } from "./src/js/pages/song.js";
 import { handleFirehose } from "./src/js/pages/firehose.js";
 import { handleNewSong } from "./src/js/pages/newSong.js";
@@ -41,9 +41,9 @@ import { handleAlbum } from "./src/js/pages/album.js";
 import { handleForum } from "./src/js/pages/forum.js";
 import { handleForumThread } from "./src/js/pages/forumThread.js";
 import { handleProfile } from "./src/js/pages/profile.js";
-import { handleNewPost } from "./src/js/pages/newPost.js";
+import { handleNewPost } from "./src/js/pages/newPost.ts";
 import { handleForumsMain } from "./src/js/pages/forumsMain.js";
-import { handlePenalties } from "./src/js/pages/mecha.penalties.js";
+import { handlePenalties } from "./src/js/pages/mecha.penalties.ts";
 import { geniusGlobalContentScript } from "./src/js/globalContent.js";
 
 function getTabId() {

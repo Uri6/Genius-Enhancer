@@ -40,3 +40,5 @@ src/imgs/magicWand/1/
 # NPM
 .yarn
 node_modules
+
+dist
