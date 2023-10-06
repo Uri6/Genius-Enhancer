@@ -111,7 +111,7 @@ export async function reactSongAdditions() {
         ));
 
         if (lyricVerifiers.length > 0) {
-            const verifiedBy = document.createElement("div")
+            const verifiedBy = document.createElement("div");
 
             verifiedBy.className = "ge-verified-by";
 

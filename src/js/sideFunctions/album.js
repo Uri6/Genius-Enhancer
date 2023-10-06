@@ -102,7 +102,6 @@ export async function getPlaylistVideos(playlistLink) {
 
     const playlistId = new URL(playlistLink).searchParams.get("list");
     const key = secrets.GOOGLE_API_KEY;
-    console.log(key);
 
     const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${key}`);
     if (!metadataResponse.ok) {
