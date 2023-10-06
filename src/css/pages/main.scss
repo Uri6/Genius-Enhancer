@@ -914,6 +914,26 @@ input {
   margin-top: 50px !important;
 }
 
+scrollable-data {
+  .mini_card:has(>.mini_card-thumbnail) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.15s ease-in-out !important;
+
+    >.mini_card-thumbnail {
+      border-radius: 50% !important;
+      margin-right: 10px !important;
+    }
+
+    &:hover {
+      >.mini_card-thumbnail {
+        border-radius: 10px !important;
+      }
+    }
+  }
+}
+
 .discussion_list_meta_user_link {
   max-width: 100% !important;
 }
