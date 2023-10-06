@@ -1136,6 +1136,159 @@ a.square_button.react_song_page_preview_link {
   }
 }
 
+// Disable scrolling on the body when the changelog popup is open
+body:has(#ge-changelog-popup) {
+  overflow: hidden;
+}
+
+#ge-changelog-popup {
+  // Making the dialog take up the entire viewport
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  // Making the dialog appear on top of everything else
+  z-index: 9998;
+
+  // This provides the dimmed backdrop effect
+  background: rgba(0, 0, 0, 0.5);
+
+  // Centering the content inside the dialog
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  backdrop-filter: blur(2.5px) saturate(70%) brightness(0.8);
+
+  .ge-changelog {
+    background-color: rgb(58, 57, 57);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    max-height: 80%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+
+    // Styling the scrollbar
+    &::-webkit-scrollbar {
+      width: 10px;
+
+      &-track {
+        background-color: transparent;
+      }
+
+      &-thumb {
+        border-radius: 100px;
+        background-color: #888;
+      }
+    }
+
+    // Cancel the style remover from the headers & lists and return them to their default styles
+    ul,
+    ol,
+    li {
+      list-style: initial;
+    }
+
+    li {
+      margin: 0 0 5px 24px;
+    }
+
+    ul,
+    ol {
+      margin: 10px 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      margin: 0 0 10px 0;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    h5 {
+      font-size: 0.9rem;
+    }
+
+    img {
+      display: block;
+      width: 80%;
+      height: auto;
+      border-radius: 10px;
+      margin: 0 auto;
+      transform: scale(0.9);
+    }
+  }
+
+  .ge-changelog-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
+
+    button {
+      cursor: pointer;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+
+      &.ge-changelog-github {
+        background-color: #24292e;
+        color: white;
+
+        &:hover {
+          background-color: #1f2428;
+        }
+      }
+
+      &.ge-changelog-close {
+        background-color: #f5f5f5;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+      }
+
+      &.ge-changelog-support {
+        background-color: #ff5e5b;
+
+        &:hover {
+          background-color: #ff7b79;
+        }
+      }
+    }
+  }
+}
+
+#confetti {
+  z-index: 9999;
+  position: fixed;
+}
+
 // DMs template generator
 form:has(>.square_input.conversation-message_textarea) {
 

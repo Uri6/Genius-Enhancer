@@ -157,6 +157,10 @@ export async function appendIcon() {
     */
 
     const handleKeyboardEvents = (event) => {
+        if ($("#ge-changelog-popup").length) {
+            return;
+        }
+
         switch (event.keyCode || event.which) {
             case 27: // Escape key
                 const closeIcon = $(".close-icon");

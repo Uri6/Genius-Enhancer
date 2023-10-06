@@ -60,9 +60,9 @@ function getTabId() {
     });
 }
 
-chrome.runtime.onInstalled.addListener((details) => {
-    // const currentVersion = chrome.runtime.getManifest().version;
-    // const previousVersion = details.previousVersion;
+chrome.runtime.onInstalled.addListener(async (details) => {
+    const currentVersion = chrome.runtime.getManifest().version;
+    const previousVersion = details.previousVersion;
     const reason = details.reason;
 
     switch (reason) {
@@ -80,11 +80,76 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.local.set({ "darkMode": false });
             break;
         case "update":
-            const changelog = "https://github.com/Uri6/Genius-Enhancer/releases";
-            chrome.tabs.create({ url: changelog });
+            if (previousVersion) {
+                const missedVersions = await calculateMissedVersions(previousVersion, currentVersion);
+                const releaseNotes = await getReleaseNotes(missedVersions);
+
+                // Filter out versions with empty release notes
+                const validReleaseNotes = releaseNotes.filter((note) => note.trim() !== "");
+
+                if (validReleaseNotes.length > 0) {
+                    // Create a long string variable with version notes and horizontal lines
+                    const notesString = validReleaseNotes.map((note, index) => {
+                        const versionNote = `# Version ${missedVersions[index]}\n\n${note}`;
+
+                        // Add horizontal line if it's not the last version note
+                        if (index < validReleaseNotes.length - 1) {
+                            return `${versionNote}\n\n${"-".repeat(50)}`;
+                        } else {
+                            return versionNote;
+                        }
+                    }).join("\n\n");
+
+                    const cleanNotes = notesString
+                        .replace(/\n@[\w-]+(\s@[\w-]+)*/g, "") // Remove line(s) that only contain @mentions
+                        .replace(/#\d+/g, ""); // Remove issues & PRs references
+
+                    chrome.storage.local.set({ "changelog": cleanNotes });
+                }
+            }
+
             break;
     }
 });
+
+async function calculateMissedVersions(previousVersion, currentVersion) {
+    const versionsUrl = "https://api.github.com/repos/Uri6/Genius-Enhancer/tags";
+
+    // Get all versions from GitHub
+    const response = await fetch(versionsUrl);
+    const data = await response.json();
+    const versions = data.map((version) => version.name);
+
+    // Get the index of the previous version
+    const previousVersionIndex = versions.indexOf(previousVersion);
+
+    // Get the index of the current version
+    const currentVersionIndex = versions.indexOf(currentVersion);
+
+    // Get the versions between the previous and current versions
+    return versions.slice(currentVersionIndex, previousVersionIndex);
+}
+
+async function getReleaseNotes(versions) {
+    const releaseNotes = [];
+
+    for (const version of versions) {
+        const releaseUrl = `https://api.github.com/repos/Uri6/Genius-Enhancer/releases/tags/${version}`;
+        const response = await fetch(releaseUrl);
+
+        if (response.status === 200) {
+            const data = await response.json();
+            const notes = data.body.trim();
+
+            // Only add notes that are not empty
+            if (notes) {
+                releaseNotes.push(notes);
+            }
+        }
+    }
+
+    return releaseNotes;
+}
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     getTabId().then((tabId) => {
@@ -158,6 +223,117 @@ async function handleGeniusPage(tabId) {
     }
 
     const forumsV2 = (await chrome.storage.local.get("forums2"))?.forums2 || false;
+    const changelog = (await chrome.storage.local.get("changelog"))?.changelog || false;
+    const sprinkleConfetti = () => {
+        const duration = 2.5 * 1000,
+            animationEnd = Date.now() + duration,
+            defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function () {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 30 * (timeLeft / duration);
+
+            // since particles fall down, start a bit higher than random
+            confetti(
+                Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                })
+            );
+            confetti(
+                Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                })
+            );
+        }, 250);
+    };
+
+    if (changelog) {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: sprinkleConfetti
+        });
+
+        await chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: async () => {
+                const changelog = (await chrome.storage.local.get("changelog"))?.changelog || false;
+                const converter = new showdown.Converter();
+                const changelogHTML = converter.makeHtml(changelog);
+                const closeButtonPhrases = [
+                    "gotcha, thanks",
+                    "cool",
+                    "nice",
+                    "great work",
+                    "keep me updated",
+                    "seems useful, tnx",
+                    "superb, ty",
+                    "awesome"
+                ];
+                const supportButtonPhrases = [
+                    "help maintaining this project 🦾",
+                    "buy me a beer 🍻",
+                    "take my money 💸",
+                    "keep the lights on 💡",
+                    "support the magic ✨",
+                    "sponsor a snack 🍫",
+                    "keep the coffee coming ☕",
+                    "donate a donut 🍩",
+                    "back this endeavor 🌟",
+                    "help the hamster run 🐹💨",
+                    "keep the code flowing 🌊"
+                ];
+
+                // Create and display the changelog popup
+                const popupContainer = $("<dialog>", {
+                    id: "ge-changelog-popup"
+                })
+                    .append($("<div>", {
+                        class: "ge-changelog",
+                        html: changelogHTML
+                    }))
+                    .append($("<div>", {
+                        class: "ge-changelog-buttons"
+                    })
+                        .append($("<button>", {
+                            class: "ge-changelog-github",
+                            text: "view on github",
+                            click: () => {
+                                window.open("https://github.com/Uri6/Genius-Enhancer/releases")
+                            }
+                        }))
+                        .append($("<button>", {
+                            class: "ge-changelog-close",
+                            text: closeButtonPhrases[Math.floor(Math.random() * closeButtonPhrases.length)],
+                            click: () => {
+                                $("#ge-changelog-popup").remove();
+
+                                // Remove the changelog from storage
+                                chrome.storage.local.remove("changelog");
+                            }
+                        }))
+                        .append($("<button>", {
+                            class: "ge-changelog-support",
+                            text: supportButtonPhrases[Math.floor(Math.random() * supportButtonPhrases.length)],
+                            click: () => {
+                                window.open("https://uri6.github.io/genius-enhancer/support", "_blank");
+                            }
+                        })));
+
+                $("body").append(popupContainer);
+            }
+        });
+    }
 
     await chrome.scripting.executeScript({
         target: { tabId: tabId },
@@ -256,6 +432,16 @@ const files = [
     {
         type: "js",
         file: "./secrets.js"
+    },
+    {
+        type: "js",
+        file: "./lib/showdown/showdown.min.js",
+        only: ["changelog"]
+    },
+    {
+        type: "js",
+        file: "./lib/particles/tsparticles.confetti.bundle.min.js",
+        only: ["changelog"]
     },
     {
         type: "js",
@@ -410,8 +596,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
             pageType = await getPageType();
 
-            function applicable(file) {
-                const enabled = file.only?.includes(pageType) ?? true;
+            async function applicable(file) {
+                let enabled = file.only?.includes(pageType) ?? true;
+                if (!enabled && file.only?.includes("changelog")) {
+                    enabled = (await chrome.storage.local.get("changelog"))?.changelog || false;
+                }
                 console.debug(file, enabled);
                 return enabled;
             }
