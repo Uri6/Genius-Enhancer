@@ -1,3 +1,17 @@
+@keyframes float {
+    0% {
+        transform: translatey(7.5px) scale(0.8);
+    }
+
+    50% {
+        transform: translatey(-7.5px) scale(0.85);
+    }
+
+    100% {
+        transform: translatey(7.5px) scale(0.82);
+    }
+}
+
 #ge-powerbar {
     position: fixed;
     display: flex;
@@ -32,6 +46,20 @@
         &.powerbar-input-warning {
             background: #d14140;
         }
+    }
+
+    >#powerbar-loading-ball {
+        animation: float 0.8s ease-in-out infinite;
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        position: absolute;
+        margin-left: 455px;
+        margin-top: 17.5px;
+        background: radial-gradient(circle at 75% 30%, white 5px, #861597 8%, #a667aa 60%, #9612aa 100%);
+        box-shadow: inset 0 0 10px #C1AAC6, inset 5px 0 23px #9612aa, inset 44px 0px 30px #a667aa, inset -10px -30px 50px #fde9ea, inset 0 25px 70px #fde9ea, 0 0 25px #fff;
+        opacity: 0.8;
+        filter: blur(2px);
     }
 
     >#powerbar-results {
@@ -70,6 +98,16 @@
                 }
             }
 
+            >.powerbar-result-cards-category {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: left;
+                padding: 20px 20px;
+                font-size: 22.5px;
+                font-weight: 700;
+            }
+
             >.powerbar-result-card {
                 display: flex;
                 flex-direction: row;
@@ -90,16 +128,6 @@
                     margin-top: 10px;
                 }
 
-                &:hover {
-                    filter: brightness(1.1);
-                    transform: scale(1.05);
-                    background: #6e699c;
-
-                    >.powerbar-result-img {
-                        border-radius: 10px;
-                    }
-                }
-
                 >.powerbar-result-img {
                     width: 40px;
                     height: 40px;
@@ -108,35 +136,113 @@
                     cursor: pointer;
                 }
 
-                >.powerbar-result-text {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: left;
-                    justify-content: center;
-                    max-width: 350px;
-                    padding: 0 20px;
+                &[data-type="command"] {
+                    max-height: 170px;
+                    cursor: pointer;
 
-                    >.powerbar-result-name {
-                        font-size: 20px;
-                        font-weight: 400;
-                        margin-bottom: 5px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 350px;
-                        cursor: pointer;
+                    >.powerbar-result-text {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: left;
+                        justify-content: center;
+                        max-width: 450px;
+                        padding: 0 20px;
+                        gap: 7.5px;
+
+                        >.description-wrapper {
+                            display: flex;
+                            align-items: center;
+
+                            &:not(:has(br)) {
+                                align-items: flex-end;
+                            }
+
+                            >.powerbar-custom-description {
+                                font-family: 'Courier New', Courier, monospace;
+                                font-size: 0.8em;
+                                font-weight: 600;
+                                width: 100px;
+                                margin-right: 10px;
+                                color: #FF4500;
+                            }
+                        }
+
+                        >.powerbar-result-name {
+                            font-size: 20px;
+                            font-weight: 650;
+                            margin-bottom: 5px;
+                            color: #00a2ff;
+                        }
+
+                        >.powerbar-result-artist {
+                            color: #a0a0a0;
+                        }
+
+                        .powerbar-result-examples {
+                            color: #2ecc71;
+
+                            &:has(br) {
+                                line-height: 1.25em;
+                            }
+                        }
                     }
+                }
 
-                    >.powerbar-result-artist {
-                        font-size: 15px;
-                        font-weight: 400;
-                        color: #a0a0a0;
-                        width: fit-content;
-                        max-width: 300px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        cursor: pointer;
+                &:not([data-type="command"]) {
+                    >.powerbar-result-text {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: left;
+                        justify-content: center;
+                        max-width: 350px;
+                        padding: 0 20px;
+
+                        >.description-wrapper {
+                            display: flex;
+                            align-items: center;
+
+                            >.powerbar-result-arg-description {
+                                font-family: 'Courier New', Courier, monospace;
+                                font-size: 15px;
+                                margin-right: 10px;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+
+                        >.powerbar-result-name {
+                            font-size: 20px;
+                            font-weight: 400;
+                            margin-bottom: 5px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            max-width: 350px;
+                            cursor: pointer;
+                        }
+
+                        >.powerbar-result-artist {
+                            font-size: 15px;
+                            font-weight: 400;
+                            color: #a0a0a0;
+                            width: fit-content;
+                            max-width: 300px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                &:hover {
+                    filter: brightness(1.1);
+                    transform: scale(1.05);
+                    background: #6e699c;
+
+                    >.powerbar-result-img {
+                        border-radius: 10px;
                     }
                 }
             }
