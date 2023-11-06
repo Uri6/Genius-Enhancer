@@ -1,0 +1,3 @@
+files:
+  - source: /src/text/en-US/
+    translation: /src/text/%locale%/%original_file_name%
