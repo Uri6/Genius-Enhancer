@@ -40,6 +40,23 @@ window.addEventListener("keyup", (e) => {
     }
 });
 
+function addLoadingAnimation() {
+    if (!$("#powerbar-loading-ball").length) {
+        $("<div>", { id: "powerbar-loading-ball" }).appendTo($("#ge-powerbar"));
+    }
+}
+
+function showSearchTypeWarning() {
+    $("#powerbar-input").addClass("powerbar-input-warning");
+    $("#powerbar-results").remove();
+}
+
+function removeSearchWarning() {
+    $("#powerbar-input").removeClass("powerbar-input-warning");
+    $("#powerbar-results").remove();
+}
+
+
 async function insertPowerbar() {
     const powerbar = $("<div>", {
         id: "ge-powerbar",
@@ -72,9 +89,7 @@ function trackPowerbarInput() {
                 search(input);
             }
         } else {
-            // Remove the results & warning class from the input
-            $("#powerbar-results").remove();
-            $("#powerbar-input").removeClass("powerbar-input-warning");
+            removeSearchWarning();
 
             // Extract the command and arguments from the input
             // For example, if the input is "!hide 123", then the command is "hide" and the arguments are "123"
@@ -87,12 +102,6 @@ function trackPowerbarInput() {
     });
 }
 
-function addLoadingAnimation() {
-    if (!$("#powerbar-loading-ball").length) {
-        $("<div>", { id: "powerbar-loading-ball" }).appendTo($("#ge-powerbar"));
-    }
-}
-
 function loadExecutionOptions(command, args) {
     // Add a loading animation to the powerbar
     addLoadingAnimation();
@@ -103,7 +112,13 @@ function loadExecutionOptions(command, args) {
         case "help":
             options = {
                 "searchTypes": {
-                    "song (default)": {
+                    "multi (default)": {
+                        description: "Search for all types of results",
+                        command: "#multi",
+                        arguments: "query",
+                        examples: ["chance", "#multi chance"]
+                    },
+                    "song": {
                         description: "Search for a song",
                         command: "#song",
                         arguments: "query",
@@ -169,20 +184,11 @@ function loadExecutionOptions(command, args) {
             }
             break;
         default:
-            // Let the user know that the command isn't supported
-            $("#powerbar-input").addClass("powerbar-input-warning");
-
-            // Remove the results
-            $("#powerbar-results").remove();
-
-            // Return so that the rest of the function doesn't run
+            showSearchTypeWarning();
             return;
     }
 
-    // Remove the warning class from the input (since the command was valid)
-    $("#powerbar-input").removeClass("powerbar-input-warning");
-
-    // Display the command options
+    removeSearchWarning();
     displayCommandResults(options);
 }
 
@@ -200,95 +206,97 @@ function executeCommand(command, args) {
     }
 }
 
-async function search(query, type = "song") {
-    // Add a loading animation to the powerbar
+async function search(query, type = "multi") {
     addLoadingAnimation();
-
-    // Encode the search query to include special characters
     const encodedName = encodeURIComponent(query);
-
-    // Construct the URL to call the Genius API search endpoint
     const url = `https://genius.com/api/search/${type}?q=${encodedName}`;
 
-    // Call the Genius API search endpoint and get the response as JSON
     const response = await fetch(url);
     let jsonResponse = await response.json();
 
-    // Extract the results from the response and map them to a new clean object
-    switch (type) {
-        case "song":
-        case "songs":
-        case "lyric":
-        case "lyrics":
-            jsonResponse = jsonResponse.response.sections[0].hits.map((hit) => {
-                return {
-                    artist: {
-                        name: hit.result.primary_artist.name,
-                        url: hit.result.primary_artist.url
-                    },
-                    name: hit.result.title_with_featured,
-                    id: hit.result.id,
-                    img: hit.result.song_art_image_thumbnail_url,
-                    url: hit.result.url,
-                    type: "song"
-                };
-            });
-            break;
-        case "artist":
-        case "artists":
-            jsonResponse = jsonResponse.response.sections[0].hits.map((hit) => {
-                return {
-                    name: hit.result.name,
-                    id: hit.result.id,
-                    img: hit.result.image_url,
-                    url: hit.result.url,
-                    type: "artist"
-                };
-            });
-            break;
-        case "album":
-        case "albums":
-            jsonResponse = jsonResponse.response.sections[0].hits.map((hit) => {
-                return {
-                    artist: {
-                        name: hit.result.artist.name,
-                        url: hit.result.artist.url
-                    },
-                    name: hit.result.name,
-                    id: hit.result.id,
-                    img: hit.result.cover_art_url,
-                    url: hit.result.url,
-                    type: "album"
-                };
-            });
-            break;
-        case "user":
-        case "users":
-            jsonResponse = jsonResponse.response.sections[0].hits.map((hit) => {
-                return {
-                    name: hit.result.name,
-                    id: hit.result.id,
-                    img: hit.result.avatar.thumb.url,
-                    url: hit.result.url,
-                    type: "user"
-                };
-            });
-            break;
-        default:
-            // Let the user know that the type isn't supported
-            $("#powerbar-input").addClass("powerbar-input-warning");
+    // Helper function to create a song hit object
+    const createSongHit = (hit) => ({
+        artist: {
+            name: hit.result.primary_artist.name,
+            url: hit.result.primary_artist.url
+        },
+        name: hit.result.title_with_featured,
+        id: hit.result.id,
+        img: hit.result.song_art_image_thumbnail_url,
+        url: hit.result.url,
+        type: "song"
+    });
 
-            // Remove the results
-            $("#powerbar-results").remove();
+    // Helper function to create an artist hit object
+    const createArtistHit = (hit) => ({
+        name: hit.result.name,
+        id: hit.result.id,
+        img: hit.result.image_url,
+        url: hit.result.url,
+        type: "artist"
+    });
 
-            // Return so that the rest of the function doesn't run
-            return;
+    // Helper function to create an album hit object
+    const createAlbumHit = (hit) => ({
+        artist: {
+            name: hit.result.artist.name,
+            url: hit.result.artist.url
+        },
+        name: hit.result.name,
+        id: hit.result.id,
+        img: hit.result.cover_art_url,
+        url: hit.result.url,
+        type: "album"
+    });
+
+    // Helper function to create a user hit object
+    const createUserHit = (hit) => ({
+        name: hit.result.name,
+        id: hit.result.id,
+        img: hit.result.avatar.thumb.url,
+        url: hit.result.url,
+        type: "user"
+    });
+
+    // Function to process section hits based on type
+    const processSectionHits = (section, seenIds) => section.hits
+        .filter(hit => !seenIds.has(hit.result.id)) // Filter out duplicates
+        .map(hit => {
+            seenIds.add(hit.result.id); // Mark as seen
+            switch (hit.type) {
+                case "song":
+                case "songs":
+                case "lyric":
+                case "lyrics": return createSongHit(hit);
+                case "artist":
+                case "artists": return createArtistHit(hit);
+                case "album":
+                case "albums": return createAlbumHit(hit);
+                case "user":
+                case "users": return createUserHit(hit);
+                default: return null;
+            }
+        })
+        .filter(hit => hit !== null); // Filter out any nulls from unrecognized types
+
+    let allHits = [];
+    let seenIds = new Set();
+
+    const singleTypes = ["song", "songs", "lyric", "lyrics", "artist", "artists", "album", "albums", "user", "users"];
+
+    if (type === "multi") {
+        jsonResponse.response.sections.forEach((section) => {
+            allHits = allHits.concat(processSectionHits(section, seenIds));
+        });
+        jsonResponse = allHits;
+    } else if (singleTypes.includes(type)) {
+        jsonResponse = processSectionHits(jsonResponse.response.sections[0], seenIds);
+    } else {
+        showSearchTypeWarning();
+        return;
     }
 
-    // Remove the warning class from the input (since the search was successful)
-    $("#powerbar-input").removeClass("powerbar-input-warning");
-
-    // If there are results, display them
+    removeSearchWarning();
     displaySearchResults(jsonResponse);
 }
 

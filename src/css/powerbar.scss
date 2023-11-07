@@ -136,6 +136,12 @@
                     cursor: pointer;
                 }
 
+                &[data-type="album"] {
+                    >.powerbar-result-img {
+                        border-radius: 10px;
+                    }
+                }
+
                 &[data-type="command"] {
                     max-height: 170px;
                     cursor: pointer;
@@ -243,6 +249,12 @@
 
                     >.powerbar-result-img {
                         border-radius: 10px;
+                    }
+
+                    &[data-type="album"] {
+                        >.powerbar-result-img {
+                            border-radius: 5px;
+                        }
                     }
                 }
             }
