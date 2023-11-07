@@ -12,31 +12,72 @@ const placeholders = [
     "Everyone needs \"!help\" sometimes"
 ];
 
-// Track after double pressing shift, and insert the powerbar when it pressed
-let shiftPressed = false;
+// Map of special characters to their corresponding number keys
+const specialChars = {
+    "!": "1",
+    "@": "2",
+    "#": "3",
+    "$": "4",
+    "%": "5",
+    "^": "6",
+    "&": "7",
+    "*": "8",
+    "(": "9",
+    ")": "0"
+};
 
-window.addEventListener("keyup", (e) => {
-    if (e.key === "Shift") {
-        if (shiftPressed) {
-            shiftPressed = false;
-            e.preventDefault();
-            $("#powerbar-input").val("");
-            $("#powerbar-results").remove();
-            $("#ge-powerbar").toggle();
-            $("#powerbar-input").attr("placeholder", placeholders[Math.floor(Math.random() * placeholders.length)]);
-            if ($("#ge-powerbar").is(":visible")) {
-                $("#powerbar-input").focus();
-            }
-        } else {
-            shiftPressed = true;
-        }
-    } else {
-        shiftPressed = false;
-    }
+// Initialize key press status array
+let keyPressStatus = [false, false, false];
 
+window.addEventListener("keyup", async (e) => {
+    // Handle escape key to hide the powerbar
     if (e.key === "Escape") {
         $("#ge-powerbar").hide();
-        shiftPressed = false;
+        keyPressStatus = [false, false, false];
+        return;
+    }
+
+    // Retrieve the hotkey combination and split it into individual keys
+    let powerbarHotkey = (await chrome.storage.local.get("powerbarHotkey"))?.powerbarHotkey || "Shift + Shift";
+    let keys = powerbarHotkey.split(" + ").map(key => key.toLowerCase());
+
+    // Normalize the key pressed and replace it with the corresponding number if it's a special character
+    let keyPressed = e.key.toLowerCase();
+    keyPressed = specialChars[keyPressed] || keyPressed;
+
+    // If the key pressed isn't one of the keys in the hotkey combination, reset the key press status
+    if (!keys.includes(keyPressed)) {
+        keyPressStatus = [false, false, false];
+        return;
+    }
+
+    // Update key press status
+    keys.forEach((key, index) => {
+        // If the key pressed matches and it hasn't been pressed yet, set it as pressed
+        if (key === keyPressed && !keyPressStatus[index]) {
+            keyPressStatus[index] = true;
+            return;
+        }
+    });
+
+    // Check if all required keys are pressed
+    const allKeysPressed = keys.every((key, index) => keyPressStatus[index]);
+
+    // Toggle the powerbar if all keys are pressed
+    if (allKeysPressed) {
+        chrome.storage.local.get(["powerbarStatus"], (res) => {
+            if (res.powerbarStatus) {
+                e.preventDefault();
+                $("#powerbar-input").val("");
+                $("#powerbar-results").remove();
+                $("#ge-powerbar").toggle();
+                $("#powerbar-input").attr("placeholder", placeholders[Math.floor(Math.random() * placeholders.length)]);
+                if ($("#ge-powerbar").is(":visible")) {
+                    $("#powerbar-input").focus();
+                }
+                keyPressStatus = [false, false, false];
+            }
+        });
     }
 });
 
@@ -55,7 +96,6 @@ function removeSearchWarning() {
     $("#powerbar-input").removeClass("powerbar-input-warning");
     $("#powerbar-results").remove();
 }
-
 
 async function insertPowerbar() {
     const powerbar = $("<div>", {
@@ -122,7 +162,7 @@ function loadExecutionOptions(command, args) {
                         description: "Search for a song",
                         command: "#song",
                         arguments: "query",
-                        examples: ["#song as - stevie", "as - stevie"]
+                        examples: ["#song as - stevie"]
                     },
                     "lyric": {
                         description: "Search for a lyric",
@@ -206,7 +246,12 @@ function executeCommand(command, args) {
     }
 }
 
-async function search(query, type = "multi") {
+async function search(query, type = "unset") {
+    if (type === "unset") {
+        // Get the default search type from the storage
+        type = (await chrome.storage.local.get("defaultSearchType"))?.defaultSearchType || "multi";
+    }
+
     addLoadingAnimation();
     const encodedName = encodeURIComponent(query);
     const url = `https://genius.com/api/search/${type}?q=${encodedName}`;
