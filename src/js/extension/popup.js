@@ -5,26 +5,11 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-const createElement = (type, id, text) => {
-    return $("<fieldset>", { id }).append(
-        $("<div>", { class: "center-text" }).append(
-            $("<legend>", { id, text })
-        )
-    );
-};
+import { createCheckbox, createFieldSet, handleCheckboxClick } from "./utils.js";
 
-const createCheckbox = (id, labelText) => {
-    return $("<div>")
-        .append($("<input>", { type: "checkbox", id, name: id, class: "chkboxm" }))
-        .append($("<label>", { for: id })
-            .append($("<span>", { class: "chkboxmspan" }))
-            .append(" " + labelText)
-        );
-};
-
-const ALBUM_PAGE_ELEMENT = createElement("info-box", "genius-page", "Album");
-const SONG_PAGE_ELEMENT = createElement("info-box", "genius-page", "Song");
-const FORUMS_ELEMENT = createElement("info-box", "genius-page", "Forums");
+const ALBUM_PAGE_ELEMENT = createFieldSet("info-box", "genius-page", "Album");
+const SONG_PAGE_ELEMENT = createFieldSet("info-box", "genius-page", "Song");
+const FORUMS_ELEMENT = createFieldSet("info-box", "genius-page", "Forums");
 
 const ALBUM_PAGE_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Metadata Indicators" }))
@@ -74,29 +59,6 @@ const $suggestFeature = $("a.suggest");
 const suggestIcon = chrome.runtime.getURL("/src/imgs/other/lightBulb.svg");
 
 $suggestFeature.append($("<img>", { src: suggestIcon, class: "icon" }));
-
-const handleCheckboxClick = (checkboxId, storageKey, messageKey, messageValue = false, additionalFunc = null) => {
-    const $checkbox = $(`#${checkboxId}`);
-    chrome.storage.local.get([storageKey], (res) => {
-        $checkbox.prop("checked", res[storageKey]);
-
-        if (additionalFunc) {
-            additionalFunc(res[storageKey]);
-        }
-    });
-
-    $checkbox.click(() => {
-        const isChecked = $checkbox.prop("checked");
-        const altMessageKey = isChecked ? "album_missingInfo" : "album_missingInfo_remove";
-        let updateMessageKey = messageKey.length ? messageKey : altMessageKey;
-        chrome.storage.local.set({ [storageKey]: isChecked });
-        messageValue ? chrome.runtime.sendMessage({ [updateMessageKey]: messageValue }) : chrome.runtime.sendMessage({ [updateMessageKey]: [isChecked] });
-
-        if (additionalFunc) {
-            additionalFunc(isChecked);
-        }
-    });
-};
 
 handleCheckboxClick("extensionStatus", "extensionStatus", "", false, (isChecked) => {
     if (isChecked) {
