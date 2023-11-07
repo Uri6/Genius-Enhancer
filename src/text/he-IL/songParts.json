@@ -1,7 +1,7 @@
 {
-    "intro": "[Intro]",
-    "verse": "[Verse {{count}}]",
-    "chorus": "[Chorus]",
-    "bridge": "[Bridge]",
-    "outro": "[Outro]"
+    "intro": "[פתיח]",
+    "verse": "['וורס {{count}}]",
+    "chorus": "[פזמון]",
+    "bridge": "[גשר]",
+    "outro": "[סגיר]"
 }
