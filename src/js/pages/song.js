@@ -91,10 +91,8 @@ export async function handleSongPage(tabId) {
 				}
 			});
 
-			$(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", () => {
-
+			$(document).on("DOMNodeInserted", "[data-react-modal-body-trap]", async () => {
 				setTimeout(() => {
-
 					const titleField = document.querySelector(".Fieldshared__FieldContainer-dxskot-0.metadatastyles__MetadataField-nhmb0p-1 .TextInput-sc-2wssth-0");
 					const title = titleField.value;
 
@@ -449,10 +447,15 @@ export async function handleSongPage(tabId) {
 			}
 
 			// Define header option buttons
-			const headerOptionButtonNames = ["Intro", "Verse", "Chorus", "Bridge", "Outro"];
-			const headerOptionButtons = headerOptionButtonNames.map(name =>
-				createButton(name, buttonStyle, () => addTextToTextArea(`\n[${name}]`))
-			);
+			// old headerOptionButtonNames: ["Intro", "Verse", "Chorus", "Bridge", "Outro"];
+			let prefferedLanguage = (await chrome.storage.local.get("songHeadersLanguage")).songHeadersLanguage;
+
+			const headersFile = chrome.runtime.getURL(`/src/text/${prefferedLanguage}/songParts.json`);
+			const headers = await fetch(headersFile).then(response => response.json());
+			// headers example: {intro: '[Intro]', verse: '[Verse {{count}}]', chorus: '[Chorus]', bridge: '[Bridge]', outro: '[Outro]'}
+			const headerOptionButtons = Object.keys(headers).map(name => {
+				return createButton(name.charAt(0).toUpperCase() + name.slice(1), buttonStyle, () => addTextToTextArea(`\n${headers[name]}`, name === "verse"));
+			});
 
 			const toolbarButtonDiv = $("<div>", {
 				class: "header-buttons"
@@ -473,8 +476,7 @@ export async function handleSongPage(tabId) {
 			}
 
 			// Add text to text area
-			const addTextToTextArea = (text) => {
-				console.info(`Using modern text editor: ${document.querySelector(".ql-snow")}`);
+			const addTextToTextArea = (text, isVerse = false) => {
 				if (document.querySelector(".ql-snow")) {
 					const styleAction = text === "Bold" || text === "Italic";
 					if (styleAction) {
@@ -492,6 +494,31 @@ export async function handleSongPage(tabId) {
 					const lyricsTextarea = document.querySelector(`textarea.${LYRICS_TEXTAREA_CLASS}`);
 					const { selectionStart, selectionEnd, value } = lyricsTextarea;
 					const selectedText = value.substring(selectionStart, selectionEnd);
+
+					if (isVerse) {
+						let verseCount;
+						const thereIsNoVerseHeader = !value.substring(0, selectionStart).includes(text.split(" ")[0].replace("\n", ""));
+
+						// if the text including hebrew, instead of the number, insert the hebrew letter for the number
+						if (text.includes("וורס")) {
+							const possibleSplitters = ["]וורס ", "[וורס ", "['וורס ", "]'וורס "]
+
+							verseCount = possibleSplitters.reduce((totalCount, splitter) => {
+								const currentCount = value.substring(0, selectionStart).split(splitter).length - 1;
+								return totalCount + currentCount;
+							}, 0);
+
+							const hebrewNumbers = ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י"];
+							verseCount = hebrewNumbers[verseCount];
+						} else if (thereIsNoVerseHeader) {
+							verseCount = 1;
+						} else {
+							verseCount = value.substring(0, selectionStart).split(text.split(" ")[0]).length + 1;
+							verseCount = verseCount === 1 ? 2 : verseCount;
+						}
+
+						text = text.replace("{{count}}", verseCount);
+					}
 
 					// Modify the text based on the selected button (bold or italic)
 					const modifiedText = text === 'Bold'

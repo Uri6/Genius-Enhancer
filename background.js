@@ -81,6 +81,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             chrome.storage.local.set({ "powerbarStatus": true });
             chrome.storage.local.set({ "defaultSearchType": "multi" });
             chrome.storage.local.set({ "powerbarHotkey": "Shift + Shift" });
+            chrome.storage.local.set({ "songHeadersLanguage": "en-US" });
             break;
         case "update":
             if (previousVersion) {

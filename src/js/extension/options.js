@@ -145,10 +145,122 @@ async function insertSettings(category) {
                     }))
                 )
 
+                .append($("<span>", {
+                    class: "setting-title",
+                    text: "Localization"
+                }))
+                .append($("<span>", {
+                    class: "setting-input",
+                    text: "Song headers language: "
+                })
+                    .append($("<select>", {
+                        id: "songHeadersLanguage"
+                    })
+                        .append($("<option>", {
+                            value: "songsLang",
+                            text: "Song's language"
+                        }))
+                        .append($("<option>", {
+                            value: "en-US",
+                            text: "English (US)"
+                        }))
+                        .append($("<option>", {
+                            value: "ca-ES",
+                            text: "Catalan"
+                        }))
+                        .append($("<option>", {
+                            value: "nl-NL",
+                            text: "Dutch"
+                        }))
+                        .append($("<option>", {
+                            value: "fi-FI",
+                            text: "Finnish"
+                        }))
+                        .append($("<option>", {
+                            value: "fr-FR",
+                            text: "French"
+                        }))
+                        .append($("<option>", {
+                            value: "de-DE",
+                            text: "German"
+                        }))
+                        .append($("<option>", {
+                            value: "he-IL",
+                            text: "Hebrew"
+                        }))
+                        .append($("<option>", {
+                            value: "no-NO",
+                            text: "Norwegian"
+                        }))
+                        .append($("<option>", {
+                            value: "ru-RU",
+                            text: "Russian"
+                        }))
+                        .append($("<option>", {
+                            value: "es-ES",
+                            text: "Spanish"
+                        }))
+                        .append($("<option>", {
+                            value: "sv-SE",
+                            text: "Swedish"
+                        }))
+                        .append($("<option>", {
+                            value: "tr-TR",
+                            text: "Turkish"
+                        }))
+                    )
+                )
+                .append($("<span>", {
+                    class: "setting-input disabled",
+                    text: "Toolbar language: "
+                })
+                    .append($("<select>", {
+                        id: "toolbarLanguage",
+                        disabled: true
+                    })
+                        .append($("<option>", {
+                            value: "Soon!",
+                            text: "Soon!"
+                        }))
+                    )
+                )
+                .append($("<span>", {
+                    class: "setting-input disabled",
+                    text: "Home page language: "
+                })
+                    .append($("<select>", {
+                        id: "homePageLanguage",
+                        disabled: true
+                    })
+                        .append($("<option>", {
+                            value: "Soon!",
+                            text: "Soon!"
+                        }))
+                    )
+                )
+                .append($("<span>", {
+                    class: "setting-input note"
+                })
+                    .append($("<img>", {
+                        src: chrome.runtime.getURL("/src/imgs/other/lightBulb.svg"),
+                        class: "icon"
+                    }))
+                    .append($("<span>", {
+                        class: "note-text",
+                        text: "Found a mistake? Want to help translate? Visit the "
+                    })
+                        .append($("<a>", {
+                            href: "https://crowdin.com/project/genius-enhancer",
+                            text: "Crowdin project page"
+                        }))
+                    )
+                )
+
                 .appendTo($settings);
 
             handleCheckboxClick("powerbarStatus");
             handleSelectChange("defaultSearchType");
+            handleSelectChange("songHeadersLanguage");
 
             // Handle powerbar hotkey input
             $("#powerbarHotkey").keydown(function(event) {
@@ -219,7 +331,6 @@ async function insertSettings(category) {
             $(".setting-suggestions-list-item").click(function() {
                 $("#powerbarHotkey").val($(this).text());
                 $("#powerbarHotkey").trigger({ type: "keydown", key: "Enter" });
-                console.log(chrome.storage.local.get("powerbarHotkey"));
             });
 
             break;
