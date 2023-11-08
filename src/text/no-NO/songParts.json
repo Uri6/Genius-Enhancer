@@ -1,6 +1,6 @@
 {
     "intro": "[Intro]",
-    "verse": "[Verse {{count}}]",
+    "verse": "[Vers {{count}}]",
     "chorus": "[Chorus]",
     "bridge": "[Bridge]",
     "outro": "[Outro]"
