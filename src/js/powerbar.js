@@ -39,9 +39,9 @@ window.addEventListener("keyup", async (e) => {
 
     // Retrieve the hotkey combination and split it into individual keys
     let powerbarHotkey = (await chrome.storage.local.get("powerbarHotkey"))?.powerbarHotkey || "Shift + Shift";
-    let keys = powerbarHotkey.split(" + ").map(key => key.toLowerCase());
+    let keys = powerbarHotkey.split(" + ").map(key => key.toLowerCase().replace("space", " ").replace("ctrl", "control"));
 
-    // Normalize the key pressed and replace it with the corresponding number if it's a special character
+    // Normalize the key pressed
     let keyPressed = e.key.toLowerCase();
     keyPressed = specialChars[keyPressed] || keyPressed;
 
@@ -52,12 +52,13 @@ window.addEventListener("keyup", async (e) => {
     }
 
     // Update key press status
-    keys.forEach((key, index) => {
+    keys.some((key, index) => {
         // If the key pressed matches and it hasn't been pressed yet, set it as pressed
         if (key === keyPressed && !keyPressStatus[index]) {
             keyPressStatus[index] = true;
-            return;
+            return true;
         }
+        return false;
     });
 
     // Check if all required keys are pressed
@@ -361,23 +362,23 @@ function displaySearchResults(results) {
     results.forEach((result) => {
         $("<div>", {
             class: "powerbar-result-card",
-            "data-id": result.id,
-            "data-type": result.type,
+            "data-id": result?.id,
+            "data-type": result?.type,
         })
             .append($("<img>", {
                 class: "powerbar-result-img",
-                src: result.img,
-                title: `Go to ${result.type} page`,
-                "data-url": result.url
+                src: result?.img,
+                title: `Go to ${result?.type} page`,
+                "data-url": result?.url
             }))
             .append($("<div>", {
                 class: "powerbar-result-text"
             })
                 .append($("<div>", {
                     class: "powerbar-result-name",
-                    text: result.name,
-                    title: `Go to ${result.type} page`,
-                    "data-url": result.url
+                    text: result?.name,
+                    title: `Go to ${result?.type} page`,
+                    "data-url": result?.url
                 }))
                 .append($("<div>", {
                     class: "powerbar-result-artist",

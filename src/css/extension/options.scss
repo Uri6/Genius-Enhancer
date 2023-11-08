@@ -4,10 +4,15 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
+$yellow: #ffdb63;
+$bright-yellow: #ffe265;
+$dark-yellow: #c0a05b;
 $green: #81c363;
 $bright-green: #c2e265;
 $dark-green: #5a9c3f;
-$blue: #1873d1;
+$blue: #4a90e2;
+$bright-blue: #4192dd;
+$light-blue: #5d9dfd;
 $grey: #6e6e6e;
 
 @keyframes jump {
@@ -361,7 +366,9 @@ main {
                     color: #e6e6e6;
                     font-size: 18px;
                     font-weight: 300;
-                    padding-left: 25px;
+                    margin-left: 25px;
+                    width: fit-content;
+
 
                     .chkboxm {
                         display: none;
@@ -379,7 +386,7 @@ main {
                         font-size: 15px;
                         width: 20px;
                         height: 20px;
-                        margin-left: 5px;
+                        margin-left: -20px;
                         margin-top: 4.5px;
                         border-radius: 50%;
                         justify-content: center;
@@ -389,8 +396,7 @@ main {
                         transition: all 0.1s ease-in-out;
 
                         &:hover {
-                            color: red;
-                            background-color: white;
+                            background-color: red;
                         }
                     }
 
@@ -480,6 +486,34 @@ main {
 
                         &:hover {
                             border-bottom: 1px solid $green;
+                        }
+                    }
+                }
+
+                .setting-suggestions-list {
+                    display: flex;
+                    justify-content: left;
+                    align-items: center;
+                    flex-direction: row;
+                    margin-left: 25px;
+                    margin-top: -7.5px;
+                    gap: 10px;
+                    color: $blue;
+                    font-size: 15px;
+
+                    >.setting-suggestions-list-item {
+                        border-radius: 10px;
+                        padding: 5px;
+                        border: 1px solid $bright-blue;
+                        color: $bright-blue;
+                        font-size: 13px;
+                        cursor: pointer;
+                        transition: all 0.15s ease-in-out;
+
+                        &:hover {
+                            background-color: rgba(0, 0, 0, 0.15);
+                            color: $light-blue;
+                            border: 1px solid transparent;
                         }
                     }
                 }

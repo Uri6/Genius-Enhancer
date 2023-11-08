@@ -5,7 +5,7 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-import { createCheckbox, createFieldSet, handleCheckboxClick, handleSelectChange } from "./utils.js";
+import { createCheckbox, handleCheckboxClick, handleSelectChange } from "./utils.js";
 
 // Set version number
 $("#version").text("v" + chrome.runtime.getManifest().version);
@@ -119,17 +119,43 @@ async function insertSettings(category) {
                         title: "Clear hotkey"
                     }))
                 )
+                .append($("<span>", {
+                    class: "setting-suggestions-list",
+                    text: "Try those: "
+                })
+                    .append($("<span>", {
+                        class: "setting-suggestions-list-item",
+                        text: "Ctrl + Space"
+                    }))
+                    .append($("<span>", {
+                        class: "setting-suggestions-list-item",
+                        text: "Ctrl + Shift + Alt"
+                    }))
+                    .append($("<span>", {
+                        class: "setting-suggestions-list-item",
+                        text: "Ctrl + Alt + Space"
+                    }))
+                    .append($("<span>", {
+                        class: "setting-suggestions-list-item",
+                        text: "Shift + Shift"
+                    }))
+                    .append($("<span>", {
+                        class: "setting-suggestions-list-item",
+                        text: "Alt + b"
+                    }))
+                )
 
                 .appendTo($settings);
 
             handleCheckboxClick("powerbarStatus");
             handleSelectChange("defaultSearchType");
 
+            // Handle powerbar hotkey input
             $("#powerbarHotkey").keydown(function(event) {
                 let key = event.key;
 
                 // Define the allowed keys
-                let allowedKeys = ["Control", "Shift", "Alt", "Space"];
+                let allowedKeys = ["Ctrl", "Shift", "Alt", "Space"];
                 let allowedChars = /^[a-z0-9]+$/i;
 
                 // Check if the key is a special character that equals to Shift + number
@@ -143,15 +169,13 @@ async function insertSettings(category) {
                     "&": "7",
                     "*": "8",
                     "(": "9",
-                    ")": "0"
+                    ")": "0",
+                    " ": "Space",
+                    "Control": "Ctrl"
                 };
 
                 if (specialChars[key]) {
                     key = specialChars[key];
-                }
-
-                if (key === " ") {
-                    key = "Space";
                 }
 
                 // Check if the key is allowed
@@ -177,15 +201,25 @@ async function insertSettings(category) {
                 event.preventDefault();
             });
 
+            // If the input is empty, set the default value
             $("#powerbarHotkey").focusout(function() {
                 if (!$(this).val()) {
                     $(this).val("Shift + Shift");
+                    chrome.storage.local.set({ "powerbarHotkey": "Shift + Shift" });
                 }
             });
 
+            // Clear the input when the × button is clicked
             $(".setting-input:has(#powerbarHotkey)>.empty-input").click(function() {
                 $("#powerbarHotkey").val("");
                 $("#powerbarHotkey").focus();
+            });
+
+            // Handle suggestions click
+            $(".setting-suggestions-list-item").click(function() {
+                $("#powerbarHotkey").val($(this).text());
+                $("#powerbarHotkey").trigger({ type: "keydown", key: "Enter" });
+                console.log(chrome.storage.local.get("powerbarHotkey"));
             });
 
             break;
