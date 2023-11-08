@@ -1,0 +1,7 @@
+{
+    "intro": "[Intro]",
+    "verse": "[Couplet {{count}}]",
+    "chorus": "[Refrain]",
+    "bridge": "[Pont]",
+    "outro": "[Outro]"
+}

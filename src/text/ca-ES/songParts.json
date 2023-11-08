@@ -1,0 +1,7 @@
+{
+    "intro": "[Intro]",
+    "verse": "[Estrofa {{count}}]",
+    "chorus": "[Tornada]",
+    "bridge": "[Pont]",
+    "outro": "[Outro]"
+}
