@@ -16,7 +16,7 @@
     "author": "Uri Sivani",
     "web_accessible_resources": [
         {
-            "resources": ["lib/*", "src/imgs/*"],
+            "resources": ["lib/*", "src/imgs/*", "src/text/*"],
             "matches": ["*://*.genius.com/*", "*://genius.com/*"]
         }
     ],

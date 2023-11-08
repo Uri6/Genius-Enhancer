@@ -78,6 +78,10 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             chrome.storage.local.set({ "extensionStatus": true });
             chrome.storage.local.set({ "OldSongPage": false });
             chrome.storage.local.set({ "darkMode": false });
+            chrome.storage.local.set({ "powerbarStatus": true });
+            chrome.storage.local.set({ "defaultSearchType": "multi" });
+            chrome.storage.local.set({ "powerbarHotkey": "Shift + Shift" });
+            chrome.storage.local.set({ "songHeadersLanguage": "en-US" });
             break;
         case "update":
             if (previousVersion) {
@@ -233,7 +237,7 @@ async function handleGeniusPage(tabId) {
             return Math.random() * (max - min) + min;
         }
 
-        const interval = setInterval(function () {
+        const interval = setInterval(() => {
             const timeLeft = animationEnd - Date.now();
 
             if (timeLeft <= 0) {

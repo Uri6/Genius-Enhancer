@@ -554,19 +554,12 @@ input {
   display: none !important;
 }
 
-#sticky-nav .StickyNavdesktop__Subnavigation-sc-60o25r-6 {
+.PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd,
+#sticky-nav .StickyNavdesktop__Subnavigation-sc-60o25r-6,
+.header-nav_menu {
   @media (max-width: 940px) {
     opacity: 0 !important;
-    margin-top: -50px !important;
-    transition: margin-top 0.05s ease-in-out, opacity 0.2s ease-in-out !important;
-  }
-}
-
-.PageHeaderdesktop__Subnavigation-bhx5ui-6.koeYQd,
-.header-nav_menu {
-  @media (max-width: 1240px) {
-    opacity: 0 !important;
-    margin-top: -50px !important;
+    margin-top: -60px !important;
     transition: margin-top 0.05s ease-in-out, opacity 0.2s ease-in-out !important;
   }
 
