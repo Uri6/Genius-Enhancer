@@ -56,7 +56,7 @@ $infoIcon.hover(() => {
 });
 
 const $suggestFeature = $("a.suggest");
-const suggestIcon = chrome.runtime.getURL("/src/imgs/other/lightBulb.svg");
+const suggestIcon = chrome.runtime.getURL("/src/imgs/other/lightBulbWBg.svg");
 
 $suggestFeature.append($("<img>", { src: suggestIcon, class: "icon" }));
 
