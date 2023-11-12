@@ -5,7 +5,7 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-import { createCheckbox, handleCheckboxClick, handleSelectChange } from "./utils.js";
+import { createCheckbox, handleCheckboxClick, handleCheckboxesClicks, handleSelectsChanges } from "./utils.js";
 
 // Set version number
 $("#version").text("v" + chrome.runtime.getManifest().version);
@@ -13,24 +13,13 @@ $("#version").text("v" + chrome.runtime.getManifest().version);
 const extensionStatusStorageKey = "extensionStatus";
 const $extensionStatusCheckbox = $("#extensionStatus");
 
-// Initial checkbox state check
+// Handle extension status checkbox
 handleCheckboxClick("extensionStatus", "extensionStatus", "", false, (isChecked) => {
     if (isChecked) {
         $("body").removeClass("disabled");
     } else {
         $("body").addClass("disabled");
     }
-});
-
-// Focus event listener to handle checkbox state
-$(window).focus(() => {
-    handleCheckboxClick("extensionStatus", "extensionStatus", "", false, (isChecked) => {
-        if (isChecked) {
-            $("body").removeClass("disabled");
-        } else {
-            $("body").addClass("disabled");
-        }
-    });
 });
 
 // Click event listener to handle checkbox state
@@ -259,8 +248,7 @@ async function insertSettings(category) {
                 .appendTo($settings);
 
             handleCheckboxClick("powerbarStatus");
-            handleSelectChange("defaultSearchType");
-            handleSelectChange("songHeadersLanguage");
+            handleSelectsChanges("defaultSearchType", "songHeadersLanguage");
 
             // Handle powerbar hotkey input
             $("#powerbarHotkey").keydown(function(event) {
