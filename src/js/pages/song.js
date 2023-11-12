@@ -447,12 +447,42 @@ export async function handleSongPage(tabId) {
 			}
 
 			// Define header option buttons
-			// old headerOptionButtonNames: ["Intro", "Verse", "Chorus", "Bridge", "Outro"];
 			let prefferedLanguage = (await chrome.storage.local.get("songHeadersLanguage")).songHeadersLanguage;
 
+			if (prefferedLanguage === "songsLang") {
+				const id = document.querySelector("[property=\"twitter:app:url:iphone\"]").content.split("/")[3];
+				const songData = await fetch(`https://genius.com/api/songs/${id}`)
+					.then(response => response?.json())
+					.catch((err) => { console.error("Error fetching song data:", err); });
+				const songLanguage = songData?.response?.song?.language?.replace(/\s/g, '') || "en";
+
+				const commonLangCodes = {
+					'ar': 'ar-SA', // Arabic - Saudi Arabia
+					'zh': 'zh-TW', // Chinese - Traditional
+					'zh-Hant': 'zh-TW', // Chinese - Traditional
+					'hi': 'hi-IN', // Hindi - India
+					'no': 'no-NO', // Norwegian - Norway
+					'ca': 'ca-ES', // Catalan - Spain
+					'nl': 'nl-NL', // Dutch - Netherlands
+					'fi': 'fi-FI', // Finnish - Finland
+					'fr': 'fr-FR', // French - France
+					'de': 'de-DE', // German - Germany
+					'he': 'he-IL', // Hebrew - Israel
+					'iw': 'he-IL', // Hebrew - Israel
+					'ru': 'ru-RU', // Russian - Russia
+					'es': 'es-ES', // Spanish - Spain
+					'sv': 'sv-SE', // Swedish - Sweden
+					'tr': 'tr-TR' // Turkish - Turkey
+				};
+
+				prefferedLanguage = commonLangCodes[songLanguage] ? commonLangCodes[songLanguage] : 'en-US';
+			}
+
 			const headersFile = chrome.runtime.getURL(`/src/text/${prefferedLanguage}/songParts.json`);
-			const headers = await fetch(headersFile).then(response => response.json());
-			// headers example: {intro: '[Intro]', verse: '[Verse {{count}}]', chorus: '[Chorus]', bridge: '[Bridge]', outro: '[Outro]'}
+			const headers = await fetch(headersFile)
+				.then(response => response?.json())
+				.catch((err) => { console.error("Error fetching headers file:", err); })
+				|| {intro: '[Intro]', verse: '[Verse {{count}}]', chorus: '[Chorus]', bridge: '[Bridge]', outro: '[Outro]'};
 			const headerOptionButtons = Object.keys(headers).map(name => {
 				return createButton(name.charAt(0).toUpperCase() + name.slice(1), buttonStyle, () => addTextToTextArea(`\n${headers[name]}`, name === "verse"));
 			});
@@ -499,7 +529,7 @@ export async function handleSongPage(tabId) {
 						let verseCount;
 						const thereIsNoVerseHeader = !value.substring(0, selectionStart).includes(text.split(" ")[0].replace("\n", ""));
 
-						// if the text including hebrew, instead of the number, insert the hebrew letter for the number
+						// If the language is Hebrew, replace the verse count with the matching Hebrew letter
 						if (text.includes("וורס")) {
 							const possibleSplitters = ["]וורס ", "[וורס ", "['וורס ", "]'וורס "]
 
@@ -513,7 +543,7 @@ export async function handleSongPage(tabId) {
 						} else if (thereIsNoVerseHeader) {
 							verseCount = 1;
 						} else {
-							verseCount = value.substring(0, selectionStart).split(text.split(" ")[0]).length + 1;
+							verseCount = value.substring(0, selectionStart).split(text.split(" ")[0]).length;
 							verseCount = verseCount === 1 ? 2 : verseCount;
 						}
 
