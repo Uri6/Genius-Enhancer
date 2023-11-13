@@ -1147,7 +1147,7 @@ export async function saveEverything() {
             name: tag.getAttribute("title")
         }));
 
-    const credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")
+    let credits = $(".extension-box .add-credits-inputs-container .add-credits-inputs")
         ?.toArray()
         .map(credit => ({
             role: $(credit).find(".role tag")[0]?.getAttribute("title"),
@@ -1157,6 +1157,11 @@ export async function saveEverything() {
         }))
         .filter(credit => credit.role && credit.artists.length);
 
+    // Separate written by and produced by credits
+    const writtenByCredits = credits.filter(credit => credit.role === "Written By").map(credit => credit.artists).flat();
+    const producedByCredits = credits.filter(credit => credit.role === "Produced By").map(credit => credit.artists).flat();
+    credits = credits.filter(credit => credit.role !== "Written By" && credit.role !== "Produced By");
+
     if (youtubeLinks.length) {
         albumSongs.forEach((song, index) => {
             song.youtube_url = youtubeLinks[index];
@@ -1164,7 +1169,7 @@ export async function saveEverything() {
     }
 
     const addArtwork = $(".extension-box .artwork-images-stack:has(>.artwork-image):not(:has(>.confirmation-box))").length;
-    const addMetadata = JSON.stringify(youtubeLinks) !== JSON.stringify(['']) || JSON.stringify(releaseDate) !== JSON.stringify(['']) || tags?.length || credits?.length;
+    const addMetadata = JSON.stringify(youtubeLinks) !== JSON.stringify(['']) || JSON.stringify(releaseDate) !== JSON.stringify(['']) || tags?.length || credits?.length || writtenByCredits?.length || producedByCredits?.length;
 
     // Create an instance of Axios with the Genius API's base URL and a CSRF token
     const gapi = axios.create({
@@ -1206,14 +1211,28 @@ export async function saveEverything() {
 
             const params = {
                 tags: [
-                    ...tags.map(tag => ({ id: +tag.id, name: tag.name })),
-                    ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id }))
+                    ...songDetails.tags.map(tag => ({ name: tag.name, id: +tag.id })),
+                    ...tags.map(tag => ({ name: tag.name, id: +tag.id })),
                 ],
                 custom_performances: [
-                    ...credits.map(credit => ({ label: credit.role, artists: credit.artists })),
-                    ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists }))
+                    ...songDetails.custom_performances.map(credit => ({ label: credit.label, artists: credit.artists })),
+                    ...credits.map(credit => ({ label: credit.role, artists: credit.artists }))
                 ]
             };
+
+            if (writtenByCredits.length) {
+                params.writer_artists = [
+                    ...songDetails.writer_artists.map(artist => ({ name: artist.name, id: +artist.id })),
+                    ...writtenByCredits.map(artist => ({ name: artist.name, id: +artist.id }))
+                ];
+            }
+
+            if (producedByCredits.length) {
+                params.producer_artists = [
+                    ...songDetails.producer_artists.map(artist => ({ name: artist.name, id: +artist.id })),
+                    ...producedByCredits.map(artist => ({ name: artist.name, id: +artist.id }))
+                ];
+            }
 
             if ((!songDetails.release_date_components || overwriteReleaseDates) && releaseDate.length === 3) {
                 params.release_date_components = {
@@ -1233,6 +1252,8 @@ export async function saveEverything() {
                     tags: params.tags,
                     youtube_url: params.youtube_url,
                     custom_performances: params.custom_performances,
+                    writer_artists: params.writer_artists,
+                    producer_artists: params.producer_artists,
                     release_date_components: params.release_date_components
                 }
             });

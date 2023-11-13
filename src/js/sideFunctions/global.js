@@ -266,11 +266,26 @@ export async function getCreditsList(query) {
     const response = await fetch(url);
     const jsonResponse = await response.json();
 
-    // Extract the artists from the response and map them to a new object with just their name and ID
-    return jsonResponse.response.custom_performance_roles.map((credit) => ({
+    // Extract the credits from the response and map them to a new object with just their name and ID
+    let credits = jsonResponse.response.custom_performance_roles.map((credit) => ({
         value: credit.label,
         id: credit.id,
     }));
+
+    // Remove producer and writer credits from the list
+    credits = credits.filter((credit) => !["produced", "producer", "writen", "written", "writtten", "writer", "writter"].some(val => credit.value.toLowerCase().includes(val)));
+
+    // Add "Produced by" credit to the list if the query includes "produced by" or "producer"
+    if (("produced by").includes(query.toLowerCase()) || ("producer").includes(query.toLowerCase())) {
+        credits.unshift({ value: "Produced By", id: 0 });
+    }
+
+    // Add "Written by" credit to the list if the query includes "written by" or "writer"
+    if (("written by").includes(query.toLowerCase()) || ("writer").includes(query.toLowerCase())) {
+        credits.unshift({ value: "Written By", id: 0 });
+    }
+
+    return credits;
 }
 
 /**
