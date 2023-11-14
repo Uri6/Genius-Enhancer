@@ -464,6 +464,20 @@ input {
 
     .conversation-message_list {
       padding-top: 10px !important;
+
+      /* Style the scrollbar */
+      &::-webkit-scrollbar {
+        width: 10px;
+
+        &-track {
+          background-color: transparent;
+        }
+
+        &-thumb {
+          border-radius: 100px;
+          background-color: #888;
+        }
+      }
     }
 
     .conversation-message--left {
