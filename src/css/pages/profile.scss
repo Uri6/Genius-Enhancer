@@ -211,14 +211,23 @@ profile-contributions-group {
             transition: all 0.2s ease-in-out;
         }
 
-        .social_media_button_username {
+        .social_media_button_username_container {
             position: relative;
-            transform: translateX(calc(17.5px - 50%)) scale(0.4);
-            top: -35px;
-            background-color: #e9e9e9;
-            border-radius: 0 0 5px 5px;
-            opacity: 0;
-            transition: transform 0.2s ease-in-out, opacity 0.1s ease-in-out !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: -15px;
+            
+            .social_media_button_username {
+                background-color: #e9e9e9;
+                color: #000;
+                width: fit-content;
+                opacity: 0;
+                border-radius: 5px;
+                padding: 2.5px 5px;
+                transform: scale(0.4);
+                transition: transform 0.2s ease-in-out, opacity 0.1s cubic-bezier(0, 0, 0.5, 0.8, 1) !important;
+            }
         }
 
         &:hover {
@@ -230,10 +239,8 @@ profile-contributions-group {
             }
 
             .social_media_button_username {
-                transform: translateX(calc(17.5px - 50%)) translateY(35px) scale(1);
+                transform: translateY(15px) scale(0.8);
                 opacity: 1;
-                display: inline-block;
-                transition: transform 0.2s ease-in-out, opacity 0.2s cubic-bezier(0, 0, 0, 1) !important;
             }
         }
     }

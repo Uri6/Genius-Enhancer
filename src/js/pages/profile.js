@@ -98,9 +98,11 @@ export async function handleProfile(tabId, url) {
                     });
 
                     socialMediaNames.forEach(socialMediaName => {
-                        $("<div>", {
+                        $("<a>", {
                             class: "social_media_button",
-                            title: socialMediaName
+                            title: socialMediaName,
+                            href: socialMediaButtons[socialMediaNames.indexOf(socialMediaName)].href,
+                            target: "_blank"
                         })
                             .append($("<div>", {
                                 class: "social_media_button_icon"
@@ -110,20 +112,18 @@ export async function handleProfile(tabId, url) {
                                 }))
                             )
                             .append($("<div>", {
-                                class: "social_media_button_username",
-                                text: socialMediaUsernames.find(username => Object.keys(username)[0] === socialMediaName)[socialMediaName]
-                            }))
+                                class: "social_media_button_username_container"
+                            })
+                                .append($("<div>", {
+                                    class: "social_media_button_username",
+                                    text: socialMediaUsernames.find(username => Object.keys(username)[0] === socialMediaName)[socialMediaName]
+                                }))
+                            )
                             .appendTo(socialMediaButtonsContainer);
                     });
 
                     // add the buttons as a child of the element with the tag name "profile-artist-pane", and before the element with the attribute "ng-init" equal to "$ctrl.show_leaderboard = true"
                     socialMediaButtonsContainer.insertBefore($("profile-artist-pane").find("[ng-init='$ctrl.show_leaderboard = true']"));
-
-                    socialMediaButtonsContainer.find(".social_media_button").each((i, el) => {
-                        $(el).click(() => {
-                            socialMediaButtons[i].click();
-                        });
-                    });
                 }
 
                 // noinspection JSJQueryEfficiency
