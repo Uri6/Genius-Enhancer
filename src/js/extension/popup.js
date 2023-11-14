@@ -31,7 +31,7 @@ const SONG_PAGE_FEATURES_ELEMENT = $("<div>")
 
 const FORUMS_FEATURES_ELEMENT = $("<fieldset>", { id: "features-box" })
     .append($("<legend>", { id: "features", text: "Features" }))
-    .append(createCheckbox("forums2", "Modern forums"))
+    .append(createCheckbox("modernForums", "Modern forums"))
     .append(createCheckbox("modern-text-editor", "Modern text editor"));
 
 const INFO_TOOLTIP = $("<div>", {
@@ -135,7 +135,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     FORUMS_CONTAINER
         .append(FORUMS_ELEMENT)
         .append(FORUMS_FEATURES_ELEMENT);
-    handleCheckboxClick("forums2", "forums2", "");
+    handleCheckboxClick("modernForums", "modernForums", "");
     handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
 
     // allow navigation through pages using arrow keys

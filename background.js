@@ -35,7 +35,7 @@ import {
 } from "./src/js/sideFunctions/forum.js";
 import { handleSongPage } from "./src/js/pages/song.js";
 import { handleFirehose } from "./src/js/pages/firehose.js";
-import { handleNewSong } from "./src/js/pages/newSong.js";
+import { handleAddASong } from "./src/js/pages/addASong.js";
 import { handleHome } from "./src/js/pages/home.js";
 import { handleAlbum } from "./src/js/pages/album.js";
 import { handleForum } from "./src/js/pages/forum.js";
@@ -73,8 +73,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             chrome.storage.local.set({ "appleMusicPopUp": true });
             chrome.storage.local.set({ "spotifyPopUp": true });
             chrome.storage.local.set({ "add_song_as_next": true });
-            chrome.storage.local.set({ "ModernTextEditor": true });
-            chrome.storage.local.set({ "forums2": true });
+            chrome.storage.local.set({ "ModernTextEditor": false });
             chrome.storage.local.set({ "extensionStatus": true });
             chrome.storage.local.set({ "OldSongPage": false });
             chrome.storage.local.set({ "darkMode": false });
@@ -83,6 +82,8 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             chrome.storage.local.set({ "defaultSearchType": "multi" });
             chrome.storage.local.set({ "powerbarHotkey": "Shift + Shift" });
             chrome.storage.local.set({ "songHeadersLanguage": "songsLang" });
+            chrome.storage.local.set({ "modernAddASong": true });
+            chrome.storage.local.set({ "modernForums": true });
             break;
         case "update":
             if (previousVersion) {
@@ -227,7 +228,7 @@ async function handleGeniusPage(tabId) {
         await chrome.storage.local.set({ "pageType": pageType });
     }
 
-    const forumsV2 = (await chrome.storage.local.get("forums2"))?.forums2 || false;
+    const forumsV2 = (await chrome.storage.local.get("modernForums"))?.modernForums || false;
     const changelog = (await chrome.storage.local.get("changelog"))?.changelog || false;
     const sprinkleConfetti = () => {
         const duration = 2.5 * 1000,
@@ -359,7 +360,10 @@ async function handleGeniusPage(tabId) {
 
     switch (pageType) {
         case "new song":
-            await handleNewSong(tabId);
+            const modernAddASong = (await chrome.storage.local.get("modernAddASong"))?.modernAddASong || false;
+            if (modernAddASong) {
+                await handleAddASong(tabId);
+            }
             break;
         case "firehose":
             await handleFirehose(tabId);

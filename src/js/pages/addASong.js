@@ -5,11 +5,11 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
-export async function handleNewSong(tabId) {
+export async function handleAddASong(tabId) {
     await chrome.scripting.insertCSS(
         {
             target: { tabId: tabId },
-            files: ["./src/css/pages/newSong.css"]
+            files: ["./src/css/pages/addASong.css"]
         }
     );
 

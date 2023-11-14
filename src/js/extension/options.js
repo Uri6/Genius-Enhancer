@@ -327,11 +327,32 @@ async function insertSettings(category) {
             });
 
             break;
+        case "design":
+            $("<div>", {
+                class: "setting"
+            })
+                .append($("<span>", {
+                    class: "setting-title",
+                    text: "Modernization"
+                }))
+                .append($("<span>", {
+                    class: "setting-input"
+                })
+                    .append(createCheckbox("modernAddASong", "\"Add a song\" page"))
+                )
+                .append($("<span>", {
+                    class: "setting-input"
+                })
+                    .append(createCheckbox("modernForums", "Forums"))
+                )
+                
+                .appendTo($settings);
+
+                handleCheckboxesClicks("modernAddASong", "modernForums");
+            break;
         case "album":
             break;
         case "song":
-            break;
-        case "forums":
             break;
         case "other":
             break;
