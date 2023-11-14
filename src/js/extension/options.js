@@ -60,6 +60,11 @@ async function insertSettings(category) {
                     .append(createCheckbox("powerbarStatus", "Enable the powerbar"))
                 )
                 .append($("<span>", {
+                    class: "setting-input"
+                })
+                    .append(createCheckbox("openPowerbarResultsInNewTab", "Open powerbar results in a new tab"))
+                )
+                .append($("<span>", {
                     class: "setting-input",
                     text: "Default search category: "
                 })
@@ -247,7 +252,7 @@ async function insertSettings(category) {
 
                 .appendTo($settings);
 
-            handleCheckboxClick("powerbarStatus");
+            handleCheckboxesClicks("powerbarStatus", "openPowerbarResultsInNewTab");
             handleSelectsChanges("defaultSearchType", "songHeadersLanguage");
 
             // Handle powerbar hotkey input

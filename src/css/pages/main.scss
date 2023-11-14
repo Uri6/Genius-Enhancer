@@ -94,7 +94,7 @@ input.input.ng-valid {
   transition: all 0s !important;
 }
 
-a:not(.discussion_thread-thread_list *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU) {
+a:not(.discussion_thread-thread_list *):not(.powerbar-result-card *):not(.VerifiedAttribution__ArtistAvatar-eyh30b-3):not(.search-choice-close):not(.square_button):not(.SquareButton-sc-109lda7-0):not(.logo_link):not(.group_name):not(.toggle_follow):not(.create_discussion):not(.discussion_summary_title):not(.qsIlk):not(.dUTFUv):not(.kcEpRx):not(.jdaOmt):not(.klrmXf):not(.eCAFYK):not(.geWmri):not(.jmEoGO):not(.jQULAr):not(.jNXEyt):not(.eJJKMv):not(.lbozyU) {
   transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   &:not(profile-page *):not(notification-inbox *):not(:has(.user_avatar)):not(.header_with_cover_art-primary_info-primary_artist):not(.SmallButton__Container-mg33hl-0):not(.drop-target):not(.InlineUserBadge__Container-qitux3-0):not(.remove_selected_user) {

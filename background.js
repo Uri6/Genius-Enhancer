@@ -79,6 +79,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             chrome.storage.local.set({ "OldSongPage": false });
             chrome.storage.local.set({ "darkMode": false });
             chrome.storage.local.set({ "powerbarStatus": true });
+            chrome.storage.local.set({ "openPowerbarResultsInNewTab": false });
             chrome.storage.local.set({ "defaultSearchType": "multi" });
             chrome.storage.local.set({ "powerbarHotkey": "Shift + Shift" });
             chrome.storage.local.set({ "songHeadersLanguage": "songsLang" });

@@ -1,3 +1,10 @@
+/**
+ * @license
+ * This code is licensed under the terms specified in the "LICENSE.md" file
+ * located in the root directory of the project. The license file can also be found at
+ * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
+ */
+
 insertPowerbar();
 
 // Placeholder texts for the powerbar input
@@ -346,7 +353,7 @@ async function search(query, type = "unset") {
     displaySearchResults(jsonResponse);
 }
 
-function displaySearchResults(results) {
+async function displaySearchResults(results) {
     // Remove any existing results
     $("#powerbar-results").remove();
 
@@ -358,33 +365,42 @@ function displaySearchResults(results) {
             class: "scroll-container"
         }));
 
+    const openInNewTab = (await chrome.storage.local.get("openPowerbarResultsInNewTab"))?.openPowerbarResultsInNewTab || false;
+
     // Iterate over the results and create a card for each one
     results.forEach((result) => {
         $("<div>", {
             class: "powerbar-result-card",
             "data-id": result?.id,
-            "data-type": result?.type,
+            "data-type": result?.type
         })
-            .append($("<img>", {
-                class: "powerbar-result-img",
-                src: result?.img,
-                title: `Go to ${result?.type} page`,
-                "data-url": result?.url
-            }))
+            .append($("<a>", {
+                class: "powerbar-result-img-container",
+                href: result?.url,
+                target: openInNewTab ? "_blank" : "_self",
+                title: `Go to ${result?.type} page`
+            })
+                .append($("<img>", {
+                    class: "powerbar-result-img",
+                    src: result?.img
+                }))
+            )
             .append($("<div>", {
                 class: "powerbar-result-text"
             })
-                .append($("<div>", {
+                .append($("<a>", {
                     class: "powerbar-result-name",
                     text: result?.name,
-                    title: `Go to ${result?.type} page`,
-                    "data-url": result?.url
+                    href: result?.url,
+                    target: openInNewTab ? "_blank" : "_self",
+                    title: `Go to ${result?.type} page`
                 }))
-                .append($("<div>", {
+                .append($("<a>", {
                     class: "powerbar-result-artist",
                     text: result?.artist?.name,
-                    title: "Go to artist page",
-                    "data-url": result?.artist?.url
+                    href: result?.artist?.url,
+                    target: openInNewTab ? "_blank" : "_self",
+                    title: "Go to artist page"
                 }))
             )
             .appendTo(container.find(".scroll-container"));
@@ -394,9 +410,9 @@ function displaySearchResults(results) {
     $("#ge-powerbar").append(container);
     $("#powerbar-loading-ball").remove();
 
-    // When a card is clicked, open the link in a new tab
+    // When a card is clicked, open the link in the current tab
     $(".powerbar-result-img, .powerbar-result-name, .powerbar-result-artist").on("click", function() {
-        window.open($(this).attr("data-url"), "_blank");
+        //window.location.href = $(this).attr("data-url");
     });
 }
 
