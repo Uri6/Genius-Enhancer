@@ -395,6 +395,23 @@ export async function handleSongPage(tabId) {
 				}
 			};
 
+			// Update X (twitter) logo
+			const twitterLogo = $("button[aria-label='twitter']");
+
+			if (twitterLogo) {
+				const twitterLogoSvg = twitterLogo.find("svg");
+
+				// Update attributes of the SVG
+				twitterLogoSvg.attr('width', '17.71');
+				twitterLogoSvg.attr('height', '16');
+				twitterLogoSvg.attr('viewBox', '0 0 300 271');
+
+				// Update the path
+				const path = twitterLogoSvg.find('path');
+				path.attr('d', 'm236 0h46l-101 115 118 156h-92.6l-72.5-94.8-83 94.8h-46l107-123-113-148h94.9l65.5 86.6zm-16.1 244h25.5l-165-218h-27.4z');
+			}
+
+
 
 			// TOOLBAR
 			const explainerSelector = ".LyricsEditExplainer__Container-sc-1aeph76-0";
