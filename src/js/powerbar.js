@@ -5,6 +5,9 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
+// Create a new AbortController for the search request
+let searchController = new AbortController();
+
 insertPowerbar();
 
 // Placeholder texts for the powerbar input
@@ -255,6 +258,14 @@ function executeCommand(command, args) {
 }
 
 async function search(query, type = "unset") {
+    // Kill the previous search request if it's still running
+    if (searchController) {
+        searchController.abort();
+    }
+
+    searchController = new AbortController();
+    const { signal } = searchController;
+
     if (type === "unset") {
         // Get the default search type from the storage
         type = (await chrome.storage.local.get("defaultSearchType"))?.defaultSearchType || "multi";
@@ -264,7 +275,16 @@ async function search(query, type = "unset") {
     const encodedName = encodeURIComponent(query);
     const url = `https://genius.com/api/search/${type}?q=${encodedName}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, { signal });
+
+    // If the request was aborted, don't do anything
+    if (signal.aborted) {
+        return;
+    } else if (!response.ok) {
+        showSearchTypeWarning();
+        return;
+    }
+
     let jsonResponse = await response.json();
 
     // Helper function to create a song hit object
@@ -330,7 +350,8 @@ async function search(query, type = "unset") {
                 default: return null;
             }
         })
-        .filter(hit => hit !== null); // Filter out any nulls from unrecognized types
+        .filter(hit => hit !== null) // Filter out any nulls from unrecognized types
+        .filter((hit, index, self) => self.findIndex(h => h.id === hit.id && h.type === hit.type) === index); // Remove any duplicates that may have slipped through
 
     let allHits = [];
     let seenIds = new Set();
@@ -409,11 +430,6 @@ async function displaySearchResults(results) {
     // Append the container to the powerbar & remove the loading animation
     $("#ge-powerbar").append(container);
     $("#powerbar-loading-ball").remove();
-
-    // When a card is clicked, open the link in the current tab
-    $(".powerbar-result-img, .powerbar-result-name, .powerbar-result-artist").on("click", function() {
-        //window.location.href = $(this).attr("data-url");
-    });
 }
 
 function displayCommandResults(options) {
