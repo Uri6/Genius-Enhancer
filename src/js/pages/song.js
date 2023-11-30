@@ -168,8 +168,7 @@ export async function handleSongPage(tabId) {
 
 					if (artworkInputContainer.length > 0 && !artworkInputContainer.find(".magic-wand-button-container").length) {
 						const magicWandContainer = $("<div>", {
-							class: "magic-wand-button-container",
-							disabled: true
+							class: "magic-wand-button-container"
 						})
 							.append($("<img>", {
 								class: "magic-wand-button-icon",
@@ -178,25 +177,99 @@ export async function handleSongPage(tabId) {
 							.appendTo(artworkInputContainer);
 
 						magicWandContainer.on("click", async function() {
-							let artwork = await new Promise((resolve) => {
+							if ($(this).hasClass("clicked")) return;
+							$(this).addClass("clicked").attr("title", "Searching for artwork...");
+
+							let artworks = await new Promise((resolve) => {
 								chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "song", false] }, (response) => {
 									resolve(response);
 								});
 							});
 
-							if (artwork.length) {
-								artwork = artwork[0];
+							$(this).attr("title", "Already checked for artwork");
+
+							if (artworks.length) {
+								const defaultArtwork = artworks[0];
 
 								const artworkInput = document.querySelectorAll("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0")[2];
 								artworkInput.value = "";
 
 								artworkInput.click();
-								artworkInput.value = artwork;
+								artworkInput.value = defaultArtwork;
 								const event = new InputEvent("input", {
 									bubbles: true,
-									data: artwork,
+									data: defaultArtwork,
 								});
 								artworkInput.dispatchEvent(event);
+
+								// Insert arrows to navigate between the artwork images
+								const resultsArrows = $("<div>", {
+									class: "results-arrows",
+									title: "Use the arrows to navigate between the results"
+								})
+									.append($("<span>", {
+										class: "arrow left",
+										text: "◀",
+										disabled: true,
+										title: "Can't go back, this is the first result"
+									}))
+									.append($("<span>", {
+										class: "arrow right",
+										text: "▶",
+										disabled: artworks.length === 1,
+										title: artworks.length === 1 ? "Can't go forward, this is the last result" : "Use the arrows to navigate between the results"
+									}))
+									.appendTo(artworkInputContainer.parent());
+
+								// If the div one before the arrows is not the input container, change its display to inline-block
+								if (resultsArrows.prev().attr("class") !== "Fieldshared__FieldContainer-dxskot-0 metadatastyles__MetadataField-nhmb0p-1") {
+									resultsArrows.prev().css("display", "inline-block");
+								}
+
+								// If no artwork was found, disable the arrows and change their title
+								if (JSON.stringify(artworks) === JSON.stringify([''])) {
+									$(this).attr("title", "No artwork found");
+									resultsArrows.find(".arrow.right").attr("disabled", true);
+									resultsArrows.find(".arrow.right").removeAttr("title");
+									resultsArrows.find(".arrow.left").removeAttr("title");
+									resultsArrows.attr("title", "No artwork found");
+									return;
+								}
+
+								// Add event listeners to the arrows
+								resultsArrows.find(".arrow").on("click", function() {
+									// Don't do anything if the arrow is disabled
+									if ($(this).attr("disabled")) return;
+
+									// Get the current artwork and its index
+									const currentArtwork = artworkInput.value;
+									const currentIndex = artworks.indexOf(currentArtwork);
+									const nextIndex = $(this).hasClass("left") ? currentIndex - 1 : currentIndex + 1;
+									const nextArtwork = artworks[nextIndex];
+
+									// Clear any previous search results & update the input with the next artwork
+									artworkInput.value = "";
+									artworkInput.click();
+									artworkInput.value = nextArtwork;
+									const event = new InputEvent("input", {
+										bubbles: true,
+										data: nextArtwork,
+									});
+									artworkInput.dispatchEvent(event);
+
+									// Update the arrows' disabled attribute
+									if (nextIndex === 0) {
+										resultsArrows.find(".arrow.left").attr("disabled", true).attr("title", "Can't go back, this is the first result");
+									} else {
+										resultsArrows.find(".arrow.left").removeAttr("disabled").attr("title", "Use the arrows to navigate between the results");
+									}
+
+									if (nextIndex === artworks.length - 1) {
+										resultsArrows.find(".arrow.right").attr("disabled", true).attr("title", "Can't go forward, this is the last result");
+									} else {
+										resultsArrows.find(".arrow.right").removeAttr("disabled").attr("title", "Use the arrows to navigate between the results");
+									}
+								});
 							}
 						});
 					}

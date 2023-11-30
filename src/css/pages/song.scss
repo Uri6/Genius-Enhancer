@@ -138,3 +138,25 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
         align-items: center;
     }
 }
+
+.results-arrows {
+    display: inline-flex;
+    float: right;
+    gap: 5px;
+
+    >.arrow {
+        padding: 0 5px;
+        user-select: none;
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+
+        &:hover {
+            color: #585858;
+        }
+
+        &[disabled] {
+            color: #a0a0a0;
+            cursor: not-allowed;
+        }
+    }
+}
