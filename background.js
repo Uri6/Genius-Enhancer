@@ -25,6 +25,7 @@ import {
 import {
     appleMusicPopUp,
     spotifyPopUp,
+    soundCloudPopUp,
     song_modernTextEditor,
     searchVideo,
     reactSongAdditions
@@ -72,6 +73,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             chrome.storage.local.set({ "releaseDate": true });
             chrome.storage.local.set({ "appleMusicPopUp": true });
             chrome.storage.local.set({ "spotifyPopUp": true });
+            chrome.storage.local.set({ "soundCloudPopUp": true });
             chrome.storage.local.set({ "add_song_as_next": true });
             chrome.storage.local.set({ "ModernTextEditor": false });
             chrome.storage.local.set({ "extensionStatus": true });
@@ -175,6 +177,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             album_saveEverything: [saveEverything, message.album_saveEverything],
             song_appleMusicPopUp: [appleMusicPopUp, message.song_appleMusicPopUp],
             song_spotifyPopUp: [spotifyPopUp, message.song_spotifyPopUp],
+            song_soundCloudPopUp: [soundCloudPopUp, message.song_soundCloudPopUp],
             song_modernTextEditor: [song_modernTextEditor, message.song_modernTextEditor],
             song_reactSongAdditions: [reactSongAdditions, message.song_reactSongAdditions],
             song_searchVideo: [searchVideo, message.song_searchVideo],

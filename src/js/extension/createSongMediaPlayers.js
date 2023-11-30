@@ -39,6 +39,94 @@ async function getDetails() {
     }
 }
 
+function createSoundCloudPlayer(url) {
+    // Set the style of the iframe
+    let style = {
+        width: '100.2%',
+        maxWidth: 'unset',
+        height: '110px',
+        marginLeft: '15px'
+    };
+
+    // If it isn't the new site, we need to adjust the dimensions
+    if (document.getElementsByClassName("header_with_cover_art-primary_info-title")[0]) {
+        style.width = 'calc(100% - 30px)';
+        style.maxWidth = '970px';
+    }
+
+    // Construct the iframe element
+    const $iframe = $('<iframe/>', {
+        id: 'ge-soundcloud-player',
+        style: `width: ${style.width};
+                max-width: ${style.maxWidth};
+                height: ${style.height};
+                margin-left: ${style.marginLeft};`,
+        scrolling: 'no',
+        frameborder: 'no',
+        src: `https://w.soundcloud.com/player/?url=${url}`
+    });
+    
+    chrome.storage.local.get(["soundCloudPopUp"], (res) => {
+        if (!res.soundCloudPopUp) {
+            $iframe.css("display", "none");
+        }
+    });
+
+    // Find the elem with the class "MediaPlayersContainer__Container"
+    let appleMusicParent = document.getElementsByClassName("apple_music_player_iframe_wrapper")[0];
+
+    // On the new site, the container div has a different name
+    if (appleMusicParent == undefined) {
+        const classBase = "AppleMusicPlayerdesktop__IframeWrapper-";
+        appleMusicParent = document.querySelectorAll("[class^=\"" + classBase + "\"], [class*=\" " + classBase + "\"]")[0];
+    }
+
+    // Some pages do not have an Apple Music player at all, so we need to create a new div for the player
+    if (appleMusicParent == undefined) {
+        if (document.getElementsByClassName("header_with_cover_art-primary_info-title")[0]) {
+            appleMusicParent = $('<div/>', {
+                class: 'apple_music_player_iframe_wrapper',
+                style: `display: block;
+                        width: 100%;`
+            })
+                .appendTo($('<div/>', {
+                    class: 'apple_music_player_desktop_positioning_container apple_music_player_desktop_positioning_container--visible'
+                })
+                    .appendTo($('<apple-music-player/>')
+                        .appendTo($('ng-outlet song-page div[ng-if="song"]>div'))));
+        } else {
+            // Find the elem with the classBase "MediaPlayersContainer__Container"
+            let classBase = "MediaPlayersContainer__Container-";
+            let playerParent = document.querySelectorAll("[class^=\"" + classBase + "\"], [class*=\" " + classBase + "\"]")[0];
+            if (playerParent) {
+                // Create a new div to hold the SoundCloud player
+                appleMusicParent = $('<div/>', {
+                    class: 'AppleMusicPlayerdesktop__IframeWrapper',
+                    style: `position: relative;
+                            pointer-events: auto;
+                            display: block;
+                            width: 70%;
+                            margin-left: 15%;`
+                })
+                    .appendTo($('<div/>', {
+                        class: 'AppleMusicPlayerdesktop__PositioningContainer',
+                        style: `width: 100%;
+                                transition: bottom 0.2s ease 0s;
+                                position: relative;
+                                visibility: visible;
+                                padding-bottom: 1rem;`
+                    })
+                        .appendTo(playerParent));
+            }
+        }
+
+        // Append the SoundCloud iframe
+        appleMusicParent.append($iframe);
+    } else { // If the Apple Music player already exists, we need to append the SoundCloud iframe to it differently
+        appleMusicParent.appendChild($iframe[0]);
+    }
+}
+
 async function createSpotifyPlayer() {
     function genAuthBasicToken(clientId, clientSecret) {
         return btoa(`${clientId}:${clientSecret}`);
@@ -279,5 +367,21 @@ async function createSpotifyPlayer() {
         swapAppleMusicPlayer(secrets.SPOTIFY_CLIENT_ID, secrets.SPOTIFY_CLIENT_SECRET);
     }
 }
+
+getDetails().then((details) => {
+    try {
+        if (details) {
+            console.log(details);
+            const soundCloudUrl = details.song.soundcloud_url;
+
+            if (soundCloudUrl) {
+                createSoundCloudPlayer(soundCloudUrl);
+            }
+        }
+        return null;
+    } catch (e) {
+        console.error(e);
+    }
+});
 
 createSpotifyPlayer();

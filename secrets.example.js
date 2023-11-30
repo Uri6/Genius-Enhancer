@@ -1,7 +1,7 @@
 window.secrets = {
     // Spotify API keys
     // Get your own at https://developer.spotify.com/dashboard/create
-    // Used in geniuspot.js
+    // Used in createSongMediaPlayers.js
     SPOTIFY_CLIENT_ID: "",
     SPOTIFY_CLIENT_SECRET: "",
 

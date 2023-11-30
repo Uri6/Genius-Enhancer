@@ -22,6 +22,7 @@ const SONG_PAGE_FEATURES_ELEMENT = $("<div>")
         .append($("<legend>", { id: "features", text: "Players" }))
         .append(createCheckbox("apple-music-pop-up", "Apple Music"))
         .append(createCheckbox("spotify-pop-up", "Spotify"))
+        .append(createCheckbox("soundcloud-pop-up", "SoundCloud"))
     )
     .append($("<fieldset>", { id: "features-box" })
         .append($("<legend>", { id: "features", text: "Features" }))
@@ -120,6 +121,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
         .append(SONG_PAGE_FEATURES_ELEMENT);
     handleCheckboxClick("apple-music-pop-up", "appleMusicPopUp", "song_appleMusicPopUp");
     handleCheckboxClick("spotify-pop-up", "spotifyPopUp", "song_spotifyPopUp");
+    handleCheckboxClick("soundcloud-pop-up", "soundCloudPopUp", "song_soundCloudPopUp");
     handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
     handleCheckboxClick("old-song-page", "OldSongPage", "");
 

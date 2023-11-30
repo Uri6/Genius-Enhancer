@@ -32,6 +32,18 @@ export function spotifyPopUp(show) {
 }
 
 /**
+ * Toggles the visibility of the SoundCloud player iframe
+ * 
+ * @param {boolean} show - Whether to show (true) or hide (false) the iframe
+ * @returns {void}
+ */
+export function soundCloudPopUp(show) {
+    const soundcloudElem = $("#ge-soundcloud-player");
+    if (!soundcloudElem.length) return;
+    soundcloudElem.toggle(show);
+}
+
+/**
  * Initializes the modern text editor for a song, and monitoring for changes in the DOM to remove the editor when necessary
  *
  * @returns {void}
