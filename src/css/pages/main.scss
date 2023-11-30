@@ -1093,6 +1093,11 @@ a.square_button.react_song_page_preview_link {
   width: 23px;
   height: 23px;
   cursor: pointer;
+
+  &.clicked {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
 
 #ge-follow-button {

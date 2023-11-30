@@ -484,6 +484,13 @@
                     }
                 }
 
+                &:has(.artwork-image):hover {
+                    .overlay {
+                        opacity: 0.4;
+                        background-color: #a1a1a1;
+                    }
+                }
+
                 .artwork-image,
                 .overlay {
                     position: absolute;

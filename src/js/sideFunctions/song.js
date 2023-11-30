@@ -9,6 +9,7 @@
  * Toggles the visibility of the Apple Music player iframe
  *
  * @param {boolean} show - Whether to show (true) or hide (false) the iframe
+ * @returns {void}
  */
 export function appleMusicPopUp(show) {
     const classBase = "AppleMusicPlayerdesktop__IframeWrapper-";
@@ -22,6 +23,7 @@ export function appleMusicPopUp(show) {
  * Toggles the visibility of the Spotify player iframe
  *
  * @param {boolean} show - Whether to show (true) or hide (false) the iframe
+ * @returns {void}
  */
 export function spotifyPopUp(show) {
     const spotiftElem = $("#ge-spotify-player");

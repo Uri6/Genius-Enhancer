@@ -1,3 +1,10 @@
+/**
+ * @license
+ * This code is licensed under the terms specified in the "LICENSE.md" file
+ * located in the root directory of the project. The license file can also be found at
+ * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
+ */
+
 export function createCheckbox(id, labelText) {
     return $("<div>")
         .append($("<input>", { type: "checkbox", id, name: id, class: "chkboxm" }))
