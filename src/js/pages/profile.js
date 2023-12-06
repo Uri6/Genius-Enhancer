@@ -26,6 +26,28 @@ export async function handleProfile(tabId, url) {
         {
             target: { tabId: tabId },
             func: () => {
+                // Fade the background of the leaderboard rows
+                const leaderboardInsertionObserver = new MutationObserver((mutations) => {
+                    const elements = mutations.flatMap(mutation => Array.from(mutation.addedNodes))
+                        .filter(node => node instanceof HTMLElement)
+                        .flatMap(node => Array.from(node.querySelectorAll(".leaderboard-row .leaderboard-percentage_fill")))
+                        .filter((element, index, self) => self.indexOf(element) === index);
+                    const total = elements.length;
+
+                    if (total === 1) {
+                        elements[0].style.background = `rgba(154, 154, 154, 0.42)`;
+                    } else {
+                        elements.forEach((element, index) => {
+                            index = total - index;
+                            const opacity = (index * 0.42) / total;
+                            element.style.background = `rgba(154, 154, 154, ${opacity})`;
+                        });
+                    }
+                });
+
+                // Start observing the document with the configured parameters
+                leaderboardInsertionObserver.observe(document, { childList: true, subtree: true });
+
                 // if exists, remove the inner text (without removing the svg child) of the elements that have the class "u-quarter_vertical_margins" and at least one of the following classes: square_button--facebook, square_button--twitter, square_button--instagram
                 // the inner text is the username in the social media
                 const socialMediaButtons = $(".square_button--facebook, .square_button--twitter, .square_button--instagram").filter((i, el) => $(el).hasClass("u-quarter_vertical_margins"));

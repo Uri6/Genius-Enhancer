@@ -415,6 +415,28 @@ export async function handleSongPage(tabId) {
 				};
 			});
 
+			// Fade the background of the leaderboard rows (works only on the old page for now)
+			const leaderboardInsertionObserver = new MutationObserver((mutations) => {
+				const elements = mutations.flatMap(mutation => Array.from(mutation.addedNodes))
+					.filter(node => node instanceof HTMLElement)
+					.flatMap(node => Array.from(node.querySelectorAll(".leaderboard-row .leaderboard-percentage_fill")))
+					.filter((element, index, self) => self.indexOf(element) === index);
+				const total = elements.length;
+
+				if (total === 1) {
+					elements[0].style.background = `rgba(154, 154, 154, 0.42)`;
+				} else {
+					elements.forEach((element, index) => {
+						index = total - index;
+						const opacity = (index * 0.42) / total;
+						element.style.background = `rgba(154, 154, 154, ${opacity})`;
+					});
+				}
+			});
+
+			// Start observing the document with the configured parameters
+			leaderboardInsertionObserver.observe(document, { childList: true, subtree: true });
+
 			const ANNOTATION_FORM_CLASS = "AnnotationEditFormdesktop__Form-sc-15key0q-0";
 			const LYRICS_TEXTAREA_CLASS = "ExpandingTextarea__Textarea-sc-4cgivl-0";
 
@@ -572,7 +594,7 @@ export async function handleSongPage(tabId) {
 			const headers = await fetch(headersFile)
 				.then(response => response?.json())
 				.catch((err) => { console.error("Error fetching headers file:", err); })
-				|| {intro: '[Intro]', verse: '[Verse {{count}}]', chorus: '[Chorus]', bridge: '[Bridge]', outro: '[Outro]'};
+				|| { intro: '[Intro]', verse: '[Verse {{count}}]', chorus: '[Chorus]', bridge: '[Bridge]', outro: '[Outro]' };
 			const headerOptionButtons = Object.keys(headers).map(name => {
 				return createButton(name.charAt(0).toUpperCase() + name.slice(1), buttonStyle, () => addTextToTextArea(`\n${headers[name]}`, name === "verse"));
 			});
@@ -695,89 +717,6 @@ export async function handleSongPage(tabId) {
 					toolbar.insertBefore(restoreButton, toolbar.children[1]);
 				}
 			});
-
-			/*let isAnnotation = false;
-
-			if (document.getElementsByClassName("annotation_sidebar_unit").length == 2) {
-				isAnnotation = true;
-			}
-			else if (!!document.getElementsByClassName("Annotation__Container-l76qjh-0 cNCMgo").length) {
-				isAnnotation = true;
-			}
-
-			const lyricsContainer = $('.Lyrics__Container-sc-1ynbvzw-6')[0] || $(".lyrics section")[0];
-			let text = lyricsContainer.innerText;
-
-			var words = text.replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g, '').split(/\s+/);
-
-			var languageCounts = {};
-			for (var i = 0; i < words.length; i++) {
-				var word = words[i];
-				var language = getLanguage(word);
-				if (!languageCounts[language]) {
-					languageCounts[language] = 0;
-				}
-				languageCounts[language]++;
-			}
-
-			var mostUsedLanguage = null;
-			var highestCount = 0;
-			for (var language in languageCounts) {
-				if (languageCounts[language] > highestCount) {
-					mostUsedLanguage = language;
-					highestCount = languageCounts[language];
-				}
-			}
-
-			if (mostUsedLanguage === null) {
-				console.log("No language detected");
-			} else {
-				var direction = isRTL(mostUsedLanguage) ? "RTL" : "LTR";
-				console.log("Most used language: " + mostUsedLanguage + " (" + direction + ")");
-			}
-
-			function getLanguage(word) {
-				switch (true) {
-					case /^[a-zA-Z]+$/.test(word):
-						return "English";
-					case /^[\u0600-\u06FF]+$/.test(word):
-						return "Arabic";
-					case /^[\u0590-\u05FF]+$/.test(word):
-						return "Hebrew";
-					case /^[\u0400-\u04FF]+$/.test(word):
-						return "Russian";
-					case /^[\u3040-\u309F]+$/.test(word):
-						return "Japanese";
-					case /^[\u4E00-\u9FFF]+$/.test(word):
-						return "Chinese Simplified";
-					case /^[\u00E4-\u00FC]+$/.test(word):
-						return "German";
-					case /^[\u00C0-\u00FF]+$/.test(word):
-						return "French";
-					case /^[\u00E0-\u00FF]+$/.test(word):
-						return "Spanish";
-					case /^[\u00C6-\u00E6]+$/.test(word):
-						return "Danish";
-					case /^[\u0104-\u0134]+$/.test(word):
-						return "Polish";
-					case /^[\u0103-\u0103]+$/.test(word):
-						return "Romanian";
-					case /^[\u00E6-\u00E6]+$/.test(word):
-						return "Ukrainian";
-					case /^[\u0131-\u0131]+$/.test(word):
-						return "Turkish";
-					case /^[\u0050-\u00FF]+$/.test(word):
-						return "Italian";
-					case /^[\u01C5-\u0218]+$/.test(word):
-						return "Dutch";
-					default:
-						return "Other";
-				}
-			}
-
-			function isRTL(language) {
-				return (language === "Arabic" || language === "Hebrew");
-			}*/
 		}
 	});
 }

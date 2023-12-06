@@ -170,13 +170,25 @@ profile-contributions-group {
     .profile_contributions_group {
         border-radius: 10px !important;
 
-        >* {
+        div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)):not(.mini_card-title_and_subtitle *):not(.standalone_annotation-referent_fragment),
+        a:not(.referent),
+        img,
+        hr:not([size]),
+        .voters {
+            border-radius: 10px !important;
+        }
 
-            div:not(:has(.user_badge-login)):not(:has(.user_badge-login_and_iq)),
-            a,
-            img,
-            hr:not([size]) {
-                border-radius: 10px !important;
+        // Annotation contributors leaderboard
+        leaderboard>div {
+            user-attribution {
+                &.leaderboard-row:not(.leaderboard-row--no_border) {
+                    border-bottom: 0;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .leaderboard-rank {
+                    display: none;
+                }
             }
         }
     }
@@ -217,7 +229,7 @@ profile-contributions-group {
             justify-content: center;
             align-items: center;
             top: -15px;
-            
+
             .social_media_button_username {
                 background-color: #e9e9e9;
                 color: #000;

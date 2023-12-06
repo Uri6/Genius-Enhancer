@@ -28,7 +28,6 @@
 }
 
 // Top right menu
-
 div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     border-radius: 10px;
 
@@ -42,8 +41,27 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
     }
 }
 
-// Song Metadata
+// Annotation contributors leaderboard
+annotation-sidebar leaderboard>div {
+    user-attribution {
+        &.leaderboard-row {
+            .leaderboard-percentage_fill {
+                border-radius: 10px;
+            }
 
+            &:not(.leaderboard-row--no_border) {
+                border-bottom: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .leaderboard-rank {
+            display: none;
+        }
+    }
+}
+
+// Song Metadata
 #edit-metadata-overlay.dSfHrp {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
@@ -75,8 +93,8 @@ div>div>div[width="narrow"]:has(a[href="/feedback/new"]) {
 
     input,
     .css-18ubn8j-control,
-    .iEuXAw>div, // song art preview
-    .diuQvC { //song gradient preview
+    .iEuXAw>div, // Song art preview
+    .diuQvC { // Song gradient preview
         &:not(input:not(.iweFBO)) {
             border-radius: var(--input-radius);
         }
