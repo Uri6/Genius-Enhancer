@@ -33,14 +33,21 @@ or
 
 1. Clone the repository
 ```
-git clone https://github.com/Uri6/Genius-Enhancer.git
+git clone https://github.com/hackeagle/Genius-Enhancer.git
 ```
 
-2. Compile the scss files
-3. Add your own API keys to the secrets.example.js file and rename it to secrets.js
-4. Load the extension in Chrome
+2. Install dependencies with `yarn install`
+3. Compile the styles with `yarn build`
+4. Optional: add Google or Spotify credentials to
+   `src/js/extension/defaultSecrets.js` for local testing. Do not commit real
+   credentials. The extension loads with those integrations disabled when the
+   values are blank.
+5. Load the extension in Chrome
     - Open up `chrome://extensions/` in your browser and click `Developer mode` in the top right
     - Click `Load unpacked` and select the `Genius-Enhancer` directory
+
+Run `yarn check` after making changes. It verifies the JavaScript project and
+ensures every file referenced by the extension exists.
 
 ## Usage
 1. Go to Genius.com

@@ -122,7 +122,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
     handleCheckboxClick("apple-music-pop-up", "appleMusicPopUp", "song_appleMusicPopUp");
     handleCheckboxClick("spotify-pop-up", "spotifyPopUp", "song_spotifyPopUp");
     handleCheckboxClick("soundcloud-pop-up", "soundCloudPopUp", "song_soundCloudPopUp");
-    handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
+    handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_modernTextEditor");
     handleCheckboxClick("old-song-page", "OldSongPage", "");
 
     // create and add album elements
@@ -138,7 +138,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async () => {
         .append(FORUMS_ELEMENT)
         .append(FORUMS_FEATURES_ELEMENT);
     handleCheckboxClick("modernForums", "modernForums", "");
-    handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_ModernTextEditor");
+    handleCheckboxClick("modern-text-editor", "ModernTextEditor", "song_modernTextEditor");
 
     // allow navigation through pages using arrow keys
     $(document).keydown((e) => {

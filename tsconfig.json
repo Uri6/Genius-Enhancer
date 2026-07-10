@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         /* Visit https://aka.ms/tsconfig to read more about this file */
-        "composite": true,
+        "composite": false,
         "target": "ES2019",
         "lib": ["ES2021", "DOM", "DOM.Iterable"],
         "module": "ES2022",
@@ -14,6 +14,6 @@
         "strictNullChecks": false,
         "strict": false,
         "noImplicitAny": false,
-        "skipLibCheck": false
+        "skipLibCheck": true
     }
 }

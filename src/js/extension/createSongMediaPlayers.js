@@ -6,37 +6,27 @@
  */
 
 async function getDetails() {
-    // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
-    const metaElem = document.documentElement.innerHTML.match(
-        /<meta content="({[^"]+)/
-    );
+    for (const meta of document.querySelectorAll("meta[content]")) {
+        const content = meta.getAttribute("content")?.trim();
+        if (!content?.startsWith("{")) continue;
+        try {
+            const details = JSON.parse(content);
+            if (details.song || details.page_type) return details;
+        } catch {
+            // Continue looking for Genius page data.
+        }
+    }
 
-    // Define an object containing HTML entity codes and their corresponding characters
-    const replaces = {
-        "&#039;": `'`,
-        "&amp;": "&",
-        "&lt;": "<",
-        "&gt;": ">",
-        "&quot;": '"',
-    };
-
-    // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
-    if (metaElem) {
-        // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
-        const meta = metaElem[1].replace(
-            /&[\w\d#]{2,5};/g,
-            (match) => replaces[match]
-        );
-
-        // Parse the JSON string and return the resulting object
-        return JSON.parse(meta);
-    } else {
-        const id = document.querySelector("[property=\"twitter:app:url:iphone\"]").content.split("/")[3];
+    const appUrl = document.querySelector("[property=\"twitter:app:url:iphone\"]")?.content;
+    const id = appUrl?.split("/")[3];
+    if (id) {
         const response = await fetch(`https://genius.com/api/songs/${id}`);
+        if (!response.ok) return null;
         const json = await response.json();
-
         return json.response;
     }
+
+    return null;
 }
 
 function createSoundCloudPlayer(url) {
@@ -128,6 +118,12 @@ function createSoundCloudPlayer(url) {
 }
 
 async function createSpotifyPlayer() {
+    const clientId = globalThis.secrets?.SPOTIFY_CLIENT_ID;
+    const clientSecret = globalThis.secrets?.SPOTIFY_CLIENT_SECRET;
+    if (!clientId || !clientSecret) {
+        console.info("Spotify enhancement is unavailable until Spotify API credentials are configured.");
+        return;
+    }
     function genAuthBasicToken(clientId, clientSecret) {
         return btoa(`${clientId}:${clientSecret}`);
     }
@@ -364,7 +360,7 @@ async function createSpotifyPlayer() {
     }
 
     if (!document.getElementById("ge-spotify-player")) {
-        swapAppleMusicPlayer(secrets.SPOTIFY_CLIENT_ID, secrets.SPOTIFY_CLIENT_SECRET);
+        swapAppleMusicPlayer(clientId, clientSecret);
     }
 }
 

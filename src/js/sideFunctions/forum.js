@@ -124,7 +124,7 @@ export function forums_modernTextEditor() {
         $("#new_discussion .required.markdown_preview_setup_complete").length
     ) {
         chrome.runtime.sendMessage({
-            replaceTextarea: ["required markdown_preview_setup_complete"],
+            replaceTextarea: [".required.markdown_preview_setup_complete"],
         });
 
         if ($(".reply_container .formatting_help").length) {

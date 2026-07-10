@@ -13,6 +13,9 @@
         "tabWidth": 4
     },
     "scripts": {
+        "build": "node compileAllSass.js && node scripts/validate-extension.js",
+        "check": "tsc --noEmit && node scripts/validate-extension.js",
+        "validate": "node scripts/validate-extension.js",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,html,json}\""
     },
     "dependencies": {

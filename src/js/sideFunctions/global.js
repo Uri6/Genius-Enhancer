@@ -47,31 +47,23 @@ export function insertAfter(newNode, existingNode) {
  * @returns The parsed metadata object
  */
 export function getDetails() {
-    // Find the first occurrence of a '<meta>' tag that contains a JSON string in its 'content' attribute
-    const metaElem = document.documentElement.innerHTML.match(
-        /<meta content="({[^"]+)/
-    );
+    for (const meta of document.querySelectorAll("meta[content]")) {
+        const content = meta.getAttribute("content")?.trim();
+        if (!content?.startsWith("{")) {
+            continue;
+        }
 
-    // Define an object containing HTML entity codes and their corresponding characters
-    const replaces = {
-        "&#039;": `'`,
-        "&amp;": "&",
-        "&lt;": "<",
-        "&gt;": ">",
-        "&quot;": '"',
-    };
-
-    // If the '<meta>' tag was found, extract the JSON string from it and replace any HTML entities with their corresponding characters
-    if (metaElem) {
-        // Get the JSON string from the first '<meta>' tag, and replace any HTML entities using a callback function
-        const meta = metaElem[1].replace(
-            /&[\w\d#]{2,5};/g,
-            (match) => replaces[match]
-        );
-
-        // Parse the JSON string and return the resulting object
-        return JSON.parse(meta);
+        try {
+            const details = JSON.parse(content);
+            if (details.page_type || details.song || details.album_appearances) {
+                return details;
+            }
+        } catch {
+            // Most metadata is not JSON. Continue looking for Genius page data.
+        }
     }
+
+    return null;
 }
 
 /**
@@ -291,21 +283,28 @@ export async function getCreditsList(query) {
 /**
  * Replaces a textarea with a Quill rich text editor
  *
- * @param {string} textareaClasses - The classes of the textarea to replace
+ * @param {string} textareaSelector - A selector for the textarea to replace
  * @throws {Error} - Throws an error if the textarea could not be found
  * @returns {void}
  */
-export function replaceTextarea(textareaClasses) {
+export function replaceTextarea(textareaSelector) {
     if ($(".ql-editor").length) {
         console.info("Quill already exists");
         return;
     }
 
-    const textarea = document.getElementsByClassName(textareaClasses)[0];
+    const textarea = document.querySelector(textareaSelector) ||
+        document.getElementsByClassName(textareaSelector)[0];
     if (!textarea) {
-        throw new Error("could not find textarea");
+        console.info("Genius Enhancer could not find an editor textarea.");
+        return;
     }
-    let content = textarea.value;
+    if (textarea.dataset.geniusEnhancerEditor === "true") return;
+    textarea.dataset.geniusEnhancerEditor = "true";
+    const isContentEditable = textarea.isContentEditable;
+    let content = isContentEditable
+        ? textarea.innerHTML
+        : textarea.value;
     textarea.style.display = "none";
     const editor = document.createElement("div");
     textarea.parentNode.appendChild(editor);
@@ -365,7 +364,8 @@ export function replaceTextarea(textareaClasses) {
     });
 
     // if editing lyrics, it's making the header sticky
-    if (textareaClasses !== "required markdown_preview_setup_complete") {
+    const isForumEditor = textarea.matches(".required.markdown_preview_setup_complete");
+    if (!isForumEditor) {
         const toolbar = $(".ql-toolbar");
         const toolbarHeight = toolbar.height();
         const toolbarContainer = $("<div>", { class: "ql-toolbar-container" });
@@ -425,16 +425,23 @@ export function replaceTextarea(textareaClasses) {
             .replace(/<\/b>\n<b>/g, "\n")
             .replace(/<\/i>\n<i>/g, "\n");
 
-        textarea.value = markdownFormat;
+        if (isContentEditable) {
+            textarea.innerHTML = markdownFormat;
+        } else {
+            textarea.value = markdownFormat;
+        }
 
-        const event = new Event("input", {
+        const inputEvent = new InputEvent("input", {
             bubbles: true,
             cancelable: true,
+            inputType: "insertText",
+            data: null
         });
-        textarea.dispatchEvent(event);
+        textarea.dispatchEvent(inputEvent);
+        textarea.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
-    if (textareaClasses === "required markdown_preview_setup_complete") {
+    if (isForumEditor) {
         window.scrollTo(0, 0);
     }
 }

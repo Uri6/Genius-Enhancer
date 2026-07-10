@@ -98,35 +98,29 @@ export async function handleForumThread(tabId) {
                                 return;
                             }
                             const username = iqValue.getAttribute("href").slice(1);
-                            const quillEditor = $(".ql-editor");
-                            if (quillEditor.length === 0) {
-                                console.error("no quill editor");
+                            const nativeEditor = $("#forum_post_body, textarea.required.markdown_preview_setup_complete");
+                            if (nativeEditor.length === 0) {
+                                console.error("no forum editor");
                                 return;
                             }
-                            const existingText = quillEditor.html();
+                            const existingText = nativeEditor.val() || "";
                             if (existingText.includes("@" + username + " ")) {
                                 return;
                             }
                             const taggedUsernames = existingText.match(/@\w+\s/g) || [];
-                            if (taggedUsernames.length > 0) {
-                                quillEditor.append("\n@" + username + " \n\n");
-                            } else {
-                                quillEditor.prepend("@" + username + " \n\n");
-                            }
+                            const mention = "@" + username + " \n\n";
+                            nativeEditor.val(taggedUsernames.length > 0
+                                ? existingText + "\n" + mention
+                                : mention + existingText
+                            ).trigger("input").trigger("change");
 
                             $("html, body").animate({
-                                scrollTop: quillEditor.offset().top
+                                scrollTop: nativeEditor.offset().top
                             }, 500);
 
-                            quillEditor.trigger("focus");
-
-                            // set the cursor to the end of the text
-                            const range = document.createRange();
-                            const sel = window.getSelection();
-                            range.setStart(quillEditor[0], quillEditor[0].childNodes.length);
-                            range.collapse(true);
-                            sel.removeAllRanges();
-                            sel.addRange(range);
+                            nativeEditor.trigger("focus");
+                            const editor = nativeEditor[0];
+                            editor.setSelectionRange(editor.value.length, editor.value.length);
                         });
 
                         forumPostUnit.appendChild(replyButton);

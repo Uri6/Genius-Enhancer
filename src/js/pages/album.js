@@ -17,6 +17,26 @@ export async function handleAlbum(tabId) {
         {
             target: { tabId: tabId },
             func: (async () => {
+                const oldAlbumPageButton = [...document.querySelectorAll("button")]
+                    .find((button) => button.textContent.trim() === "View Old Album Page");
+
+                if (oldAlbumPageButton) {
+                    if (!document.querySelector(".ge-bulk-edit-credits")) {
+                        const bulkEditButton = oldAlbumPageButton.cloneNode(true);
+                        bulkEditButton.classList.add("ge-bulk-edit-credits");
+                        bulkEditButton.textContent = "Bulk edit credits";
+                        bulkEditButton.title = "Open the compatible album editor";
+                        bulkEditButton.addEventListener("click", () => {
+                            oldAlbumPageButton.click();
+                        });
+                        oldAlbumPageButton.parentNode.insertBefore(
+                            bulkEditButton,
+                            oldAlbumPageButton
+                        );
+                    }
+                    return;
+                }
+
                 $("div[ng-bind-html='metadata_question.question']").each((index, e) => {
                     e.parentElement.remove();
                 });
@@ -89,15 +109,17 @@ export async function handleAlbum(tabId) {
                 }
 
                 // Get the album title and artist name from the page DOM
-                const title = document.getElementsByClassName("header_with_cover_art-primary_info-title header_with_cover_art-primary_info-title--white")[0].innerText;
-                const artist = document.getElementsByClassName("header_with_cover_art-primary_info-primary_artist")[0].innerText;
+                const title = document.querySelector(".header_with_cover_art-primary_info-title, [class*='HeaderAlbum__Title']")?.innerText;
+                const artist = document.querySelector(".header_with_cover_art-primary_info-primary_artist, [class*='HeaderArtistAndTracklistdesktop__Artist']")?.innerText;
                 const query = [title, artist];
 
-                const albumArtworks = await new Promise((resolve) => {
-                    chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "album", true] }, (response) => {
-                        resolve(response);
-                    });
-                });
+                const albumArtworks = title && artist
+                    ? await new Promise((resolve) => {
+                        chrome.runtime.sendMessage({ "album_autolinkArtwork": [query, "album", true] }, (response) => {
+                            resolve(Array.isArray(response) ? response : []);
+                        });
+                    })
+                    : [];
 
                 const albumArtworksContainer = $("<datalist>", {
                     id: "albumArtworks",
@@ -113,6 +135,7 @@ export async function handleAlbum(tabId) {
                 }
 
                 getTagsList().then(res => {
+                    if (!res) return;
                     const replaces = {
                         "&#039;": `'`,
                         "&amp;": "&",
@@ -145,6 +168,8 @@ export async function handleAlbum(tabId) {
                     });
 
                     $("body").append(dataListElem);
+                }).catch((error) => {
+                    console.info("Legacy Genius tag list is unavailable", error);
                 });
 
                 const albumObject = await new Promise((resolve) => {
@@ -153,7 +178,9 @@ export async function handleAlbum(tabId) {
                     });
                 });
 
-                const isExplicit = albumObject.dfp_kv.find(x => x.name === "is_explicit").values[0] === "true";
+                const isExplicit = albumObject?.dfp_kv
+                    ?.find(x => x.name === "is_explicit")
+                    ?.values?.[0] === "true";
 
                 if (isExplicit && !$(".ge-explicit-icon").length) {
                     $(".header_with_cover_art-primary_info-title").append($("<img>", {

@@ -42,11 +42,12 @@ export function handleCheckboxClick(checkboxId, storageKey = checkboxId, message
 
     $checkbox.click(() => {
         const isChecked = $checkbox.prop("checked");
-        const altMessageKey = isChecked ? "album_missingInfo" : "album_missingInfo_remove";
-        const updateMessageKey = messageKey.length ? messageKey : altMessageKey;
-
         chrome.storage.local.set({ [storageKey]: isChecked });
-        chrome.runtime.sendMessage({ [updateMessageKey]: messageValue || [isChecked] });
+        if (messageKey || messageValue) {
+            const altMessageKey = isChecked ? "album_missingInfo" : "album_missingInfo_remove";
+            const updateMessageKey = messageKey.length ? messageKey : altMessageKey;
+            chrome.runtime.sendMessage({ [updateMessageKey]: messageValue || [isChecked] });
+        }
 
         getAndUpdateState();
     });

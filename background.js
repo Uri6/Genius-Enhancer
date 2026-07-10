@@ -47,19 +47,61 @@ import { handleForumsMain } from "./src/js/pages/forumsMain.js";
 import { handlePenalties } from "./src/js/pages/mecha.penalties.js";
 import { geniusGlobalContentScript } from "./src/js/globalContent.js";
 
-function getTabId() {
-    return new Promise((resolve, reject) => {
-        try {
-            chrome.tabs.query({
-                active: true
-            }, (tabs) => {
-                resolve(tabs[0].id);
-            });
-        } catch (e) {
-            reject(e);
-        }
+async function getTabId(sender) {
+    if (sender?.tab?.id !== undefined) {
+        return sender.tab.id;
+    }
+    const tabs = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
     });
+    return tabs[0]?.id;
 }
+
+function isInjectableGeniusUrl(tabUrl) {
+    try {
+        const parsed = new URL(tabUrl);
+        return parsed.protocol === "https:" &&
+            (parsed.hostname === "genius.com" || parsed.hostname === "www.genius.com");
+    } catch {
+        return false;
+    }
+}
+
+const defaultSettings = {
+    bios: true,
+    people: true,
+    releaseDate: true,
+    appleMusicPopUp: true,
+    spotifyPopUp: true,
+    soundCloudPopUp: true,
+    add_song_as_next: true,
+    ModernTextEditor: false,
+    extensionStatus: true,
+    OldSongPage: false,
+    darkMode: false,
+    powerbarStatus: true,
+    openPowerbarResultsInNewTab: false,
+    defaultSearchType: "multi",
+    powerbarHotkey: "Shift + Shift",
+    songHeadersLanguage: "songsLang",
+    modernAddASong: true,
+    modernForums: true
+};
+
+async function initializeMissingSettings() {
+    const currentSettings = await chrome.storage.local.get(Object.keys(defaultSettings));
+    const missingSettings = Object.fromEntries(
+        Object.entries(defaultSettings).filter(([key]) => currentSettings[key] === undefined)
+    );
+    if (Object.keys(missingSettings).length) {
+        await chrome.storage.local.set(missingSettings);
+    }
+}
+
+initializeMissingSettings().catch((error) => {
+    console.error("Failed to initialize Genius Enhancer settings", error);
+});
 
 chrome.runtime.onInstalled.addListener(async (details) => {
     const currentVersion = chrome.runtime.getManifest().version;
@@ -68,24 +110,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     switch (reason) {
         case "install":
-            chrome.storage.local.set({ "bios": true });
-            chrome.storage.local.set({ "people": true });
-            chrome.storage.local.set({ "releaseDate": true });
-            chrome.storage.local.set({ "appleMusicPopUp": true });
-            chrome.storage.local.set({ "spotifyPopUp": true });
-            chrome.storage.local.set({ "soundCloudPopUp": true });
-            chrome.storage.local.set({ "add_song_as_next": true });
-            chrome.storage.local.set({ "ModernTextEditor": false });
-            chrome.storage.local.set({ "extensionStatus": true });
-            chrome.storage.local.set({ "OldSongPage": false });
-            chrome.storage.local.set({ "darkMode": false });
-            chrome.storage.local.set({ "powerbarStatus": true });
-            chrome.storage.local.set({ "openPowerbarResultsInNewTab": false });
-            chrome.storage.local.set({ "defaultSearchType": "multi" });
-            chrome.storage.local.set({ "powerbarHotkey": "Shift + Shift" });
-            chrome.storage.local.set({ "songHeadersLanguage": "songsLang" });
-            chrome.storage.local.set({ "modernAddASong": true });
-            chrome.storage.local.set({ "modernForums": true });
+            await chrome.storage.local.set(defaultSettings);
             break;
         case "update":
             if (previousVersion) {
@@ -160,7 +185,18 @@ async function getReleaseNotes(versions) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    getTabId().then((tabId) => {
+    getTabId(sender).then(async (tabId) => {
+        if (tabId === undefined) {
+            sendResponse(undefined);
+            return;
+        }
+
+        const targetTab = sender?.tab || await chrome.tabs.get(tabId);
+        if (!isInjectableGeniusUrl(targetTab?.url)) {
+            sendResponse(undefined);
+            return;
+        }
+
         const functions = {
             fixNonLatin: [fixNonLatin, message.fixNonLatin],
             getDetails: [getDetails, [""]],
@@ -188,33 +224,36 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const [func, args] = functions[Object.keys(message)[0]] || [];
 
         if (!func) {
+            sendResponse(undefined);
             return;
         }
 
-        chrome.scripting.executeScript({
+        const results = await chrome.scripting.executeScript({
             target: { tabId: tabId },
             func: func,
             args: args
-        }).then((results) => {
-            const res = (func === autolinkArtwork ||
-                func === identifyPageType ||
-                func === getPlaylistVideos ||
-                func === getDetails ||
-                func === getArtistsList ||
-                func === getCreditsList ||
-                func === searchVideo ||
-                func === fixNonLatin) ? results[0].result : undefined;
-
-            console.info("----------------------------------------");
-            console.info("%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
-            console.info("time received: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
-            console.info("message received: ", message);
-            console.info("function called: ", func.name);
-            console.info("arguments: ", args);
-            console.info("response: ", res);
-
-            sendResponse(res);
         });
+        const res = (func === autolinkArtwork ||
+            func === identifyPageType ||
+            func === getPlaylistVideos ||
+            func === getDetails ||
+            func === getArtistsList ||
+            func === getCreditsList ||
+            func === searchVideo ||
+            func === fixNonLatin) ? results[0]?.result : undefined;
+
+        console.info("----------------------------------------");
+        console.info("%c new message received ", "background-color: #ff1464; color: #fff; padding: 5px; text-align: center; font-size: 15px; font-weight: bold; display: block; border-radius: 5px;");
+        console.info("time received: ", new Date().toLocaleTimeString("en-US", { hour12: false }));
+        console.info("message received: ", message);
+        console.info("function called: ", func.name);
+        console.info("arguments: ", args);
+        console.info("response: ", res);
+
+        sendResponse(res);
+    }).catch((error) => {
+        console.warn("Genius Enhancer could not handle a page message", error);
+        sendResponse(undefined);
     });
 
     return true;
@@ -443,7 +482,7 @@ const files = [
     },
     {
         type: "js",
-        file: "./secrets.js"
+        file: "./src/js/extension/defaultSecrets.js"
     },
     {
         type: "js",
@@ -488,10 +527,17 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     chrome.storage.local.get("extensionStatus", async (res) => {
         if (res.extensionStatus) {
             // we might not have access to this page
-            isGeniusPage = geniusAddress.some((adress) => tab?.url?.startsWith(adress));
+            let parsedUrl;
+            try {
+                parsedUrl = new URL(tab?.url);
+            } catch {
+                parsedUrl = null;
+            }
+            isGeniusPage = parsedUrl?.protocol === "https:" &&
+                (parsedUrl.hostname === "genius.com" || parsedUrl.hostname === "www.genius.com");
             await chrome.storage.local.set({ "isGeniusPage": isGeniusPage });
 
-            if (!tab.url) {
+            if (!tab.url || changeInfo.status !== "complete" || !isGeniusPage) {
                 return;
             }
 
@@ -507,32 +553,40 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
             pageType = "unknown";
 
-            const prohibitedDomains = ["promote.genius.com", "support.genius.com", "docs.genius.com", "homestudio.genius.com", "genius.com/developers", "genius.com/api-clients", "api.genius.com"];
+            const prohibitedDomains = [
+                "promote.genius.com",
+                "support.genius.com",
+                "docs.genius.com",
+                "homestudio.genius.com",
+                "api.genius.com"
+            ];
+            const prohibitedPaths = ["/developers", "/api-clients"];
 
-            const protocolAndDomainRegex = /^https:\/\/([^\/]+)/;
-            const protocolAndDomainMatch = tab.url.match(protocolAndDomainRegex);
-
-            if (protocolAndDomainMatch !== null && prohibitedDomains.includes(protocolAndDomainMatch[1])) {
+            if (prohibitedDomains.includes(parsedUrl.hostname) ||
+                prohibitedPaths.some((path) => parsedUrl.pathname.startsWith(path))) {
                 return;
             }
 
-            if (changeInfo.status !== "complete" || !tab.url.includes("genius.com")) {
-                return;
-            }
-
-            const runningFlag = await chrome.scripting.executeScript({
-                target: { tabId: tabId },
-                func: () => {
-                    if (document.body.dataset.geniusEnhancerRunning === "true") {
-                        return false;
-                    } else {
-                        document.body.dataset.geniusEnhancerRunning = "true";
-                        return true;
+            let runningFlag;
+            try {
+                runningFlag = await chrome.scripting.executeScript({
+                    target: { tabId: tabId },
+                    func: () => {
+                        if (document.body.dataset.geniusEnhancerUrl === location.href) {
+                            return false;
+                        } else {
+                            document.body.dataset.geniusEnhancerRunning = "true";
+                            document.body.dataset.geniusEnhancerUrl = location.href;
+                            return true;
+                        }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.warn("Genius Enhancer could not access this tab", error);
+                return;
+            }
 
-            if (!runningFlag[0].result) {
+            if (!runningFlag?.[0]?.result) {
                 return;
             }
 
@@ -558,9 +612,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                     return undefined;
                 }
 
-                const urlPart = tab.url.split("genius.com/")[1];
+                const currentUrl = new URL(tab.url);
+                const urlPart = currentUrl.pathname.replace(/^\/|\/$/g, "");
 
-                if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-annotated") || urlPart.endsWith("?react=1") || urlPart.endsWith("?bagon=1"))) {
+                if (!urlPart.includes("/") && (urlPart.endsWith("-lyrics") || urlPart.endsWith("-annotated"))) {
                     // we may not reach the end of the function by the time chrome updates. just in case!
                     pageType = "song";
 
@@ -579,14 +634,24 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                     });
 
                     return "song";
-                } else if (geniusAddress.some((address) => tab.url === address) || (urlPart[0] === "#" && !urlPart.includes("/"))) {
+                } else if (currentUrl.pathname === "/" || (currentUrl.hash && !urlPart.includes("/"))) {
                     return "home";
-                } else if (geniusAddress.some((address) => tab.url.startsWith(address + "firehose"))) {
+                } else if (urlPart === "firehose" || urlPart.startsWith("firehose/")) {
                     return "firehose";
-                } else if (geniusAddress.some((address) => tab.url === address + "new" || tab.url === address + "new/" || tab.url === address + "songs/new" || tab.url === address + "songs/new/")) {
+                } else if (urlPart === "new" || urlPart === "songs/new") {
                     return "new song";
-                } else if (geniusAddress.some((address) => tab.url.startsWith(address + "penalties"))) {
+                } else if (urlPart === "penalties" || urlPart.startsWith("penalties/")) {
                     return "mecha.penalties";
+                } else if (urlPart === "albums" || urlPart.startsWith("albums/")) {
+                    return "album";
+                } else if (urlPart === "forums") {
+                    return "forums (main)";
+                } else if (urlPart.includes("/discussions/")) {
+                    return "forum thread";
+                } else if (urlPart.startsWith("forums/") && urlPart.endsWith("/new")) {
+                    return "new post";
+                } else if (urlPart.startsWith("forums/")) {
+                    return "forum";
                 }
 
                 const isForumPage = await chrome.scripting.executeScript({
@@ -617,31 +682,51 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
                 return enabled;
             }
 
-            const cssFiles = files
-                .filter((f) => f.type === "css" && applicable(f))
+            const applicableFiles = (await Promise.all(
+                files.map(async (file) => ({
+                    file,
+                    enabled: await applicable(file)
+                }))
+            ))
+                .filter(({ enabled }) => enabled)
+                .map(({ file }) => file);
+
+            const cssFiles = applicableFiles
+                .filter((f) => f.type === "css")
                 .map((f) => f.file);
 
-            const baseJsFiles = files
-                .filter((f) => f.type === "js" && applicable(f))
+            const baseJsFiles = applicableFiles
+                .filter((f) => f.type === "js")
                 .map((f) => f.file);
 
             console.info("css files: ", cssFiles);
             console.info("js files: ", baseJsFiles);
 
             // inject relevant css/js files
-            if (cssFiles.length) {
-                await chrome.scripting.insertCSS({
-                    target: { tabId: tabId }, files: cssFiles
-                });
-            }
+            try {
+                if (cssFiles.length) {
+                    await chrome.scripting.insertCSS({
+                        target: { tabId: tabId }, files: cssFiles
+                    });
+                }
 
-            if (baseJsFiles.length) {
+                if (baseJsFiles.length) {
+                    await chrome.scripting.executeScript({
+                        target: { tabId: tabId }, files: baseJsFiles
+                    });
+                }
+
+                await handleGeniusPage(tabId);
+            } catch (error) {
+                console.error("Genius Enhancer failed to initialize this page", error);
                 await chrome.scripting.executeScript({
-                    target: { tabId: tabId }, files: baseJsFiles
-                });
+                    target: { tabId },
+                    func: () => {
+                        delete document.body.dataset.geniusEnhancerRunning;
+                        delete document.body.dataset.geniusEnhancerUrl;
+                    }
+                }).catch(() => {});
             }
-
-            await handleGeniusPage(tabId);
         }
     });
 });

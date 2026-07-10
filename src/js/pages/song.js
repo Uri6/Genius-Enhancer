@@ -23,14 +23,12 @@ export async function handleSongPage(tabId) {
 	chrome.storage.local.get("ModernTextEditor", (res) => {
 		if (res.ModernTextEditor) {
 			chrome.scripting.executeScript({
-				target: {
-					tabId: tabId
-				},
-				func: (() => {
+				target: { tabId },
+				func: () => {
 					chrome.runtime.sendMessage({
 						"song_modernTextEditor": [true]
 					});
-				})
+				}
 			});
 		}
 	});
@@ -150,7 +148,7 @@ export async function handleSongPage(tabId) {
 								});
 							});
 
-							if (ytURL.length > 0) {
+							if (ytURL) {
 								// Clear any previous search results
 								const youtubeInput = document.querySelectorAll("section.ScrollableTabs__Section-sc-179ldtd-6[data-section-index='1'] input.TextInput-sc-2wssth-0")[0];
 								youtubeInput.value = "";

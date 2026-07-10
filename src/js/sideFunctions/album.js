@@ -45,7 +45,7 @@ export async function missingInfo(bio, people, releaseDate) {
     const tracklist = document.getElementsByClassName("chart_row chart_row--light_border chart_row--full_bleed_left chart_row--align_baseline chart_row--no_hover");
     let song_index = 0;
 
-    if (albumObject.album_appearances.length === 0) {
+    if (!albumObject?.album_appearances?.length || !tracklist.length) {
         return;
     }
 
@@ -69,7 +69,7 @@ export async function missingInfo(bio, people, releaseDate) {
         createIcon(imgs.bios[song.description_preview === "" ? "missing" : "exists"], song.description_preview === "" ? "missing bio" : "exists bio", song.description_preview === "" ? "No one has written a bio for this song yet" : "", bioClasses);
         createIcon(imgs.releaseDate[song.release_date_for_display ? "exists" : "missing"], song.release_date_for_display ? "exists release date" : "missing release date", !song.release_date_for_display ? "The release date for this song is unknown" : "", releaseDateClasses);
 
-        elem.appendChild(iconContainer[0]);
+        elem?.appendChild(iconContainer[0]);
         song_index++;
     });
 }
@@ -101,7 +101,10 @@ export async function getPlaylistVideos(playlistLink) {
     }
 
     const playlistId = new URL(playlistLink).searchParams.get("list");
-    const key = secrets.GOOGLE_API_KEY;
+    const key = globalThis.secrets?.GOOGLE_API_KEY;
+    if (!key) {
+        return "getPlaylistVideos: Google API key is not configured";
+    }
 
     const metadataResponse = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${key}`);
     if (!metadataResponse.ok) {
@@ -946,28 +949,36 @@ export async function appendIcon() {
             }
         });
 
-        async function waitForTagsList() {
+        async function waitForTagsList(maxAttempts = 3) {
             const tagsList = $("datalist#tagsList");
             if (tagsList.children("option").length > 0) {
                 $("input.add-tags.rcorners.ge-textarea").attr("placeholder", "Tag");
                 $("input.add-tags.rcorners.ge-textarea").removeAttr("disabled");
                 $("input.add-tags.rcorners.ge-textarea").css("cursor", "default");
-                return;
+                return true;
             }
             const inputElem = $("input.add-tags.rcorners.ge-textarea");
-            inputElem.attr("placeholder", "Loading.");
             inputElem.attr("disabled", true);
             inputElem.css("cursor", "not-allowed");
-            await new Promise(resolve => setTimeout(resolve, 500));
-            inputElem.attr("placeholder", "Loading..");
-            await new Promise(resolve => setTimeout(resolve, 500));
-            inputElem.attr("placeholder", "Loading...");
-            await new Promise(resolve => setTimeout(resolve, 500));
-            inputElem.attr("placeholder", "Loading.");
-            await waitForTagsList();
+
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                inputElem.attr("placeholder", `Loading${".".repeat((attempt % 3) + 1)}`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                if ($("datalist#tagsList option").length > 0) {
+                    inputElem.attr("placeholder", "Tag");
+                    inputElem.removeAttr("disabled");
+                    inputElem.css("cursor", "default");
+                    return true;
+                }
+            }
+
+            inputElem.attr("placeholder", "Type to search tags");
+            inputElem.removeAttr("disabled");
+            inputElem.css("cursor", "default");
+            return false;
         }
 
-        await waitForTagsList();
+        const tagsAvailable = await waitForTagsList();
 
         const tagify_tagsWhitelist = $("datalist#tagsList option").map(function(_, o) {
             let searchByStr;
@@ -1026,8 +1037,40 @@ export async function appendIcon() {
             }
         });
 
-        $("#tagify_tags").on("input", (e) => {
+        let tagSearchController;
+        tagify_tags.on("input", async (event) => {
+            const query = event.detail.value.trim();
             $(".blured-background").append($(".tagify__dropdown").eq(0));
+
+            if (tagsAvailable || query.length < 1) {
+                return;
+            }
+
+            tagSearchController?.abort();
+            tagSearchController = new AbortController();
+
+            try {
+                const response = await fetch(
+                    `/api/tags/autocomplete?q=${encodeURIComponent(query)}`,
+                    { signal: tagSearchController.signal }
+                );
+                if (!response.ok) {
+                    throw new Error(`Tag search failed (${response.status})`);
+                }
+
+                const data = await response.json();
+                const tags = data.response?.tags || data.tags || [];
+                tagify_tags.whitelist = tags.map((tag) => ({
+                    value: tag.name,
+                    id: tag.id
+                }));
+                tagify_tags.dropdown.show(query);
+                $(".blured-background").append($(".tagify__dropdown").eq(0));
+            } catch (error) {
+                if (error.name !== "AbortError") {
+                    console.error("Unable to search Genius tags", error);
+                }
+            }
         });
 
         if ($("#tagsList").length) {

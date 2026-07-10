@@ -5,10 +5,26 @@
  * https://github.com/Uri6/Genius-Enhancer/blob/main/LICENSE.md
  */
 
+(() => {
+if (globalThis.__geniusEnhancerPowerbarLoaded) {
+    return;
+}
+globalThis.__geniusEnhancerPowerbarLoaded = true;
+
 // Create a new AbortController for the search request
 let searchController = new AbortController();
 
 insertPowerbar();
+
+async function getStoredSettings(keys) {
+    if (!chrome.runtime?.id) return null;
+    try {
+        return await chrome.storage.local.get(keys);
+    } catch (error) {
+        if (String(error).includes("Extension context invalidated")) return null;
+        throw error;
+    }
+}
 
 // Placeholder texts for the powerbar input
 const placeholders = [
@@ -48,7 +64,9 @@ window.addEventListener("keyup", async (e) => {
     }
 
     // Retrieve the hotkey combination and split it into individual keys
-    let powerbarHotkey = (await chrome.storage.local.get("powerbarHotkey"))?.powerbarHotkey || "Shift + Shift";
+    const hotkeySettings = await getStoredSettings("powerbarHotkey");
+    if (!hotkeySettings) return;
+    let powerbarHotkey = hotkeySettings.powerbarHotkey || "Shift + Shift";
     let keys = powerbarHotkey.split(" + ").map(key => key.toLowerCase().replace("space", " ").replace("ctrl", "control"));
 
     // Normalize the key pressed
@@ -76,19 +94,19 @@ window.addEventListener("keyup", async (e) => {
 
     // Toggle the powerbar if all keys are pressed
     if (allKeysPressed) {
-        chrome.storage.local.get(["powerbarStatus"], (res) => {
-            if (res.powerbarStatus) {
-                e.preventDefault();
-                $("#powerbar-input").val("");
-                $("#powerbar-results").remove();
-                $("#ge-powerbar").toggle();
-                $("#powerbar-input").attr("placeholder", placeholders[Math.floor(Math.random() * placeholders.length)]);
-                if ($("#ge-powerbar").is(":visible")) {
-                    $("#powerbar-input").focus();
-                }
-                keyPressStatus = [false, false, false];
+        const settings = await getStoredSettings("powerbarStatus");
+        if (!settings) return;
+        if (settings.powerbarStatus) {
+            e.preventDefault();
+            $("#powerbar-input").val("");
+            $("#powerbar-results").remove();
+            $("#ge-powerbar").toggle();
+            $("#powerbar-input").attr("placeholder", placeholders[Math.floor(Math.random() * placeholders.length)]);
+            if ($("#ge-powerbar").is(":visible")) {
+                $("#powerbar-input").focus();
             }
-        });
+            keyPressStatus = [false, false, false];
+        }
     }
 });
 
@@ -268,7 +286,7 @@ async function search(query, type = "unset") {
 
     if (type === "unset") {
         // Get the default search type from the storage
-        type = (await chrome.storage.local.get("defaultSearchType"))?.defaultSearchType || "multi";
+        type = (await getStoredSettings("defaultSearchType"))?.defaultSearchType || "multi";
     }
 
     addLoadingAnimation();
@@ -386,7 +404,7 @@ async function displaySearchResults(results) {
             class: "scroll-container"
         }));
 
-    const openInNewTab = (await chrome.storage.local.get("openPowerbarResultsInNewTab"))?.openPowerbarResultsInNewTab || false;
+    const openInNewTab = (await getStoredSettings("openPowerbarResultsInNewTab"))?.openPowerbarResultsInNewTab || false;
 
     // Iterate over the results and create a card for each one
     results.forEach((result) => {
@@ -522,3 +540,5 @@ function displayCommandResults(options) {
 function hidePage(id, type) {
 
 }
+
+})();
